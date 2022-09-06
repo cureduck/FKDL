@@ -4,7 +4,5 @@
     {
         public int CurHp;
         public string Id;
-        
-        
     }
 }

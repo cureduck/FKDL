@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Game
 {
+    [ExecuteAlways]
     public class EnemySquare : Square<EnemySaveData>
     {
         public EnemyBp EnemyBp => EnemyManager.Instance.EnemyBps[Data.Id];

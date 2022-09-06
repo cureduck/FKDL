@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Managers
 {
+    [ExecuteAlways]
     public class EnemyManager : Singleton<EnemyManager>
     {
         public Dictionary<string, EnemyBp> EnemyBps;

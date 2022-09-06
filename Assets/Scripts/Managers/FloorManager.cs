@@ -16,11 +16,7 @@ namespace Managers
         
         
         private static string FloorPath => Path.Combine(Application.dataPath, "Resources", "Floors");
-
-        protected override void Awake()
-        {
-            base.Awake();
-        }
+        
 
         [Button]
         public Map CreateRandomMap()
@@ -41,17 +37,6 @@ namespace Managers
                 Floors = Floors,
                 CurrentFloor = "1"
             };
-        }
-
-        [Button]
-        private void CreateFloor(Map.Floor floor)
-        {
-            var f = JsonConvert.SerializeObject(floor, settings: new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
-            var count = Directory.GetFiles(Path.Combine(FloorPath, floor.FloorName)).Length;
-            File.WriteAllText(Path.Combine(FloorPath, floor.FloorName, count+".json") , f);
         }
     }
 }

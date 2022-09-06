@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Managers
 {
+    [ExecuteAlways]
     public class GameManager : Singleton<GameManager>
     {
         public PlayerData PlayerData;
@@ -14,15 +15,8 @@ namespace Managers
         public GameObject Prefab;
 
         public GameObject MapGo;
-        
-        
-        protected override void Awake()
-        {
-            base.Awake();
-            
-        }
 
-        
+
         [Button]
         public void LoadFromSave()
         {
@@ -37,7 +31,6 @@ namespace Managers
                 Console.WriteLine(e);
                 throw;
             }
-
         }
         
         [Button]
@@ -58,12 +51,17 @@ namespace Managers
         
         private void LoadMap()
         {
+            LoadFloor(Map.Floors[Map.CurrentFloor]);
+        }
+
+        public void LoadFloor(Map.Floor floor)
+        {
             foreach (Transform child in MapGo.transform)
             {
                 DestroyImmediate(child.gameObject);
             }
 
-            foreach (var square in Map.Floors[Map.CurrentFloor].Squares)
+            foreach (var square in floor.Squares)
             {
                 CreateSquare(square);
             }
@@ -72,9 +70,11 @@ namespace Managers
         [Button]
         private void CreateSquare(MapData data)
         {
+            if (data == null) return; 
+            
             var go = Instantiate(Prefab, MapGo.transform);
             try
-            {    
+            {
                 switch (data)
                 {
                     case EnemySaveData d1:

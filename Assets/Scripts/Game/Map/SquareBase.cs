@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Game
 {
+    [ExecuteAlways]
     public class SquareBase: MonoBehaviour
     {
 
@@ -17,11 +18,11 @@ namespace Game
 
         public Transform Global;
         
-        public void Set(MapData Data)
+        public void Set(MapData data)
         {
-            transform.position = new Vector3(Data.x + Spacing/2, Data.y + Spacing/2, 0);
-            transform.localScale = new Vector3(Data.Width - Spacing, Data.Height - Spacing, 0);
-            Global.localScale = new Vector3(1/(Data.Width -Spacing), 1/(Data.Height - Spacing));
+            transform.position = new Vector3(data.x + Spacing/2, data.y + Spacing/2, 0);
+            transform.localScale = new Vector3(data.Width - Spacing, data.Height - Spacing, 0);
+            Global.localScale = new Vector3(1/(data.Width -Spacing), 1/(data.Height - Spacing));
         }
 
 
