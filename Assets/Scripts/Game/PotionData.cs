@@ -1,15 +1,13 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Sirenix.Utilities;
-using UnityEngine;
 
 namespace Game
 {
-    public struct SkillData
+    public struct PotionData
     {
         public string Id;
-        public int CurLv;
-
+        public int Count;
+        
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
     }
 }

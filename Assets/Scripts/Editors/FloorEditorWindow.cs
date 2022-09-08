@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Game;
 using Managers;
 using Newtonsoft.Json;
@@ -50,7 +51,8 @@ namespace Editors
                 {
                     TypeNameHandling = TypeNameHandling.All
                 });
-                var count = Directory.GetFiles(Path.Combine(FloorPath, floor.FloorName)).Length;
+                var count = Directory.GetFiles(Path.Combine(FloorPath, floor.FloorName))
+                    .Count(name => name.EndsWith(".json"));
                 File.WriteAllText(Path.Combine(FloorPath, floor.FloorName, count+".json") , f);
             }
 

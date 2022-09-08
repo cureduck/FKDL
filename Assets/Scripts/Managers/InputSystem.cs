@@ -67,7 +67,7 @@ namespace Managers
                 var t = hit.transform.GetComponent<SquareBase>();
                 if ( t != null)
                 {
-                    t.OnClick();
+                    t.Focus();
                 }
             }
         }

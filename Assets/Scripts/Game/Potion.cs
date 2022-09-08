@@ -3,14 +3,11 @@ using UnityEngine;
 
 namespace Game
 {
-    public class Skill
+    public class Potion
     {
         [JsonIgnore] public Texture Icon;
         public string Id;
-        public bool Positive;
-        public int MaxLv;
         public Rank Rank;
-
         public int Param1;
         public int Param2;
     }

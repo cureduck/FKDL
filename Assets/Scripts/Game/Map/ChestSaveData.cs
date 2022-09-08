@@ -2,15 +2,8 @@
 {
     public sealed class ChestSaveData : MapData
     {
-        public ChestType Type;
+        public Rank Rank;
+        public Offer[] Offers;
         
-        
-        public enum ChestType
-        {
-            White,
-            Red,
-            Yellow,
-            Class
-        }
     }
 }

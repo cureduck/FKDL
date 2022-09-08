@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Game;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Managers
 {
@@ -16,7 +17,8 @@ namespace Managers
 
         public GameObject MapGo;
 
-
+        public Random Random;
+        
         [Button]
         public void LoadFromSave()
         {
@@ -56,10 +58,12 @@ namespace Managers
 
         public void LoadFloor(Map.Floor floor)
         {
-            foreach (Transform child in MapGo.transform)
+
+            while (MapGo.transform.childCount > 0)
             {
-                DestroyImmediate(child.gameObject);
+                DestroyImmediate(MapGo.transform.GetChild(0).gameObject);
             }
+            
 
             foreach (var square in floor.Squares)
             {
@@ -70,18 +74,13 @@ namespace Managers
         [Button]
         private void CreateSquare(MapData data)
         {
-            if (data == null) return; 
+            if (data == null) return;
             
             var go = Instantiate(Prefab, MapGo.transform);
             try
             {
-                switch (data)
-                {
-                    case EnemySaveData d1:
-                        var sq = go.AddComponent<EnemySquare>();
-                        sq.Data = d1;
-                        break;
-                }
+                var sq = go.GetComponent<Square>();
+                sq.Data = data;
             }
             catch (Exception e)
             {

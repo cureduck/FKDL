@@ -17,7 +17,6 @@ namespace Managers
         
         private static string FloorPath => Path.Combine(Application.dataPath, "Resources", "Floors");
         
-
         [Button]
         public Map CreateRandomMap()
         {

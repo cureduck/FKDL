@@ -10,6 +10,5 @@ namespace Game
         public int y;
         public int Width;
         public int Height;
-        
     }
 }

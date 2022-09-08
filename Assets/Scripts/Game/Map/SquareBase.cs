@@ -9,7 +9,7 @@ namespace Game
     [ExecuteAlways]
     public class SquareBase: MonoBehaviour
     {
-
+        public SpriteRenderer Sp;
         private const float Spacing = .06f;
         
         public SpriteRenderer Icon;
@@ -18,19 +18,31 @@ namespace Game
 
         public Transform Global;
         
-        public void Set(MapData data)
+        public void SetSize(MapData data)
         {
             transform.position = new Vector3(data.x + Spacing/2, data.y + Spacing/2, 0);
             transform.localScale = new Vector3(data.Width - Spacing, data.Height - Spacing, 0);
             Global.localScale = new Vector3(1/(data.Width -Spacing), 1/(data.Height - Spacing));
         }
 
-
-        public event Action Clicked;
-        
-        public void OnClick()
+        public void SetContent(string id, string text, Color color = default)
         {
-            Clicked?.Invoke();
+            Id.SetTerm(id);
+            Bonus.text = text;
+        }
+        
+
+        public event Action OnFocus;
+        public event Action OnReact;
+        
+        public void Focus()
+        {
+            OnFocus?.Invoke();
+        }
+
+        public void React()
+        {
+            OnReact?.Invoke();
         }
     }
 }
