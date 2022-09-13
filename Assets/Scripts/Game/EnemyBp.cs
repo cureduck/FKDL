@@ -9,6 +9,7 @@ namespace Game
         public Texture Icon;
         public string Id;
         public BattleStatus Status;
-        
+
+        public string[] Skills;
     }
 }

@@ -4,38 +4,32 @@ using System.IO;
 using System.Linq;
 using Game;
 using Managers;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Game
 {
-    public class PlayerData : SaveData
+    public class PlayerData : FighterData
     {
         public string Id;
-        public SkillData[] Skills;
         public PotionData[] Potions;
 
         public int Gold;
         
-        public BattleStatus BattleStatus;
         public PlayerStatus PlayerStatus;
-
-        private static readonly string _initPath = Path.Combine( Application.persistentDataPath, "Resources", "PlayerInit", "PlayerData.json");
-        private static readonly string _savePath = Path.Combine( Application.persistentDataPath, "PlayerData.json");
-
-
-
-
+        
+        
+        
+        
         public bool TryTake(Offer offer)
         {
             switch (offer.Kind)
             {
                 case Offer.OfferKind.Potion:
                     return TryTakePotion(offer.Id);
-                    break;
                 case Offer.OfferKind.Skill:
                     return TryTakeSkill(offer.Id);
-                    break;
                 case Offer.OfferKind.Gold:
                     Gold += offer.Gold;
                     return true;
@@ -49,21 +43,21 @@ namespace Game
         {
             if (PotionManager.Instance.Potions.TryGetValue(id, out var sk))
             {
-                for (var i = 0; i < Potions.Length; i++)
-                {
-                    if ((Potions[i].Id == id))
-                    {
-                        Potions[i].Count += 1;
-                        return true;
-                    }
-                }
-
                 for (int i = 0; i < Potions.Length; i++)
                 {
                     if (Potions[i].IsEmpty)
                     {
                         Potions[i].Id = id;
                         Potions[i].Count = 1;
+                        return true;
+                    }
+                }
+                
+                for (var i = 0; i < Potions.Length; i++)
+                {
+                    if ((Potions[i].Id == id))
+                    {
+                        Potions[i].Count += 1;
                         return true;
                     }
                 }
@@ -77,16 +71,6 @@ namespace Game
         {
             if (SkillManager.Instance.Skills.TryGetValue(id, out var sk))
             {
-                for (var i = 0; i < Skills.Length; i++)
-                {
-                    if (Skills[i].IsEmpty)
-                    {
-                        Skills[i].Id = id;
-                        Skills[i].CurLv = 1;
-                        return true;
-                    }
-                }
-
                 for (int i = 0; i < Skills.Length; i++)
                 {
                     if ((Skills[i].Id == id)&&(sk.MaxLv > Skills[i].CurLv))
@@ -95,10 +79,24 @@ namespace Game
                         return true;
                     }
                 }
+
+                for (var i = 0; i < Skills.Length; i++)
+                {
+                    if (Skills[i].IsEmpty)
+                    {
+                        Skills[i].Id = id;
+                        Skills[i].CurLv = 1;
+                        OnEquip(Skills[i]);
+                        return true;
+                    }
+                }
             }
             return false;
         }
         
+        
+        private static readonly string _initPath = Path.Combine( Application.persistentDataPath, "Resources", "PlayerInit", "PlayerData.json");
+        private static readonly string _savePath = Path.Combine( Application.persistentDataPath, "PlayerData.json");
         
         
         public void Save()
@@ -121,6 +119,26 @@ namespace Game
         public static PlayerData Load(string path)
         {
             return Load<PlayerData>(path);
+        }
+        
+        
+        private static T Load<T>(string path)
+        {
+            var f = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<T>(f, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+        }
+
+        [Button]
+        private void Save(string path)
+        {
+            var f = JsonConvert.SerializeObject(this, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+            File.WriteAllText(path, f);
         }
     }
 }

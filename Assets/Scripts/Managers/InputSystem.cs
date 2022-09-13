@@ -68,6 +68,7 @@ namespace Managers
                 if ( t != null)
                 {
                     t.Focus();
+                    t.React();
                 }
             }
         }

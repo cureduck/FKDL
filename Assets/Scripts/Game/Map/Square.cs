@@ -15,16 +15,36 @@ namespace Game
 
         [ShowInInspector] public MapData Data;
 
-        protected virtual void Start()
-        {
 
+        private void Start()
+        {
             Sq = GetComponent<SquareBase>();
-            
             Sq.SetSize(Data);
+            UpdateFace();
+
             switch (Data)
             {
                 case EnemySaveData d0:
-                    Sq.SetContent(d0.Id, d0.CurHp +"/" + d0.Bp.Status.MaxHp, EnemyColor);
+                    Sq.OnFocus += () => WindowManager.Instance.Display(d0);
+                    Sq.OnReact += () => BattleManager.Instance.Fight(this);
+                    break;
+                case CasinoSaveData d1:
+                    break;
+                case ChestSaveData d2:
+                    break;
+                case MountainSaveData d3:
+                    break;
+            }
+            
+        }
+
+
+        public void UpdateFace()
+        {
+            switch (Data)
+            {
+                case EnemySaveData d0:
+                    Sq.SetContent(d0.Id, d0.Status.CurHp +"/" + d0.Bp.Status.MaxHp, EnemyColor);
                     break;
                 case CasinoSaveData d1:
                     Sq.SetContent("casino", d1.TimesLeft + "/" + CasinoSaveData.MaxTimes, EnemyColor);
@@ -37,10 +57,20 @@ namespace Game
                     break;
             }
         }
+        
+        
 
-        /*private void OnDestroy()
+        private void OnDestroy()
         {
-            //GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares.Remove(Data);
-        }*/
+            try
+            {
+                GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares.Remove(Data);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

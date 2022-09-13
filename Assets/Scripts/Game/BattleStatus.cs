@@ -4,6 +4,8 @@
     {
         public int MaxHp;
         public int CurHp;
+        public int MaxMp;
+        public int CurMp;
         public int MAtk;
         public int PAtk;
         public int MDef;
@@ -14,7 +16,5 @@
     {
         public int MaxSp;
         public int CurSp;
-        public int MaxMp;
-        public int CurMp;
     }
 }

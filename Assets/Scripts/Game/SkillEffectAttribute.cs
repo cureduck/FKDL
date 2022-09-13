@@ -17,7 +17,8 @@ namespace Game
     
     public enum Timing
     {
-        PlayerAttack,
-        PlayerImpact,
+        Attack,
+        
+        Settle,
     }
 }

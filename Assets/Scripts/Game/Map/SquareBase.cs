@@ -1,5 +1,6 @@
 ﻿using System;
 using I2.Loc;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,8 @@ namespace Game
         public TMP_Text Bonus;
 
         public Transform Global;
+        
+        [JsonIgnore] 
         
         public void SetSize(MapData data)
         {
