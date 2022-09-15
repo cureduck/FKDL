@@ -95,7 +95,7 @@ namespace Game
         }
         
         
-        private static readonly string _initPath = Path.Combine( Application.persistentDataPath, "Resources", "PlayerInit", "PlayerData.json");
+        private static readonly string _initPath = Path.Combine( Application.dataPath, "Resources", "PlayerInit", "PlayerData.json");
         private static readonly string _savePath = Path.Combine( Application.persistentDataPath, "PlayerData.json");
         
         

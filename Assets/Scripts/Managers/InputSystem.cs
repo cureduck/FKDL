@@ -64,7 +64,7 @@ namespace Managers
             var hit = Physics2D.Raycast(worldPos, Vector2.zero);
             if (hit.transform != null)
             {
-                var t = hit.transform.GetComponent<SquareBase>();
+                var t = hit.transform.GetComponent<Square>();
                 if ( t != null)
                 {
                     t.Focus();

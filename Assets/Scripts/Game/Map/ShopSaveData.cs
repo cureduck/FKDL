@@ -1,6 +1,6 @@
 ﻿namespace Game
 {
-    public class ShopSaveData : SaveData
+    public class ShopSaveData : MapData
     {
         
     }

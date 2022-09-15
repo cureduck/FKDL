@@ -12,15 +12,12 @@ namespace Managers
 {
     public class FloorManager : Singleton<FloorManager>
     {
-        public Dictionary<string, Map.Floor> Floors;
-        
-        
         private static string FloorPath => Path.Combine(Application.dataPath, "Resources", "Floors");
         
         [Button]
         public Map CreateRandomMap()
         {
-            Floors = new Dictionary<string, Map.Floor>();
+            var Floors = new Dictionary<string, Map.Floor>();
 
             foreach (var s in Directory.GetDirectories(FloorPath))
             {
@@ -37,5 +34,40 @@ namespace Managers
                 CurrentFloor = "1"
             };
         }
+
+        
+        
+        [Button("Create Floor")]
+        public static void CreateFloor(Map.Floor floor)
+        {
+            var f = JsonConvert.SerializeObject(floor, settings: new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                Formatting = Formatting.Indented
+            });
+            var count = Directory.GetFiles(Path.Combine(FloorPath, floor.FloorName))
+                .Count(n => n.EndsWith(".json"));
+            File.WriteAllText(Path.Combine(FloorPath, floor.FloorName, count+".json") , f);
+        }
+        
+        
+
+        
+        [Button]
+        public Map.Floor SaveCurrentFloor(string floorName)
+        {
+            var f = new Map.Floor
+            {
+                Squares = new LinkedList<MapData>(),
+                FloorName = floorName
+            };
+            foreach (Transform go in GameManager.Instance.MapGo.transform)
+            {
+                f.Squares.AddLast(go.GetComponent<Square>().Data);
+            }
+
+            return f;
+        }
+
     }
 }

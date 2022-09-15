@@ -7,6 +7,11 @@ namespace Game
         public Rank Rank;
         public Offer[] Offers;
 
+        public ChestSaveData(Rank rank) : base()
+        {
+            Rank = rank;
+        }
+        
 
         public override void Init()
         {
