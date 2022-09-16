@@ -47,6 +47,12 @@ namespace Managers
             });
             var count = Directory.GetFiles(Path.Combine(FloorPath, floor.FloorName))
                 .Count(n => n.EndsWith(".json"));
+
+            if (!Directory.Exists(Path.Combine(FloorPath, floor.FloorName)))
+            {
+                Directory.CreateDirectory(Path.Combine(FloorPath, floor.FloorName));
+            }
+            
             File.WriteAllText(Path.Combine(FloorPath, floor.FloorName, count+".json") , f);
         }
         

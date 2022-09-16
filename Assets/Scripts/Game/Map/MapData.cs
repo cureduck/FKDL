@@ -10,6 +10,10 @@ namespace Game
         public Placement Placement;
 
         public virtual void Init(){}
+        
+        public virtual void OnFocus(){}
+        
+        public virtual void OnReact(){}
     }
 
 

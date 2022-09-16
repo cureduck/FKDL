@@ -24,12 +24,14 @@ namespace Managers
             using (var excel = new ExcelPackage(fs))
             {
                 Debug.Log(excel.Workbook.Worksheets.Count);
-                var sheet = excel.Workbook.Worksheets[v];
 
-                var f = LoadFloor(sheet);
+                foreach (var sheet in excel.Workbook.Worksheets)
+                {
+                    var f = LoadFloor(sheet);
 
-                FloorManager.CreateFloor(f);
-
+                    FloorManager.CreateFloor(f);
+                }
+                
                 excel.Dispose();
                 fs.Dispose();
             }
@@ -40,7 +42,7 @@ namespace Managers
         {
             var floor = new Map.Floor
             {
-                FloorName = worksheet.Name,
+                FloorName = worksheet.Name.Split('_')[0],
                 Squares = new LinkedList<MapData>()
             };
 
@@ -103,6 +105,12 @@ namespace Managers
                         break;
                     case "obsidian":
                         floor.Squares.AddLast(new ObsidianSaveData() {Placement = p});
+                        break;
+                    case "stair":
+                        floor.Squares.AddLast(new StairsSaveData(suffix) {Placement = p});
+                        break;
+                    case "start":
+                        floor.Squares.AddLast(new StartSaveData() {Placement = p});
                         break;
                     default:
                         throw new ArgumentException(prefix);

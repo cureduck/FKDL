@@ -40,10 +40,6 @@ namespace Game
                 case EnemySaveData d0:
                     OnFocus += () => WindowManager.Instance.Display(d0);
                     OnReact += () => BattleManager.Instance.Fight(this);
-                    if (GameManager.Instance.NewGame)
-                    {
-                        d0.Status = d0.Bp.Status;
-                    }
                     break;
                 case CasinoSaveData d1:
                     break;
@@ -52,6 +48,12 @@ namespace Game
                 case MountainSaveData d3:
                     break;
             }
+
+            if (GameManager.Instance.NewGame)
+            {
+                Data.Init();
+            }
+            
             UpdateFace();
         }
 
@@ -72,6 +74,40 @@ namespace Game
                 case MountainSaveData d3:
                     SetContent("mountain", d3.TimesLeft + "/" + MountainSaveData.MaxTimes);
                     break;
+                case RockSaveData d4:
+                    SetContent("rock", d4.Cost.ToString());
+                    break;
+                case DoorSaveData d5:
+                    SetContent("door", d5.Rank.ToString());
+                    break;
+                case KeySaveData d6:
+                    SetContent("key", d6.Rank.ToString());
+                    break;
+                case CrystalSaveData d7:
+                    SetContent("crystal", "");
+                    break;
+                case ObsidianSaveData d8:
+                    SetContent("","");
+                    break;
+                case SupplySaveData d9:
+                    switch (d9.Type)
+                    {
+                        case SupplyType.Spring:
+                            SetContent("spring", d9.Rank.ToString());
+                            break;
+                        case SupplyType.Grassland:
+                            SetContent("grassland", d9.Rank.ToString());
+                            break;
+                        case SupplyType.Camp:
+                            SetContent("camp", d9.Rank.ToString());
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
+                case ShopSaveData d10:
+                    SetContent("shop", "");
+                    break;
             }
         }
         
@@ -85,10 +121,24 @@ namespace Game
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Debug.Log(e);
             }
         }
+
+        /*
+        private void OnSquareDestroy()
+        {
+            try
+            {
+                GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares.Remove(Data);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+            DestroyImmediate(this);
+        }
+        */
 
 
         #region base
@@ -121,6 +171,7 @@ namespace Game
         public void Focus()
         {
             OnFocus?.Invoke();
+            Data.OnFocus();
         }
 
         public void React()
