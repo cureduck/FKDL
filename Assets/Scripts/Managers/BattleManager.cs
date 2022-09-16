@@ -6,9 +6,8 @@ namespace Managers
     public class BattleManager : Singleton<BattleManager>
     {
         private PlayerData P => GameManager.Instance.PlayerData;
-        public void Fight(Square sq)
+        public void Fight(EnemySaveData enemy)
         {
-            var enemy = (EnemySaveData) sq.Data;
             var pa = P.ForgeAtk();
             
             //玩家攻击阶段
@@ -31,14 +30,15 @@ namespace Managers
                 result = func.Invoke(result, P, enemy);
             }
 
-            sq.UpdateFace();
+            
             //死亡判断
-            if (enemy.Status.CurHp <= 0)
+            if (enemy == null)
             {
-                DestroyImmediate(sq.gameObject);
+                //DestroyImmediate(sq.gameObject);
             }
             else
             {
+
                 var pa2 = enemy.ForgeAtk();
                 //怪物攻击阶段
                 foreach (var func in enemy.AttackModifiers)

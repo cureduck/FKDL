@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿#if UNITY_EDITOR
+
+using System.IO;
 using System.Linq;
 using Game;
 using Managers;
@@ -64,3 +66,5 @@ namespace Editors
         }
     }
 }
+
+#endif

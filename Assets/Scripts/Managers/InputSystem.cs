@@ -64,11 +64,11 @@ namespace Managers
             var hit = Physics2D.Raycast(worldPos, Vector2.zero);
             if (hit.transform != null)
             {
-                var t = hit.transform.GetComponent<Square>();
+                var t = hit.transform.GetComponent<Square>().Data;
                 if ( t != null)
                 {
-                    t.Focus();
-                    t.React();
+                    t.OnFocus();
+                    t.OnReact();
                 }
             }
         }

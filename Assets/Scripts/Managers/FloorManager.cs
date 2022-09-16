@@ -12,7 +12,7 @@ namespace Managers
 {
     public class FloorManager : Singleton<FloorManager>
     {
-        private static string FloorPath => Path.Combine(Application.dataPath, "Resources", "Floors");
+        private static string FloorPath => Path.Combine(Application.streamingAssetsPath, "Floors");
         
         [Button]
         public Map CreateRandomMap()
@@ -43,15 +43,16 @@ namespace Managers
             var f = JsonConvert.SerializeObject(floor, settings: new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
-                Formatting = Formatting.Indented
+                //Formatting = Formatting.Indented
             });
-            var count = Directory.GetFiles(Path.Combine(FloorPath, floor.FloorName))
-                .Count(n => n.EndsWith(".json"));
 
             if (!Directory.Exists(Path.Combine(FloorPath, floor.FloorName)))
             {
                 Directory.CreateDirectory(Path.Combine(FloorPath, floor.FloorName));
             }
+            
+            var count = Directory.GetFiles(Path.Combine(FloorPath, floor.FloorName))
+                .Count(n => n.EndsWith(".json"));
             
             File.WriteAllText(Path.Combine(FloorPath, floor.FloorName, count+".json") , f);
         }

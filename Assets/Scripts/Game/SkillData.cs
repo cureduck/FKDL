@@ -24,6 +24,21 @@ namespace Game
             return attack;
         }
 
+
+        [SkillEffect("Burst", Timing.Equip)]
+        public void BurstEquip(FighterData fighter)
+        {
+            fighter.Status.PAtk += Bp.Param1 * CurLv;
+        }
+        
+        [SkillEffect("Burst", Timing.LvUp)]
+        public void BurstLvUp(FighterData fighter)
+        {
+            fighter.Status.PAtk += Bp.Param1 * CurLv;
+        }
+        
+
+        [JsonIgnore] public Skill Bp => SkillManager.Instance.Skills[Id];
         [ShowInInspector] public event Action Activate;
     }
 }

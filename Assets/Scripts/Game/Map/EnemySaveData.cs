@@ -9,8 +9,6 @@ namespace Game
     public class EnemySaveData : FighterData
     {
         public string Id;
-
-        public event Action Destroy;
         
         public EnemySaveData(string id) : base()
         {
@@ -30,11 +28,14 @@ namespace Game
 
         public override void OnFocus()
         {
+            WindowManager.Instance.Display(this);
+            
             base.OnFocus();
         }
 
         public override void OnReact()
         {
+            BattleManager.Instance.Fight(this);
             base.OnReact();
         }
 

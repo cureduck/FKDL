@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Game;
 using Managers;
 using Newtonsoft.Json;
@@ -18,7 +19,8 @@ namespace Game
         public int Gold;
         
         public PlayerStatus PlayerStatus;
-        
+
+        public Dictionary<Rank, int> Keys;
         
         
         
@@ -95,7 +97,7 @@ namespace Game
         }
         
         
-        private static readonly string _initPath = Path.Combine( Application.dataPath, "Resources", "PlayerInit", "PlayerData.json");
+        private static readonly string _initPath = Path.Combine( Application.streamingAssetsPath, "PlayerData.json");
         private static readonly string _savePath = Path.Combine( Application.persistentDataPath, "PlayerData.json");
         
         
@@ -124,7 +126,13 @@ namespace Game
         
         private static T Load<T>(string path)
         {
-            var f = File.ReadAllText(path);
+            string f = "";
+#if UNITY_ANDROID
+            var wread = new WWW(path);
+            f = Encoding.UTF8.GetString(wread.bytes, 3, wread.bytes.Length - 3);
+#else
+            f = File.ReadAllText(path);
+#endif
             return JsonConvert.DeserializeObject<T>(f, new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All

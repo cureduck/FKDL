@@ -106,7 +106,7 @@ namespace Managers
                     case "obsidian":
                         floor.Squares.AddLast(new ObsidianSaveData() {Placement = p});
                         break;
-                    case "stair":
+                    case "stairs":
                         floor.Squares.AddLast(new StairsSaveData(suffix) {Placement = p});
                         break;
                     case "start":

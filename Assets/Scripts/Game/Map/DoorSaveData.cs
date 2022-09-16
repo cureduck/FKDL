@@ -1,4 +1,6 @@
-﻿namespace Game
+﻿using Managers;
+
+namespace Game
 {
     public class DoorSaveData : MapData
     {
@@ -7,6 +9,20 @@
         public DoorSaveData(Rank rank)
         {
             Rank = rank;
+        }
+
+        public override void OnReact()
+        {
+            base.OnReact();
+            if (GameManager.Instance.PlayerData.Keys[Rank] > 0)
+            {
+                GameManager.Instance.PlayerData.Keys[Rank] -= 1;
+                OnDestroy?.Invoke();
+            }
+            else
+            {
+                WindowManager.Instance.Warn("No Key");
+            }
         }
     }
 }

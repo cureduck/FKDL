@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections;
 using Game;
+using I2.Loc;
+using UI;
 using UnityEngine;
 
 namespace Managers
 {
     public class WindowManager : Singleton<WindowManager>
     {
-        public GameObject OffersWindow;
+        public OfferWindow OffersWindow;
 
+        public Localize WarnWindow;
 
         public void Display(EnemySaveData data)
         {
@@ -17,7 +21,15 @@ namespace Managers
         
         public void Warn(string log)
         {
-            throw new NotImplementedException();
+            WarnWindow.gameObject.SetActive(true);
+            WarnWindow.SetTerm(log);
+            StartCoroutine(WarnDisappear());
+        }
+
+        private IEnumerator WarnDisappear()
+        {
+            yield return new WaitForSeconds(3f);
+            WarnWindow.gameObject.SetActive(false);
         }
     }
 }

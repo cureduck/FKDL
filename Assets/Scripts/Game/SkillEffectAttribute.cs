@@ -18,7 +18,11 @@ namespace Game
     public enum Timing
     {
         Attack,
-        
         Settle,
+        Equip,
+        UnEquip,
+        LvUp,
+        Kill,
+        Heal
     }
 }

@@ -46,6 +46,13 @@ namespace Game
         {
             Status.CurHp -= attack.PAtk - Status.PDef + attack.MAtk - Status.MDef + attack.CAtk;
             
+            OnUpdated?.Invoke();
+            
+            if ((Status.CurHp <= 0)&&(this is EnemySaveData))
+            {
+                OnDestroy?.Invoke();
+            }
+            
             return new Result
             {
                 PAtk = attack.PAtk - Status.PDef,
@@ -70,6 +77,18 @@ namespace Game
                         AttackModifiers.AddLast(f);
                         break;
                     case Timing.Settle:
+                        break;
+                    case Timing.Equip:
+                        var f2 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), skill);
+                        f2.Invoke((FighterData) this);
+                        break;
+                    case Timing.UnEquip:
+                        break;
+                    case Timing.LvUp:
+                        break;
+                    case Timing.Kill:
+                        break;
+                    case Timing.Heal:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

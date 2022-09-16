@@ -1,4 +1,5 @@
 ﻿using System;
+using Managers;
 
 namespace Game
 {
@@ -10,25 +11,31 @@ namespace Game
         public ChestSaveData(Rank rank) : base()
         {
             Rank = rank;
+            
         }
         
 
         public override void Init()
         {
             base.Init();
-            switch (Rank)
+
+            Offers = new Offer[3];
+            var skills = SkillManager.Instance.Roll(Rank, 3);
+            for (int i = 0; i < 3; i++)
             {
-                case Rank.Normal:
-                    break;
-                case Rank.Uncommon:
-                    break;
-                case Rank.Rare:
-                    break;
-                case Rank.Ultra:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                Offers[i] = new Offer()
+                {
+                    Id = skills[i],
+                    Kind = Offer.OfferKind.Skill
+                };
             }
+        }
+
+        public override void OnReact()
+        {
+            base.OnReact();
+            WindowManager.Instance.OffersWindow.Load(Offers);
+            OnDestroy?.Invoke();
         }
     }
 }

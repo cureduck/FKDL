@@ -21,7 +21,7 @@ namespace UI
                 {
                     if (GameManager.Instance.PlayerData.TryTake(_offerUi.Offer))
                     {
-                        WindowManager.Instance.OffersWindow.SetActive(false);
+                        WindowManager.Instance.OffersWindow.gameObject.SetActive(false);
                         return;
                     }
                     else

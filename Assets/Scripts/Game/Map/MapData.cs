@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
@@ -14,6 +15,9 @@ namespace Game
         public virtual void OnFocus(){}
         
         public virtual void OnReact(){}
+
+        [JsonIgnore] public Action OnDestroy;
+        [JsonIgnore] public Action OnUpdated;
     }
 
 

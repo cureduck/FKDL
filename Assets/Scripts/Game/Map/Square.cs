@@ -38,8 +38,7 @@ namespace Game
             switch (Data)
             {
                 case EnemySaveData d0:
-                    OnFocus += () => WindowManager.Instance.Display(d0);
-                    OnReact += () => BattleManager.Instance.Fight(this);
+
                     break;
                 case CasinoSaveData d1:
                     break;
@@ -49,6 +48,9 @@ namespace Game
                     break;
             }
 
+            Data.OnDestroy += OnSquareDestroy;
+            Data.OnUpdated += UpdateFace;
+            
             if (GameManager.Instance.NewGame)
             {
                 Data.Init();
@@ -108,37 +110,29 @@ namespace Game
                 case ShopSaveData d10:
                     SetContent("shop", "");
                     break;
+                case StairsSaveData d11:
+                    SetContent("stairs", d11.Destination);
+                    break;
+                case StartSaveData d12:
+                    SetContent("start", "");
+                    break;
             }
         }
         
-        
 
-        private void OnDestroy()
-        {
-            try
-            {
-                GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares.Remove(Data);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-            }
-        }
-
-        /*
         private void OnSquareDestroy()
         {
             try
             {
                 GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares.Remove(Data);
+                Data = null;
             }
             catch (Exception e)
             {
                 Debug.Log(e);
             }
-            DestroyImmediate(this);
+            DestroyImmediate(gameObject);
         }
-        */
 
 
         #region base
