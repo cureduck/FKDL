@@ -15,9 +15,6 @@ namespace Managers
     {
         public Dictionary<string, Skill> Skills;
         public Dictionary<Rank, LinkedList<Skill>> OrderedSkills;
-        
-        private static string path => Path.Combine(Application.dataPath, "GameData", "Skills", "Skills.csv");
-        
 
         private void Start()
         {
@@ -30,7 +27,7 @@ namespace Managers
             Skills = new Dictionary<string, Skill>();
             OrderedSkills = new Dictionary<Rank, LinkedList<Skill>>();
 
-            var csv = File.ReadAllText(path);
+            var csv = File.ReadAllText(Paths.SkillDataPath);
             
             foreach (var line in CsvReader.ReadFromText(csv))
             {

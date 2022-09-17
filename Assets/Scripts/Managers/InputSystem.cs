@@ -19,21 +19,38 @@ namespace Managers
         
         public Vector2 pos;
 
+        [ShowInInspector] private Vector2 delta;
 
-
+        public float f;
+        
         private void Update()
         {
-            if (Clicked()&&(!EventSystem.current.IsPointerOverGameObject()))
+            Debug.Log(Input.mousePosition);
+            
+            delta =  ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - pos)/2;
+            pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
+            if (LeftClicked())
             {
                 pos = GetPosition();
                 Raycast();
+                return;
             }
+
+            if (BeginDrag())
+            {
+                //Debug.Log(delta);
+                Camera.main.transform.position -= (Vector3)delta;
+            }
+            
         }
 
         
         
 
-        private bool Clicked()
+        private bool LeftClicked()
         {
             /*if (EventSystem.current.IsPointerOverGameObject())
             {
@@ -45,6 +62,12 @@ namespace Managers
             return (Input.GetMouseButtonUp(0)) ;
         }
 
+
+        private bool BeginDrag()
+        {
+            return Input.GetMouseButton(1);
+        }
+        
         
         
 
