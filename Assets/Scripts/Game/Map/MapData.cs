@@ -16,8 +16,18 @@ namespace Game
         
         public virtual void OnReact(){}
         
-        [JsonIgnore] public Action OnDestroy;
-        [JsonIgnore] public Action OnUpdated;
+        public event Action OnDestroy;
+        public event Action OnUpdated;
+
+        protected void Destroy()
+        {
+            OnDestroy?.Invoke();
+        }
+
+        protected void Update()
+        {
+            OnUpdated?.Invoke();
+        }
 
         [JsonIgnore] public int Area => Placement.Height * Placement.Width;
 

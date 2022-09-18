@@ -52,9 +52,9 @@ namespace Game
                 TimesLeft -= 1;
                 if (TimesLeft <= 0)
                 {
-                    OnDestroy?.Invoke();
+                    Destroy();
                 }
-                OnUpdated?.Invoke();
+                Update();
             }
             else
             {

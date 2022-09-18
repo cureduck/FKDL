@@ -17,7 +17,7 @@ namespace Game
             if (GameManager.Instance.PlayerData.Keys[Rank] > 0)
             {
                 GameManager.Instance.PlayerData.Keys[Rank] -= 1;
-                OnDestroy?.Invoke();
+                Destroy();
             }
             else
             {

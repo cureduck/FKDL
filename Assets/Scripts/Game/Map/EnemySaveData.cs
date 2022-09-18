@@ -23,20 +23,22 @@ namespace Game
         {
             base.Init();
             Status = Bp.Status;
-
         }
 
 
         public override void OnFocus()
         {
             WindowManager.Instance.Display(this);
-            
             base.OnFocus();
         }
 
         public override void OnReact()
         {
             BattleManager.Instance.Fight(this);
+            if (Status.CurHp <= 0)
+            {
+                Destroy();
+            }
             base.OnReact();
         }
 

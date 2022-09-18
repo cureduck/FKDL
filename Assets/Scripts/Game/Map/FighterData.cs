@@ -46,11 +46,11 @@ namespace Game
         {
             Status.CurHp -= attack.PAtk - Status.PDef + attack.MAtk - Status.MDef + attack.CAtk;
             
-            OnUpdated?.Invoke();
+            Update();
             
             if ((Status.CurHp <= 0)&&(this is EnemySaveData))
             {
-                OnDestroy?.Invoke();
+                Update();
             }
             
             return new Result
