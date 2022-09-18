@@ -13,9 +13,28 @@ namespace Game
         public int CurLv;
 
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
+
+        [JsonIgnore] public Action<FighterData> OnLvUp;
+        [JsonIgnore] public Action<FighterData> OnUnEquip;
+
+
+        public void LvUp(FighterData fighter, int lv = 1)
+        {
+            CurLv += lv;
+            OnLvUp?.Invoke(fighter);
+        }
+
+        public void UnEquip(FighterData fighter)
+        {
+            OnUnEquip?.Invoke(fighter);
+        }
         
-        
-        
+        [JsonIgnore] public Skill Bp => SkillManager.Instance.Skills[Id];
+        [ShowInInspector] public event Action Activate;
+
+
+        #region 具体技能
+
         [SkillEffect("Furious", Timing.Attack)]
         public Attack Furious(Attack attack, FighterData fighter, FighterData defender)
         {
@@ -23,6 +42,7 @@ namespace Game
             Activate?.Invoke();
             return attack;
         }
+        
 
 
         [SkillEffect("Burst", Timing.Equip)]
@@ -34,11 +54,20 @@ namespace Game
         [SkillEffect("Burst", Timing.LvUp)]
         public void BurstLvUp(FighterData fighter)
         {
-            fighter.Status.PAtk += Bp.Param1 * CurLv;
+            fighter.Status.PAtk += Bp.Param1;
+        }
+
+        [SkillEffect("Burst", Timing.UnEquip)]
+        public void BurstUnEquip(FighterData fighter)
+        {
+            fighter.Status.PAtk -= Bp.Param1 * CurLv;
         }
         
+        #endregion
+        
 
-        [JsonIgnore] public Skill Bp => SkillManager.Instance.Skills[Id];
-        [ShowInInspector] public event Action Activate;
+        
+
+
     }
 }

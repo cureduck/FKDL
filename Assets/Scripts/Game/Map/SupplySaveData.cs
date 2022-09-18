@@ -8,10 +8,10 @@ namespace Game
         public SupplyType Type;
         public Rank Rank;
 
-        public SupplySaveData(SupplyType supplyType, Rank rank) : base()
+        public SupplySaveData(SupplyType supplyType) : base()
         {
             Type = supplyType;
-            Rank = rank;
+            Rank = _rank;
         }
 
         public override void OnReact()

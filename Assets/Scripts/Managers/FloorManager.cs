@@ -22,6 +22,9 @@ namespace Managers
             foreach (var s in Directory.GetDirectories(FloorPath))
             {
                 var files = Directory.GetFiles(s);
+                
+                Debug.Log(files[Random.Range(0, files.Length - 1)]);
+                
                 var f = File.ReadAllText(files[Random.Range(0, files.Length - 1)]);
                 Floors[Path.GetFileName(s)] = JsonConvert.DeserializeObject<Map.Floor>(f, settings: new JsonSerializerSettings
                 {

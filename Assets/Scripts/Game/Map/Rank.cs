@@ -5,6 +5,8 @@
         Normal,
         Uncommon,
         Rare,
-        Ultra
+        Ultra,
+        Prof,
+        God
     }
 }

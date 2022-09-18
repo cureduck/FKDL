@@ -77,7 +77,7 @@ namespace Game
                 {
                     if ((Skills[i].Id == id)&&(sk.MaxLv > Skills[i].CurLv))
                     {
-                        Skills[i].CurLv += 1;
+                        Skills[i].LvUp(this);
                         return true;
                     }
                 }

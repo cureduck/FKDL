@@ -4,6 +4,7 @@ using Csv;
 using Game;
 using Sirenix.OdinInspector;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace Managers
@@ -12,6 +13,8 @@ namespace Managers
     {
         public Dictionary<string, Potion> Potions;
 
+        public Dictionary<Rank, LinkedList<Potion>> OrderedPotions;
+        
         private void Start()
         {
             Load();
@@ -22,7 +25,7 @@ namespace Managers
         {
             Potions = new Dictionary<string, Potion>();
             var csv = File.ReadAllText(Paths.PotionDataPath);
-
+            OrderedPotions = new Dictionary<Rank, LinkedList<Potion>>();
 
             foreach (var line in CsvReader.ReadFromText(csv))
             {
@@ -30,6 +33,10 @@ namespace Managers
                 {
                     var potion = Line2Potion(line);
                     Potions[potion.Id] = potion;
+
+                    if (!OrderedPotions.ContainsKey(potion.Rank))
+                        OrderedPotions[potion.Rank] = new LinkedList<Potion>();
+                    OrderedPotions[potion.Rank].AddLast(potion);
                 }
                 catch (Exception)
                 {
@@ -49,5 +56,18 @@ namespace Managers
                 Param2 = int.Parse(line[3] == ""?line[3]:"0"),
             };
         }
+        
+        
+        public string[] Roll(Rank roll, int count)
+        {
+            var s = new string[count];
+            int[] selectNumArray = Enumerable.Range(0, OrderedPotions[roll].Count).OrderBy(t => Guid.NewGuid()).Take(count).ToArray();
+            for (int i = 0; i < s.Length; i++)
+            {
+                s[i] = OrderedPotions[roll].ToList()[selectNumArray[i]].Id;
+            }
+            return s;
+        }
+        
     }
 }

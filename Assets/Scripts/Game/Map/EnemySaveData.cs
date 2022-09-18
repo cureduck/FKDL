@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Game
 {
@@ -40,6 +41,18 @@ namespace Game
         }
 
 
-        [JsonIgnore] public EnemyBp Bp => EnemyManager.Instance.EnemyBps[Id];
+        [JsonIgnore]
+        public EnemyBp Bp
+        {
+            get
+            {
+                if (!EnemyManager.Instance.EnemyBps.ContainsKey(Id))
+                {
+                    Debug.LogWarning(Id +" not found");
+                }
+                return EnemyManager.Instance.EnemyBps[Id];
+            }
+            
+        }
     }
 }

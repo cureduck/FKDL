@@ -89,7 +89,7 @@ namespace Game
                     SetContent("crystal", "");
                     break;
                 case ObsidianSaveData d8:
-                    SetContent("","");
+                    SetContent("obsidian","");
                     break;
                 case SupplySaveData d9:
                     switch (d9.Type)
@@ -114,7 +114,14 @@ namespace Game
                     SetContent("stairs", d11.Destination);
                     break;
                 case StartSaveData d12:
-                    SetContent("start", "");
+                    SetContent("play", "");
+                    var tmp = transform.position;
+                    tmp.z = -10;
+                    Camera.main.transform.position = tmp;
+                    
+                    break;
+                case TravellerSaveData d13:
+                    SetContent("traveler", "");
                     break;
             }
         }

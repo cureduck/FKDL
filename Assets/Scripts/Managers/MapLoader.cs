@@ -74,13 +74,13 @@ namespace Managers
                         floor.Squares.AddLast(new CasinoSaveData() {Placement = p});
                         break;
                     case "grassland":
-                        floor.Squares.AddLast(new SupplySaveData(SupplyType.Grassland, (Rank)v) {Placement = p});
+                        floor.Squares.AddLast(new SupplySaveData(SupplyType.Grassland) {Placement = p});
                         break;
                     case "spring":
-                        floor.Squares.AddLast(new SupplySaveData(SupplyType.Spring, (Rank)v) {Placement = p});
+                        floor.Squares.AddLast(new SupplySaveData(SupplyType.Spring) {Placement = p});
                         break;
                     case "camp":
-                        floor.Squares.AddLast(new SupplySaveData(SupplyType.Camp, (Rank) v) {Placement = p});
+                        floor.Squares.AddLast(new SupplySaveData(SupplyType.Camp) {Placement = p});
                         break;
                     case "shop":
                         floor.Squares.AddLast(new ShopSaveData() {Placement = p});
@@ -94,7 +94,7 @@ namespace Managers
                     case "crystal":
                         floor.Squares.AddLast(new CrystalSaveData() {Placement = p});
                         break;
-                    case "traveller":
+                    case "traveler":
                         floor.Squares.AddLast(new TravellerSaveData() {Placement = p});
                         break;
                     case "enemy":
@@ -109,11 +109,15 @@ namespace Managers
                     case "stairs":
                         floor.Squares.AddLast(new StairsSaveData(suffix) {Placement = p});
                         break;
-                    case "start":
+                    case "play":
                         floor.Squares.AddLast(new StartSaveData() {Placement = p});
                         break;
+                    case "mountain":
+                        floor.Squares.AddLast(new MountainSaveData() {Placement = p});
+                        break;
                     default:
-                        throw new ArgumentException(prefix);
+                        Debug.Log("Unknown" + prefix);
+                        break;
                 }
 
             }

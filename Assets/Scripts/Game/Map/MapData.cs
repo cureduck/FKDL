@@ -15,9 +15,25 @@ namespace Game
         public virtual void OnFocus(){}
         
         public virtual void OnReact(){}
-
+        
         [JsonIgnore] public Action OnDestroy;
         [JsonIgnore] public Action OnUpdated;
+
+        [JsonIgnore] public int Area => Placement.Height * Placement.Width;
+
+        [JsonIgnore]
+        protected Rank _rank
+        {
+            get
+            {
+                if (Area <= 4)
+                {
+                    return Rank.Normal;
+                }
+
+                return Area>=16 ? Rank.Rare : Rank.Uncommon;
+            }
+        }
     }
 
 
@@ -28,4 +44,5 @@ namespace Game
         public int Width;
         public int Height;
     }
+    
 }

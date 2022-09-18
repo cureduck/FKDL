@@ -83,8 +83,12 @@ namespace Game
                         f2.Invoke((FighterData) this);
                         break;
                     case Timing.UnEquip:
+                        var f3 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), skill);
+                        skill.OnUnEquip = f3;
                         break;
                     case Timing.LvUp:
+                        var f4 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), skill);
+                        skill.OnLvUp = f4;
                         break;
                     case Timing.Kill:
                         break;

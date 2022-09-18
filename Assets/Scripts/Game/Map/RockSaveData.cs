@@ -11,7 +11,7 @@ namespace Game
         {
             base.Init();
             var c = Placement.Height * Placement.Width;
-            Cost = Random.Range((int) c / 2, (int) c);
+            Cost = Random.Range((int) c , (int) 2*c);
         }
 
         public override void OnReact()

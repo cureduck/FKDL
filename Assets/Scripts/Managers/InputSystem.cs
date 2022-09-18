@@ -20,15 +20,13 @@ namespace Managers
         public Vector2 pos;
 
         [ShowInInspector] private Vector2 delta;
-
-        public float f;
         
         private void Update()
         {
-            Debug.Log(Input.mousePosition);
             
-            delta =  ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - pos)/2;
-            pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Scroll();
+            
+
             
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
@@ -41,7 +39,12 @@ namespace Managers
 
             if (BeginDrag())
             {
-                //Debug.Log(delta);
+                delta =  ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - pos + delta);
+                if (Input.GetMouseButtonDown(1))
+                {
+                    delta = Vector2.zero;
+                }
+                pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Camera.main.transform.position -= (Vector3)delta;
             }
             
@@ -94,6 +97,15 @@ namespace Managers
                     t.OnReact();
                 }
             }
+        }
+
+        private void Scroll()
+        {
+            var orthographicSize = Camera.main.orthographicSize;
+            orthographicSize -=  Input.mouseScrollDelta.y;
+            orthographicSize = orthographicSize > 10 ? 10 : orthographicSize;
+            orthographicSize = orthographicSize <3 ? 3 : orthographicSize;
+            Camera.main.orthographicSize = orthographicSize;
         }
     }
 }
