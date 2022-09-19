@@ -19,7 +19,13 @@ namespace UI
         
         private void Start()
         {
-            
+            //UpdateData();
+            //_p.OnUpdated += UpdateData;
+        }
+
+        private void Update()
+        {
+            UpdateData();
         }
 
         private void UpdateData()

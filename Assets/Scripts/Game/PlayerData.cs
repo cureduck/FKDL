@@ -51,6 +51,7 @@ namespace Game
                     {
                         Potions[i].Id = id;
                         Potions[i].Count = 1;
+                        Updated();
                         return true;
                     }
                 }
@@ -60,6 +61,7 @@ namespace Game
                     if ((Potions[i].Id == id))
                     {
                         Potions[i].Count += 1;
+                        Updated();
                         return true;
                     }
                 }
@@ -78,6 +80,7 @@ namespace Game
                     if ((Skills[i].Id == id)&&(sk.MaxLv > Skills[i].CurLv))
                     {
                         Skills[i].LvUp(this);
+                        Updated();
                         return true;
                     }
                 }
@@ -89,6 +92,7 @@ namespace Game
                         Skills[i].Id = id;
                         Skills[i].CurLv = 1;
                         OnEquip(Skills[i]);
+                        Updated();
                         return true;
                     }
                 }

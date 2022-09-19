@@ -10,6 +10,6 @@ namespace Game
         public string Id;
         public BattleStatus Status;
 
-        public string[] Skills;
+        public SkillData[] Skills;
     }
 }

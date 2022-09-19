@@ -52,9 +52,9 @@ namespace Game
                 TimesLeft -= 1;
                 if (TimesLeft <= 0)
                 {
-                    Destroy();
+                    Destroyed();
                 }
-                Update();
+                Updated();
             }
             else
             {

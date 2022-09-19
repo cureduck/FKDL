@@ -21,7 +21,7 @@ namespace Game
             if (GameManager.Instance.PlayerData.PlayerStatus.CurSp >= Cost)
             {
                 GameManager.Instance.PlayerData.PlayerStatus.CurSp -= Cost;
-                Destroy();
+                Destroyed();
             }
             else
             {

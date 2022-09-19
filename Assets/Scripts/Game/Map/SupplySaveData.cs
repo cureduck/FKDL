@@ -51,7 +51,7 @@ namespace Game
                     throw new ArgumentOutOfRangeException();
             }
             
-            Destroy();
+            Destroyed();
         }
     }
     public enum SupplyType

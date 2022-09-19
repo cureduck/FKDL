@@ -41,5 +41,10 @@ namespace Game
         {
             return Load<Map>(path);
         }
+
+        ~Map()
+        {
+            Debug.Log("!!!");
+        }
     }
 }

@@ -55,6 +55,10 @@ namespace Game
             {
                 Data.Init();
             }
+            else
+            {
+                Data.Load();
+            }
             
             UpdateFace();
         }

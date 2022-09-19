@@ -35,7 +35,7 @@ namespace Game
         {
             base.OnReact();
             WindowManager.Instance.OffersWindow.Load(Offers);
-            Destroy();
+            Destroyed();
         }
     }
 }

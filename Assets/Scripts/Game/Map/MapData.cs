@@ -10,7 +10,16 @@ namespace Game
     {
         public Placement Placement;
 
+        
+        /// <summary>
+        /// 新游戏时调用
+        /// </summary>
         public virtual void Init(){}
+        
+        /// <summary>
+        /// 加载游戏时调用
+        /// </summary>
+        public virtual void Load(){}
         
         public virtual void OnFocus(){}
         
@@ -19,12 +28,12 @@ namespace Game
         public event Action OnDestroy;
         public event Action OnUpdated;
 
-        protected void Destroy()
+        protected void Destroyed()
         {
             OnDestroy?.Invoke();
         }
 
-        protected void Update()
+        protected void Updated()
         {
             OnUpdated?.Invoke();
         }

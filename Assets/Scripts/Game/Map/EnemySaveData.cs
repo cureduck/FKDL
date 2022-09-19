@@ -14,15 +14,36 @@ namespace Game
         public EnemySaveData(string id) : base()
         {
             Id = id;
+
+            /*
             Status = Bp.Status;
             Skills = new SkillData[Bp.Skills.Length];
-            //Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
+            Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
+            */
+            
         }
         
         public override void Init()
         {
             base.Init();
             Status = Bp.Status;
+            
+            Skills = new SkillData[Bp.Skills.Length];
+            Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
+            foreach (var sk in Skills)
+            {
+                OnEquip(sk);
+            }
+        }
+
+
+        public override void Load()
+        {
+            base.Load();
+            foreach (var sk in Skills)
+            {
+                OnLoad(sk);
+            }
         }
 
 
@@ -37,7 +58,7 @@ namespace Game
             BattleManager.Instance.Fight(this);
             if (Status.CurHp <= 0)
             {
-                Destroy();
+                Destroyed();
             }
             base.OnReact();
         }

@@ -15,7 +15,7 @@ namespace Game
         {
             base.OnReact();
             GameManager.Instance.PlayerData.Keys[Rank] += 1;
-            Destroy();
+            Destroyed();
         }
     }
 }

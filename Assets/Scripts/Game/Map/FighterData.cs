@@ -46,11 +46,11 @@ namespace Game
         {
             Status.CurHp -= attack.PAtk - Status.PDef + attack.MAtk - Status.MDef + attack.CAtk;
             
-            Update();
+            Updated();
             
             if ((Status.CurHp <= 0)&&(this is EnemySaveData))
             {
-                Update();
+                Updated();
             }
             
             return new Result
@@ -60,44 +60,95 @@ namespace Game
                 CAtk = attack.CAtk
             };
         }
+
+
+        protected void LoadSkill(SkillData sk)
+        {
+            if (GameManager.Instance.NewGame)
+            {
+                OnEquip(sk);
+            }
+            else
+            {
+                OnLoad(sk);
+            }
+        }
         
         
-        public void OnEquip(SkillData skill)
+        protected void OnEquip(SkillData sk)
         {
             foreach (var pi in typeof(SkillData).GetMethods())
             {
                 var msg = pi.GetCustomAttribute<SkillEffectAttribute>();
-                if ((msg == null)||(msg.id != skill.Id)) continue;
+                if ((msg == null)||(msg.id != sk.Id)) continue;
 
                 switch (msg.timing)
                 {
                     case Timing.Attack:
                         var f = (Func<Attack, FighterData, FighterData, Attack>) 
-                            pi.CreateDelegate(typeof(Func<Attack, FighterData, FighterData, Attack>), skill);
+                            pi.CreateDelegate(typeof(Func<Attack, FighterData, FighterData, Attack>), sk);
                         AttackModifiers.AddLast(f);
                         break;
                     case Timing.Settle:
                         break;
                     case Timing.Equip:
-                        var f2 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), skill);
+                        var f2 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
                         f2.Invoke((FighterData) this);
                         break;
                     case Timing.UnEquip:
-                        var f3 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), skill);
-                        skill.OnUnEquip = f3;
+                        var f3 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
+                        sk.OnUnEquip = f3;
                         break;
                     case Timing.LvUp:
-                        var f4 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), skill);
-                        skill.OnLvUp = f4;
+                        var f4 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
+                        sk.OnLvUp = f4;
                         break;
                     case Timing.Kill:
                         break;
                     case Timing.Heal:
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        break;
                 }
             }
+            
+            Updated();
+        }
+        
+        
+        protected void OnLoad(SkillData sk)
+        {
+            foreach (var pi in typeof(SkillData).GetMethods())
+            {
+                var msg = pi.GetCustomAttribute<SkillEffectAttribute>();
+                if ((msg == null)||(msg.id != sk.Id)) continue;
+
+                switch (msg.timing)
+                {
+                    case Timing.Attack:
+                        var f = (Func<Attack, FighterData, FighterData, Attack>) 
+                            pi.CreateDelegate(typeof(Func<Attack, FighterData, FighterData, Attack>), sk);
+                        AttackModifiers.AddLast(f);
+                        break;
+                    case Timing.Settle:
+                        break;
+                    case Timing.UnEquip:
+                        var f3 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
+                        sk.OnUnEquip = f3;
+                        break;
+                    case Timing.LvUp:
+                        var f4 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
+                        sk.OnLvUp = f4;
+                        break;
+                    case Timing.Kill:
+                        break;
+                    case Timing.Heal:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            Updated();
         }
         
         public void OnUnEquip(SkillData skill)

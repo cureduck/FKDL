@@ -19,7 +19,8 @@ namespace Managers
 
         public Random Random;
         public bool NewGame = false;
-        
+
+        public event Action GameLoaded;
         
         [Button]
         public void LoadFromSave()
@@ -36,6 +37,8 @@ namespace Managers
                 Console.WriteLine(e);
                 throw;
             }
+            GameLoaded?.Invoke();
+            //GC.Collect();
         }
         
         [Button]
@@ -45,6 +48,8 @@ namespace Managers
             PlayerData = PlayerData.LoadFromInit();
             Map = Map.LoadFromInit();
             LoadMap();
+            GameLoaded?.Invoke();
+            //GC.Collect();
         }
         
         [Button]
