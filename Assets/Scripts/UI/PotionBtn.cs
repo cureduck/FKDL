@@ -1,20 +1,18 @@
-﻿using System;
-using Game;
+﻿using Game;
 using I2.Loc;
 using Managers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace UI
 {
-    public class SkillBtn : MonoBehaviour
+    public class PotionBtn : MonoBehaviour
     {
         public int Index;
 
-        public string Id => GameManager.Instance.PlayerData.Skills[Index].Id;
-        public Skill Target => SkillManager.Instance.Lib[Id];
-        public SkillData D => GameManager.Instance.PlayerData.Skills[Index];
+        public string Id => GameManager.Instance.PlayerData.Potions[Index].Id;
+        public Potion Target => PotionManager.Instance.Lib[Id];
+        public PotionData D => GameManager.Instance.PlayerData.Potions[Index];
         
         public Localize IdText;
         public TMP_Text LvText;
@@ -36,14 +34,11 @@ namespace UI
             {
                 IdText.SetTerm("empty");
                 LvText.gameObject.SetActive(false);
-                GetComponent<Button>().interactable = false;
             }
             else
             {
                 LvText.gameObject.SetActive(true);
                 IdText.SetTerm(Id);
-                LvText.text = D.CurLv.ToString();
-                GetComponent<Button>().interactable = Target.Positive;
             }
 
         }

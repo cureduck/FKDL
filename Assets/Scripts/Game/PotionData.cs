@@ -9,5 +9,10 @@ namespace Game
         public int Count;
         
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
+
+        public void OnUse(PlayerData player)
+        {
+            
+        }
     }
 }

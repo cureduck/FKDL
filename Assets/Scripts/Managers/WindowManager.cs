@@ -10,12 +10,13 @@ namespace Managers
     public class WindowManager : Singleton<WindowManager>
     {
         public OfferWindow OffersWindow;
-
+        
+        
         public Localize WarnWindow;
 
         public void Display(EnemySaveData data)
         {
-            
+            EnemyInfoWindow.Instance.Load(data);
         }
         
         

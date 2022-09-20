@@ -6,14 +6,15 @@ using Sirenix.OdinInspector;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Managers
 {
     public class PotionManager : Singleton<PotionManager>
     {
-        public Dictionary<string, Potion> Potions;
+        public Dictionary<string, Potion> Lib;
 
-        public Dictionary<Rank, LinkedList<Potion>> OrderedPotions;
+        public Dictionary<Rank, LinkedList<Potion>> Ordered;
         
         private void Start()
         {
@@ -23,20 +24,20 @@ namespace Managers
 
         private void Load()
         {
-            Potions = new Dictionary<string, Potion>();
+            Lib = new Dictionary<string, Potion>();
             var csv = File.ReadAllText(Paths.PotionDataPath);
-            OrderedPotions = new Dictionary<Rank, LinkedList<Potion>>();
+            Ordered = new Dictionary<Rank, LinkedList<Potion>>();
 
             foreach (var line in CsvReader.ReadFromText(csv))
             {
                 try
                 {
                     var potion = Line2Potion(line);
-                    Potions[potion.Id] = potion;
+                    Lib[potion.Id] = potion;
 
-                    if (!OrderedPotions.ContainsKey(potion.Rank))
-                        OrderedPotions[potion.Rank] = new LinkedList<Potion>();
-                    OrderedPotions[potion.Rank].AddLast(potion);
+                    if (!Ordered.ContainsKey(potion.Rank))
+                        Ordered[potion.Rank] = new LinkedList<Potion>();
+                    Ordered[potion.Rank].AddLast(potion);
                 }
                 catch (Exception)
                 {
@@ -61,10 +62,10 @@ namespace Managers
         public string[] Roll(Rank roll, int count)
         {
             var s = new string[count];
-            int[] selectNumArray = Enumerable.Range(0, OrderedPotions[roll].Count).OrderBy(t => Guid.NewGuid()).Take(count).ToArray();
+            int[] selectNumArray = Enumerable.Range(0, Ordered[roll].Count).OrderBy(t => Guid.NewGuid()).Take(count).ToArray();
             for (int i = 0; i < s.Length; i++)
             {
-                s[i] = OrderedPotions[roll].ToList()[selectNumArray[i]].Id;
+                s[i] = Ordered[roll].ToList()[selectNumArray[i]].Id;
             }
             return s;
         }

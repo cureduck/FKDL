@@ -7,6 +7,7 @@ using Game;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 namespace Game
@@ -43,24 +44,24 @@ namespace Game
 
         private bool TryTakePotion(string id)
         {
-            if (PotionManager.Instance.Potions.TryGetValue(id, out var sk))
+            if (PotionManager.Instance.Lib.TryGetValue(id, out var sk))
             {
+                for (var i = 0; i < Potions.Length; i++)
+                {
+                    if ((Potions[i].Id == id))
+                    {
+                        Potions[i].Count += 1;
+                        Updated();
+                        return true;
+                    }
+                }
+                
                 for (int i = 0; i < Potions.Length; i++)
                 {
                     if (Potions[i].IsEmpty)
                     {
                         Potions[i].Id = id;
                         Potions[i].Count = 1;
-                        Updated();
-                        return true;
-                    }
-                }
-                
-                for (var i = 0; i < Potions.Length; i++)
-                {
-                    if ((Potions[i].Id == id))
-                    {
-                        Potions[i].Count += 1;
                         Updated();
                         return true;
                     }
@@ -73,15 +74,23 @@ namespace Game
         
         private bool TryTakeSkill(string id)
         {
-            if (SkillManager.Instance.Skills.TryGetValue(id, out var sk))
+            if (SkillManager.Instance.Lib.TryGetValue(id, out var sk))
             {
                 for (int i = 0; i < Skills.Length; i++)
                 {
-                    if ((Skills[i].Id == id)&&(sk.MaxLv > Skills[i].CurLv))
+                    if ((Skills[i].Id == id))
                     {
-                        Skills[i].LvUp(this);
-                        Updated();
-                        return true;
+                        if ((sk.MaxLv > Skills[i].CurLv))
+                        {
+                            WindowManager.Instance.Warn("Skill Max!");
+                            return false;
+                        }
+                        else
+                        {
+                            Skills[i].LvUp(this);
+                            Updated();
+                            return true;
+                        }
                     }
                 }
 

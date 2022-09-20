@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Managers;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -7,7 +9,7 @@ namespace Game
 {
     public class Map : SaveData
     {
-        [ShowInInspector] private static string _savePath = Application.persistentDataPath + "/MapData.json";
+        [JsonIgnore] public static string _savePath => Path.Combine(Application.persistentDataPath, "/MapData.json");
 
         public string CurrentFloor;
         
@@ -23,6 +25,7 @@ namespace Game
         public void Save()
         {
             Save(_savePath);
+            var s = $"{_savePath}";
         }
 
         public static Map LoadFromInit()
@@ -34,6 +37,7 @@ namespace Game
         {
             return Load(_savePath);
         }
+        
         
 
         [Button]

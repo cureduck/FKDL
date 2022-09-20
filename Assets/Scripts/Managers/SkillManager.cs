@@ -13,8 +13,8 @@ namespace Managers
 {
     public class SkillManager : Singleton<SkillManager>
     {
-        public Dictionary<string, Skill> Skills;
-        public Dictionary<Rank, LinkedList<Skill>> OrderedSkills;
+        public Dictionary<string, Skill> Lib;
+        public Dictionary<Rank, LinkedList<Skill>> Ordered;
 
         private void Start()
         {
@@ -24,8 +24,8 @@ namespace Managers
 
         private void Load()
         {
-            Skills = new Dictionary<string, Skill>();
-            OrderedSkills = new Dictionary<Rank, LinkedList<Skill>>();
+            Lib = new Dictionary<string, Skill>();
+            Ordered = new Dictionary<Rank, LinkedList<Skill>>();
 
             var csv = File.ReadAllText(Paths.SkillDataPath);
             
@@ -34,10 +34,10 @@ namespace Managers
                 try
                 {
                     var skill = Line2Skill(line);
-                    Skills[skill.Id] = skill;
-                    if (!OrderedSkills.ContainsKey(skill.Rank))
-                        OrderedSkills[skill.Rank] = new LinkedList<Skill>();
-                    OrderedSkills[skill.Rank].AddLast(skill);
+                    Lib[skill.Id] = skill;
+                    if (!Ordered.ContainsKey(skill.Rank))
+                        Ordered[skill.Rank] = new LinkedList<Skill>();
+                    Ordered[skill.Rank].AddLast(skill);
                 }
                 catch (Exception e)
                 {
@@ -52,10 +52,10 @@ namespace Managers
         public string[] Roll(Rank roll, int count)
         {
             var s = new string[count];
-            int[] selectNumArray = Enumerable.Range(0, OrderedSkills[roll].Count).OrderBy(t => Guid.NewGuid()).Take(count).ToArray();
+            int[] selectNumArray = Enumerable.Range(0, Ordered[roll].Count).OrderBy(t => Guid.NewGuid()).Take(count).ToArray();
             for (int i = 0; i < s.Length; i++)
             {
-                s[i] = OrderedSkills[roll].ToList()[selectNumArray[i]].Id;
+                s[i] = Ordered[roll].ToList()[selectNumArray[i]].Id;
             }
             return s;
         }

@@ -11,7 +11,7 @@ namespace Game
     public class FighterData : MapData
     {
         public BattleStatus Status;
-        public SkillData[] Skills;
+        [HideInInspector] public SkillData[] Skills;
 
         
         [JsonIgnore, NonSerialized, ShowInInspector]
@@ -20,13 +20,15 @@ namespace Game
         public LinkedList<Func<Result, FighterData, FighterData,  Result>> SettleModifiers;
         [JsonIgnore, NonSerialized, ShowInInspector]
         public LinkedList<Func<Attack, FighterData, FighterData, Attack>> DefendModifiers;
-
+        [JsonIgnore, NonSerialized, ShowInInspector]
+        public LinkedList<Func<FighterData>> KillModifiers;
 
         public FighterData()
         {
             AttackModifiers = new LinkedList<Func<Attack, FighterData, FighterData, Attack>>();
             SettleModifiers = new LinkedList<Func<Result, FighterData, FighterData, Result>>();
             DefendModifiers = new LinkedList<Func<Attack, FighterData, FighterData, Attack>>();
+            KillModifiers = new LinkedList<Func<FighterData>>();
         }
         
         

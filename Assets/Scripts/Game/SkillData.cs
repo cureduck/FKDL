@@ -11,6 +11,7 @@ namespace Game
     {
         public string Id;
         public int CurLv;
+        public int Local;
 
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
 
@@ -29,7 +30,7 @@ namespace Game
             OnUnEquip?.Invoke(fighter);
         }
         
-        [JsonIgnore] public Skill Bp => SkillManager.Instance.Skills[Id];
+        [JsonIgnore] public Skill Bp => SkillManager.Instance.Lib[Id];
         [ShowInInspector] public event Action Activate;
 
 
