@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Game;
 using I2.Loc;
 using Managers;
@@ -12,13 +13,22 @@ namespace UI
     {
         public int Index;
 
-        public string Id => GameManager.Instance.PlayerData.Skills[Index].Id;
-        public Skill Target => SkillManager.Instance.Lib[Id];
-        public SkillData D => GameManager.Instance.PlayerData.Skills[Index];
+        private string Id => GameManager.Instance.PlayerData.Skills[Index].Id;
+        private Skill Target => SkillManager.Instance.Lib[Id];
+        private SkillData D => GameManager.Instance.PlayerData.Skills[Index];
         
         public Localize IdText;
         public TMP_Text LvText;
+        
+        public enum BtnMode
+        {
+            Cast,
+            Remove,
+            Upgrade,
+        }
 
+        public BtnMode SkillMode;
+        
 
         private void Start()
         {
@@ -45,7 +55,6 @@ namespace UI
                 LvText.text = D.CurLv.ToString();
                 GetComponent<Button>().interactable = Target.Positive;
             }
-
         }
         
         
@@ -53,10 +62,24 @@ namespace UI
         {
             GetComponent<Animation>().Play();
         }
-        
-        private void OnMouseOver()
+
+
+        public void Click(Action<SkillData> OnClick)
         {
-            
+            switch (SkillMode)
+            {
+                case BtnMode.Cast:
+                    break;
+                case BtnMode.Remove:
+                    
+                    break;
+                case BtnMode.Upgrade:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            OnClick?.Invoke(D);
         }
+        
     }
 }

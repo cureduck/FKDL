@@ -12,10 +12,12 @@ namespace Managers
         
         public enum Mode
         {
-            ChooseMode,
-            RemoveSkillMode,
+            SelectPotionMode,
+            SelectSkillMode,
             DragMode
         }
+
+        public Mode InputMode;
         
         public Vector2 pos;
 

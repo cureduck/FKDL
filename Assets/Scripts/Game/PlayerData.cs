@@ -80,7 +80,7 @@ namespace Game
                 {
                     if ((Skills[i].Id == id))
                     {
-                        if ((sk.MaxLv > Skills[i].CurLv))
+                        if (sk.MaxLv <= Skills[i].CurLv)
                         {
                             WindowManager.Instance.Warn("Skill Max!");
                             return false;
@@ -91,6 +91,7 @@ namespace Game
                             Updated();
                             return true;
                         }
+                        
                     }
                 }
 

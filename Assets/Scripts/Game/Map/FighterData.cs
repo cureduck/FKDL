@@ -5,6 +5,7 @@ using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Object = System.Object;
 
 namespace Game
 {
@@ -62,21 +63,9 @@ namespace Game
                 CAtk = attack.CAtk
             };
         }
+        
 
 
-        protected void LoadSkill(SkillData sk)
-        {
-            if (GameManager.Instance.NewGame)
-            {
-                OnEquip(sk);
-            }
-            else
-            {
-                OnLoad(sk);
-            }
-        }
-        
-        
         protected void OnEquip(SkillData sk)
         {
             foreach (var pi in typeof(SkillData).GetMethods())

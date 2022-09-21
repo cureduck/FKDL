@@ -9,7 +9,7 @@ namespace Game
 {
     public class Map : SaveData
     {
-        [JsonIgnore] public static string _savePath => Path.Combine(Application.persistentDataPath, "/MapData.json");
+        [JsonIgnore] public static string _savePath => Application.persistentDataPath+ "/MapData.json";
 
         public string CurrentFloor;
         
