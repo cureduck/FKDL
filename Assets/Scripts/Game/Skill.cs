@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Game
@@ -13,5 +15,7 @@ namespace Game
 
         public int Param1;
         public int Param2;
+
+        [JsonIgnore] public Dictionary<Timing, MethodInfo> Fs;
     }
 }

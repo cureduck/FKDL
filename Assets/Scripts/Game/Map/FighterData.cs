@@ -33,7 +33,7 @@ namespace Game
         }
         
         
-        public Attack ForgeAtk()
+        private Attack InitAttack()
         {
             return new Attack
             {
@@ -45,8 +45,18 @@ namespace Game
         }
 
 
-        public Result Suffer(Attack attack)
+        public Result Suffer(Attack attack, FighterData enemy)
         {
+            
+            foreach (var skill in Skills)
+            {
+                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnDefend)))
+                {
+                    var f = skill.Bp.Fs[Timing.OnDefend];
+                    attack = (Attack) f?.Invoke(skill, new object[]{attack, this, enemy});
+                }
+            }
+            
             Status.CurHp -= attack.PAtk - Status.PDef + attack.MAtk - Status.MDef + attack.CAtk;
             
             Updated();
@@ -63,8 +73,39 @@ namespace Game
                 CAtk = attack.CAtk
             };
         }
+
+
+        public Attack ForgeAttack(FighterData target)
+        {
+            var atk = InitAttack();
+            foreach (var skill in Skills)
+            {
+                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnAttack)))
+                {
+                    var f = skill.Bp.Fs[Timing.OnAttack];
+                    atk = (Attack) f?.Invoke(skill, new object[]{atk, this, target});
+                }
+            }
+
+            return atk;
+        }
+        
         
 
+        public Result Settle(Result r, FighterData enemy)
+        {
+            foreach (var skill in Skills)
+            {
+                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnSettle)))
+                {
+                    var f = skill.Bp.Fs[Timing.OnSettle];
+                    r = (Result) f?.Invoke(skill, new object[]{r, this, enemy});
+                }
+            }
+
+            return r;
+        }
+        
 
         protected void OnEquip(SkillData sk)
         {
@@ -75,28 +116,28 @@ namespace Game
 
                 switch (msg.timing)
                 {
-                    case Timing.Attack:
+                    case Timing.OnAttack:
                         var f = (Func<Attack, FighterData, FighterData, Attack>) 
                             pi.CreateDelegate(typeof(Func<Attack, FighterData, FighterData, Attack>), sk);
                         AttackModifiers.AddLast(f);
                         break;
-                    case Timing.Settle:
+                    case Timing.OnSettle:
                         break;
-                    case Timing.Equip:
+                    case Timing.OnEquip:
                         var f2 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
                         f2.Invoke((FighterData) this);
                         break;
-                    case Timing.UnEquip:
+                    case Timing.OnUnEquip:
                         var f3 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
                         sk.OnUnEquip = f3;
                         break;
-                    case Timing.LvUp:
+                    case Timing.OnLvUp:
                         var f4 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
                         sk.OnLvUp = f4;
                         break;
-                    case Timing.Kill:
+                    case Timing.OnKill:
                         break;
-                    case Timing.Heal:
+                    case Timing.OnHeal:
                         break;
                     default:
                         break;
@@ -116,24 +157,24 @@ namespace Game
 
                 switch (msg.timing)
                 {
-                    case Timing.Attack:
+                    case Timing.OnAttack:
                         var f = (Func<Attack, FighterData, FighterData, Attack>) 
                             pi.CreateDelegate(typeof(Func<Attack, FighterData, FighterData, Attack>), sk);
                         AttackModifiers.AddLast(f);
                         break;
-                    case Timing.Settle:
+                    case Timing.OnSettle:
                         break;
-                    case Timing.UnEquip:
+                    case Timing.OnUnEquip:
                         var f3 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
                         sk.OnUnEquip = f3;
                         break;
-                    case Timing.LvUp:
+                    case Timing.OnLvUp:
                         var f4 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
                         sk.OnLvUp = f4;
                         break;
-                    case Timing.Kill:
+                    case Timing.OnKill:
                         break;
-                    case Timing.Heal:
+                    case Timing.OnHeal:
                         break;
                     default:
                         break;
@@ -151,12 +192,12 @@ namespace Game
 
                 switch (msg.timing)
                 {
-                    case Timing.Attack:
+                    case Timing.OnAttack:
                         var f = (Func<Attack, FighterData, FighterData, Attack>)
                             pi.CreateDelegate(typeof(Func<Attack, FighterData, FighterData, Attack>), this);
                         AttackModifiers.Remove(f);
                         break;
-                    case Timing.Settle:
+                    case Timing.OnSettle:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

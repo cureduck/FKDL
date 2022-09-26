@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -32,33 +33,33 @@ namespace Game
         
         [JsonIgnore] public Skill Bp => SkillManager.Instance.Lib[Id];
         [ShowInInspector] public event Action Activate;
-
-
+        
+        
+        
         #region 具体技能
 
-        [SkillEffect("Furious", Timing.Attack)]
+        [SkillEffect("furious", Timing.OnAttack)]
         public Attack Furious(Attack attack, FighterData fighter, FighterData defender)
         {
             fighter.Status.CurHp += 1;
             Activate?.Invoke();
             return attack;
         }
-        
 
 
-        [SkillEffect("Burst", Timing.Equip)]
+        [SkillEffect("burst", Timing.OnEquip)]
         public void BurstEquip(FighterData fighter)
         {
             fighter.Status.PAtk += Bp.Param1 * CurLv;
         }
         
-        [SkillEffect("Burst", Timing.LvUp)]
+        [SkillEffect("burst", Timing.OnLvUp)]
         public void BurstLvUp(FighterData fighter)
         {
             fighter.Status.PAtk += Bp.Param1;
         }
 
-        [SkillEffect("Burst", Timing.UnEquip)]
+        [SkillEffect("burst", Timing.OnUnEquip)]
         public void BurstUnEquip(FighterData fighter)
         {
             fighter.Status.PAtk -= Bp.Param1 * CurLv;

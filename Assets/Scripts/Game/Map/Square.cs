@@ -69,7 +69,7 @@ namespace Game
             switch (Data)
             {
                 case EnemySaveData d0:
-                    SetContent(d0.Id, d0.Status.CurHp +"/" + d0.Bp.Status.MaxHp, EnemyColor);
+                    SetContent(d0.Id.ToLower(), d0.Status.CurHp +"/" + d0.Bp.Status.MaxHp, EnemyColor);
                     break;
                 case CasinoSaveData d1:
                     SetContent("casino", d1.TimesLeft + "/" + CasinoSaveData.MaxTimes, EnemyColor);

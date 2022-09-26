@@ -4,7 +4,7 @@ namespace Game
 {
     public class SkillEffectAttribute : Attribute
     {
-        public SkillEffectAttribute(string id, Timing timing)
+        public SkillEffectAttribute(string id, Timing timing, int priority = 1)
         {
             this.id = id;
             this.timing = timing;
@@ -12,17 +12,27 @@ namespace Game
 
         public string id;
         public Timing timing;
+        public int priority;
     }
     
     
     public enum Timing
     {
-        Attack,
-        Settle,
-        Equip,
-        UnEquip,
-        LvUp,
-        Kill,
-        Heal
+        OnAttack,
+        OnDefend,
+        OnSettle,
+        OnEquip,
+        OnUnEquip,
+        OnLvUp,
+        OnKill,
+        OnHeal,
+        OnStrengthen,
+        OnUsePotion,
+        OnGainSkill,
+        OnGetKey,
+        OnUseKey,
+        OnCast,
+        OnMarch,
+        OnGain
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Game;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Managers
@@ -8,27 +9,14 @@ namespace Managers
         private PlayerData P => GameManager.Instance.PlayerData;
         public void Fight(EnemySaveData enemy)
         {
-            var pa = P.ForgeAtk();
+            var pa = P.ForgeAttack(enemy);
             
-            //玩家攻击阶段
-            foreach (var func in P.AttackModifiers)
-            {
-                pa = func.Invoke(pa, P, enemy);
-            }
-            
+
             //怪物防御阶段
-            foreach (var func in enemy.DefendModifiers)
-            {
-                pa = func.Invoke(pa, enemy, P);
-            }
-            
-            var result = enemy.Suffer(pa);
+            var result = enemy.Suffer(pa, P);
 
             //攻击后结算阶段
-            foreach (var func in P.SettleModifiers)
-            {
-                result = func.Invoke(result, P, enemy);
-            }
+            var r = P.Settle(result, enemy);
 
             
             //死亡判断
@@ -39,25 +27,11 @@ namespace Managers
             else
             {
 
-                var pa2 = enemy.ForgeAtk();
-                //怪物攻击阶段
-                foreach (var func in enemy.AttackModifiers)
-                {
-                    pa2 = func.Invoke(pa2, enemy, P);
-                }
+                var pa2 = enemy.ForgeAttack(P);
                 
-                foreach (var func in P.DefendModifiers)
-                {
-                    pa2 = func.Invoke(pa2, P, enemy);
-                }
-                
-                var result2 = P.Suffer(pa2);
-            
-                //攻击后结算阶段
-                foreach (var func in enemy.SettleModifiers)
-                {
-                    result2 = func.Invoke(result2, enemy, P);
-                }
+                var result2 = P.Suffer(pa2, enemy);
+                var r2 = enemy.Settle(result2, P);
+
             }
             
             

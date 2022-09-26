@@ -16,7 +16,7 @@ namespace Managers
             var bps = Resources.LoadAll<EnemyBp>("EnemyBp");
             foreach (var bp in bps)
             {
-                EnemyBps[bp.Id] = bp;
+                EnemyBps[bp.Id.ToLower()] = bp;
             }
         }
     }

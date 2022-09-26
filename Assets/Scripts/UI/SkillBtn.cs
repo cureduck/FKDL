@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Game;
 using I2.Loc;
 using Managers;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -58,9 +59,10 @@ namespace UI
         }
         
         
+        [Button]
         private void Activate()
         {
-            GetComponent<Animation>().Play();
+            GetComponent<Animator>().SetTrigger("activate");
         }
 
 
