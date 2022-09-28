@@ -22,6 +22,20 @@ namespace Game
         public PlayerStatus PlayerStatus;
 
         public Dictionary<Rank, int> Keys;
+
+
+
+        public void OnGain(int gold)
+        {
+            foreach (var skill in Skills)
+            {
+                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnStrengthen)))
+                {
+                    var f = skill.Bp.Fs[Timing.OnStrengthen];
+                    //modify = (int) f?.Invoke(skill, new object[]{gold, this});
+                }
+            }
+        }
         
         
         

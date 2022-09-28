@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using Cysharp.Threading.Tasks;
 using Game;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -22,6 +23,32 @@ namespace Managers
         public bool NewGame = false;
 
         public event Action GameLoaded;
+
+
+        public void RollForSkill(int rank)
+        {
+            RollForSkill((Rank)rank);
+        }
+        
+        
+        
+
+        public void RollForSkill(Rank rank)
+        {
+            var offers = new Offer[3];
+            var skills = SkillManager.Instance.Roll(rank, 3);
+            for (int i = 0; i < 3; i++)
+            {
+                offers[i] = new Offer()
+                {
+                    Id = skills[i],
+                    Kind = Offer.OfferKind.Skill
+                };
+            }
+            WindowManager.Instance.OffersWindow.Load(offers);
+        }
+        
+        
         
         [Button]
         public void LoadFromSave()

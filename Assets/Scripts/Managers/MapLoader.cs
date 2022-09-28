@@ -14,7 +14,7 @@ namespace Managers
     {
 
         [Button]
-        void Load(int v)
+        void Load()
         {
             var path = "Assets/Maps/test.xlsx";
 

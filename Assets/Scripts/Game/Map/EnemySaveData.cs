@@ -31,6 +31,12 @@ namespace Game
             
             Skills = new SkillData[Bp.Skills.Length];
             Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
+            Buffs = new List<BuffData>();
+            foreach (var buff in Bp.Buffs)
+            {
+                Buffs.Add(buff);
+            }
+            
             foreach (var sk in Skills)
             {
                 OnEquip(sk);

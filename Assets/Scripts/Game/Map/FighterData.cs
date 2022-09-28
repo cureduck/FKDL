@@ -13,26 +13,8 @@ namespace Game
     {
         public BattleStatus Status;
         [HideInInspector] public SkillData[] Skills;
+        [ShowInInspector] public List<BuffData> Buffs;
 
-        
-        [JsonIgnore, NonSerialized, ShowInInspector]
-        public LinkedList<Func<Attack, FighterData, FighterData, Attack>> AttackModifiers;
-        [JsonIgnore, NonSerialized, ShowInInspector]
-        public LinkedList<Func<Result, FighterData, FighterData,  Result>> SettleModifiers;
-        [JsonIgnore, NonSerialized, ShowInInspector]
-        public LinkedList<Func<Attack, FighterData, FighterData, Attack>> DefendModifiers;
-        [JsonIgnore, NonSerialized, ShowInInspector]
-        public LinkedList<Func<FighterData>> KillModifiers;
-
-        public FighterData()
-        {
-            AttackModifiers = new LinkedList<Func<Attack, FighterData, FighterData, Attack>>();
-            SettleModifiers = new LinkedList<Func<Result, FighterData, FighterData, Result>>();
-            DefendModifiers = new LinkedList<Func<Attack, FighterData, FighterData, Attack>>();
-            KillModifiers = new LinkedList<Func<FighterData>>();
-        }
-        
-        
         private Attack InitAttack()
         {
             return new Attack
@@ -78,20 +60,14 @@ namespace Game
         public Attack ForgeAttack(FighterData target)
         {
             var atk = InitAttack();
-            foreach (var skill in Skills)
-            {
-                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnAttack)))
-                {
-                    var f = skill.Bp.Fs[Timing.OnAttack];
-                    atk = (Attack) f?.Invoke(skill, new object[]{atk, this, target});
-                }
-            }
+
+            atk = CheckChain<Attack>(Timing.OnAttack, new object[] {atk, this, target});
 
             return atk;
         }
         
         
-
+        
         public Result Settle(Result r, FighterData enemy)
         {
             foreach (var skill in Skills)
@@ -111,33 +87,14 @@ namespace Game
         {
             foreach (var pi in typeof(SkillData).GetMethods())
             {
-                var msg = pi.GetCustomAttribute<SkillEffectAttribute>();
+                var msg = pi.GetCustomAttribute<EffectAttribute>();
                 if ((msg == null)||(msg.id != sk.Id)) continue;
 
                 switch (msg.timing)
                 {
-                    case Timing.OnAttack:
-                        var f = (Func<Attack, FighterData, FighterData, Attack>) 
-                            pi.CreateDelegate(typeof(Func<Attack, FighterData, FighterData, Attack>), sk);
-                        AttackModifiers.AddLast(f);
-                        break;
-                    case Timing.OnSettle:
-                        break;
                     case Timing.OnEquip:
                         var f2 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
                         f2.Invoke((FighterData) this);
-                        break;
-                    case Timing.OnUnEquip:
-                        var f3 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
-                        sk.OnUnEquip = f3;
-                        break;
-                    case Timing.OnLvUp:
-                        var f4 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
-                        sk.OnLvUp = f4;
-                        break;
-                    case Timing.OnKill:
-                        break;
-                    case Timing.OnHeal:
                         break;
                     default:
                         break;
@@ -152,57 +109,102 @@ namespace Game
         {
             foreach (var pi in typeof(SkillData).GetMethods())
             {
-                var msg = pi.GetCustomAttribute<SkillEffectAttribute>();
+                var msg = pi.GetCustomAttribute<EffectAttribute>();
                 if ((msg == null)||(msg.id != sk.Id)) continue;
-
-                switch (msg.timing)
-                {
-                    case Timing.OnAttack:
-                        var f = (Func<Attack, FighterData, FighterData, Attack>) 
-                            pi.CreateDelegate(typeof(Func<Attack, FighterData, FighterData, Attack>), sk);
-                        AttackModifiers.AddLast(f);
-                        break;
-                    case Timing.OnSettle:
-                        break;
-                    case Timing.OnUnEquip:
-                        var f3 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
-                        sk.OnUnEquip = f3;
-                        break;
-                    case Timing.OnLvUp:
-                        var f4 = (Action<FighterData>) pi.CreateDelegate(typeof(Action<FighterData>), sk);
-                        sk.OnLvUp = f4;
-                        break;
-                    case Timing.OnKill:
-                        break;
-                    case Timing.OnHeal:
-                        break;
-                    default:
-                        break;
-                }
             }
             Updated();
         }
         
         public void OnUnEquip(SkillData skill)
         {
-            foreach (var pi in typeof(SkillData).GetMethods())
-            {
-                var msg = pi.GetCustomAttribute<SkillEffectAttribute>();
-                if ((msg == null)||(msg.id != skill.Id)) continue;
+        }
+        
+        
+        [Button]
+        public void Strengthen(BattleStatus modify)
+        {
+            modify = CheckChain<BattleStatus>(Timing.OnStrengthen, new object[] {modify, this});
+            this.Status += modify;
+            Updated();
+        }
+        
 
-                switch (msg.timing)
+        [Button]
+        public void OnRecover(BattleStatus modify, HealType healType = HealType.Heal)
+        {
+            modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] {modify, healType, this});
+            this.Status += modify;
+            Updated();
+        }
+        
+        
+        /// <summary>
+        /// 方法参数查看触发时机注释，必须匹配
+        /// </summary>
+        /// <param name="timing">触发时机</param>
+        /// <param name="param">方法参数</param>
+        /// <typeparam name="T">返回值类型</typeparam>
+        /// <returns></returns>
+        protected T CheckChain<T>(Timing timing, object[] param) where T : struct
+        {
+            var tmp = new List<IEffectContainer>();
+            
+            foreach (var skill in Skills)
+            {
+                if (!skill.IsEmpty &&(skill.MayAffect(timing, out _)))
                 {
-                    case Timing.OnAttack:
-                        var f = (Func<Attack, FighterData, FighterData, Attack>)
-                            pi.CreateDelegate(typeof(Func<Attack, FighterData, FighterData, Attack>), this);
-                        AttackModifiers.Remove(f);
-                        break;
-                    case Timing.OnSettle:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    tmp.Add(skill);
                 }
             }
+
+            foreach (var buff in Buffs)
+            {
+                if (buff.MayAffect(timing, out _))
+                {
+                    tmp.Add(buff);
+                }
+            }
+            
+            
+            
+            tmp.Sort(
+                (x, y) =>
+                {
+                    x.MayAffect(timing, out var xx);
+                    y.MayAffect(timing, out var yy);
+                    return xx - yy;
+                });
+
+            var origin = (T) param[0];
+            foreach (var sk in tmp)
+            {
+                origin = sk.Affect<T>(timing, param);
+            }
+            return origin;
         }
+
+
+        public void Apply(BuffData buff)
+        {
+            if (buff.Positive)
+            {
+                buff = CheckChain<BuffData>(Timing.OnBuff, new object[] {buff, this });
+            }
+            else
+            {
+                buff = CheckChain<BuffData>(Timing.OnDeBuff, new object[] {buff, this });
+            }
+            Buffs.Add(buff);
+        }
+        
+        
+        
+    }
+
+    public enum HealType
+    {
+        Heal,
+        Rest,
+        Blood
     }
 }

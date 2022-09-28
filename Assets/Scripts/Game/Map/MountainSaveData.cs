@@ -32,17 +32,7 @@ namespace Game
                 GameManager.Instance.PlayerData.PlayerStatus.CurSp -= Cost;
                 if (Random.Range(0f, 1f)> .5f)
                 {
-                    var offers = new Offer[3];
-                    var skills = SkillManager.Instance.Roll(Rank, 3);
-                    for (int i = 0; i < 3; i++)
-                    {
-                         offers[i] = new Offer()
-                        {
-                            Id = skills[i],
-                            Kind = Offer.OfferKind.Skill
-                        };
-                    }
-                    WindowManager.Instance.OffersWindow.Load(offers);
+                    GameManager.Instance.RollForSkill(Rank);
                 }
                 else
                 {

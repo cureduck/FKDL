@@ -10,7 +10,7 @@ namespace Game
         
         public static implicit operator MethodWrapper(MethodInfo methodInfo)
         {
-            var attr = methodInfo.GetCustomAttribute<SkillEffectAttribute>();
+            var attr = methodInfo.GetCustomAttribute<EffectAttribute>();
             return new MethodWrapper
             {
                 MethodInfo = methodInfo,

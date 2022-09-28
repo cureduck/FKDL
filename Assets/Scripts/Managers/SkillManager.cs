@@ -86,13 +86,29 @@ namespace Managers
             
             foreach (var method in typeof(SkillData).GetMethods())
             {
-                var attr = method.GetCustomAttribute<SkillEffectAttribute>();
+                var attr = method.GetCustomAttribute<EffectAttribute>();
 
                 if (attr!=null)
                 {
-                    Lib[attr.id].Fs[attr.timing] = method;
-                }
+#if UNITY_EDITOR
+                    if (!Lib.ContainsKey(attr.id.ToLower()))
+                    {
+                        var sk = new Skill
+                        {
+                            Id = attr.id.ToLower(),
+                            Fs = new Dictionary<Timing, MethodInfo>(),
+                            Rank = Rank.Uncommon,
+                            MaxLv = 3,
+                            Param1 = 1,
+                            Positive = false
+                        };
+                        Lib[attr.id.ToLower()] = sk;
+                        Ordered[Rank.Uncommon].AddLast(sk);
+                    }
+#endif
 
+                    Lib[attr.id.ToLower()].Fs[attr.timing] = method;
+                }
             }
         }
     }
