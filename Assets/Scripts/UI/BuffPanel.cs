@@ -1,16 +1,12 @@
-﻿using System.Collections.Generic;
-using Game;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UI
 {
-    public class BuffPanel : MonoBehaviour
+    public class BuffPanel : FighterUIPanel
     {
-        public BuffBtn[] BuffBtns;
-
-        public void LoadSkills(List<BuffData> data)
+        protected override void UpdateData()
         {
-            
+            //throw new System.NotImplementedException();
         }
     }
 }

@@ -2,8 +2,11 @@
 
 namespace UI
 {
-    public class SkillPanel : MonoBehaviour
+    public class SkillPanel : FighterUIPanel
     {
-        
+        protected override void UpdateData()
+        {
+            //throw new System.NotImplementedException();
+        }
     }
 }

@@ -15,18 +15,17 @@ namespace UI
         public TMP_Text MAD;
 
 
-        private PlayerData _p => GameManager.Instance.PlayerData;
+        private PlayerData _p;
         
         private void Start()
         {
-            //UpdateData();
-            //_p.OnUpdated += UpdateData;
+            GameManager.Instance.GameLoaded += () =>
+            {
+                _p = GameManager.Instance.PlayerData;
+                _p.OnUpdated += UpdateData;
+            };
         }
-
-        private void Update()
-        {
-            UpdateData();
-        }
+        
 
         private void UpdateData()
         {

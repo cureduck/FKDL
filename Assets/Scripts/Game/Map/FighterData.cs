@@ -26,6 +26,7 @@ namespace Game
             };
         }
 
+        public bool IsPlayer => this == GameManager.Instance.PlayerData;
 
         public Result Suffer(Attack attack, FighterData enemy)
         {
