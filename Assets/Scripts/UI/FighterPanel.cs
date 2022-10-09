@@ -25,6 +25,11 @@ namespace UI
 
         protected virtual void SetMaster(FighterData master)
         {
+            Debug.Log("set Master " + master.ToString());
+            if (master == _master) return; 
+            
+            Debug.Log(master == _master);
+            
             _master = master;
             
             StatusPanel.SetMaster(master);

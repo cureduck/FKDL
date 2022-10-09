@@ -31,7 +31,7 @@ namespace Game
             
             Skills = new SkillData[Bp.Skills.Length];
             Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
-            Buffs = new List<BuffData>();
+            Buffs = new BuffAgent();
             foreach (var buff in Bp.Buffs)
             {
                 Buffs.Add(buff);
@@ -66,6 +66,7 @@ namespace Game
             if (Status.CurHp <= 0)
             {
                 Destroyed();
+                return;
             }
             base.OnReact();
         }
@@ -83,6 +84,11 @@ namespace Game
                 return EnemyManager.Instance.EnemyBps[Id];
             }
             
+        }
+
+        public override string ToString()
+        {
+            return Id;
         }
     }
 }

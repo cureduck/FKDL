@@ -21,6 +21,7 @@ namespace Game
         public event Action<FighterData> OnUnEquip;
 
 
+        
         public void LvUp(FighterData fighter, int lv = 1)
         {
             CurLv += lv;
@@ -68,7 +69,8 @@ namespace Game
             return (T) Bp.Fs[timing].Invoke(this, param);
         }
         
-        
+        public static SkillData Empty => new SkillData();
+
 
         #region 具体技能
 

@@ -150,8 +150,26 @@ namespace Game
         {
             return Load<PlayerData>(path);
         }
+
+        public override string ToString()
+        {
+            return "player";
+        }
+
+        [Button]
+        public void Add(BuffData data)
+        {
+            Buffs.Add(data);
+        }
+
+        [Button]
+        public void Remove(string id)
+        {
+            var f = Buffs.Find((data => data.Id == id));
+            Buffs.Remove(f);
+        }
         
-        
+
         private static T Load<T>(string path)
         {
             string f = "";

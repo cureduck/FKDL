@@ -12,8 +12,8 @@ namespace Game
     public class FighterData : MapData
     {
         public BattleStatus Status;
-        [HideInInspector] public SkillData[] Skills;
-        [ShowInInspector] public List<BuffData> Buffs;
+        [ShowInInspector] public SkillData[] Skills;
+        [ShowInInspector] public BuffAgent Buffs;
 
         private Attack InitAttack()
         {
@@ -146,7 +146,7 @@ namespace Game
         /// <param name="param">方法参数</param>
         /// <typeparam name="T">返回值类型</typeparam>
         /// <returns></returns>
-        protected T CheckChain<T>(Timing timing, object[] param) where T : struct
+        protected T CheckChain<T>(Timing timing, object[] param)
         {
             var tmp = new List<IEffectContainer>();
             
@@ -197,8 +197,19 @@ namespace Game
             }
             Buffs.Add(buff);
         }
-        
-        
+
+
+        ~FighterData()
+        {
+            if (this is EnemySaveData d)
+            {
+                Debug.Log($"~ {d.Id}");
+            }
+            if (this is PlayerData d2)
+            {
+                Debug.Log($"~ player");
+            }
+        }
         
     }
 

@@ -16,7 +16,6 @@ namespace Managers
 
         public void Display(EnemySaveData data)
         {
-            EnemyInfoWindow.Instance.Load(data);
             EnemyPanel.Instance.Load(data);
         }
         

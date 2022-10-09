@@ -20,7 +20,6 @@ namespace UI
         protected override void SetMaster(FighterData master)
         {
             base.SetMaster(master);
-            master.OnUpdated += () => SetMaster(master);
         }
     }
 }
