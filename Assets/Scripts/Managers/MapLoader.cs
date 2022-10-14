@@ -14,9 +14,9 @@ namespace Managers
     {
 
         [Button]
-        void Load()
+        void Load(string fileName)
         {
-            var path = "Assets/Maps/test.xlsx";
+            var path = $"Assets/Maps/{fileName}.xlsx";
 
             var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
 
@@ -63,7 +63,7 @@ namespace Managers
                 var prefix = ss[0];
                 var suffix = ss.Length > 1 ? ss[1] : "";
 
-                if (int.TryParse(suffix, out var v)) ;
+                if (int.TryParse(suffix, out var v));
 
                 switch (prefix)
                 {
@@ -98,7 +98,7 @@ namespace Managers
                         floor.Squares.AddLast(new TravellerSaveData() {Placement = p});
                         break;
                     case "enemy":
-                        floor.Squares.AddLast(new EnemySaveData(suffix) {Placement = p});
+                        floor.Squares.AddLast(new EnemySaveData(suffix.ToLower()) {Placement = p});
                         break;
                     case "rock":
                         floor.Squares.AddLast(new RockSaveData() {Placement = p});
@@ -115,8 +115,11 @@ namespace Managers
                     case "mountain":
                         floor.Squares.AddLast(new MountainSaveData() {Placement = p});
                         break;
+                    case "gold":
+                        floor.Squares.AddLast(new GoldSaveData(v) {Placement = p});
+                        break;
                     default:
-                        Debug.Log("Unknown" + prefix);
+                        Debug.Log("Unknown " + prefix);
                         break;
                 }
 

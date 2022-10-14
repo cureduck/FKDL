@@ -123,25 +123,23 @@ namespace Game
             }
             return false;
         }
-        
-        
-        private static readonly string _initPath = Path.Combine( Application.streamingAssetsPath, "PlayerData.json");
-        private static readonly string _savePath = Path.Combine( Application.persistentDataPath, "PlayerData.json");
+
+
         
         
         public void Save()
         {
-            Save(_savePath);
+            Save(Paths._savePath);
         }
 
         public static PlayerData LoadFromInit()
         {
-            return Load(_initPath);
+            return Load(Paths._initPath);
         }
 
         public static PlayerData LoadFromSave()
         {
-            return Load(_savePath);
+            return Load(Paths._savePath);
         }
         
         
@@ -156,19 +154,6 @@ namespace Game
             return "player";
         }
 
-        [Button]
-        public void Add(BuffData data)
-        {
-            Buffs.Add(data);
-        }
-
-        [Button]
-        public void Remove(string id)
-        {
-            var f = Buffs.Find((data => data.Id == id));
-            Buffs.Remove(f);
-        }
-        
 
         private static T Load<T>(string path)
         {

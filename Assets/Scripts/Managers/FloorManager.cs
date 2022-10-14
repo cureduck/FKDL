@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Game;
@@ -7,6 +8,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
+using Random = UnityEngine.Random;
 
 namespace Managers
 {
@@ -21,11 +23,13 @@ namespace Managers
 
             foreach (var s in Directory.GetDirectories(FloorPath))
             {
-                var files = Directory.GetFiles(s);
+                var files = Directory.GetFiles(s).ToList().FindAll((s1 => s1.EndsWith(".json"))).ToArray();
+
+                var chosen = Random.Range(0, files.Length - 1);
                 
-                Debug.Log(files[Random.Range(0, files.Length - 1)]);
+                Debug.Log($"Loading {s} {chosen}");
                 
-                var f = File.ReadAllText(files[Random.Range(0, files.Length - 1)]);
+                var f = File.ReadAllText(files[chosen]);
                 Floors[Path.GetFileName(s)] = JsonConvert.DeserializeObject<Map.Floor>(f, settings: new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.All
@@ -37,9 +41,35 @@ namespace Managers
                 CurrentFloor = "1"
             };
         }
+        
+        
+        [Button]
+        public void LoadAllFloors()
+        {
+            foreach (var s in Directory.GetDirectories(FloorPath))
+            {
+                var files = Directory.GetFiles(s).ToList().FindAll((s1 => s1.EndsWith(".json"))).ToArray();
+                
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        var floor = JsonConvert.DeserializeObject<Map.Floor>(File.ReadAllText(file),
+                            settings: new JsonSerializerSettings
+                            {
+                                TypeNameHandling = TypeNameHandling.All
+                            });
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log($"Loading {file} failed");
+                    }
 
-        
-        
+                }
+            }
+        }
+
+
         [Button("Create Floor")]
         public static void CreateFloor(Map.Floor floor)
         {

@@ -6,6 +6,7 @@ using System.Reflection;
 using Csv;
 using Game;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using Random = System.Random;
 
@@ -74,6 +75,7 @@ namespace Managers
                 MaxLv = int.Parse(line[3]),
                 Param1 = int.Parse(line[4] != ""?line[4]:"0"),
                 Param2 = int.Parse(line[5] != ""?line[5]:"0"),
+                Description = line[6]
             };
         }
 

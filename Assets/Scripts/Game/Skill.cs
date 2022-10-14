@@ -13,6 +13,8 @@ namespace Game
         public int MaxLv;
         public Rank Rank;
 
+        public string Description;
+        
         public int Param1;
         public int Param2;
 

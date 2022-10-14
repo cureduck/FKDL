@@ -10,6 +10,7 @@ namespace Game
     {
         public Placement Placement;
 
+        public bool Revealed = false;
         
         /// <summary>
         /// 新游戏时调用
@@ -30,6 +31,7 @@ namespace Game
 
         protected void Destroyed()
         {
+            RevealAround();
             OnDestroy?.Invoke();
         }
 
@@ -53,6 +55,12 @@ namespace Game
                 return Area>=16 ? Rank.Rare : Rank.Uncommon;
             }
         }
+
+        public void RevealAround()
+        {
+            
+        }
+        
     }
 
 

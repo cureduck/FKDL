@@ -201,14 +201,14 @@ namespace Game
 
         ~FighterData()
         {
-            if (this is EnemySaveData d)
+            /*if (this is EnemySaveData d)
             {
                 Debug.Log($"~ {d.Id}");
             }
             if (this is PlayerData d2)
             {
                 Debug.Log($"~ player");
-            }
+            }*/
         }
         
     }

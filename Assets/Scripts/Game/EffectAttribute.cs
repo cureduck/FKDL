@@ -8,6 +8,7 @@ namespace Game
         {
             this.id = id;
             this.timing = timing;
+            this.priority = priority;
         }
 
         public string id;

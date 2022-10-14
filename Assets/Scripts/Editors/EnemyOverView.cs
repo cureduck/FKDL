@@ -20,7 +20,6 @@ namespace Editors
                 .Select(guid => AssetDatabase.LoadAssetAtPath<EnemyBp>(AssetDatabase.GUIDToAssetPath(guid)))
                 .ToArray();
         }
-
 #endif
     }
 }

@@ -11,6 +11,15 @@ namespace Game
         public string Id;
         public BattleStatus Status;
 
+        
+        public int Gold;
+        public int Spirit;
+
+        public string Description;
+
+        public Rank Rank;
+        
+        
         public SkillData[] Skills;
         public List<BuffData> Buffs;
     }
