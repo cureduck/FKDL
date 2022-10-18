@@ -20,33 +20,37 @@ namespace Game
     public enum Timing
     {
         /// <summary>
-        /// attack, attacker, defender
+        /// attack, fighter, enemy
         /// </summary>
         OnAttack,
         /// <summary>
-        /// attack, defender, attacker
+        /// attack, fighter, enemy
         /// </summary>
         OnDefend,
         /// <summary>
-        /// 
+        /// result, fighter, enemy
         /// </summary>
         OnSettle,
         /// <summary>
-        /// fighter
+        /// result, fighter, enemy
+        /// </summary>
+        OnKill,
+        /// <summary>
+        /// Heal Data, fighter, enemy
+        /// </summary>
+        OnRecover,
+        /// <summary>
+        /// skill data, fighter
         /// </summary>
         OnEquip,
         /// <summary>
-        /// fighter
+        /// skill data, fighter
         /// </summary>
         OnUnEquip,
         /// <summary>
-        /// fighter
+        /// skill data, fighter
         /// </summary>
         OnLvUp,
-        /// <summary>
-        /// attack, attacker, defender
-        /// </summary>
-        OnKill,
         /// <summary>
         /// modifier, fighter
         /// </summary>
@@ -79,10 +83,6 @@ namespace Game
         /// coin, fighter
         /// </summary>
         OnGain,
-        /// <summary>
-        /// 
-        /// </summary>
-        OnUse,
         /// <summary>
         /// 获得正面buff buff, fighter
         /// </summary>

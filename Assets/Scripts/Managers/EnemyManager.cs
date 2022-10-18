@@ -16,7 +16,16 @@ namespace Managers
             var bps = Resources.LoadAll<EnemyBp>("EnemyBp");
             foreach (var bp in bps)
             {
-                EnemyBps[bp.Id.ToLower()] = bp;
+                EnemyBps[bp.Id.ToLower().Trim()] = bp;
+                if (bp.Skills == null)
+                {
+                    bp.Skills = new SkillData[0];
+                }
+
+                if (bp.Buffs == null)
+                {
+                    bp.Buffs = new BuffAgent();
+                }
             }
         }
     }

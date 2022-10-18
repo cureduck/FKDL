@@ -34,22 +34,11 @@ namespace Game
         private void Start()
         {
             SetSize(Data.Placement);
-
-            switch (Data)
-            {
-                case EnemySaveData d0:
-
-                    break;
-                case CasinoSaveData d1:
-                    break;
-                case ChestSaveData d2:
-                    break;
-                case MountainSaveData d3:
-                    break;
-            }
+            
 
             Data.OnDestroy += OnSquareDestroy;
             Data.OnUpdated += UpdateFace;
+            //Data.RevealAround += RevealAround;
             
             if (GameManager.Instance.NewGame)
             {
@@ -66,6 +55,12 @@ namespace Game
 
         public void UpdateFace()
         {
+            /*if (!Data.Revealed)
+            {
+                SetContent("null", "");
+                return;
+            }*/
+
             switch (Data)
             {
                 case EnemySaveData d0:
@@ -122,10 +117,12 @@ namespace Game
                     var tmp = transform.position;
                     tmp.z = -10;
                     Camera.main.transform.position = tmp;
-                    
                     break;
                 case TravellerSaveData d13:
                     SetContent("traveler", "");
+                    break;
+                case GoldSaveData d14:
+                    SetContent("gold", d14.Count.ToString());
                     break;
             }
         }
@@ -136,6 +133,7 @@ namespace Game
             try
             {
                 GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares.Remove(Data);
+                
                 Data = null;
             }
             catch (Exception e)
@@ -163,26 +161,30 @@ namespace Game
             Global.localScale = new Vector3(1/(d.Width -Spacing), 1/(d.Height - Spacing));
         }
 
-        public void SetContent(string id, string text, Color color = default)
+        public void SetContent(string id, string text, Color color = default, Sprite icon = null)
         {
             Id.SetTerm(id);
             Bonus.text = text;
-        }
-        
-
-        public event Action OnFocus;
-        public event Action OnReact;
-        
-        public void Focus()
-        {
-            OnFocus?.Invoke();
-            Data.OnFocus();
+            //Sp.color = color;
+            Icon.sprite = icon;
         }
 
-        public void React()
+        [Button]
+        public void RevealAround()
         {
-            OnReact?.Invoke();
+            throw new NotImplementedException();
         }
+
+
+        private void OnDestroy()
+        {
+            if (Data != null)
+            {
+                Data.OnDestroy -= OnSquareDestroy;
+                Data.OnUpdated -= UpdateFace;
+            }
+        }
+
         #endregion
     }
 }

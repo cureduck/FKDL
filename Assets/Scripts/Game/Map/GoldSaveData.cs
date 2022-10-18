@@ -19,7 +19,7 @@ namespace Game
         public override void OnReact()
         {
             base.OnReact();
-            GameManager.Instance.PlayerData.OnGain(Count);
+            GameManager.Instance.PlayerData.Gain(Count);
             Destroyed();
         }
     }

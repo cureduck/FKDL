@@ -49,8 +49,8 @@ namespace UI
             DescriptionPanel.gameObject.SetActive(true);
             if (Lib.ContainsKey(IdText.Term))
             {
-                ParamsManager.SetParameterValue("param1", Lib[IdText.Term].Param1.ToString());
-                ParamsManager.SetParameterValue("param1", Lib[IdText.Term].Param1.ToString());
+                ParamsManager.SetParameterValue("P1", Lib[IdText.Term].Param1.ToString());
+                ParamsManager.SetParameterValue("P2", Lib[IdText.Term].Param2.ToString());
                 Description.SetTerm(Lib[IdText.Term].Description);
             }
         }

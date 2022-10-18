@@ -29,7 +29,7 @@ namespace Game
             base.OnReact();
             if (GameManager.Instance.PlayerData.Gold >= Cost)
             {
-                GameManager.Instance.PlayerData.Gold -= Cost;
+                GameManager.Instance.PlayerData.Gain(-Cost);
                 if (Random.Range(0f, 1f)> .5f)
                 {
                     var offers = new Offer[3];

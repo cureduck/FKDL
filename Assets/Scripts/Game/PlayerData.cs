@@ -16,27 +16,16 @@ namespace Game
     {
         public string Id;
         public PotionData[] Potions;
-
-        public int Gold;
         
         public PlayerStatus PlayerStatus;
 
         public Dictionary<Rank, int> Keys;
 
 
-
-        public void OnGain(int gold)
+        public void March(string destination)
         {
-            foreach (var skill in Skills)
-            {
-                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnStrengthen)))
-                {
-                    var f = skill.Bp.Fs[Timing.OnStrengthen];
-                    //modify = (int) f?.Invoke(skill, new object[]{gold, this});
-                }
-            }
+            
         }
-        
         
         
         public bool TryTake(Offer offer)
@@ -115,7 +104,7 @@ namespace Game
                     {
                         Skills[i].Id = id;
                         Skills[i].CurLv = 1;
-                        OnEquip(Skills[i]);
+                        Equip(Skills[i]);
                         Updated();
                         return true;
                     }

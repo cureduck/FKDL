@@ -15,8 +15,8 @@ namespace Game
 
         public string Description;
         
-        public int Param1;
-        public int Param2;
+        public float Param1;
+        public float Param2;
 
         [JsonIgnore] public Dictionary<Timing, MethodInfo> Fs;
     }

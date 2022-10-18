@@ -95,10 +95,9 @@ namespace Managers
 
         public void LoadFloor(Map.Floor floor)
         {
-
-            while (MapGo.transform.childCount > 0)
+            foreach (Transform trans in MapGo.transform)
             {
-                DestroyImmediate(MapGo.transform.GetChild(0).gameObject);
+                Destroy(trans.gameObject);
             }
             
 

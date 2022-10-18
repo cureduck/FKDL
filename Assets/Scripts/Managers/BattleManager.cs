@@ -20,9 +20,11 @@ namespace Managers
 
             
             //死亡判断
-            if (enemy == null)
+            if (enemy.Status.CurHp <= 0 )
             {
                 //DestroyImmediate(sq.gameObject);
+                P.Kill(r, enemy);
+                P.Gain(enemy.Gold);
             }
             else
             {

@@ -5,8 +5,10 @@ using System.Linq;
 using System.Reflection;
 using Csv;
 using Game;
+using I2.Loc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using UnityEditor.Localization.Editor;
 using UnityEngine;
 using Random = System.Random;
 
@@ -69,14 +71,16 @@ namespace Managers
         {
             return new Skill
             {
-                Id = line[0].ToLower(),
-                Rank = (Rank) int.Parse(line[1]),
-                Positive = line[2] == "TRUE",
-                MaxLv = int.Parse(line[3]),
-                Param1 = int.Parse(line[4] != ""?line[4]:"0"),
-                Param2 = int.Parse(line[5] != ""?line[5]:"0"),
-                Description = line[6]
+                Id = line[1].ToLower(),
+                Rank = (Rank) int.Parse(line[2]),
+                Positive = bool.Parse(line[3]),
+                MaxLv = int.Parse(line[4]),
+                Param1 = float.Parse(line[5] != ""?line[5]:"0"),
+                Param2 = float.Parse(line[6] != ""?line[6]:"0"),
+                Description = line[8]
             };
+            
+            
         }
 
         private void FuncMatch()

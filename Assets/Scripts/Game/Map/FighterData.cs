@@ -12,6 +12,7 @@ namespace Game
     public class FighterData : MapData
     {
         public BattleStatus Status;
+        public int Gold;
         [ShowInInspector] public SkillData[] Skills;
         [ShowInInspector] public BuffAgent Buffs;
 
@@ -20,7 +21,7 @@ namespace Game
             return new Attack
             {
                 PAtk = Status.PAtk,
-                MAtk = Status.MAtk,
+                MAtk = 0,
                 CAtk = 0,
                 Id = null
             };
@@ -39,6 +40,7 @@ namespace Game
                     attack = (Attack) f?.Invoke(skill, new object[]{attack, this, enemy});
                 }
             }
+            
             
             Status.CurHp -= attack.PAtk - Status.PDef + attack.MAtk - Status.MDef + attack.CAtk;
             
@@ -79,14 +81,48 @@ namespace Game
                     r = (Result) f?.Invoke(skill, new object[]{r, this, enemy});
                 }
             }
-
             return r;
         }
+
+
+        public Result Kill(Result r, FighterData enemy)
+        {
+            foreach (var skill in Skills)
+            {
+                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnKill)))
+                {
+                    var f = skill.Bp.Fs[Timing.OnKill];
+                    r = (Result) f?.Invoke(skill, new object[]{r, this, enemy});
+                }
+            }
+            
+            return r;
+        }
+
+
+        public void Gain(int gold)
+        {
+            foreach (var skill in Skills)
+            {
+                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnGain)))
+                {
+                    var f = skill.Bp.Fs[Timing.OnGain];
+                    //modify = (int) f?.Invoke(skill, new object[]{gold, this});
+                }
+            }
+
+            Gold += gold;
+            Updated();
+        }
+        
+        
+        
+        
         
 
-        protected void OnEquip(SkillData sk)
+        protected void Equip(SkillData sk)
         {
-            foreach (var pi in typeof(SkillData).GetMethods())
+            /*foreach (var pi in typeof(SkillData).GetMethods())
             {
                 var msg = pi.GetCustomAttribute<EffectAttribute>();
                 if ((msg == null)||(msg.id != sk.Id)) continue;
@@ -100,13 +136,27 @@ namespace Game
                     default:
                         break;
                 }
+            }*/
+
+            if (sk.Bp.Fs.TryGetValue(Timing.OnEquip, out var f))
+            {
+                f = sk.Bp.Fs[Timing.OnEquip];
+                f.Invoke(sk, new object[] {this});
+                Updated();
             }
             
+            
+        }
+        
+        public void OnUnEquip(SkillData sk)
+        {
+            var f = sk.Bp.Fs[Timing.OnUnEquip];
+            f.Invoke(this, new object[] {sk, this});
             Updated();
         }
         
         
-        protected void OnLoad(SkillData sk)
+        protected void Load(SkillData sk)
         {
             foreach (var pi in typeof(SkillData).GetMethods())
             {
@@ -116,9 +166,6 @@ namespace Game
             Updated();
         }
         
-        public void OnUnEquip(SkillData skill)
-        {
-        }
         
         
         [Button]
@@ -131,12 +178,22 @@ namespace Game
         
 
         [Button]
-        public void OnRecover(BattleStatus modify, HealType healType = HealType.Heal)
+        public void Recover(BattleStatus modify, FighterData enemy)
         {
-            modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] {modify, healType, this});
+            modify = CheckChain<BattleStatus>(Timing.OnRecover, new object[] {modify, this, enemy});
             this.Status += modify;
             Updated();
         }
+
+        public void Heal(BattleStatus modify)
+        {
+            modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] {modify, this});
+            this.Status += modify;
+            Updated();
+        }
+        
+        
+        
         
         
         /// <summary>
@@ -183,7 +240,6 @@ namespace Game
             }
             return origin;
         }
-
 
         public void Apply(BuffData buff)
         {

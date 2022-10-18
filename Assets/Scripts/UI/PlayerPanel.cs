@@ -1,11 +1,13 @@
 ﻿using Game;
 using Managers;
+using TMPro;
 
 namespace UI
 {
     public class PlayerPanel : FighterPanel<PlayerPanel>
     {
         public PotionPanel PotionPanel;
+        public GoldPanel GoldPanel;
         
         private void Start()
         {
@@ -20,6 +22,7 @@ namespace UI
         protected override void SetMaster(FighterData master)
         {
             base.SetMaster(master);
+            GoldPanel.SetMaster(master);
         }
     }
 }

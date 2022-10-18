@@ -93,7 +93,7 @@ namespace Managers
             if (hit.transform != null)
             {
                 var t = hit.transform.GetComponent<Square>().Data;
-                if ( t != null)
+                if ((t != null))
                 {
                     t.OnFocus();
                     t.OnReact();

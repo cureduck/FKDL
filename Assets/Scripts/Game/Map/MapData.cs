@@ -31,7 +31,7 @@ namespace Game
 
         protected void Destroyed()
         {
-            RevealAround();
+            RevealAround?.Invoke();
             OnDestroy?.Invoke();
         }
 
@@ -39,6 +39,8 @@ namespace Game
         {
             OnUpdated?.Invoke();
         }
+        
+        
 
         [JsonIgnore] public int Area => Placement.Height * Placement.Width;
 
@@ -56,11 +58,7 @@ namespace Game
             }
         }
 
-        public void RevealAround()
-        {
-            
-        }
-        
+        public event Action RevealAround;
     }
 
 

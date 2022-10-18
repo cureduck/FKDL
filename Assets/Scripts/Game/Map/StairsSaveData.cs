@@ -16,6 +16,11 @@ namespace Game
             base.OnReact();
             GameManager.Instance.LoadFloor(GameManager.Instance.Map.Floors[Destination]);
             GameManager.Instance.Map.CurrentFloor = Destination;
+
+            if (!Destination.StartsWith("A"))
+            {
+                GameManager.Instance.PlayerData.March(Destination);
+            }
         }
     }
 }

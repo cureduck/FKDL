@@ -15,20 +15,20 @@ namespace Game
         public EnemySaveData(string id) : base()
         {
             Id = id;
-
             /*
             Status = Bp.Status;
             Skills = new SkillData[Bp.Skills.Length];
             Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
             */
-            
+
         }
         
         public override void Init()
         {
             base.Init();
             Status = Bp.Status;
-            
+            Gold = Bp.Gold;
+
             Skills = new SkillData[Bp.Skills.Length];
             Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
             Buffs = new BuffAgent();
@@ -39,7 +39,7 @@ namespace Game
             
             foreach (var sk in Skills)
             {
-                OnEquip(sk);
+                Equip(sk);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Game
             base.Load();
             foreach (var sk in Skills)
             {
-                OnLoad(sk);
+                Load(sk);
             }
         }
 
