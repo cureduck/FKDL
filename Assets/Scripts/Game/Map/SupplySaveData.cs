@@ -42,7 +42,7 @@ namespace Game
                     GameManager.Instance.PlayerData.Status.CurMp += value;
                     break;
                 case SupplyType.Grassland:
-                    GameManager.Instance.PlayerData.Status.CurHp += value;
+                    GameManager.Instance.PlayerData.Heal(new BattleStatus{CurHp = value});
                     break;
                 case SupplyType.Camp:
                     GameManager.Instance.PlayerData.PlayerStatus.CurSp += value;

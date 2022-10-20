@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Managers;
 using Sirenix.OdinInspector;
 
 namespace Game
@@ -11,8 +13,21 @@ namespace Game
 
         public new void Add(BuffData data)
         {
-            base.Add(data);
-            BuffAdded?.Invoke(data);
+            data.Id = data.Id.ToLower();
+            if (BuffManager.Instance.Lib.TryGetValue(data.Id, out _))
+            {
+                var buff = Find((buffData => buffData.Id == data.Id));
+                if (buff == null)
+                {
+                    base.Add(data);
+                    BuffAdded?.Invoke(data);
+                }
+                else
+                {
+                    buff.CurLv += data.CurLv;
+                }
+                
+            }
         }
 
         public new void Remove(BuffData data)
@@ -20,7 +35,23 @@ namespace Game
             base.Remove(data);
             BuffRemoved?.Invoke(data);
         }
-        
+
+
+        public void Check()
+        {
+            var tmp = new LinkedList<BuffData>();
+            foreach (BuffData buff in this.Where(buff => buff.CurLv == 0))
+            {
+                tmp.AddLast(buff);
+            }
+
+            foreach (var buff in tmp)
+            {
+                Remove(buff);
+                BuffRemoved?.Invoke(buff);
+            }
+            
+        }
         
     }
 }

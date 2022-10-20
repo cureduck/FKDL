@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Managers;
+using Newtonsoft.Json;
 using Sirenix.Utilities;
 
 namespace Game
@@ -9,10 +10,6 @@ namespace Game
         public int Count;
         
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
-
-        public void OnUse(PlayerData player)
-        {
-            
-        }
+        public Potion Bp => PotionManager.Instance.Lib[Id];
     }
 }

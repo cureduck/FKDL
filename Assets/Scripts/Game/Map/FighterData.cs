@@ -4,6 +4,7 @@ using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 using Object = System.Object;
 
@@ -31,18 +32,16 @@ namespace Game
 
         public Result Suffer(Attack attack, FighterData enemy)
         {
+            attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
             
-            foreach (var skill in Skills)
+            var result = new Result
             {
-                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnDefend)))
-                {
-                    var f = skill.Bp.Fs[Timing.OnDefend];
-                    attack = (Attack) f?.Invoke(skill, new object[]{attack, this, enemy});
-                }
-            }
-            
-            
-            Status.CurHp -= attack.PAtk - Status.PDef + attack.MAtk - Status.MDef + attack.CAtk;
+                PAtk = math.max(0, attack.PAtk - Status.PDef),
+                MAtk = math.max(0, attack.MAtk - Status.MDef),
+                CAtk = attack.CAtk
+            };
+
+            Status.CurHp -= result.PAtk + result.MAtk + attack.CAtk;
             
             Updated();
             
@@ -51,12 +50,7 @@ namespace Game
                 Updated();
             }
             
-            return new Result
-            {
-                PAtk = attack.PAtk - Status.PDef,
-                MAtk = attack.MAtk - Status.MDef,
-                CAtk = attack.CAtk
-            };
+            return result;
         }
 
 
@@ -70,7 +64,12 @@ namespace Game
         }
         
         
-        
+        /// <summary>
+        /// 进攻时的触发条件
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
         public Result Settle(Result r, FighterData enemy)
         {
             foreach (var skill in Skills)
@@ -81,6 +80,9 @@ namespace Game
                     r = (Result) f?.Invoke(skill, new object[]{r, this, enemy});
                 }
             }
+            
+            CoolDown();
+            Buffs.Check();
             return r;
         }
 
@@ -193,7 +195,15 @@ namespace Game
         }
         
         
+        [Button]
+        public void TakeBuff(BuffData buff)
+        {
+            Buffs.Add(buff);
+        }
         
+        
+        
+        [JsonIgnore] public int LossHp => Status.MaxHp - Status.CurHp;
         
         
         /// <summary>
@@ -241,7 +251,7 @@ namespace Game
             return origin;
         }
 
-        public void Apply(BuffData buff)
+        public void ApplyBuff(BuffData buff)
         {
             if (buff.Positive)
             {
@@ -253,8 +263,38 @@ namespace Game
             }
             Buffs.Add(buff);
         }
+        
+        
+        [Button]
+        public void Cast(int index)
+        {
+            if (Skills[index].Bp.Positive)
+            {
+                Skills[index].Bp.Fs[Timing.OnCast].Invoke(Skills[index], new object[]{this});
+            }
+
+            Skills[index].Local = Skills[index].Bp.Cooldown;
+            Updated();
+        }
 
 
+        public void CoolDown()
+        {
+            for (int i = 0; i < Skills.Length; i++)
+            {
+                if (Skills[i].IsEmpty)
+                {
+                    break;
+                }
+                
+                if ((Skills[i].Bp.Positive)&&(Skills[i].Local > 0))
+                {
+                    Skills[i].Local -= 1;
+                }
+            }
+        }
+        
+        
         ~FighterData()
         {
             /*if (this is EnemySaveData d)

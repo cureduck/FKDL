@@ -26,19 +26,6 @@ namespace Game
         
         public event Action Activate;
 
-
-        #region 具体效果
-
-        [Effect("HpPotion", Timing.OnAttack)]
-        public Attack HpPotion(Attack attack, FighterData f1, FighterData f2)
-        {
-            Debug.Log("buff loaded");
-            Activate?.Invoke();
-            return attack;
-        }
-        
-        #endregion
-
         public bool MayAffect(Timing timing, out int priority)
         {
             if (Bp == null)
@@ -63,5 +50,21 @@ namespace Game
         {
             return (T) Bp.Fs[timing].Invoke(this, param);
         }
+        
+        
+        
+        #region 具体效果
+
+        [Effect("anger", Timing.OnAttack)]
+        public Attack HpPotion(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.PAtk += CurLv;
+            CurLv -= 1;
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        #endregion
+        
     }
 }

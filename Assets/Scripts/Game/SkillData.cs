@@ -4,6 +4,7 @@ using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -140,7 +141,6 @@ namespace Game
                 fighter.Strengthen(new BattleStatus(){PAtk = 1});
                 Activate?.Invoke();
             }
-            Activate?.Invoke();
             return attack;
         }
 
@@ -258,6 +258,49 @@ namespace Game
             return attack;
         }
 
+
+        [Effect("subjugate", Timing.OnDefend)]
+        public Attack Subjugate(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            var diff = fighter.Status.PAtk - attack.PAtk;
+            if (diff > 0)
+            {
+                Activate?.Invoke();
+                attack.PAtk -= (int)(diff * Bp.Param1 * CurLv);
+            }
+
+            return attack;
+        }
+
+        [Effect("well-Laid Plans", Timing.OnHeal)]
+        public BattleStatus WellLaid(BattleStatus modify, FighterData fighter)
+        {
+            var diff = modify.CurHp - fighter.LossHp;
+
+            if (diff > 0)
+            {
+                modify.CurHp -= diff;
+                Activate?.Invoke();
+                diff = (int)(diff * CurLv * Bp.Param1);
+                fighter.Strengthen(new BattleStatus{MaxHp = diff});
+            }
+            
+            
+            return modify;
+        }
+
+
+        [Effect("Anger", Timing.OnCast)]
+        public void Anger(FighterData fighter)
+        {
+            fighter.ApplyBuff(new BuffData
+            {
+                CurLv = CurLv,
+                Id = "Anger"
+            });
+        }
+        
+        
         #endregion
 
 

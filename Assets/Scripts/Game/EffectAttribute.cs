@@ -72,7 +72,7 @@ namespace Game
         /// </summary>
         OnUseKey,
         /// <summary>
-        /// skill, fighter
+        /// fighter
         /// </summary>
         OnCast,
         /// <summary>

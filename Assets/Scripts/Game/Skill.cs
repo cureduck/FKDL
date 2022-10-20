@@ -17,6 +17,7 @@ namespace Game
         
         public float Param1;
         public float Param2;
+        public int Cooldown;
 
         [JsonIgnore] public Dictionary<Timing, MethodInfo> Fs;
     }

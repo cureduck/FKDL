@@ -44,9 +44,17 @@ namespace Game
                 PDef = (int)(s1.PDef*v)
             };
         }
+
+
+        public void Heal(int value)
+        {
+            CurHp = math.min(CurHp + value, MaxHp);
+        }
+        
         
     }
 
+    
     public struct PlayerStatus
     {
         public int MaxSp;

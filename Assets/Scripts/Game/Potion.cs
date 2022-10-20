@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Game
@@ -10,5 +12,7 @@ namespace Game
         public Rank Rank;
         public int Param1;
         public int Param2;
+
+        public Dictionary<Timing, MethodInfo> Fs;
     }
 }

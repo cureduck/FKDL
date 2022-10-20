@@ -8,7 +8,6 @@ using Game;
 using I2.Loc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
-using UnityEditor.Localization.Editor;
 using UnityEngine;
 using Random = System.Random;
 
@@ -69,6 +68,7 @@ namespace Managers
         
         private static Skill Line2Skill(ICsvLine line)
         {
+            int.TryParse(line[7], out var cooldown);
             return new Skill
             {
                 Id = line[1].ToLower(),
@@ -77,7 +77,8 @@ namespace Managers
                 MaxLv = int.Parse(line[4]),
                 Param1 = float.Parse(line[5] != ""?line[5]:"0"),
                 Param2 = float.Parse(line[6] != ""?line[6]:"0"),
-                Description = line[8]
+                Cooldown = cooldown,
+                Description = line[9]
             };
             
             
@@ -94,7 +95,7 @@ namespace Managers
             {
                 var attr = method.GetCustomAttribute<EffectAttribute>();
 
-                if (attr!=null)
+                if ((attr!=null)&&(Lib.ContainsKey(attr.id.ToLower())))
                 {
 #if UNITY_EDITOR
                     if (!Lib.ContainsKey(attr.id.ToLower()))

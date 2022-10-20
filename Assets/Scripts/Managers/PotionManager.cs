@@ -5,6 +5,7 @@ using Game;
 using Sirenix.OdinInspector;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -44,6 +45,8 @@ namespace Managers
                     Debug.Log("potion load failed");
                 }
             }
+            
+            FuncMatch();
         }
 
 
@@ -69,6 +72,25 @@ namespace Managers
             }
             return s;
         }
-        
+
+
+        private void FuncMatch()
+        {
+            foreach (var v in Lib.Values)
+            {
+                v.Fs = new Dictionary<Timing, MethodInfo>();
+            }
+
+            foreach (var method in typeof(SkillData).GetMethods())
+            {
+                var attr = method.GetCustomAttribute<EffectAttribute>();
+
+                if ((attr != null) && (Lib.ContainsKey(attr.id.ToLower())))
+                {
+                    Lib[attr.id.ToLower()].Fs[attr.timing] = method;
+                }
+            }
+        }
+
     }
 }

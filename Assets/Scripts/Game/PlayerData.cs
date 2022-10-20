@@ -26,6 +26,19 @@ namespace Game
         {
             
         }
+
+
+#if UNITY_EDITOR
+        [Button]
+#endif
+        public void UsePotion(int index)
+        {
+            if (!Potions[index].IsEmpty)
+            {
+                Potions[index].Bp.Fs[Timing.OnUsePotion].Invoke(Skills[index], new object[] {this});
+            }
+            
+        }
         
         
         public bool TryTake(Offer offer)

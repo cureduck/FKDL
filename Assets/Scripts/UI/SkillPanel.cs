@@ -1,6 +1,8 @@
-﻿using Game;
+﻿using System;
+using Game;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -26,7 +28,20 @@ namespace UI
                 _master.Skills[i].Activate += SkillItems[i].Activate;
             }
         }
-        
+
+        private void Start()
+        {
+            for (int i = 0; i < SkillItems.Length; i++)
+            {
+                var i1 = i;
+                SkillItems[i].GetComponent<Button>().onClick.AddListener((() =>
+                {
+                    CastMasterSkill(i1);
+                }));
+            }
+        }
+
+
         private void UnbindPrevious()
         {
             if (_master == null) return;
@@ -35,6 +50,13 @@ namespace UI
                 _master.Skills[i].Activate -= SkillItems[i].Activate;
             }
         }
+        
+        
+        private void CastMasterSkill(int index)
+        {
+            _master.Cast(index);
+        }
+        
         
 
         protected override void UpdateData()

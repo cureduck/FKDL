@@ -14,7 +14,8 @@ namespace UI
     {
         public Localize IdText;
         public TMP_Text LvText;
-
+        public TMP_Text CdText;
+        
         public GameObject DescriptionPanel;
         public Localize Description;
         public LocalizationParamsManager ParamsManager;
@@ -32,7 +33,25 @@ namespace UI
                 LvText.gameObject.SetActive(true);
                 IdText.SetTerm(data.Id);
                 LvText.text = data.CurLv.ToString();
-                GetComponent<Button>().interactable = data.Bp.Positive;
+
+                if ((data.Bp.Positive) && (data.Local > 0))
+                {
+                    CdText.gameObject.SetActive(true);
+                    CdText.text = data.Local.ToString();
+                    GetComponent<Button>().interactable = false;
+                }
+                else
+                {
+                    if (!data.Bp.Positive)
+                    {
+                        GetComponent<Button>().interactable = false;
+                    }
+                    else
+                    {
+                        GetComponent<Button>().interactable = true;
+                    }
+                    CdText.gameObject.SetActive(false);
+                }
             }
         }
 
