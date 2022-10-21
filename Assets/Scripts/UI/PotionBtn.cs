@@ -1,8 +1,10 @@
 ﻿using Game;
 using I2.Loc;
 using Managers;
+using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -30,21 +32,24 @@ namespace UI
 
         private void Load()
         {
-            if ((GameManager.Instance.PlayerData == null)||(Id == null))
+            if ((GameManager.Instance.PlayerData == null)||(Id.IsNullOrWhitespace()))
             {
                 IdText.SetTerm("empty");
+                GetComponent<Button>().interactable = false;
                 LvText.gameObject.SetActive(false);
             }
             else
             {
                 LvText.gameObject.SetActive(true);
+                GetComponent<Button>().interactable = true;
                 IdText.SetTerm(Id);
+                LvText.text = D.Count.ToString();
             }
 
         }
         
         
-        private void Activate()
+        public void Activate()
         {
             GetComponent<Animation>().Play();
         }

@@ -10,9 +10,8 @@ namespace Game
         [JsonIgnore] public Texture Icon;
         public string Id;
         public Rank Rank;
-        public int Param1;
-        public int Param2;
-
+        public float Param1;
+        
         public Dictionary<Timing, MethodInfo> Fs;
     }
 }

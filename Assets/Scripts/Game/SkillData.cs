@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace Game
 {
-    public struct SkillData : IEffectContainer
+    public class SkillData : IEffectContainer
     {
         public string Id;
         public int CurLv;
@@ -290,7 +290,7 @@ namespace Game
         }
 
 
-        [Effect("Anger", Timing.OnCast)]
+        [Effect("Anger", Timing.SkillEffect)]
         public void Anger(FighterData fighter)
         {
             fighter.ApplyBuff(new BuffData

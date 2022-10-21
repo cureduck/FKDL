@@ -23,6 +23,7 @@ namespace UI
         {
             base.SetMaster(master);
             GoldPanel.SetMaster(master);
+            PotionPanel.SetMaster(master);
         }
     }
 }

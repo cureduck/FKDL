@@ -184,6 +184,7 @@ namespace Game
         {
             modify = CheckChain<BattleStatus>(Timing.OnRecover, new object[] {modify, this, enemy});
             this.Status += modify;
+            Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Updated();
         }
 
@@ -191,6 +192,7 @@ namespace Game
         {
             modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] {modify, this});
             this.Status += modify;
+            Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Updated();
         }
         
@@ -270,7 +272,7 @@ namespace Game
         {
             if (Skills[index].Bp.Positive)
             {
-                Skills[index].Bp.Fs[Timing.OnCast].Invoke(Skills[index], new object[]{this});
+                Skills[index].Bp.Fs[Timing.SkillEffect].Invoke(Skills[index], new object[]{this});
             }
 
             Skills[index].Local = Skills[index].Bp.Cooldown;
@@ -278,7 +280,7 @@ namespace Game
         }
 
 
-        public void CoolDown()
+        public void CoolDown(int x = 1)
         {
             for (int i = 0; i < Skills.Length; i++)
             {
@@ -289,7 +291,11 @@ namespace Game
                 
                 if ((Skills[i].Bp.Positive)&&(Skills[i].Local > 0))
                 {
-                    Skills[i].Local -= 1;
+                    Skills[i].Local -= x;
+                    if (Skills[i].Local < 0)
+                    {
+                        Skills[i].Local = 0;
+                    }
                 }
             }
         }

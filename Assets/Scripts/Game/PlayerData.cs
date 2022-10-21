@@ -35,9 +35,18 @@ namespace Game
         {
             if (!Potions[index].IsEmpty)
             {
-                Potions[index].Bp.Fs[Timing.OnUsePotion].Invoke(Skills[index], new object[] {this});
+                if (Potions[index].Bp.Fs.TryGetValue(Timing.PotionEffect, out var f))
+                {
+                    CheckChain<PotionData>(Timing.OnUsePotion, new object[] {Potions[index], this});
+                    f?.Invoke(Potions[index], new object[] {this});
+                    Potions[index].Count -= 1;
+                    if (Potions[index].Count <= 0)
+                    {
+                        Potions[index].Id = "";
+                    }
+                    Updated();
+                }
             }
-            
         }
         
         

@@ -60,6 +60,14 @@ namespace Game
         /// </summary>
         OnStrengthen,
         /// <summary>
+        /// fighter
+        /// </summary>
+        PotionEffect,
+        /// <summary>
+        /// fighter
+        /// </summary>
+        SkillEffect,
+        /// <summary>
         /// potion, fighter
         /// </summary>
         OnUsePotion,

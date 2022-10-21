@@ -54,10 +54,9 @@ namespace Managers
         {
             return new Potion
             {
-                Id = line[0],
+                Id = line[0].ToLower().Replace(" ", ""),
                 Rank = (Rank) int.Parse(line[1]),
-                Param1 = int.Parse(line[2] == ""?line[2]:"0"),
-                Param2 = int.Parse(line[3] == ""?line[3]:"0"),
+                Param1 = float.Parse(line[2]),
             };
         }
         
@@ -81,13 +80,13 @@ namespace Managers
                 v.Fs = new Dictionary<Timing, MethodInfo>();
             }
 
-            foreach (var method in typeof(SkillData).GetMethods())
+            foreach (var method in typeof(PotionData).GetMethods())
             {
                 var attr = method.GetCustomAttribute<EffectAttribute>();
 
                 if ((attr != null) && (Lib.ContainsKey(attr.id.ToLower())))
                 {
-                    Lib[attr.id.ToLower()].Fs[attr.timing] = method;
+                    Lib[attr.id.ToLower().Trim()].Fs[attr.timing] = method;
                 }
             }
         }
