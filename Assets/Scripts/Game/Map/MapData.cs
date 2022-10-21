@@ -1,4 +1,5 @@
 ﻿using System;
+using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
@@ -9,9 +10,8 @@ namespace Game
     public class MapData
     {
         public Placement Placement;
+        public SquareState SquareState = SquareState.UnRevealed;
 
-        public bool Revealed = false;
-        
         /// <summary>
         /// 新游戏时调用
         /// </summary>
@@ -31,7 +31,7 @@ namespace Game
 
         protected void Destroyed()
         {
-            RevealAround?.Invoke();
+            SquareState = SquareState.Done;
             OnDestroy?.Invoke();
         }
 
@@ -58,7 +58,44 @@ namespace Game
             }
         }
 
-        public event Action RevealAround;
+        public void Reveal()
+        {
+            SquareState = SquareState.Revealed;
+            Updated();
+        }
+        
+        [Button]
+        public bool NextTo(Placement p2)
+        {
+            var p1 = Placement;
+            
+            var p3 = new Placement
+            {
+                x = math.max(p1.x, p2.x),
+                y = math.max(p1.y, p2.y),
+                Width = math.min(p1.x+p1.Width, p2.x + p2.Width)- math.max(p1.x, p2.x),
+                Height = math.min(p1.y+p1.Height, p2.y + p2.Height)- math.max(p1.y, p2.y),
+            };
+
+            return (!(p3.Height < 0 || p3.Width < 0)&&(!((p3.Height == 0)&&(p3.Width == 0))));
+        }
+        
+        
+        public void RevealAround()
+        {
+            foreach (var square in GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares)
+            {
+                if (square.SquareState!= SquareState.UnRevealed)
+                {
+                    continue;
+                }
+                
+                if (NextTo(square.Placement))
+                {
+                    square.Reveal();
+                }
+            }
+        }
     }
 
 
@@ -70,4 +107,11 @@ namespace Game
         public int Height;
     }
     
+    
+    public enum SquareState
+    {
+        UnRevealed,
+        Revealed,
+        Done,
+    }
 }

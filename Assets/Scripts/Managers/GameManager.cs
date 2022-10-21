@@ -75,6 +75,7 @@ namespace Managers
             NewGame = true;
             PlayerData = PlayerData.LoadFromInit();
             Map = Map.LoadFromInit();
+            Map.Init();
             LoadMap();
             GameLoaded?.Invoke();
             //GC.Collect();

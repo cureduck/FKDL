@@ -93,8 +93,9 @@ namespace Managers
             if (hit.transform != null)
             {
                 var t = hit.transform.GetComponent<Square>().Data;
-                if ((t != null))
+                if ((t != null)&&(t.SquareState == SquareState.Revealed))
                 {
+                    t.RevealAround();
                     t.OnFocus();
                     t.OnReact();
                 }

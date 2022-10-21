@@ -4,6 +4,7 @@ using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Game
@@ -12,6 +13,7 @@ namespace Game
     public class Square : MonoBehaviour
     {
         [ShowInInspector] public static Color EnemyColor;
+        [ShowInInspector] public static Color DoneColor;
         
         [ShowInInspector] public MapData Data;
 
@@ -40,14 +42,7 @@ namespace Game
             Data.OnUpdated += UpdateFace;
             //Data.RevealAround += RevealAround;
             
-            if (GameManager.Instance.NewGame)
-            {
-                Data.Init();
-            }
-            else
-            {
-                Data.Load();
-            }
+            Data.Load();
             
             UpdateFace();
         }
@@ -60,6 +55,17 @@ namespace Game
                 SetContent("null", "");
                 return;
             }*/
+
+            switch (Data.SquareState)
+            {
+                case SquareState.UnRevealed:
+                    SetContent("empty", "", new Color(.5f, .5f, .5f, .8f), null);
+                    return;
+                case SquareState.Done:
+                    SetContent("empty", "", new Color(.5f, .5f, .5f, .6f), null);
+                    return;
+            }
+
 
             switch (Data)
             {
@@ -132,15 +138,13 @@ namespace Game
         {
             try
             {
-                GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares.Remove(Data);
-                
-                Data = null;
+                UpdateFace();
             }
             catch (Exception e)
             {
                 Debug.Log(e);
             }
-            DestroyImmediate(gameObject);
+            //DestroyImmediate(gameObject);
         }
 
 
@@ -165,15 +169,14 @@ namespace Game
         {
             Id.SetTerm(id);
             Bonus.text = text;
-            //Sp.color = color;
+            if (color == default)
+            {
+                color = Color.gray;
+            }
+            Sp.color = color;
             Icon.sprite = icon;
         }
 
-        [Button]
-        public void RevealAround()
-        {
-            throw new NotImplementedException();
-        }
 
 
         private void OnDestroy()
@@ -184,7 +187,6 @@ namespace Game
                 Data.OnUpdated -= UpdateFace;
             }
         }
-
         #endregion
     }
 }

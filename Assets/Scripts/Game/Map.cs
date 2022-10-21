@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Managers;
 using Newtonsoft.Json;
@@ -36,6 +37,24 @@ namespace Game
         public static Map LoadFromSave()
         {
             return Load(_savePath);
+        }
+
+        public void Init()
+        {
+            foreach (var floor in Floors.Values)
+            {
+                foreach (var square in floor.Squares)
+                {
+                    try
+                    {
+                        square.Init();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
         }
         
         
