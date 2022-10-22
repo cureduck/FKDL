@@ -105,6 +105,11 @@ namespace Game
         public int y;
         public int Width;
         public int Height;
+
+        public override string ToString()
+        {
+            return $"({x},{y}), ({x+Width},{y+Height})";
+        }
     }
     
     

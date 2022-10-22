@@ -51,7 +51,10 @@ namespace Game
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        if (square is EnemySaveData sq )
+                        {
+                            Debug.Log($"{sq.Id} {floor.FloorName} {square.Placement}");
+                        }
                     }
                 }
             }

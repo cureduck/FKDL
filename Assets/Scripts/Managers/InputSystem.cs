@@ -1,4 +1,5 @@
-﻿using Game;
+﻿using System;
+using Game;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -101,6 +102,15 @@ namespace Managers
                 }
             }
         }
+
+
+        public void FindTarget(Action<bool> callback)
+        {
+            
+        }
+        
+        
+        
 
         private void Scroll()
         {
