@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using Game;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -104,13 +105,21 @@ namespace Managers
         }
 
 
-        public void FindTarget(Action<bool> callback)
+        private MapData RaycastGetMapData()
         {
-            
+            var worldPos = Camera.main.ScreenToWorldPoint(pos);
+            var hit = Physics2D.Raycast(worldPos, Vector2.zero);
+            if (hit.transform != null)
+            {
+                var t = hit.transform.GetComponent<Square>().Data;
+                return t;
+            }
+            else
+            {
+                return null;
+            }
         }
-        
-        
-        
+
 
         private void Scroll()
         {

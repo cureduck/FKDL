@@ -12,6 +12,8 @@ namespace Game
         public Placement Placement;
         public SquareState SquareState = SquareState.UnRevealed;
 
+        public Func<FighterData> SkillBody;
+        
         /// <summary>
         /// 新游戏时调用
         /// </summary>

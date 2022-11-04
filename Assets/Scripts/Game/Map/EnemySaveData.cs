@@ -29,8 +29,11 @@ namespace Game
             Status = Bp.Status;
             Gold = Bp.Gold;
 
-            Skills = new SkillData[Bp.Skills.Length];
-            Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
+            Skills = new SkillAgent(Bp.Skills);
+            //Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
+            
+            
+            
             Buffs = new BuffAgent();
             foreach (var buff in Bp.Buffs)
             {

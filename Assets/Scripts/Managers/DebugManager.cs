@@ -1,6 +1,11 @@
-﻿using Game;
+﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Game;
 using Sirenix.OdinInspector;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 namespace Managers
 {
@@ -51,5 +56,20 @@ namespace Managers
         {
             GameManager.Instance.PlayerData.Strengthen(new BattleStatus{PDef = 1});
         }
+        
+        [Button]
+        public void Test()
+        {
+            var t1 = UniTask.WhenAll(AsyncTest());
+            
+        }
+
+        public async UniTask<string> AsyncTest()
+        {
+            await UniTask.DelayFrame(100);
+            Debug.Log("123");
+            return "sdff";
+        }
+
     }
 }

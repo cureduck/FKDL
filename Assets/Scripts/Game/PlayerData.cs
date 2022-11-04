@@ -101,7 +101,7 @@ namespace Game
         {
             if (SkillManager.Instance.Lib.TryGetValue(id, out var sk))
             {
-                for (int i = 0; i < Skills.Length; i++)
+                for (int i = 0; i < Skills.Count; i++)
                 {
                     if ((Skills[i].Id == id))
                     {
@@ -120,7 +120,7 @@ namespace Game
                     }
                 }
 
-                for (var i = 0; i < Skills.Length; i++)
+                for (var i = 0; i < Skills.Count; i++)
                 {
                     if (Skills[i].IsEmpty)
                     {

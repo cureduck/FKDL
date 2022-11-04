@@ -85,7 +85,7 @@ namespace Game
 
 
         [Effect("feast", Timing.OnKill)]
-        public Result Feast(Result result, FighterData fighter, FighterData enemy)
+        public Attack Feast(Attack result, FighterData fighter, FighterData enemy)
         {
             fighter.Recover( new BattleStatus(){CurHp = (int)(CurLv*Bp.Param1)}, enemy);
             Activate?.Invoke();
@@ -124,7 +124,7 @@ namespace Game
         }
 
         [Effect("Execution", Timing.OnKill)]
-        public Result Execution(Result result, FighterData holder, FighterData enemy)
+        public Attack Execution(Attack result, FighterData holder, FighterData enemy)
         {
             var overDamage = -enemy.Status.CurHp;
             holder.Gain(overDamage);
@@ -223,7 +223,7 @@ namespace Game
         
 
         [Effect("poison blood", Timing.OnSettle)]
-        public Result PoisonAttack(Result result, FighterData fighter, FighterData enemy)
+        public Attack PoisonAttack(Attack result, FighterData fighter, FighterData enemy)
         {
             if (result.Sum > 0)
             {
@@ -298,6 +298,17 @@ namespace Game
                 CurLv = CurLv,
                 Id = "Anger"
             });
+        }
+
+
+        [Effect("One", Timing.SkillEffect)]
+        public void One(FighterData fighter, FighterData enemy)
+        {
+            var atk = fighter.ForgeAttack(enemy);
+            atk.OnComplete = new Action<FighterData, Attack>(((data, attack) =>
+            {
+                
+            }));
         }
         
         

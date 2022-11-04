@@ -37,7 +37,7 @@ namespace Game
         }
 
 
-        public void Check()
+        public void RemoveZeroStackBuff()
         {
             var tmp = new LinkedList<BuffData>();
             foreach (BuffData buff in this.Where(buff => buff.CurLv == 0))

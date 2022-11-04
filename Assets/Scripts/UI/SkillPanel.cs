@@ -10,7 +10,7 @@ namespace UI
     {
         public SkillItem[] SkillItems;
 
-        public int MinLen => math.min(_master.Skills.Length, SkillItems.Length);
+        public int MinLen => math.min(_master.Skills.Count, SkillItems.Length);
         
         public override void SetMaster(FighterData master)
         {

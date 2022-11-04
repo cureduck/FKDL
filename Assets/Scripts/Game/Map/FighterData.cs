@@ -14,7 +14,7 @@ namespace Game
     {
         public BattleStatus Status;
         public int Gold;
-        [ShowInInspector] public SkillData[] Skills;
+        [ShowInInspector] public SkillAgent Skills;
         [ShowInInspector] public BuffAgent Buffs;
 
         private Attack InitAttack()
@@ -24,24 +24,20 @@ namespace Game
                 PAtk = Status.PAtk,
                 MAtk = 0,
                 CAtk = 0,
-                Id = null
             };
         }
 
         public bool IsPlayer => this == GameManager.Instance.PlayerData;
 
-        public Result Suffer(Attack attack, FighterData enemy)
+        public Attack Suffer(Attack attack, FighterData enemy)
         {
             attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
             
-            var result = new Result
-            {
-                PAtk = math.max(0, attack.PAtk - Status.PDef),
-                MAtk = math.max(0, attack.MAtk - Status.MDef),
-                CAtk = attack.CAtk
-            };
-
-            Status.CurHp -= result.PAtk + result.MAtk + attack.CAtk;
+            attack.PDmg = math.max(0, attack.PAtk - Status.PDef);
+            attack.MDmg = math.max(0, attack.MAtk - Status.MDef);
+            attack.CDmg = attack.CDmg;
+            
+            Status.CurHp -= attack.Sum;
             
             Updated();
             
@@ -50,16 +46,18 @@ namespace Game
                 Updated();
             }
             
-            return result;
+            return attack;
         }
 
 
-        public Attack ForgeAttack(FighterData target)
+        public Attack ForgeAttack(FighterData target, SkillData skillData = null)
         {
             var atk = InitAttack();
-
             atk = CheckChain<Attack>(Timing.OnAttack, new object[] {atk, this, target});
-
+            if ((skillData!=null)&&(skillData.Bp.Fs.ContainsKey(Timing.SkillEffect)))
+            {
+                skillData.Bp.Fs[Timing.SkillEffect].Invoke(skillData, new object[] {this, target});
+            }
             return atk;
         }
         
@@ -70,31 +68,31 @@ namespace Game
         /// <param name="r"></param>
         /// <param name="enemy"></param>
         /// <returns></returns>
-        public Result Settle(Result r, FighterData enemy)
+        public Attack Settle(Attack r, FighterData enemy)
         {
             foreach (var skill in Skills)
             {
                 if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnSettle)))
                 {
                     var f = skill.Bp.Fs[Timing.OnSettle];
-                    r = (Result) f?.Invoke(skill, new object[]{r, this, enemy});
+                    r = (Attack) f?.Invoke(skill, new object[]{r, this, enemy});
                 }
             }
             
             CoolDown();
-            Buffs.Check();
+            Buffs.RemoveZeroStackBuff();
             return r;
         }
 
 
-        public Result Kill(Result r, FighterData enemy)
+        public Attack Kill(Attack r, FighterData enemy)
         {
             foreach (var skill in Skills)
             {
                 if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnKill)))
                 {
                     var f = skill.Bp.Fs[Timing.OnKill];
-                    r = (Result) f?.Invoke(skill, new object[]{r, this, enemy});
+                    r = (Attack) f?.Invoke(skill, new object[]{r, this, enemy});
                 }
             }
             
@@ -282,7 +280,7 @@ namespace Game
 
         public void CoolDown(int x = 1)
         {
-            for (int i = 0; i < Skills.Length; i++)
+            for (int i = 0; i < Skills.Count; i++)
             {
                 if (Skills[i].IsEmpty)
                 {
@@ -299,6 +297,20 @@ namespace Game
                 }
             }
         }
+
+
+
+        public void Attack(FighterData target, Attack attack)
+        {
+            
+        }
+
+
+        public void CastSpell()
+        {
+            
+        }
+        
         
         
         ~FighterData()
