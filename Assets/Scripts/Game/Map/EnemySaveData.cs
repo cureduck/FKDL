@@ -65,7 +65,9 @@ namespace Game
 
         public override void OnReact()
         {
-            BattleManager.Instance.Fight(this);
+            
+            
+            InputSystem.Instance.ArrangeFight(this);
             if (Status.CurHp <= 0)
             {
                 Destroyed();

@@ -10,6 +10,7 @@ namespace Game
         [JsonIgnore] public Texture Icon;
         public string Id;
         public bool Positive;
+        public bool NeedTarget;
         public int MaxLv;
         public Rank Rank;
 

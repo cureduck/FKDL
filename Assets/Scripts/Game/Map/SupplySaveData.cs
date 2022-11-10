@@ -39,16 +39,13 @@ namespace Game
             switch (Type)
             {
                 case SupplyType.Spring:
-                    GameManager.Instance.PlayerData.Status.CurMp += value;
+                    GameManager.Instance.PlayerData.Heal(new BattleStatus{CurMp = value});
                     break;
                 case SupplyType.Grassland:
                     GameManager.Instance.PlayerData.Heal(new BattleStatus{CurHp = value});
                     break;
-                case SupplyType.Camp:
-                    GameManager.Instance.PlayerData.PlayerStatus.CurSp += value;
-                    break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
             
             Destroyed();

@@ -34,10 +34,10 @@ namespace UI
                 IdText.SetTerm(data.Id);
                 LvText.text = data.CurLv.ToString();
 
-                if ((data.Bp.Positive) && (data.Local > 0))
+                if ((data.Bp.Positive) && (data.Cooldown > 0))
                 {
                     CdText.gameObject.SetActive(true);
-                    CdText.text = data.Local.ToString();
+                    CdText.text = data.Cooldown.ToString();
                     GetComponent<Button>().interactable = false;
                 }
                 else

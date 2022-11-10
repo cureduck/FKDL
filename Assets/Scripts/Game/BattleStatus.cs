@@ -30,6 +30,38 @@ namespace Game
         }
         
         
+        public static BattleStatus operator -(BattleStatus s1)
+        {
+            return new BattleStatus
+            {
+                MaxHp = -s1.MaxHp,
+                CurHp = -s1.CurHp,
+                MaxMp = -s1.MaxMp,
+                CurMp = -s1.CurMp,
+                MAtk = -s1.MAtk,
+                PAtk = -s1.PAtk,
+                MDef = -s1.MDef,
+                PDef = -s1.PDef
+            };
+        }
+
+
+        public static BattleStatus operator -(BattleStatus s1, BattleStatus s2)
+        {
+            return new BattleStatus
+            {
+                MaxHp = s1.MaxHp - s2.MaxHp,
+                CurHp = s1.CurHp - s2.CurHp,
+                MaxMp = s1.MaxMp - s2.MaxMp,
+                CurMp = s1.CurMp - s2.CurMp,
+                MAtk = s1.MAtk - s2.MAtk,
+                PAtk = s1.PAtk - s2.PAtk,
+                MDef = s1.MDef - s2.MDef,
+                PDef = s1.PDef - s2.PDef
+            };
+        }
+        
+                
         public static BattleStatus operator *(BattleStatus s1, float v)
         {
             return new BattleStatus
@@ -50,14 +82,5 @@ namespace Game
         {
             CurHp = math.min(CurHp + value, MaxHp);
         }
-        
-        
-    }
-
-    
-    public struct PlayerStatus
-    {
-        public int MaxSp;
-        public int CurSp;
     }
 }

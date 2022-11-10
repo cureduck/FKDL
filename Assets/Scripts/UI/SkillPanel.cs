@@ -1,5 +1,6 @@
 ﻿using System;
 using Game;
+using Managers;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,7 +37,7 @@ namespace UI
                 var i1 = i;
                 SkillItems[i].GetComponent<Button>().onClick.AddListener((() =>
                 {
-                    CastMasterSkill(i1);
+                    ClickSkillBtn(i1);
                 }));
             }
         }
@@ -52,9 +53,18 @@ namespace UI
         }
         
         
-        private void CastMasterSkill(int index)
+        private void ClickSkillBtn(int index)
         {
-            _master.Cast(index);
+            var skill = _master.Skills[index];
+            if ((skill.Bp.Positive)&&(!skill.Bp.NeedTarget))
+            {
+                _master.CastNonAimingSkill(index);
+            }
+            if ((skill.Bp.Positive)&&(skill.Bp.NeedTarget))
+            {
+                InputSystem.Instance.AwaitTargetSkill = skill;
+                InputSystem.Instance.InputMode = InputSystem.Mode.SelectEnemyMode;
+            }
         }
         
         

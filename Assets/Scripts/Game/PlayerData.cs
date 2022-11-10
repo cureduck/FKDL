@@ -17,8 +17,6 @@ namespace Game
         public string Id;
         public PotionData[] Potions;
         
-        public PlayerStatus PlayerStatus;
-
         public Dictionary<Rank, int> Keys;
 
 

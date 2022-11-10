@@ -13,14 +13,16 @@ namespace Game
         public int MDmg;
         public int CDmg;
 
+        public bool Death;
+
+        public SkillData Skill;
+        
+        
         public int Sum => PDmg + MDmg + CDmg;
 
-        public Action<FighterData, Attack> OnComplete;
-        public Action<FighterData, Attack> OnKill;
-        
         public override string ToString()
         {
-            return $" ({PAtk}, {MAtk}, {CAtk}), ({PDmg}, {MDmg}, {CDmg})";
+            return $"({PAtk}, {MAtk}, {CAtk}), ({PDmg}, {MDmg}, {CDmg})";
         }
     }
 }

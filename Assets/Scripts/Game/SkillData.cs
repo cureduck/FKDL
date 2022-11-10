@@ -14,8 +14,10 @@ namespace Game
     {
         public string Id;
         public int CurLv;
-        public int Local;
-
+        
+        public int Cooldown;
+        public bool Sealed = false;
+        
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
 
         public event Action<FighterData> OnLvUp;
@@ -43,7 +45,11 @@ namespace Game
             OnUnEquip?.Invoke(fighter);
         }
 
-
+        public void SetCooldown(int bonus = 0)
+        {
+            Cooldown = Bp.Cooldown - bonus;
+        }
+        
 
 
         [JsonIgnore] public Skill Bp => SkillManager.Instance.Lib[Id.ToLower()];
@@ -53,6 +59,12 @@ namespace Game
         
         public bool MayAffect(Timing timing, out int priority)
         {
+            if (Sealed)
+            {
+                priority = 0;
+                return false;
+            }
+            
             if (Bp.Fs.TryGetValue(timing, out var f))
             {
                 priority = f.GetCustomAttribute<EffectAttribute>().priority;
@@ -228,7 +240,7 @@ namespace Game
             if (result.Sum > 0)
             {
                 Activate?.Invoke();
-                enemy.Suffer(new Attack() {MAtk = result.Sum}, fighter);
+                enemy.Defend(new Attack() {MAtk = result.Sum}, fighter);
             }
 
             return result;
@@ -305,10 +317,7 @@ namespace Game
         public void One(FighterData fighter, FighterData enemy)
         {
             var atk = fighter.ForgeAttack(enemy);
-            atk.OnComplete = new Action<FighterData, Attack>(((data, attack) =>
-            {
-                
-            }));
+            
         }
         
         

@@ -9,14 +9,19 @@ using Sirenix.OdinInspector;
 
 namespace Managers
 {
-    public class InputSystem : MonoBehaviour
+    public class InputSystem : Singleton<InputSystem>
     {
+
+        public SkillData AwaitTargetSkill;
+        
+        private PlayerData P => GameManager.Instance.PlayerData;
+
         
         public enum Mode
         {
             SelectPotionMode,
-            SelectSkillMode,
-            DragMode
+            SelectEnemyMode,
+            NormalMode
         }
 
         public Mode InputMode;
@@ -54,6 +59,12 @@ namespace Managers
             
         }
 
+
+
+        private void ResetInputMode()
+        {
+            InputMode = Mode.NormalMode;
+        }
         
         
 
@@ -66,7 +77,7 @@ namespace Managers
 #if UNITY_ANDROID
             return (Input.touchCount == 1) ;
 #endif
-            return (Input.GetMouseButtonUp(0)) ;
+            return (Input.GetMouseButtonUp(0));
         }
 
 
@@ -75,6 +86,44 @@ namespace Managers
             return Input.GetMouseButton(1);
         }
         
+        
+        
+        public void ArrangeFight(EnemySaveData enemy)
+        {
+            Attack pa;
+            if (this.InputMode == Mode.NormalMode)
+            {
+                pa = P.ForgeAttack(enemy);
+            }
+            else
+            {
+                pa = P.ForgeAttack(enemy, AwaitTargetSkill);
+                ResetInputMode();
+            }
+            
+
+            //怪物防御阶段
+            var result = enemy.Defend(pa, P);
+
+            //攻击后结算阶段
+            var r = P.Settle(result, enemy);
+
+            
+            //死亡判断
+            if (enemy.Status.CurHp <= 0 )
+            {
+                //DestroyImmediate(sq.gameObject);
+                P.Kill(r, enemy);
+                P.Gain(enemy.Gold);
+            }
+            else
+            {
+                var pa2 = enemy.ForgeAttack(P);
+                
+                var result2 = P.Defend(pa2, enemy);
+                var r2 = enemy.Settle(result2, P);
+            }
+        }
         
         
 

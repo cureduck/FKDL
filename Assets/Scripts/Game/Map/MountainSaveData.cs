@@ -27,9 +27,9 @@ namespace Game
         public override void OnReact()
         {
             base.OnReact();
-            if (GameManager.Instance.PlayerData.PlayerStatus.CurSp >= Cost)
+            if (GameManager.Instance.PlayerData.Status.CurMp >= Cost)
             {
-                GameManager.Instance.PlayerData.PlayerStatus.CurSp -= Cost;
+                GameManager.Instance.PlayerData.Cost(new BattleStatus{CurMp = Cost});
                 if (Random.Range(0f, 1f)> .5f)
                 {
                     GameManager.Instance.RollForSkill(Rank);

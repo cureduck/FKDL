@@ -18,9 +18,9 @@ namespace Game
         {
             base.OnReact();
             
-            if (GameManager.Instance.PlayerData.PlayerStatus.CurSp >= Cost)
+            if (GameManager.Instance.PlayerData.Status.CurMp >= Cost)
             {
-                GameManager.Instance.PlayerData.PlayerStatus.CurSp -= Cost;
+                GameManager.Instance.PlayerData.Cost(new BattleStatus{CurMp = Cost});
                 Destroyed();
             }
             else
