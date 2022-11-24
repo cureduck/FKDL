@@ -52,6 +52,13 @@ namespace Game
         }
 
 
+        public Attack Suffer(Attack attack)
+        {
+            return attack;
+        }
+        
+
+
         public Attack ForgeAttack(FighterData target, SkillData skillData = null)
         {
             if (skillData == null)
@@ -84,7 +91,6 @@ namespace Game
 
             CheckChain<Attack>(Timing.OnDefend, new object[] {r, this, enemy});
             
-            
             CoolDown();
             Buffs.RemoveZeroStackBuff();
             return r;
@@ -115,14 +121,23 @@ namespace Game
         }
 
 
-        public void Cost(BattleStatus modify)
+        public void Cost(BattleStatus modify, string kw = null)
         {
+            modify = CheckChain<BattleStatus>(Timing.OnCost, new object[] {modify, this, kw});
             Status -= modify;
             Updated();
         }
         
         
-
+        public void CounterCharge(BattleStatus modify, string kw = null)
+        {
+            modify = CheckChain<BattleStatus>(Timing.OnCounterCharge, new object[] {modify, this, kw});
+            Status -= modify;
+            Updated();
+        }
+        
+        
+        
         protected void Equip(SkillData sk)
         {
             /*foreach (var pi in typeof(SkillData).GetMethods())

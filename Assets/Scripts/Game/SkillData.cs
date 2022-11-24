@@ -324,5 +324,98 @@ namespace Game
         #endregion
 
 
+        #region 正式技能
+        [Effect("humoral extraction", Timing.OnKill)]
+        public Attack HumoralExtraction(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            //var potion = PotionManager.Instance.
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        /// <summary>
+        /// 解剖学
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("anatomy", Timing.OnAttack)]
+        public Attack Anatomy(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        [Effect("drug resistance", Timing.OnAttack)]
+        public Attack DrugResistance(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        
+        [Effect("poison blood", Timing.OnAttack)]
+        public Attack PoisonBlood(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        [Effect("self-destructive", Timing.OnAttack)]
+        public Attack SelfDestructive(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        [Effect("magic addiction", Timing.OnAttack)]
+        public Attack MagicAddiction(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        [Effect("self-abuse", Timing.OnAttack)]
+        public Attack SelfAbuse(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        
+        [Effect("near-death-experience", Timing.OnAttack)]
+        public Attack NDE(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        [Effect("refining elixir", Timing.OnAttack)]
+        public Attack RefiningElixir(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        
+        [Effect("ether body", Timing.OnAttack)]
+        public Attack EtherBody(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        #endregion
     }
 }

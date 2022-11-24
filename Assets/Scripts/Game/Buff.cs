@@ -7,7 +7,7 @@ namespace Game
 {
     public class Buff
     {
-        [JsonIgnore] public Texture Icon;
+        [JsonIgnore] public Sprite Icon;
         
         public string Id;
 

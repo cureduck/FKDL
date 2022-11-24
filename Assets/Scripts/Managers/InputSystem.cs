@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using UnityEngine.Experimental.Rendering.Universal;
 
 
 namespace Managers
@@ -35,13 +36,11 @@ namespace Managers
             
             Scroll();
             
-
             
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
             if (LeftClicked())
             {
-                pos = GetPosition();
                 Raycast();
                 return;
             }
@@ -139,21 +138,38 @@ namespace Managers
 
         private void Raycast()
         {
-            var worldPos = Camera.main.ScreenToWorldPoint(pos);
-            var hit = Physics2D.Raycast(worldPos, Vector2.zero);
-            if (hit.transform != null)
+            var Pos = Input.mousePosition;
+
+            var ray = Camera.main.ScreenPointToRay(Pos);
+            if (IntersectionOfRayAndFace(ray, Vector3.forward, Vector3.zero, out var ret))
             {
-                var t = hit.transform.GetComponent<Square>().Data;
-                if ((t != null)&&(t.SquareState == SquareState.Revealed))
+                Debug.Log(ray);
+                Debug.Log(ret);
+                var hit = Physics2D.Raycast(ret, Vector2.zero);
+                if (hit.transform != null)
                 {
-                    t.RevealAround();
-                    t.OnFocus();
-                    t.OnReact();
+                    var sq = hit.transform.parent.GetComponent<Square>();
+                    
+                    var t = sq.Data;
+                    if ((t != null)&&(t.SquareState == SquareState.Revealed))
+                    {
+                        if (GameManager.Instance.Focus != sq)
+                        {
+                            GameManager.Instance.Focus?.UnFocus();
+                            GameManager.Instance.Focus = sq;
+                            sq.Focus();
+                        }
+                        
+                        t.RevealAround();
+                        t.OnFocus();
+                        t.OnReact();
+                    }
                 }
             }
         }
 
 
+        /*
         private MapData RaycastGetMapData()
         {
             var worldPos = Camera.main.ScreenToWorldPoint(pos);
@@ -168,15 +184,49 @@ namespace Managers
                 return null;
             }
         }
+        */
 
 
+        public Light2D light;
+        
         private void Scroll()
         {
             var orthographicSize = Camera.main.orthographicSize;
             orthographicSize -=  Input.mouseScrollDelta.y;
             orthographicSize = orthographicSize > 10 ? 10 : orthographicSize;
             orthographicSize = orthographicSize <3 ? 3 : orthographicSize;
+
+            light.pointLightOuterRadius = orthographicSize;
             Camera.main.orthographicSize = orthographicSize;
         }
+        
+        
+        /// <summary>
+        /// 计算射线和面的交点 
+        /// 会有一定误差 ， 浮点数计算没有办法
+        /// </summary>
+        /// <param name="ray">射线</param>
+        /// <param name="normal">面的法线</param>
+        /// <param name="Point">面上的一点</param>
+        /// <param name="ret">交点</param>
+        /// <returns>线和面是否相交</returns>
+        private bool IntersectionOfRayAndFace(Ray ray, Vector3 normal,Vector3 Point, out Vector3 ret)
+        {
+            if (Vector3.Dot(ray.direction, normal) == 0)
+            {
+                //如果平面法线和射线垂直 则不会相交
+                ret = Vector3.zero;
+                return false;
+            }
+            Vector3 Forward = normal;
+            Vector3 Offset = Point - ray.origin; //获取线的方向
+            float DistanceZ = Vector3.Angle(Forward, Offset); //计算夹角
+            DistanceZ = Mathf.Cos(DistanceZ / 180f * Mathf.PI) * Offset.magnitude; //算点到面的距离
+            DistanceZ /= Mathf.Cos(Vector3.Angle(ray.direction, Forward) / 180f * Mathf.PI); //算点沿射线到面的距离
+            ret = ray.origin + ray.direction * DistanceZ; //算得射线和面的交点
+            return true;
+        }
+
+        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game
 {
@@ -20,6 +21,28 @@ namespace Game
         public SkillAgent()
         {
             
+        }
+
+        public bool UpgradeRandomSkill(Rank rank)
+        {
+            var tmp = new List<SkillData>();
+            foreach (var sk in this)
+            {
+                if ((sk.Bp.Rank == rank)&&(sk.CurLv < sk.Bp.MaxLv))
+                {
+                    tmp.Add(sk);
+                }
+            }
+
+            if (tmp.Count == 0)
+            {
+                return false;
+            }
+            else
+            {
+                tmp[Random.Range(0, tmp.Count)].CurLv += 1;
+                return true;
+            }
         }
         
         

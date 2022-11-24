@@ -55,10 +55,28 @@ namespace Game
         
         #region 具体效果
 
-        [Effect("anger", Timing.OnAttack)]
-        public Attack HpPotion(Attack attack, FighterData f1, FighterData f2)
+        [Effect("anger", Timing.OnAttack, priority = -4)]
+        public Attack Anger(Attack attack, FighterData f1, FighterData f2)
         {
             attack.PAtk += CurLv;
+            CurLv -= 1;
+            Activate?.Invoke();
+            return attack;
+        }
+
+        [Effect("Surging", Timing.OnAttack, priority = -4)]
+        public Attack Surging(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.MAtk += CurLv;
+            CurLv -= 1;
+            Activate?.Invoke();
+            return attack;
+        }
+        
+        [Effect("Poison", Timing.OnSettle, priority = -4)]
+        public Attack Poison(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.MAtk += CurLv;
             CurLv -= 1;
             Activate?.Invoke();
             return attack;

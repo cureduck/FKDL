@@ -20,7 +20,7 @@ namespace Managers
         public GameObject MapGo;
 
         public Random Random;
-        public bool NewGame = false;
+        public Square Focus;
 
         public event Action GameLoaded;
 
@@ -53,7 +53,6 @@ namespace Managers
         [Button]
         public void LoadFromSave()
         {
-            NewGame = false;
             try
             {
                 PlayerData = PlayerData.LoadFromSave();
@@ -72,7 +71,6 @@ namespace Managers
         [Button]
         public void LoadFromInit()
         {
-            NewGame = true;
             PlayerData = PlayerData.LoadFromInit();
             Map = Map.LoadFromInit();
             Map.Init();

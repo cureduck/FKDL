@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Csv;
 using Game;
+using UI;
 using UnityEngine;
 
 namespace Managers
@@ -11,7 +12,7 @@ namespace Managers
     public class BuffManager : Singleton<BuffManager>
     {
         public Dictionary<string, Buff> Lib;
-
+        
         private void Start()
         {
             Load();
@@ -41,10 +42,10 @@ namespace Managers
 
         private static Buff Line2Buff(ICsvLine line)
         {
-            return new Buff
-            {
-                Id = line[0].ToLower()
-            };
+            var buff = new Buff {Id = line[0].ToLower()};
+            if (SpriteManager.Instance.BuffIcons.TryGetValue(buff.Id, out buff.Icon)){}
+
+            return buff;
         }
 
         private void FuncMatch()
@@ -60,7 +61,20 @@ namespace Managers
 
                 if (attr!=null)
                 {
+#if UNITY_EDITOR
+                    if (!Lib.ContainsKey(attr.id.ToLower()))
+                    {
+                        var sk = new Buff
+                        {
+                            Id = attr.id.ToLower(),
+                            Fs = new Dictionary<Timing, MethodInfo>(),
+                        };
+                        Lib[attr.id.ToLower()] = sk;
+                    }
+#endif
+
                     Lib[attr.id.ToLower()].Fs[attr.timing] = method;
+
                 }
             }
         }

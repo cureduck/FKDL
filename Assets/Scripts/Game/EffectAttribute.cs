@@ -4,16 +4,18 @@ namespace Game
 {
     public class EffectAttribute : Attribute
     {
-        public EffectAttribute(string id, Timing timing, int priority = 1)
+        public EffectAttribute(string id, Timing timing, int priority = 1, bool activated = true)
         {
             this.id = id;
             this.timing = timing;
             this.priority = priority;
+            this.activated = activated;
         }
 
         public string id;
         public Timing timing;
         public int priority;
+        public bool activated;
     }
     
     
@@ -28,11 +30,11 @@ namespace Game
         /// </summary>
         OnDefend,
         /// <summary>
-        /// result, fighter, enemy
+        /// attack, fighter, enemy
         /// </summary>
         OnSettle,
         /// <summary>
-        /// result, fighter, enemy
+        /// attack, fighter, enemy
         /// </summary>
         OnKill,
         /// <summary>
@@ -106,6 +108,14 @@ namespace Game
         /// <summary>
         /// buff, fighter
         /// </summary>
-        OnBuffLvChange
+        OnBuffLvChange,
+        /// <summary>
+        /// battle status, fighter, kw
+        /// </summary>
+        OnCounterCharge,
+        /// <summary>
+        /// battle status, fighter, kw
+        /// </summary>
+        OnCost
     }
 }
