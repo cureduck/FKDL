@@ -12,9 +12,6 @@ namespace Managers
 {
     public class InputSystem : Singleton<InputSystem>
     {
-
-        public SkillData AwaitTargetSkill;
-        
         private PlayerData P => GameManager.Instance.PlayerData;
 
         
@@ -60,13 +57,6 @@ namespace Managers
 
 
 
-        private void ResetInputMode()
-        {
-            InputMode = Mode.NormalMode;
-        }
-        
-        
-
         private bool LeftClicked()
         {
             /*if (EventSystem.current.IsPointerOverGameObject())
@@ -87,7 +77,7 @@ namespace Managers
         
         
         
-        public void ArrangeFight(EnemySaveData enemy)
+        public void ArrangeFight(EnemySaveData enemy, SkillData awaitTargetSkill = null)
         {
             Attack pa;
             if (this.InputMode == Mode.NormalMode)
@@ -96,8 +86,7 @@ namespace Managers
             }
             else
             {
-                pa = P.ForgeAttack(enemy, AwaitTargetSkill);
-                ResetInputMode();
+                pa = P.ForgeAttack(enemy, awaitTargetSkill);
             }
             
 

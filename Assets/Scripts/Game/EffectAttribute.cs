@@ -24,6 +24,10 @@ namespace Game
         /// <summary>
         /// attack, fighter, enemy
         /// </summary>
+        OnPreAttack,
+        /// <summary>
+        /// attack, fighter, enemy
+        /// </summary>
         OnAttack,
         /// <summary>
         /// attack, fighter, enemy
@@ -94,13 +98,13 @@ namespace Game
         /// </summary>
         OnGain,
         /// <summary>
-        /// 获得正面buff buff, fighter
+        /// 被施加buff buff, fighter
         /// </summary>
-        OnBuff,
+        OnApplied,
         /// <summary>
-        /// 获得负面buff buff, fighter
+        /// 施加buff buff, fighter
         /// </summary>
-        OnDeBuff,
+        OnApply,
         /// <summary>
         /// 净化时 fighter
         /// </summary>

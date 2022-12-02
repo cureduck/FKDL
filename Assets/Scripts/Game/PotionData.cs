@@ -31,7 +31,14 @@ namespace Game
         [Effect("angerpotion", Timing.PotionEffect)]
         public void AngerPotion(FighterData player)
         {
-            player.ApplyBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "anger"});
+            player.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "anger"});
+        }
+
+        [Effect("firepotion", Timing.PotionEffect)]
+        public void FirePotion(FighterData player)
+        {
+            var data = GameManager.Instance.Focus;
+            
         }
         
         [Effect("hppotion+", Timing.PotionEffect)]
@@ -50,7 +57,7 @@ namespace Game
         [Effect("angerpotion+", Timing.PotionEffect)]
         public void AngerPotionP(FighterData player)
         {
-            player.ApplyBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "anger"});
+            player.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "anger"});
         }
                 
         [Effect("hppotion++", Timing.PotionEffect)]
@@ -65,12 +72,29 @@ namespace Game
             player.Strengthen(new BattleStatus{MaxMp = (int)Bp.Param1});
         }
         
-        [Effect("angerpotion++", Timing.PotionEffect)]
+        [Effect("patkpotion", Timing.PotionEffect)]
         public void AngerPotionPP(FighterData player)
         {
             player.Strengthen(new BattleStatus{PAtk = (int)Bp.Param1});
         }
+
+        [Effect("matkpotion", Timing.PotionEffect)]
+        public void MatkPotion(FighterData player)
+        {
+            player.Strengthen(new BattleStatus{MAtk = (int)Bp.Param1});
+        }
+
+        [Effect("mdefpotion", Timing.PotionEffect)]
+        public void MDef(FighterData player)
+        {
+            player.Strengthen(new BattleStatus{MDef = (int)Bp.Param1});
+        }
         
+        [Effect("pdefpotion", Timing.PotionEffect)]
+        public void PDef(FighterData player)
+        {
+            player.Strengthen(new BattleStatus{PDef = (int)Bp.Param1});
+        }
         #endregion
     }
 }

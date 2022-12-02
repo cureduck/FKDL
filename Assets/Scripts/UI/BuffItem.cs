@@ -14,7 +14,8 @@ namespace UI
         public BuffData BuffData;
         public TMP_Text Lv;
         public Image Icon;
-
+        public TMP_Text Id;
+        
         private void Start()
         {
             Load();
@@ -24,6 +25,7 @@ namespace UI
         {
             Icon.sprite = BuffData.Bp?.Icon;
             Lv.text = BuffData.CurLv.ToString();
+            Id.text = BuffData?.Id;
         }
 
         private void LoadSprite()

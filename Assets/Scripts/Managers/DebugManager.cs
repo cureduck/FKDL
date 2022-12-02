@@ -16,7 +16,7 @@ namespace Managers
         [Button]
         public void Apply(string id, int lv)
         {
-            GameManager.Instance.PlayerData.ApplyBuff(
+            GameManager.Instance.PlayerData.AppliedBuff(
                 new BuffData
                 {
                     Id = id,

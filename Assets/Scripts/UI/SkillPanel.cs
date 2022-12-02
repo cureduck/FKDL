@@ -62,8 +62,7 @@ namespace UI
             }
             if ((skill.Bp.Positive)&&(skill.Bp.NeedTarget))
             {
-                InputSystem.Instance.AwaitTargetSkill = skill;
-                InputSystem.Instance.InputMode = InputSystem.Mode.SelectEnemyMode;
+                InputSystem.Instance.ArrangeFight((EnemySaveData)GameManager.Instance.Focus.Data, skill);
             }
         }
         

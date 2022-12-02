@@ -255,7 +255,6 @@ namespace Game
             }
             
             
-            
             tmp.Sort(
                 (x, y) =>
                 {
@@ -271,17 +270,63 @@ namespace Game
             }
             return origin;
         }
-
-        public void ApplyBuff(BuffData buff)
+        
+        
+        protected void CheckChain(Timing timing, object[] param)
         {
-            if (buff.Positive)
+            var tmp = new List<IEffectContainer>();
+            
+            foreach (var skill in Skills)
             {
-                buff = CheckChain<BuffData>(Timing.OnBuff, new object[] {buff, this });
+                if (!skill.IsEmpty &&(skill.MayAffect(timing, out _)))
+                {
+                    tmp.Add(skill);
+                }
             }
-            else
+
+            foreach (var buff in Buffs)
             {
-                buff = CheckChain<BuffData>(Timing.OnDeBuff, new object[] {buff, this });
+                if (buff.MayAffect(timing, out _))
+                {
+                    tmp.Add(buff);
+                }
             }
+            
+            
+            tmp.Sort(
+                (x, y) =>
+                {
+                    x.MayAffect(timing, out var xx);
+                    y.MayAffect(timing, out var yy);
+                    return xx - yy;
+                });
+            
+            foreach (var sk in tmp)
+            {
+                sk.Affect(timing, param);
+            }
+        }
+        
+        
+        public BuffData ApplyBuff(BuffData buff)
+        {
+            buff = CheckChain<BuffData>(Timing.OnApply, new object[] {buff, this });
+            return buff;
+        }
+        
+
+        public void AppliedBuff(BuffData buff)
+        {
+            buff = CheckChain<BuffData>(Timing.OnApplied, new object[] {buff, this });
+            Buffs.Add(buff);
+        }
+
+
+        public void ApplySelfBuff(BuffData buff)
+        {
+            buff = CheckChain<BuffData>(Timing.OnApply, new object[] {buff, this });
+            buff = CheckChain<BuffData>(Timing.OnApplied, new object[] {buff, this });
+
             Buffs.Add(buff);
         }
         

@@ -7,5 +7,6 @@ namespace Game
     {
         bool MayAffect(Timing timing, out int priority);
         T Affect<T>(Timing timing, object[] param);
+        void Affect(Timing timing, object[] param);
     }
 }

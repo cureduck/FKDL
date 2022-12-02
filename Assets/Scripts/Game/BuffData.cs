@@ -50,9 +50,13 @@ namespace Game
         {
             return (T) Bp.Fs[timing].Invoke(this, param);
         }
-        
-        
-        
+
+        public void Affect(Timing timing, object[] param)
+        {
+            Bp.Fs[timing].Invoke(this, param);
+        }
+
+
         #region 具体效果
 
         [Effect("anger", Timing.OnAttack, priority = -4)]
@@ -73,10 +77,10 @@ namespace Game
             return attack;
         }
         
-        [Effect("Poison", Timing.OnSettle, priority = -4)]
+        [Effect("Poison", Timing.OnPreAttack, priority = -4)]
         public Attack Poison(Attack attack, FighterData f1, FighterData f2)
         {
-            attack.MAtk += CurLv;
+            f1.Suffer(new Attack{MAtk = CurLv});
             CurLv -= 1;
             Activate?.Invoke();
             return attack;

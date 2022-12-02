@@ -9,6 +9,7 @@ using Sirenix.Utilities;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 namespace Game
 {
@@ -19,6 +20,7 @@ namespace Game
         [ShowInInspector] public static Color DoneColor;
         
         [ShowInInspector] public MapData Data;
+
 
 
 #if UNITY_EDITOR
@@ -125,6 +127,7 @@ namespace Game
                 case StartSaveData d12:
                     SetContent("play", "");
                     var tmp = transform.position;
+                    tmp.y -= 8.4f;
                     tmp.z = -10;
                     Camera.main.transform.position = tmp;
                     break;
@@ -143,6 +146,7 @@ namespace Game
             try
             {
                 UpdateFace();
+                UnFocus();
             }
             catch (Exception e)
             {
@@ -160,6 +164,15 @@ namespace Game
         public SpriteRenderer Icon;
         public Localize Id;
         public TMP_Text Bonus;
+        public Light2D Light2D;
+        
+        private Animation anim;
+
+
+        private void Awake()
+        {
+            anim = GetComponent<Animation>();
+        }
 
         //public RectTransform Global;
 
@@ -203,12 +216,15 @@ namespace Game
         [Button]
         public void Focus()
         {
+            anim.Play("breath");
             UniTask.WhenAll(OnFocus());
         }
         
         
         public void UnFocus()
         {
+            anim.Stop();
+            Light2D.intensity = 0f;
             UniTask.WhenAll(OnUnFocus());
         }
 
@@ -247,7 +263,6 @@ namespace Game
 
         private void OnDestroy()
         {
-            UnFocus();
             if (Data != null)
             {
                 Data.OnDestroy -= OnSquareDestroy;

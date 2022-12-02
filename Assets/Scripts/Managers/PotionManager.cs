@@ -15,7 +15,7 @@ namespace Managers
     {
         public Dictionary<string, Potion> Lib;
 
-        public Dictionary<Rank, LinkedList<Potion>> Ordered;
+        public Dictionary<Rank, List<Potion>> Ordered;
         
         private void Start()
         {
@@ -27,7 +27,7 @@ namespace Managers
         {
             Lib = new Dictionary<string, Potion>();
             var csv = File.ReadAllText(Paths.PotionDataPath);
-            Ordered = new Dictionary<Rank, LinkedList<Potion>>();
+            Ordered = new Dictionary<Rank, List<Potion>>();
 
             foreach (var line in CsvReader.ReadFromText(csv))
             {
@@ -37,8 +37,8 @@ namespace Managers
                     Lib[potion.Id] = potion;
 
                     if (!Ordered.ContainsKey(potion.Rank))
-                        Ordered[potion.Rank] = new LinkedList<Potion>();
-                    Ordered[potion.Rank].AddLast(potion);
+                        Ordered[potion.Rank] = new List<Potion>();
+                    Ordered[potion.Rank].Add(potion);
                 }
                 catch (Exception)
                 {

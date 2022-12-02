@@ -81,7 +81,12 @@ namespace Game
         {
             return (T) Bp.Fs[timing].Invoke(this, param);
         }
-        
+
+        public void Affect(Timing timing, object[] param)
+        {
+            Bp.Fs[timing].Invoke(this, param);
+        }
+
         public static SkillData Empty => new SkillData();
 
 
@@ -305,7 +310,7 @@ namespace Game
         [Effect("Anger", Timing.SkillEffect)]
         public void Anger(FighterData fighter)
         {
-            fighter.ApplyBuff(new BuffData
+            fighter.AppliedBuff(new BuffData
             {
                 CurLv = CurLv,
                 Id = "Anger"
@@ -325,6 +330,15 @@ namespace Game
 
 
         #region 正式技能
+
+        [Effect("brew potion", Timing.OnCast)]
+        public void BrewPotion(FighterData fighter)
+        {
+            var p = Provider.Instance.CreateRandomPotion(Rank.Normal);
+            GameManager.Instance.PlayerData.TryTake(new Offer(){Id = p.Id, Kind = Offer.OfferKind.Potion});
+        }
+        
+        
         [Effect("humoral extraction", Timing.OnKill)]
         public Attack HumoralExtraction(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -415,7 +429,8 @@ namespace Game
             Activate?.Invoke();
             return attack;
         }
-        
+
+
         #endregion
     }
 }

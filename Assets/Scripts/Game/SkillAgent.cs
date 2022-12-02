@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class SkillAgent : List<SkillData>, IEffectContainer
+    public class SkillAgent : List<SkillData>
     {
 
         public SkillAgent(SkillData[] bp)
