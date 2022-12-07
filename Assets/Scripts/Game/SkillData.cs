@@ -49,7 +49,11 @@ namespace Game
         {
             Cooldown = Bp.Cooldown - bonus;
         }
-        
+
+
+        public bool CanCast => true;
+
+        [JsonIgnore] public bool IsBattleSkill => Bp.Fs[Timing.SkillEffect] == null;
 
 
         [JsonIgnore] public Skill Bp => SkillManager.Instance.Lib[Id.ToLower()];
@@ -331,11 +335,31 @@ namespace Game
 
         #region 正式技能
 
-        [Effect("brew potion", Timing.OnCast)]
+        [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
+        
+        [Effect("brew potion", Timing.SkillEffect)]
         public void BrewPotion(FighterData fighter)
         {
             var p = Provider.Instance.CreateRandomPotion(Rank.Normal);
             GameManager.Instance.PlayerData.TryTake(new Offer(){Id = p.Id, Kind = Offer.OfferKind.Potion});
+        }
+
+        [Effect("metal transformation", Timing.SkillEffect)]
+        public void MetalTrans(FighterData fighter)
+        {
+            fighter.ApplySelfBuff(new BuffData{Id = "Bellow", CurLv = (int)Bp.Param1});
+        }
+
+        [Effect("blood transformation", Timing.OnCost)]
+        public void BloodTrans(FighterData fighter)
+        {
+            fighter.Heal(new BattleStatus{CurHp = (int)Bp.Param1});
+        }
+        
+        [Effect("flesh transformation", Timing.OnCost)]
+        public void FleshTrans(FighterData fighter)
+        {
+            
         }
         
         

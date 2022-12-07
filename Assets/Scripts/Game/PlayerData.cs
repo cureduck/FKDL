@@ -19,6 +19,7 @@ namespace Game
         
         public Dictionary<Rank, int> Keys;
 
+        [JsonIgnore] public override FighterData Enemy => (EnemySaveData) GameManager.Instance.Focus.Data;
 
         public void March(string destination)
         {

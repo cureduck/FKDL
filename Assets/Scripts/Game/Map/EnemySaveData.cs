@@ -11,7 +11,10 @@ namespace Game
     public class EnemySaveData : FighterData
     {
         public string Id;
-        
+
+
+        public override FighterData Enemy => GameManager.Instance.PlayerData;
+
         public EnemySaveData(string id) : base()
         {
             Id = id;
@@ -22,6 +25,14 @@ namespace Game
             */
 
         }
+
+
+
+        public void PlanAttackRound()
+        {
+            ManageAttackRound();
+        }
+        
         
         public override void Init()
         {

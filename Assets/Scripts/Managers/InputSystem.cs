@@ -144,7 +144,7 @@ namespace Managers
                     {
                         if (GameManager.Instance.Focus != sq)
                         {
-                            GameManager.Instance.Focus?.UnFocus();
+                            if (GameManager.Instance.Focus != null) GameManager.Instance.Focus?.UnFocus();
                             GameManager.Instance.Focus = sq;
                             sq.Focus();
                         }

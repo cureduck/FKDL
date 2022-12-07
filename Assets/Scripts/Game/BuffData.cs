@@ -86,6 +86,17 @@ namespace Game
             return attack;
         }
         
+        [Effect("Bellow", Timing.OnAttack, priority = -4)]
+        public Attack Bellow(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (attack.PAtk > 0) attack.PAtk += CurLv;
+            if (attack.MAtk > 0) attack.MAtk += CurLv;
+            if (attack.CAtk > 0) attack.CAtk += CurLv;
+            
+            CurLv = 0;
+            Activate?.Invoke();
+            return attack;
+        }        
         #endregion
         
     }

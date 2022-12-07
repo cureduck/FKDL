@@ -33,7 +33,6 @@ namespace UI
                     GoldText.text = _currentGoldCount.ToString();
                     _pause = 10;
                 }
-
             }
         }
 

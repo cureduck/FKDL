@@ -88,10 +88,6 @@ namespace Game
         /// <summary>
         /// fighter
         /// </summary>
-        OnCast,
-        /// <summary>
-        /// fighter
-        /// </summary>
         OnMarch,
         /// <summary>
         /// coin, fighter

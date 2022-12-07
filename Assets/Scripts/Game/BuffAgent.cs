@@ -11,6 +11,16 @@ namespace Game
         public event Action<BuffData> BuffAdded;
         public event Action<BuffData> BuffRemoved;
 
+
+        public BuffAgent() : base()
+        {
+            foreach (var  buff in this)
+            {
+                buff.Removed += () => { Remove(buff); };
+            }
+        }
+        
+        
         public new void Add(BuffData data)
         {
             data.Id = data.Id.ToLower();
@@ -26,14 +36,13 @@ namespace Game
                 {
                     buff.CurLv += data.CurLv;
                 }
-                
             }
         }
 
         public new void Remove(BuffData data)
         {
-            base.Remove(data);
             BuffRemoved?.Invoke(data);
+            base.Remove(data);
         }
 
 

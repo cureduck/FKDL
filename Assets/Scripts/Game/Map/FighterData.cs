@@ -10,13 +10,15 @@ using Object = System.Object;
 
 namespace Game
 {
-    public class FighterData : MapData
+    public abstract class FighterData : MapData
     {
         public BattleStatus Status;
         public int Gold;
         [ShowInInspector] public SkillAgent Skills;
         [ShowInInspector] public BuffAgent Buffs;
 
+        public abstract FighterData Enemy { get; }
+        
         private Attack InitAttack(SkillData skill = null)
         {
             return new Attack
@@ -28,7 +30,7 @@ namespace Game
             };
         }
 
-        public bool IsPlayer => this == GameManager.Instance.PlayerData;
+        [JsonIgnore] public bool IsPlayer => this == GameManager.Instance.PlayerData;
 
         public Attack Defend(Attack attack, FighterData enemy)
         {
@@ -163,7 +165,7 @@ namespace Game
                 Updated();
             }
 
-            if ((sk.Bp.Positive)&&(sk.Bp.NeedTarget))
+            if ((sk.Bp.Positive))
             {
                 sk.Sealed = true;
             }
@@ -214,16 +216,8 @@ namespace Game
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Updated();
         }
-        
-        
-        [Button]
-        public void TakeBuff(BuffData buff)
-        {
-            Buffs.Add(buff);
-        }
-        
-        
-        
+
+
         [JsonIgnore] public int LossHp => Status.MaxHp - Status.CurHp;
         
         
@@ -334,7 +328,7 @@ namespace Game
         [Button]
         public void CastNonAimingSkill(int index)
         {
-            if ((Skills[index].Bp.Positive)&&(!Skills[index].Bp.NeedTarget))
+            if ((Skills[index].Bp.Positive))
             {
                 Skills[index].Bp.Fs[Timing.SkillEffect].Invoke(Skills[index], new object[]{this});
                 Skills[index].SetCooldown();
@@ -346,10 +340,50 @@ namespace Game
             }
         }
 
+        public void CastNonAimingSkill(SkillData skill)
+        {
+            if ((skill.Bp.Positive))
+            {
+                skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
+                skill.SetCooldown();
+                Updated();
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+        
+
 
         public void CastAimingSkill(int index, FighterData enemy)
         {
             
+        }
+
+
+        /// <summary>
+        /// 参数为使用的技能
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <returns></returns>
+        public Attack? ManageAttackRound(SkillData skill = null)
+        {
+            if ((skill!=null)&&(!skill.IsBattleSkill))
+            {
+                CastNonAimingSkill(skill);
+                return null;
+            }
+            else
+            {
+                var pa = this.ForgeAttack(Enemy, skill);
+
+                Enemy.Defend(pa, this);
+
+                this.Settle(pa, Enemy);
+
+                return pa;
+            }
         }
         
         

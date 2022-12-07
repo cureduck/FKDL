@@ -22,6 +22,9 @@ namespace Managers
         public Random Random;
         public Square Focus;
 
+        public bool InBattle => Focus?.Data is EnemySaveData;
+        
+        
         public event Action GameLoaded;
 
 

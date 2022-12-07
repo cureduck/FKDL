@@ -70,22 +70,19 @@ namespace Managers
         
         private static Skill Line2Skill(ICsvLine line)
         {
-            int.TryParse(line[9], out var cooldown);
+            int.TryParse(line[8], out var cooldown);
             return new Skill
             {
                 Id = line[1].ToLower(),
                 Rank = (Rank) int.Parse(line[2]),
                 Pool = line[3],
                 Positive = bool.Parse(line[4]),
-                NeedTarget = bool.Parse(line[5]),
-                MaxLv = int.Parse(line[6]),
-                Param1 = float.Parse(line[7] != ""?line[7]:"0"),
-                Param2 = float.Parse(line[8] != ""?line[8]:"0"),
+                MaxLv = int.Parse(line[5]),
+                Param1 = float.Parse(line[6] != ""?line[7]:"0"),
+                Param2 = float.Parse(line[7] != ""?line[8]:"0"),
                 Cooldown = cooldown,
-                Description = line[10]
+                Description = line[9]
             };
-            
-            
         }
 
         private void FuncMatch()

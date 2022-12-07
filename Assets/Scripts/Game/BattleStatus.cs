@@ -82,5 +82,29 @@ namespace Game
         {
             CurHp = math.min(CurHp + value, MaxHp);
         }
+
+
+        public void ReduceMaxHp(int value)
+        {
+            MaxHp -= value;
+            CurHp = math.min(MaxHp, CurHp);
+        }
+
+        public static BattleStatus Healing(int value)
+        {
+            return new BattleStatus
+            {
+                CurHp = value
+            };
+        }
+
+        public static BattleStatus StrengthenAtk(int value)
+        {
+            return new BattleStatus
+            {
+                PAtk = value
+            };
+        }
+        
     }
 }

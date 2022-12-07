@@ -56,13 +56,15 @@ namespace UI
         private void ClickSkillBtn(int index)
         {
             var skill = _master.Skills[index];
-            if ((skill.Bp.Positive)&&(!skill.Bp.NeedTarget))
+
+            if (GameManager.Instance.InBattle)
             {
-                _master.CastNonAimingSkill(index);
+                _master.ManageAttackRound(skill);
+                ((EnemySaveData)(_master.Enemy)).PlanAttackRound();
             }
-            if ((skill.Bp.Positive)&&(skill.Bp.NeedTarget))
+            else
             {
-                InputSystem.Instance.ArrangeFight((EnemySaveData)GameManager.Instance.Focus.Data, skill);
+                _master.CastNonAimingSkill(skill);
             }
         }
         

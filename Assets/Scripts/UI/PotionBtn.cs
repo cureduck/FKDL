@@ -25,7 +25,6 @@ namespace UI
             GameManager.Instance.GameLoaded += () =>
             {
                 GameManager.Instance.PlayerData.OnUpdated += Load;
-                GameManager.Instance.PlayerData.Skills[Index].Activate += Activate;
                 Load();
             };
         }
@@ -45,7 +44,12 @@ namespace UI
                 IdText.SetTerm(Id);
                 LvText.text = D.Count.ToString();
             }
+        }
 
+
+        public void UsePotion()
+        {
+            GameManager.Instance.PlayerData.UsePotion(Index);
         }
         
         
