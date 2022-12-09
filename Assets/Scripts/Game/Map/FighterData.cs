@@ -380,7 +380,7 @@ namespace Game
 
                 Enemy.Defend(pa, this);
 
-                this.Settle(pa, Enemy);
+                Settle(pa, Enemy);
 
                 return pa;
             }

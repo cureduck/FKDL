@@ -76,13 +76,31 @@ namespace Game
 
         public override void OnReact()
         {
-            
-            
-            InputSystem.Instance.ArrangeFight(this);
+            GameManager.Instance.PlayerData.ManageAttackRound();
             if (Status.CurHp <= 0)
             {
                 Destroyed();
                 return;
+            }
+            else
+            {
+                PlanAttackRound();
+            }
+            base.OnReact();
+        }
+
+
+        public void OnReact(SkillData skill)
+        {
+            GameManager.Instance.PlayerData.ManageAttackRound(skill);
+            if (Status.CurHp <= 0)
+            {
+                Destroyed();
+                return;
+            }
+            else
+            {
+                PlanAttackRound();
             }
             base.OnReact();
         }

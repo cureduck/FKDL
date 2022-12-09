@@ -32,8 +32,15 @@ namespace Managers
         {
             RollForSkill((Rank)rank);
         }
-        
-        
+
+
+        public void Attack()
+        {
+            if (PlayerData.Enemy != null)
+            {
+                PlayerData.OnReact();
+            }
+        }
         
 
         public void RollForSkill(Rank rank)

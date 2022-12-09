@@ -74,46 +74,8 @@ namespace Managers
         {
             return Input.GetMouseButton(1);
         }
-        
-        
-        
-        public void ArrangeFight(EnemySaveData enemy, SkillData awaitTargetSkill = null)
-        {
-            Attack pa;
-            if (this.InputMode == Mode.NormalMode)
-            {
-                pa = P.ForgeAttack(enemy);
-            }
-            else
-            {
-                pa = P.ForgeAttack(enemy, awaitTargetSkill);
-            }
-            
 
-            //怪物防御阶段
-            var result = enemy.Defend(pa, P);
 
-            //攻击后结算阶段
-            var r = P.Settle(result, enemy);
-
-            
-            //死亡判断
-            if (enemy.Status.CurHp <= 0 )
-            {
-                //DestroyImmediate(sq.gameObject);
-                P.Kill(r, enemy);
-                P.Gain(enemy.Gold);
-            }
-            else
-            {
-                var pa2 = enemy.ForgeAttack(P);
-                
-                var result2 = P.Defend(pa2, enemy);
-                var r2 = enemy.Settle(result2, P);
-            }
-        }
-        
-        
 
         private static Vector2 GetPosition()
         {
@@ -140,6 +102,12 @@ namespace Managers
                     var sq = hit.transform.parent.GetComponent<Square>();
                     
                     var t = sq.Data;
+
+                    if ((t != null) && (t.SquareState != SquareState.UnRevealed))
+                    {
+                        CameraMan.Instance.Target = sq.transform.position;
+                    }
+
                     if ((t != null)&&(t.SquareState == SquareState.Revealed))
                     {
                         if (GameManager.Instance.Focus != sq)
@@ -147,10 +115,9 @@ namespace Managers
                             if (GameManager.Instance.Focus != null) GameManager.Instance.Focus?.UnFocus();
                             GameManager.Instance.Focus = sq;
                             sq.Focus();
+                            //t.RevealAround();
                         }
-                        
-                        t.RevealAround();
-                        t.OnFocus();
+                        //t.OnFocus();
                         t.OnReact();
                     }
                 }

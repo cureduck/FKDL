@@ -63,11 +63,25 @@ namespace Game
             switch (Data.SquareState)
             {
                 case SquareState.UnRevealed:
+                    Box.gameObject.SetActive(false);
+                    Mask.gameObject.SetActive(true);
                     SetContent("empty", "", new Color(.5f, .5f, .5f, .8f), null);
+                    var t = Mask.color;
+                    t.a = 1f;
+                    Mask.color = t;
                     return;
                 case SquareState.Done:
-                    SetContent("empty", "", new Color(.5f, .5f, .5f, .6f), null);
-                    return;
+                    //SetContent("empty", "", new Color(.5f, .5f, .5f, .6f), null);
+                    Mask.gameObject.SetActive(true);
+                    var t2 = Mask.color;
+                    t2.a = .7f;
+                    Mask.color = t2;
+                    break;
+                case SquareState.Revealed:
+                    Box.gameObject.SetActive(true);
+                    Mask.gameObject.SetActive(false);
+                    break;
+                
             }
 
 
@@ -126,10 +140,7 @@ namespace Game
                     break;
                 case StartSaveData d12:
                     SetContent("play", "");
-                    var tmp = transform.position;
-                    tmp.y -= 8.4f;
-                    tmp.z = -10;
-                    Camera.main.transform.position = tmp;
+                    CameraMan.Instance.Target = transform.position;
                     break;
                 case TravellerSaveData d13:
                     SetContent("traveler", "");
@@ -159,19 +170,18 @@ namespace Game
         #region base
         public SpriteRenderer Bg;
         public SpriteRenderer Box;
+        public SpriteRenderer Mask;
+        
         private const float Spacing = .02f;
         
         public SpriteRenderer Icon;
         public Localize Id;
         public TMP_Text Bonus;
-        public Light2D Light2D;
         
-        private Animation anim;
-
+        
 
         private void Awake()
         {
-            anim = GetComponent<Animation>();
         }
 
         //public RectTransform Global;
@@ -182,11 +192,16 @@ namespace Game
             //transform.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
             
             Bg.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
+            bg1.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
+            bg2.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
+            Mask.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
+            
             Box.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
             
             
-            Id.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f +.6f, 0);
-            Bonus.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f - .6f, 0);
+            Id.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f +.6f, -0.01f);
+            Bonus.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f - .6f, -0.01f);
+            
             Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f, 0);
 
             
@@ -216,42 +231,61 @@ namespace Game
         [Button]
         public void Focus()
         {
-            anim.Play("breath");
             UniTask.WhenAll(OnFocus());
         }
         
         
         public void UnFocus()
         {
-            anim.Stop();
-            Light2D.intensity = 0f;
             UniTask.WhenAll(OnUnFocus());
         }
 
+
+        public GameObject bg1;
+        public GameObject bg2;
+        
+        
         private async UniTask OnFocus()
         {
+            for (int i = 0; i < 10; i++)
+            {
+                await UniTask.NextFrame();
+            }
+            
             var f = .2f;
-            var f2 = -.6f;
+            var f2 = -.3f;
             var pos = transform.position;
-            for (var i = 0f; i < 1f; i += .04f)
+            for (var i = 0f; i < 1f; i += .15f)
             {
                 pos.z = math.lerp(0, f, i);
                 transform.position = pos;
                 await UniTask.NextFrame();
             }
             
-            for (var i = 0f; i <= 1f; i += .02f)
+            for (var i = 0f; i <= 1f; i += .09f)
             {
-                pos.z = math.lerp(0, f2, i);
+                pos.z = math.lerp(f, 0, i);
                 transform.position = pos;
                 await UniTask.NextFrame();
             }
+            
+            for (var i = 0f; i <= 1f; i += .12f)
+            {
+                pos.z = math.lerp(0, f2, i);
+                bg1.transform.localPosition = new Vector3(0, 0, -pos.z /2f);
+                bg2.transform.localPosition = new Vector3(0, 0, -pos.z);
+                transform.position = pos;
+                await UniTask.NextFrame();
+            }
+            
         }
         
         private async UniTask OnUnFocus()
         {
             var f = transform.position.z;
             var pos = transform.position;
+            bg1.transform.localPosition = Vector3.zero;
+            bg2.transform.localPosition =Vector3.zero;
             for (var i = 0f; i <= 1f; i += .04f)
             {
                 pos.z = math.lerp(f, 0, i);

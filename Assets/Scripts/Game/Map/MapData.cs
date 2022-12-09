@@ -34,6 +34,7 @@ namespace Game
         protected void Destroyed()
         {
             SquareState = SquareState.Done;
+            RevealAround();
             OnDestroy?.Invoke();
         }
 

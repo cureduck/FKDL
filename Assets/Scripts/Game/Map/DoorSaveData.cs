@@ -13,7 +13,10 @@ namespace Game
 
         public override void OnReact()
         {
-            base.OnReact();
+            
+            Destroyed();
+            
+            /*base.OnReact();
             if (GameManager.Instance.PlayerData.Keys[Rank] > 0)
             {
                 GameManager.Instance.PlayerData.Keys[Rank] -= 1;
@@ -22,7 +25,7 @@ namespace Game
             else
             {
                 WindowManager.Instance.Warn("No Key");
-            }
+            }*/
         }
     }
 }

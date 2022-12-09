@@ -59,8 +59,7 @@ namespace UI
 
             if (GameManager.Instance.InBattle)
             {
-                _master.ManageAttackRound(skill);
-                ((EnemySaveData)(_master.Enemy)).PlanAttackRound();
+                ((EnemySaveData)(_master.Enemy)).OnReact(skill);
             }
             else
             {
