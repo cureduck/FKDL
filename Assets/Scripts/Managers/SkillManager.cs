@@ -96,7 +96,7 @@ namespace Managers
             {
                 var attr = method.GetCustomAttribute<EffectAttribute>();
 
-                if ((attr!=null)&&(attr.activated == false))
+                if ((attr!=null)||(attr.activated == false))
                 {
                     continue;
                 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using I2.Loc;
@@ -9,6 +11,7 @@ using Sirenix.Utilities;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering.Universal;
 
 namespace Game
@@ -21,8 +24,8 @@ namespace Game
         
         [ShowInInspector] public MapData Data;
 
-
-
+        
+        
 #if UNITY_EDITOR
 
         [JsonIgnore, ShowInInspector]
@@ -65,16 +68,19 @@ namespace Game
                 case SquareState.UnRevealed:
                     Box.gameObject.SetActive(false);
                     Mask.gameObject.SetActive(true);
-                    SetContent("empty", "", new Color(.5f, .5f, .5f, .8f), null);
+                    SetContent("empty", "", null);
                     var t = Mask.color;
                     t.a = 1f;
                     Mask.color = t;
                     return;
                 case SquareState.Done:
                     //SetContent("empty", "", new Color(.5f, .5f, .5f, .6f), null);
-                    Mask.gameObject.SetActive(true);
+                    if (GameManager.Instance.Focus != this)
+                    {
+                        Mask.gameObject.SetActive(true);
+                    }
                     var t2 = Mask.color;
-                    t2.a = .7f;
+                    t2.a = .95f;
                     Mask.color = t2;
                     break;
                 case SquareState.Revealed:
@@ -90,10 +96,23 @@ namespace Game
             switch (Data)
             {
                 case EnemySaveData d0:
-                    SetContent(d0.Id.ToLower(), d0.Status.CurHp +"/" + d0.Bp.Status.MaxHp, EnemyColor, lib["boss"]);
+                    var icon = "";
+                    switch (d0.Bp.Rank)
+                    {
+                        case Rank.Normal:
+                            icon = "soldier";
+                            break;
+                        case Rank.Uncommon:
+                            icon = "elite";
+                            break;
+                        case Rank.Rare:
+                            icon = "boss";
+                            break;
+                    }
+                    SetContent(d0.Id.ToLower(), d0.Status.CurHp +"/" + d0.Bp.Status.MaxHp, lib[icon]);
                     break;
                 case CasinoSaveData d1:
-                    SetContent("casino", d1.TimesLeft + "/" + CasinoSaveData.MaxTimes, EnemyColor, lib["casino"]);
+                    SetContent("casino", d1.TimesLeft + "/" + CasinoSaveData.MaxTimes, lib["casino"]);
                     break;
                 case ChestSaveData d2:
                     SetContent("treasure", d2.Rank.ToString(), icon: lib["chest"]);
@@ -157,7 +176,7 @@ namespace Game
             try
             {
                 UpdateFace();
-                UnFocus();
+                //UnFocus();
             }
             catch (Exception e)
             {
@@ -214,16 +233,10 @@ namespace Game
             //Global.sizeDelta = new Vector2(d.Width - Spacing, d.Height - Spacing);
         }
 
-        public void SetContent(string id, string text, Color color = default, Sprite icon = null)
+        public void SetContent(string id, string text, Sprite icon = null)
         {
             Id.SetTerm(id);
             Bonus.text = text;
-            /*if (color == default)
-            {
-                color = Color.gray;
-            }
-            Sp.color = color;
-            */
             Icon.sprite = icon;
         }
 
@@ -231,15 +244,32 @@ namespace Game
         [Button]
         public void Focus()
         {
+            if (Icon.sprite != null)
+            {
+                if (GameManager.Instance.SquareColors.TryGetValue(Icon.sprite.name, out var c))
+                {
+                    Bg.color = c;
+                    Icon.color = c;
+                    Box.color = c;
+                }
+            }
+            
             UniTask.WhenAll(OnFocus());
         }
         
         
         public void UnFocus()
         {
+            if (GameManager.Instance.SquareColors.TryGetValue("default", out var c))
+            {
+                Bg.color = c;
+                Icon.color = c;
+                Box.color = c;
+            }
+            
             UniTask.WhenAll(OnUnFocus());
         }
-
+        
 
         public GameObject bg1;
         public GameObject bg2;
@@ -292,6 +322,12 @@ namespace Game
                 transform.position = pos;
                 await UniTask.NextFrame();
             }
+        }
+
+
+        public override string ToString()
+        {
+            return Icon.sprite.name;
         }
 
 

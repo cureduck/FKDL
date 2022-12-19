@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using Cysharp.Threading.Tasks;
 using Game;
@@ -23,8 +24,9 @@ namespace Managers
         public Square Focus;
 
         public bool InBattle => Focus?.Data is EnemySaveData;
-        
-        
+
+        public Dictionary<string, Color> SquareColors;
+
         public event Action GameLoaded;
 
 

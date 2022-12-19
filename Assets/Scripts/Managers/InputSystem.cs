@@ -112,8 +112,14 @@ namespace Managers
                     {
                         if (GameManager.Instance.Focus != sq)
                         {
-                            if (GameManager.Instance.Focus != null) GameManager.Instance.Focus?.UnFocus();
+                            Square previous = null;
+                            if (GameManager.Instance.Focus != null)
+                            {
+                                GameManager.Instance.Focus?.UnFocus();
+                                previous = GameManager.Instance.Focus;
+                            }
                             GameManager.Instance.Focus = sq;
+                            if (previous != null) previous.UpdateFace();
                             sq.Focus();
                             //t.RevealAround();
                         }

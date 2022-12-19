@@ -30,6 +30,10 @@ namespace Game
         /// </summary>
         OnAttack,
         /// <summary>
+        /// attack, fighter, enemy, time
+        /// </summary>
+        OnStrike,
+        /// <summary>
         /// attack, fighter, enemy
         /// </summary>
         OnDefend,

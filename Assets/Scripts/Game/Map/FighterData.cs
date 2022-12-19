@@ -4,6 +4,7 @@ using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using Object = System.Object;
@@ -21,13 +22,7 @@ namespace Game
         
         private Attack InitAttack(SkillData skill = null)
         {
-            return new Attack
-            {
-                PAtk = Status.PAtk,
-                MAtk = 0,
-                CAtk = 0,
-                Skill = skill
-            };
+            return new Attack(Status.PAtk) {Skill = skill};
         }
 
         [JsonIgnore] public bool IsPlayer => this == GameManager.Instance.PlayerData;
@@ -35,9 +30,9 @@ namespace Game
         public Attack Defend(Attack attack, FighterData enemy)
         {
             
-            attack.PDmg = math.max(0, attack.PAtk - Status.PDef);
-            attack.MDmg = math.max(0, attack.MAtk - Status.MDef);
-            attack.CDmg = attack.CDmg;
+            attack.PDmg = math.max(0, (int)(attack.PAtk * attack.Multi) - Status.PDef);
+            attack.MDmg = math.max(0, (int)(attack.MAtk * attack.Multi) - Status.MDef);
+            attack.CDmg = (int) (attack.CAtk * attack.Multi);
             
             attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
 
@@ -78,10 +73,26 @@ namespace Game
                 skillData.SetCooldown();
                 return atk;
             }
-            
         }
-        
-        
+
+
+
+        public void OperateAttack(FighterData target, Attack attack)
+        {
+            var i = 0;
+            while (attack.Combo > 0)
+            {
+                var tmp = attack;
+                tmp = CheckChain<Attack>(Timing.OnStrike, new object[] {tmp, this, target, i});
+                tmp = target.Defend(tmp, this);
+                Settle(tmp, Enemy);
+                attack.Include(tmp);
+            }
+        }
+
+
+
+
         /// <summary>
         /// 进攻时的触发条件
         /// </summary>
@@ -362,6 +373,12 @@ namespace Game
         }
 
 
+        private void SingleStrike(Attack attack, FighterData enemy)
+        {
+            
+        }
+        
+        
         /// <summary>
         /// 参数为使用的技能
         /// </summary>
@@ -376,11 +393,11 @@ namespace Game
             }
             else
             {
-                var pa = this.ForgeAttack(Enemy, skill);
+                var pa = ForgeAttack(Enemy, skill);
 
-                Enemy.Defend(pa, this);
+                OperateAttack(Enemy, pa);
 
-                Settle(pa, Enemy);
+                //Settle(pa, Enemy);
 
                 return pa;
             }

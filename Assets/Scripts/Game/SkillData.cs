@@ -14,6 +14,8 @@ namespace Game
     {
         public string Id;
         public int CurLv;
+
+        public int Counter;
         
         public int Cooldown;
         public bool Sealed = false;
@@ -454,6 +456,12 @@ namespace Game
             return attack;
         }
 
+        
+        
+        
+        
+        
+        
 
         #endregion
     }
