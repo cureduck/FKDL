@@ -1,6 +1,7 @@
 ﻿using Game;
 using I2.Loc;
 using Managers;
+using Newtonsoft.Json;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
@@ -12,13 +13,16 @@ namespace UI
     {
         public int Index;
 
-        public string Id => GameManager.Instance.PlayerData.Potions[Index].Id;
-        public Potion Target => PotionManager.Instance.Lib[Id];
-        public PotionData D => GameManager.Instance.PlayerData.Potions[Index];
+        private string Id => D.Id;
+        [JsonIgnore] public Potion Target => PotionManager.Instance.Lib[Id];
+         public PotionData D => GameManager.Instance.PlayerData.Potions[Index];
         
         public Localize IdText;
         public TMP_Text LvText;
 
+        public Image BottleIcon;
+        public Image PotionIcon;
+        
 
         private void Start()
         {
@@ -35,6 +39,8 @@ namespace UI
             {
                 IdText.SetTerm("empty");
                 GetComponent<Button>().interactable = false;
+                BottleIcon.gameObject.SetActive(false);
+                PotionIcon.gameObject.SetActive(false);
                 LvText.gameObject.SetActive(false);
             }
             else
@@ -42,6 +48,12 @@ namespace UI
                 LvText.gameObject.SetActive(true);
                 GetComponent<Button>().interactable = true;
                 IdText.SetTerm(Id);
+                
+                BottleIcon.gameObject.SetActive(true);
+                PotionIcon.gameObject.SetActive(true);
+                
+                BottleIcon.sprite = SpriteManager.Instance.PotionBottleIcon[D.Bp.Rank];
+                
                 LvText.text = D.Count.ToString();
             }
         }

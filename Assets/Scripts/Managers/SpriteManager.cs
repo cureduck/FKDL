@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game;
 using UnityEngine;
 
 namespace Managers
@@ -7,8 +8,8 @@ namespace Managers
     {
         private const string IconPath = "BuffIcon";
         public Dictionary<string, Sprite> BuffIcons;
-        
-        
+
+        public Dictionary<Rank, Sprite> PotionBottleIcon;
         
         protected override void Awake()
         {
