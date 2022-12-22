@@ -99,7 +99,7 @@ namespace Managers
                 var hit = Physics2D.Raycast(ret, Vector2.zero);
                 if (hit.transform != null)
                 {
-                    var sq = hit.transform.parent.GetComponent<Square>();
+                    var sq = hit.transform.GetComponentInParent<Square>();
                     
                     var t = sq.Data;
 
@@ -108,7 +108,7 @@ namespace Managers
                         CameraMan.Instance.Target = sq.transform.position;
                     }
 
-                    if ((t != null)&&(t.SquareState == SquareState.Revealed))
+                    if ((t != null)&&((t.SquareState == SquareState.Focus)||(t.SquareState == SquareState.UnFocus)))
                     {
                         if (GameManager.Instance.Focus != sq)
                         {
@@ -149,7 +149,7 @@ namespace Managers
         */
 
 
-        public Light2D light;
+        public Light2D light2D;
         
         private void Scroll()
         {
@@ -158,7 +158,7 @@ namespace Managers
             orthographicSize = orthographicSize > 10 ? 10 : orthographicSize;
             orthographicSize = orthographicSize <3 ? 3 : orthographicSize;
 
-            light.pointLightOuterRadius = orthographicSize;
+            light2D.pointLightOuterRadius = orthographicSize;
             Camera.main.orthographicSize = orthographicSize;
         }
         

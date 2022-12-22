@@ -19,12 +19,8 @@ namespace Game
     [DisallowMultipleComponent]
     public class Square : SerializedMonoBehaviour
     {
-        [ShowInInspector] public static Color EnemyColor;
-        [ShowInInspector] public static Color DoneColor;
-        
         [ShowInInspector] public MapData Data;
 
-        
         
 #if UNITY_EDITOR
 
@@ -63,17 +59,17 @@ namespace Game
                 return;
             }*/
 
-            switch (Data.SquareState)
+            /*switch (Data.SquareState)
             {
                 case SquareState.UnRevealed:
-                    Box.gameObject.SetActive(false);
-                    Mask.gameObject.SetActive(true);
+                    _animator.SetTrigger("UnReveal");
                     SetContent("empty", "", null);
                     var t = Mask.color;
                     t.a = 1f;
                     Mask.color = t;
                     return;
                 case SquareState.Done:
+                    _animator.SetTrigger("Done");
                     //SetContent("empty", "", new Color(.5f, .5f, .5f, .6f), null);
                     if (GameManager.Instance.Focus != this)
                     {
@@ -88,8 +84,30 @@ namespace Game
                     Mask.gameObject.SetActive(false);
                     break;
                 
-            }
+            }*/
 
+            switch (Data.SquareState)
+            {
+                case SquareState.UnRevealed:
+                    _animator.SetTrigger("Unreveal");
+                    break;
+                case SquareState.Focus:
+                    _animator.SetTrigger("Focus");
+                    break;
+                case SquareState.UnFocus:
+                    _animator.SetTrigger("UnFocus");
+                    break;
+                case SquareState.Done:
+                    if (GameManager.Instance.Focus != this)
+                    {
+                        _animator.SetTrigger("Done");
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            
 
             var lib = SpriteManager.Instance.BuffIcons;
             
@@ -196,11 +214,12 @@ namespace Game
         public SpriteRenderer Icon;
         public Localize Id;
         public TMP_Text Bonus;
-        
-        
+
+        private Animator _animator;
 
         private void Awake()
         {
+            _animator = GetComponent<Animator>();
         }
 
         //public RectTransform Global;
@@ -233,96 +252,48 @@ namespace Game
             //Global.sizeDelta = new Vector2(d.Width - Spacing, d.Height - Spacing);
         }
 
+
+        public Light2D Light2D;
+        
         public void SetContent(string id, string text, Sprite icon = null)
         {
             Id.SetTerm(id);
             Bonus.text = text;
             Icon.sprite = icon;
+
+            if (icon != null)
+            {
+                if (GameManager.Instance.SquareColors.TryGetValue(icon.name, out var L))
+                {
+                    Light2D.color = L;
+                }
+            }
         }
 
+        
 
         [Button]
         public void Focus()
         {
-            if (Icon.sprite != null)
-            {
-                if (GameManager.Instance.SquareColors.TryGetValue(Icon.sprite.name, out var c))
-                {
-                    Bg.color = c;
-                    Icon.color = c;
-                    Box.color = c;
-                }
-            }
-            
-            UniTask.WhenAll(OnFocus());
+            Data.SquareState = SquareState.Focus;
+            _animator.SetTrigger("Focus");
         }
         
         
         public void UnFocus()
         {
-            if (GameManager.Instance.SquareColors.TryGetValue("default", out var c))
+            if (Data.SquareState == SquareState.Done)
             {
-                Bg.color = c;
-                Icon.color = c;
-                Box.color = c;
+                return;
             }
-            
-            UniTask.WhenAll(OnUnFocus());
+            Data.SquareState = SquareState.UnFocus;
+            _animator.SetTrigger("UnFocus");
         }
+        
         
 
         public GameObject bg1;
         public GameObject bg2;
-        
-        
-        private async UniTask OnFocus()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                await UniTask.NextFrame();
-            }
-            
-            var f = .2f;
-            var f2 = -.3f;
-            var pos = transform.position;
-            for (var i = 0f; i < 1f; i += .15f)
-            {
-                pos.z = math.lerp(0, f, i);
-                transform.position = pos;
-                await UniTask.NextFrame();
-            }
-            
-            for (var i = 0f; i <= 1f; i += .09f)
-            {
-                pos.z = math.lerp(f, 0, i);
-                transform.position = pos;
-                await UniTask.NextFrame();
-            }
-            
-            for (var i = 0f; i <= 1f; i += .12f)
-            {
-                pos.z = math.lerp(0, f2, i);
-                bg1.transform.localPosition = new Vector3(0, 0, -pos.z /2f);
-                bg2.transform.localPosition = new Vector3(0, 0, -pos.z);
-                transform.position = pos;
-                await UniTask.NextFrame();
-            }
-            
-        }
-        
-        private async UniTask OnUnFocus()
-        {
-            var f = transform.position.z;
-            var pos = transform.position;
-            bg1.transform.localPosition = Vector3.zero;
-            bg2.transform.localPosition =Vector3.zero;
-            for (var i = 0f; i <= 1f; i += .04f)
-            {
-                pos.z = math.lerp(f, 0, i);
-                transform.position = pos;
-                await UniTask.NextFrame();
-            }
-        }
 
 
         public override string ToString()

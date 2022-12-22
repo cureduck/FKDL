@@ -63,7 +63,7 @@ namespace Game
 
         public void Reveal()
         {
-            SquareState = SquareState.Revealed;
+            SquareState = SquareState.UnFocus;
             Updated();
         }
         
@@ -99,6 +99,12 @@ namespace Game
                 }
             }
         }
+
+
+        protected void PlaySoundEffect(string id)
+        {
+            AudioPlayer.Instance.PlaySoundEffect(id);
+        }
     }
 
 
@@ -118,8 +124,10 @@ namespace Game
     
     public enum SquareState
     {
-        UnRevealed,
-        Revealed,
-        Done,
+        UnRevealed = 0b0001,
+        Focus = 0b0010,
+        UnFocus = 0b0100,
+        Done = 0b1000,
+        Revealed = Focus | UnFocus
     }
 }

@@ -39,9 +39,11 @@ namespace Game
             switch (Type)
             {
                 case SupplyType.Spring:
+                    PlaySoundEffect("spring");
                     GameManager.Instance.PlayerData.Heal(new BattleStatus{CurMp = value});
                     break;
                 case SupplyType.Grassland:
+                    PlaySoundEffect("grassland");
                     GameManager.Instance.PlayerData.Heal(new BattleStatus{CurHp = value});
                     break;
                 default:

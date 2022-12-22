@@ -13,7 +13,7 @@ namespace Game
 
         public override void OnReact()
         {
-            
+            PlaySoundEffect("door");
             Destroyed();
             
             /*base.OnReact();

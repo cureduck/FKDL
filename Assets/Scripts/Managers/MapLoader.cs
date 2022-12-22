@@ -110,7 +110,7 @@ namespace Managers
                         floor.Squares.AddLast(new StairsSaveData(suffix) {Placement = p});
                         break;
                     case "play":
-                        floor.Squares.AddLast(new StartSaveData() {Placement = p, SquareState = SquareState.Revealed});
+                        floor.Squares.AddLast(new StartSaveData() {Placement = p, SquareState = SquareState.UnFocus});
                         break;
                     case "mountain":
                         floor.Squares.AddLast(new MountainSaveData() {Placement = p});

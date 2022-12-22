@@ -120,6 +120,10 @@ namespace Game
         /// <summary>
         /// battle status, fighter, kw
         /// </summary>
-        OnCost
+        OnCost,
+        /// <summary>
+        /// battle status, fighter, kw
+        /// </summary>
+        OnLoss
     }
 }

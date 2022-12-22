@@ -43,6 +43,7 @@ namespace Game
                     {
                         Potions[index].Id = "";
                     }
+                    PlaySoundEffect("potion");
                     Updated();
                 }
             }
