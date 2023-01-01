@@ -334,10 +334,10 @@ namespace Game
         
         #endregion
 
+        [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
 
         #region 正式技能
 
-        [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
         
         [Effect("brew potion", Timing.SkillEffect)]
         public void BrewPotion(FighterData fighter)

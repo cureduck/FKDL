@@ -22,6 +22,7 @@ namespace Game
             {
                 GameManager.Instance.PlayerData.Cost(new BattleStatus{CurMp = Cost});
                 Destroyed();
+                AudioPlayer.Instance.PlaySoundEffect("rock");
             }
             else
             {

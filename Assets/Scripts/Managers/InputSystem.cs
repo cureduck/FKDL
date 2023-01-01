@@ -14,6 +14,7 @@ namespace Managers
     {
         private PlayerData P => GameManager.Instance.PlayerData;
 
+        public GameObject BG;
         
         public enum Mode
         {
@@ -27,12 +28,15 @@ namespace Managers
         public Vector2 pos;
 
         [ShowInInspector] private Vector2 delta;
+        private Vector2 prePos;
         
         private void Update()
         {
             
             Scroll();
-            
+
+            delta = (Vector2)Input.mousePosition - prePos;
+            prePos = Input.mousePosition;
             
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
@@ -44,16 +48,21 @@ namespace Managers
 
             if (BeginDrag())
             {
-                delta =  ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - pos + delta);
+                /*delta =  ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - pos + delta);
                 if (Input.GetMouseButtonDown(1))
                 {
-                    delta = Vector2.zero;
+                    //delta = Vector2.zero;
                 }
                 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Camera.main.transform.position -= (Vector3)delta;
+                Camera.main.transform.position -= (Vector3)delta;*/
+                
+                Camera.main.transform.position -= (Vector3)delta * DragRate;
+                BG.transform.position -= (Vector3)delta * DragRate * 0.05f;
             }
             
         }
+
+        public float DragRate;
 
 
 

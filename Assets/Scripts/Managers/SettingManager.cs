@@ -4,10 +4,13 @@ namespace Managers
 {
     public class SettingManager : Singleton<SettingManager>
     {
+
+        public GameSettings GameSettings;
+
         protected override void Awake()
         {
             base.Awake();
-            Application.targetFrameRate = 30;
+            Application.targetFrameRate = 120;
         }
     }
 }

@@ -46,6 +46,10 @@ namespace Game
         /// </summary>
         OnKill,
         /// <summary>
+        /// attack, fighter, enemy
+        /// </summary>
+        OnDrawBack,
+        /// <summary>
         /// Heal Data, fighter, enemy
         /// </summary>
         OnRecover,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Managers
@@ -7,7 +8,17 @@ namespace Managers
     {
         private Camera _camera;
 
-        public Vector2 Target;
+        public Vector2 Target
+        {
+            get => _target;
+            set
+            {
+                _target = value;
+                StartCoroutine(GoToPoint());
+            }
+        }
+
+        private Vector2 _target;
 
         public Vector3 offset;
         
@@ -20,13 +31,21 @@ namespace Managers
         private void Update()
         {
 
-            var t = transform.position - offset;
-            var delta = (Vector2)t - Target;
-            var f = 10f;
+
+        }
+
+        IEnumerator GoToPoint()
+        {
+            var delta = Vector2.left;
+            while(delta.magnitude >= .1f)
+            {
+                var t = transform.position - offset;
+                delta = (Vector2)t - Target;
+                var f = 10f;
             
-            
-            
-            transform.position = new Vector3((t.x - delta.x/f), (t.y - delta.y/f), -10) + offset;
+                transform.position = new Vector3((t.x - delta.x/f), (t.y - delta.y/f), -10) + offset;
+                yield return null;
+            }
             
         }
     }
