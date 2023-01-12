@@ -6,7 +6,8 @@
         {
             Potion,
             Skill,
-            Gold
+            Gold,
+            Key
         }
 
         public OfferKind Kind;

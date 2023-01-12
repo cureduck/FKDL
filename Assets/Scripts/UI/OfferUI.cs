@@ -16,12 +16,27 @@ namespace UI
     {
         public Image Icon;
         public Localize Id;
-
+        public TMP_Text CostLabel;
+        
+        public int Cost;
+        public bool IsGood;
+        
         [ShowInInspector] public Offer Offer;
 
 
         private void OnEnable()
         {
+            UpdateData();
+        }
+
+
+        public void UpdateData()
+        {
+            if ((Cost >= 0)&&(CostLabel != null))
+            {
+                CostLabel.text = Cost.ToString();
+            }
+            
             switch (Offer.Kind)
             {
                 case Offer.OfferKind.Potion:
@@ -37,7 +52,6 @@ namespace UI
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
         
     }
 }

@@ -9,6 +9,10 @@ namespace UI
     public class GoldPanel : FighterUIPanel
     {
         public TMP_Text GoldText;
+        public TMP_Text CKey;
+        public TMP_Text GoldKey;
+        public TMP_Text SilverKey;
+
 
         private int _targetGoldCount;
         private int _currentGoldCount;
@@ -46,6 +50,9 @@ namespace UI
         {
             base.UpdateData();
             _targetGoldCount = ((PlayerData) _master).Gold;
+            CKey.text = ((PlayerData) _master).Keys[Rank.Normal].ToString();
+            SilverKey.text = ((PlayerData) _master).Keys[Rank.Uncommon].ToString();
+            GoldKey.text = ((PlayerData) _master).Keys[Rank.Rare].ToString();
         }
     }
 }

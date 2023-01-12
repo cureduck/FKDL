@@ -280,7 +280,7 @@ namespace Game
         }
         
         
-        public void UnFocus()
+        public virtual void UnFocus()
         {
             if (Data.SquareState == SquareState.Done)
             {

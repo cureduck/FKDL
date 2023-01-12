@@ -13,7 +13,7 @@ namespace Managers
 
         public Dictionary<string, AudioClip> AudioClips;
 
-        private LinkedList<AudioClip> SEQueue;
+        [ShowInInspector] private LinkedList<AudioClip> SEQueue;
         
         
         private GameSettings Settings => SettingManager.Instance.GameSettings;

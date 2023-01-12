@@ -8,7 +8,7 @@ namespace UI
     {
         public PotionPanel PotionPanel;
         public GoldPanel GoldPanel;
-        
+
         private void Start()
         {
 

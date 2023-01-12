@@ -10,6 +10,7 @@ namespace UI
     public class OfferBtn : Button
     {
         private OfferUI _offerUi;
+
         
         protected override void Start()
         {
@@ -19,9 +20,28 @@ namespace UI
             onClick.AddListener(
                 () =>
                 {
+                    if (_offerUi.IsGood)
+                    {
+                        if (!CanAfford())
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        
+                    }
+                    
                     if (GameManager.Instance.PlayerData.TryTake(_offerUi.Offer))
                     {
-                        WindowManager.Instance.OffersWindow.gameObject.SetActive(false);
+                        if (_offerUi.IsGood)
+                        {
+                            transform.parent.gameObject.SetActive(false);
+                        }
+                        else
+                        {
+                            WindowManager.Instance.OffersWindow.gameObject.SetActive(false);
+                        }
                         return;
                     }
                     else
@@ -39,13 +59,24 @@ namespace UI
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }
-                        
                     }
-
-
-
                 });
         }
+
+
+        private PlayerData _p => GameManager.Instance.PlayerData;
+
+        public bool CanAfford()
+        {
+            if (_p.Gold < _offerUi.Cost)
+            {
+                WindowManager.Instance.Warn("Not Enough Gold");
+                return false;
+            }
+
+            return true;
+        }
+        
 
         public override void OnPointerEnter(PointerEventData eventData)
         {

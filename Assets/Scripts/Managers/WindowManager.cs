@@ -10,7 +10,7 @@ namespace Managers
     public class WindowManager : Singleton<WindowManager>
     {
         public OfferWindow OffersWindow;
-        
+        public ShopPanel ShopPanel;
         
         public Localize WarnWindow;
 

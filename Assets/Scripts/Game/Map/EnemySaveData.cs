@@ -13,8 +13,9 @@ namespace Game
         public string Id;
 
 
-        public override FighterData Enemy => GameManager.Instance.PlayerData;
-
+        [JsonIgnore] public override FighterData Enemy => GameManager.Instance.PlayerData;
+        [JsonIgnore] public bool IsAlive => Status.CurHp >= 0;
+        
         public EnemySaveData(string id) : base()
         {
             Id = id;
@@ -32,8 +33,14 @@ namespace Game
         {
             ManageAttackRound();
         }
-        
-        
+
+
+        public void Chase()
+        {
+            ManageAttackRound();
+        }
+
+
         public override void Init()
         {
             base.Init();

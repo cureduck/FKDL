@@ -17,7 +17,10 @@ namespace Managers
             BuffIcons = new Dictionary<string, Sprite>();
             foreach (var sprite in Resources.LoadAll<Sprite>(IconPath))
             {
-                BuffIcons.Add(sprite.name, sprite);
+                if (!BuffIcons.ContainsKey(sprite.name))
+                {
+                    BuffIcons.Add(sprite.name, sprite);
+                }
             }
         }
     }
