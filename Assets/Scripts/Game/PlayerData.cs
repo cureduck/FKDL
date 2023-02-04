@@ -67,7 +67,15 @@ namespace Game
         }
 
 
-        private bool TryTakePotion(string id)
+        [Button]
+        public void AddSkillSlot()
+        {
+            Skills.Add(SkillData.Empty);
+        }
+        
+        
+
+        public bool TryTakePotion(string id)
         {
             if (PotionManager.Instance.Lib.TryGetValue(id, out var sk))
             {
@@ -97,7 +105,7 @@ namespace Game
         }
         
         
-        private bool TryTakeSkill(string id)
+        public bool TryTakeSkill(string id)
         {
             if (SkillManager.Instance.Lib.TryGetValue(id, out var sk))
             {

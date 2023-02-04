@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Csv;
 using Game;
 using I2.Loc;
@@ -19,6 +20,8 @@ namespace Managers
     {
         public Dictionary<string, Skill> Lib;
         public Dictionary<Rank, LinkedList<Skill>> Ordered;
+        public LanguageSource LS;
+
 
         private void Start()
         {
@@ -32,7 +35,7 @@ namespace Managers
             Lib = new Dictionary<string, Skill>();
             Ordered = new Dictionary<Rank, LinkedList<Skill>>();
 
-            var csv = File.ReadAllText(Paths.SkillDataPath);
+            var csv = File.ReadAllText(Paths.SkillDataPath, Encoding.UTF8);
             
             foreach (var line in CsvReader.ReadFromText(csv))
             {
@@ -50,7 +53,6 @@ namespace Managers
                     Debug.Log("skill load failed");
                 }
             }
-            
             FuncMatch();
         }
 
@@ -70,18 +72,19 @@ namespace Managers
         
         private static Skill Line2Skill(ICsvLine line)
         {
-            int.TryParse(line[8], out var cooldown);
+            int.TryParse(line[9], out var cooldown);
             return new Skill
             {
                 Id = line[1].ToLower(),
                 Rank = (Rank) int.Parse(line[2]),
                 Pool = line[3],
                 Positive = bool.Parse(line[4]),
-                MaxLv = int.Parse(line[5]),
-                Param1 = float.Parse(line[6] != ""?line[7]:"0"),
-                Param2 = float.Parse(line[7] != ""?line[8]:"0"),
+                BattleOnly = bool.Parse(line[5]),
+                MaxLv = int.Parse(line[6]),
+                Param1 = float.Parse(line[7] != ""?line[7]:"0"),
+                Param2 = float.Parse(line[8] != ""?line[8]:"0"),
                 Cooldown = cooldown,
-                Description = line[9]
+                //Description = line[10]
             };
         }
 

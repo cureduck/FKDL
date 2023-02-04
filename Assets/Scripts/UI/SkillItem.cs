@@ -26,6 +26,7 @@ namespace UI
             {
                 IdText.SetTerm("empty");
                 LvText.gameObject.SetActive(false);
+                CdText.gameObject.SetActive(false);
                 GetComponent<Button>().interactable = false;
             }
             else
@@ -34,7 +35,28 @@ namespace UI
                 IdText.SetTerm(data.Id);
                 LvText.text = data.CurLv.ToString();
 
-                if ((data.Bp.Positive) && (data.Cooldown > 0))
+
+                if ((data.Cooldown > 0))
+                {
+                    CdText.gameObject.SetActive(true);
+                    CdText.text = data.Cooldown.ToString();
+                }
+                else
+                {
+                    CdText.gameObject.SetActive(false);
+                }
+                
+                
+                if (data.CanCast)
+                {
+                    GetComponent<Button>().interactable = true;
+                }
+                else
+                {
+                    GetComponent<Button>().interactable = false;
+                }
+                
+                /*if ((data.Bp.Positive) && (data.Cooldown > 0))
                 {
                     CdText.gameObject.SetActive(true);
                     CdText.text = data.Cooldown.ToString();
@@ -51,7 +73,7 @@ namespace UI
                         GetComponent<Button>().interactable = true;
                     }
                     CdText.gameObject.SetActive(false);
-                }
+                }*/
             }
         }
 

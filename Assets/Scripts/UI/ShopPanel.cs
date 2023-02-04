@@ -7,17 +7,27 @@ namespace UI
     public class ShopPanel : MonoBehaviour
     {
 
-        public OfferUI[] GoodsList;
+        public OfferUI[] PotionList;
+        public OfferUI[] SkillList;
         
         
         public void Refresh()
         {
-            foreach (var good in GoodsList)
+            foreach (var good in PotionList)
             {
                 good.transform.parent.gameObject.SetActive(true);
                 good.Cost = Random.Range(7, 12);
                 good.Offer.Kind = Offer.OfferKind.Potion;
                 good.Offer.Id = PotionManager.Instance.Roll(RollForRank(), 1)[0];
+                good.UpdateData();
+            }
+
+            foreach (var good in SkillList)
+            {
+                good.transform.parent.gameObject.SetActive(true);
+                good.Cost = Random.Range(7, 12);
+                good.Offer.Kind = Offer.OfferKind.Skill;
+                good.Offer.Id = SkillManager.Instance.Roll(RollForRank(), 1)[0];
                 good.UpdateData();
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -38,6 +39,10 @@ namespace Managers
             {
                 while (SEQueue.Count >= 0)
                 {
+                    if (SEQueue.First == null)
+                    {
+                        yield break;
+                    }
                     var head = SEQueue.First.Value;
                     SEQueue.RemoveFirst();
                     SoundEffect.clip = head;

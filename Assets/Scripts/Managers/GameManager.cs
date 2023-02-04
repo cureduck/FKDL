@@ -68,6 +68,7 @@ namespace Managers
             try
             {
                 PlayerData = PlayerData.LoadFromSave();
+                PlayerData.Gain(0);
                 Map = Map.LoadFromSave();
                 LoadMap();
             }
@@ -84,6 +85,7 @@ namespace Managers
         public void LoadFromInit()
         {
             PlayerData = PlayerData.LoadFromInit();
+            PlayerData.Gain(0);
             Map = Map.LoadFromInit();
             Map.Init();
             LoadMap();

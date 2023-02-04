@@ -31,7 +31,7 @@ namespace Game
         public event Action OnDestroy;
         public event Action OnUpdated;
 
-        protected void Destroyed()
+        protected virtual void Destroyed()
         {
             SquareState = SquareState.Done;
             RevealAround();

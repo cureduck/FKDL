@@ -26,10 +26,13 @@ namespace UI
                         {
                             return;
                         }
+                        else
+                        {
+                            _p.Gain(-_offerUi.Cost);
+                        }
                     }
                     else
                     {
-                        
                     }
                     
                     if (GameManager.Instance.PlayerData.TryTake(_offerUi.Offer))

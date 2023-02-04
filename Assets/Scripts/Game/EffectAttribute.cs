@@ -22,6 +22,10 @@ namespace Game
     public enum Timing
     {
         /// <summary>
+        /// fighter, enemy
+        /// </summary>
+        OnEngage,
+        /// <summary>
         /// attack, fighter, enemy
         /// </summary>
         OnPreAttack,

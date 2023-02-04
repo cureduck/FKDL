@@ -11,6 +11,7 @@ namespace Game
         public string Id;
         public string Pool;
         public bool Positive;
+        public bool BattleOnly;
         public int MaxLv;
         public Rank Rank;
 

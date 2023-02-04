@@ -53,10 +53,26 @@ namespace Game
         }
 
 
-        public bool CanCast => true;
+        [JsonIgnore] public bool CanCast
+        {
+            get
+            {
+                if (!Bp.Positive) return false;
+                if ((Bp.BattleOnly) && (!GameManager.Instance.InBattle)) return false;
 
-        [JsonIgnore] public bool IsBattleSkill => Bp.Fs[Timing.SkillEffect] == null;
+                if (Cooldown > 0) return false;
+                return true;
+            }
+        }
 
+        public void SetCoolDown(int bonus = 0)
+        {
+            Cooldown = math.max(0 , Bp.Cooldown - bonus);
+        }
+        
+        
+        
+        
 
         [JsonIgnore] public Skill Bp => SkillManager.Instance.Lib[Id.ToLower()];
         [ShowInInspector] public event Action Activate;
@@ -339,33 +355,33 @@ namespace Game
         #region 正式技能
 
         
-        [Effect("brew potion", Timing.SkillEffect)]
+        [Effect("YWLZ_ALC", Timing.SkillEffect)]
         public void BrewPotion(FighterData fighter)
         {
             var p = Provider.Instance.CreateRandomPotion(Rank.Normal);
             GameManager.Instance.PlayerData.TryTake(new Offer(){Id = p.Id, Kind = Offer.OfferKind.Potion});
         }
 
-        [Effect("metal transformation", Timing.SkillEffect)]
+        [Effect("JSLZ_ALC", Timing.SkillEffect)]
         public void MetalTrans(FighterData fighter)
         {
             fighter.ApplySelfBuff(new BuffData{Id = "Bellow", CurLv = (int)Bp.Param1});
         }
 
-        [Effect("blood transformation", Timing.OnCost)]
+        [Effect("XYLZ_ALC", Timing.SkillEffect)]
         public void BloodTrans(FighterData fighter)
         {
             fighter.Heal(new BattleStatus{CurHp = (int)Bp.Param1});
         }
         
-        [Effect("flesh transformation", Timing.OnCost)]
+        [Effect("YRLZ_ALC", Timing.SkillEffect)]
         public void FleshTrans(FighterData fighter)
         {
             
         }
         
         
-        [Effect("humoral extraction", Timing.OnKill)]
+        [Effect("TYTQ_ALC", Timing.OnKill)]
         public Attack HumoralExtraction(Attack attack, FighterData fighter, FighterData enemy)
         {
             //var potion = PotionManager.Instance.
@@ -381,7 +397,7 @@ namespace Game
         /// <param name="fighter"></param>
         /// <param name="enemy"></param>
         /// <returns></returns>
-        [Effect("anatomy", Timing.OnAttack)]
+        [Effect("JPX_ALC", Timing.OnAttack)]
         public Attack Anatomy(Attack attack, FighterData fighter, FighterData enemy)
         {
             fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
@@ -389,7 +405,7 @@ namespace Game
             return attack;
         }
         
-        [Effect("drug resistance", Timing.OnAttack)]
+        [Effect("NYX_ALC", Timing.OnAttack)]
         public Attack DrugResistance(Attack attack, FighterData fighter, FighterData enemy)
         {
             fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
@@ -398,56 +414,131 @@ namespace Game
         }
         
         
-        [Effect("poison blood", Timing.OnAttack)]
+        [Effect("DZXY_ALC", Timing.OnSettle)]
         public Attack PoisonBlood(Attack attack, FighterData fighter, FighterData enemy)
         {
-            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
-            Activate?.Invoke();
+            if (attack.Sum > 0)
+            {
+                Activate?.Invoke();
+                enemy.Defend(new Attack() {MAtk = attack.Sum}, fighter);
+            }
+
             return attack;
         }
         
-        [Effect("self-destructive", Timing.OnAttack)]
+        [Effect("ZHQX_ALC", Timing.OnSettle)]
         public Attack SelfDestructive(Attack attack, FighterData fighter, FighterData enemy)
         {
-            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
-            Activate?.Invoke();
+            if (attack.Sum > 0)
+            {
+                if (Random.Range(0f, 1f) < .3f)
+                {
+                    fighter.RandomStrengthen();
+                    Activate?.Invoke();
+                }
+            }
             return attack;
         }
         
-        [Effect("magic addiction", Timing.OnAttack)]
-        public Attack MagicAddiction(Attack attack, FighterData fighter, FighterData enemy)
+        [Effect("MY_ALC", Timing.OnUsePotion)]
+        public PotionData MagicAddiction(PotionData potion, FighterData fighter)
         {
-            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            fighter.Heal(new BattleStatus{CurHp = CurLv, CurMp = CurLv});
             Activate?.Invoke();
-            return attack;
+            return potion;
         }
         
-        [Effect("self-abuse", Timing.OnAttack)]
-        public Attack SelfAbuse(Attack attack, FighterData fighter, FighterData enemy)
+        [Effect("ZN_ALC", Timing.OnCounterCharge)]
+        public BattleStatus SelfAbuse(BattleStatus status, FighterData fighter, string kw)
         {
-            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            fighter.RandomStrengthen();
             Activate?.Invoke();
-            return attack;
+            return status;
         }
         
         
-        [Effect("near-death-experience", Timing.OnAttack)]
+        [Effect("BXTY_ALC", Timing.OnStrengthen)]
         public Attack NDE(Attack attack, FighterData fighter, FighterData enemy)
         {
+            
             fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
             Activate?.Invoke();
             return attack;
         }
-        
-        [Effect("refining elixir", Timing.OnAttack)]
-        public Attack RefiningElixir(Attack attack, FighterData fighter, FighterData enemy)
+
+        [Effect("JLYJ_ALC", Timing.OnUsePotion)]
+        public PotionData RefiningElixir(PotionData potion, FighterData fighter)
         {
-            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            if (Random.Range(0, 1f) < .2f)
+            {
+                var p = potion;
+                ((PlayerData) fighter).TryTakePotion(p.Id);
+                Activate?.Invoke();
+            }
+
+            return potion;
+        }
+
+
+        [Effect("HQ_MAG", Timing.OnAttack, priority = -100)]
+        public Attack FireBall(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            SetCooldown();
+            return new Attack
+            {
+                MAtk = fighter.Status.MAtk,
+                Multi = 3,
+                Combo = 1,
+                Id = "FB_MAG"
+            };
+        }
+
+
+        [Effect("ZZFD_MAG", Timing.OnAttack, priority = -100)]
+        public Attack TraceMissile(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            return new Attack
+            {
+                MAtk = fighter.Status.MAtk,
+                Multi = 2,
+                Combo = 1,
+                Id = "ZZFD_MAG"
+            };
+        }
+        
+        [Effect("ASFD_MAG", Timing.OnAttack, priority = -100)]
+        public Attack ArcaneMissile(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            return new Attack
+            {
+                MAtk = fighter.Status.MAtk,
+                Multi = 1,
+                Combo = (int)Bp.Param1,
+                Id = "ASFD_MAG"
+            };
+        }
+        
+        [Effect("YSS_MAG", Timing.OnAttack, priority = -100)]
+        public Attack Meteor(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            return new Attack
+            {
+                MAtk = fighter.Status.MAtk,
+                Multi = 1,
+                Combo = (int)Bp.Param1,
+                Id = "ASFD_MAG"
+            };
+        }
+
+        [Effect("JZ_MAG", Timing.OnEngage)]
+        public void Arrogance(PlayerData player, PlayerData enemy)
+        {
+            ((PlayerData)player).ApplySelfBuff(new BuffData(){CurLv = CurLv, Id = "surging"});
             Activate?.Invoke();
-            return attack;
         }
         
         
+
         [Effect("ether body", Timing.OnAttack)]
         public Attack EtherBody(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -455,7 +546,6 @@ namespace Game
             Activate?.Invoke();
             return attack;
         }
-
         
         
         

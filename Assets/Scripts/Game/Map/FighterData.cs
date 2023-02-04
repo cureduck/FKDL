@@ -8,6 +8,7 @@ using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using Object = System.Object;
+using Random = UnityEngine.Random;
 
 namespace Game
 {
@@ -70,7 +71,7 @@ namespace Game
                 var atk = InitAttack(skillData);
                 atk = CheckChain<Attack>(Timing.OnAttack, new object[] {atk, this, target});
                 skillData.Sealed = true;
-                skillData.SetCooldown();
+                //skillData.SetCooldown();
                 return atk;
             }
         }
@@ -118,6 +119,7 @@ namespace Game
         }
 
 
+        [Button]
         public void Gain(int gold)
         {
             foreach (var skill in Skills)
@@ -208,6 +210,33 @@ namespace Game
             modify = CheckChain<BattleStatus>(Timing.OnStrengthen, new object[] {modify, this});
             this.Status += modify;
             Updated();
+        }
+
+
+        public void RandomStrengthen(int v = 1)
+        {
+            var r = Random.Range(0, 6);
+            switch (r)
+            {
+                case 0:
+                    Strengthen(new BattleStatus{MaxHp = 5 * v});
+                    break;
+                case 1:
+                    Strengthen(new BattleStatus{MaxMp = 5 * v});
+                    break;
+                case 2:
+                    Strengthen(new BattleStatus{PAtk = v});
+                    break;
+                case 3:
+                    Strengthen(new BattleStatus{PDef = v});
+                    break;
+                case 4:
+                    Strengthen(new BattleStatus{MAtk = v});
+                    break;
+                case 5:
+                    Strengthen(new BattleStatus{MDef = v});
+                    break;
+            }
         }
         
 
@@ -386,7 +415,7 @@ namespace Game
         /// <returns></returns>
         public Attack? ManageAttackRound(SkillData skill = null)
         {
-            if ((skill!=null)&&(!skill.IsBattleSkill))
+            if ((skill!=null)&&(!skill.Bp.BattleOnly))
             {
                 CastNonAimingSkill(skill);
                 return null;
@@ -398,7 +427,7 @@ namespace Game
                 OperateAttack(Enemy, pa);
 
                 //Settle(pa, Enemy);
-
+                Updated();
                 return pa;
             }
         }
@@ -428,7 +457,7 @@ namespace Game
 
 
 
-        public void Attack(FighterData target, Attack attack)
+        /*public void Attack(FighterData target, Attack attack)
         {
             var result = target.Defend(attack, this);
             var r = Settle(result, target);
@@ -437,8 +466,8 @@ namespace Game
             {
                 Kill(r, target);
             }
-
         }
+        */
         
         
         

@@ -22,7 +22,7 @@ namespace Game
 
         public SkillData Skill;
 
-        public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 2)
+        public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1)
         {
             Combo = combo;
             Multi = multi;
