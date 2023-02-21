@@ -16,7 +16,7 @@ using Random = System.Random;
 namespace Managers
 {
     [ExecuteAlways]
-    public class SkillManager : Singleton<SkillManager>
+    public class RelicManager : Singleton<RelicManager>
     {
         public Dictionary<string, Skill> Lib;
         public Dictionary<Rank, LinkedList<Skill>> Ordered;

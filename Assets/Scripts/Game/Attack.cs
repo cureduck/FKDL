@@ -17,32 +17,54 @@ namespace Game
 
         public float Multi;
         public int Combo;
+        public BattleStatus Cost;
+        public string CostKw;
         
         public bool Death;
-
-        public SkillData Skill;
-
-        public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1)
+        
+        public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1,string id = "", BattleStatus cost = new BattleStatus(), string costKw = "")
         {
             Combo = combo;
             Multi = multi;
             PAtk = pAtk;
             MAtk = mAtk;
             CAtk = cAtk;
-            Id = null;
+            Id = id;
             PDmg = 0;
             MDmg = 0;
             CDmg = 0;
-            Skill = null;
+            //Skill = null;
+            Cost = cost;
+            CostKw = costKw;
 
             Death = false;
         }
+        
+        
+        public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1, string id ="", int manaCost = 0)
+        {
+            Combo = combo;
+            Multi = multi;
+            PAtk = pAtk;
+            MAtk = mAtk;
+            CAtk = cAtk;
+            Id = id;
+            PDmg = 0;
+            MDmg = 0;
+            CDmg = 0;
+            //Skill = null;
+            Cost = BattleStatus.ManaCost(manaCost);
+            CostKw = "";
+
+            Death = false;
+        }
+        
 
 
         [JsonIgnore] public int Sum => PDmg + MDmg + CDmg;
 
         [JsonIgnore]
-        public Attack SubAttack
+        private Attack SubAttack
         {
             get
             {
@@ -55,6 +77,10 @@ namespace Game
         }
 
 
+        /// <summary>
+        /// 伤害累计
+        /// </summary>
+        /// <param name="subAttack"></param>
         public void Include(Attack subAttack)
         {
             this.PDmg += subAttack.PDmg;

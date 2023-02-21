@@ -105,6 +105,20 @@ namespace Game
                 PAtk = value
             };
         }
+
+        /// <summary>
+        /// 自动将输入转为负值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static BattleStatus ManaCost(int value)
+        {
+            return new BattleStatus
+            {
+                CurMp = -value
+            };
+        }
+        
         
     }
 }

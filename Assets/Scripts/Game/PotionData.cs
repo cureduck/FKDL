@@ -37,7 +37,11 @@ namespace Game
         [Effect("firepotion", Timing.PotionEffect)]
         public void FirePotion(FighterData player)
         {
-            var data = GameManager.Instance.Focus;
+            if (GameManager.Instance.InBattle)
+            {
+                var attack = new Attack(mAtk: (int)Bp.Param1, id: "firepotion", manaCost: 0);
+                GameManager.Instance.PlayerData.Enemy.Settle(attack, player);
+            }
             
         }
         
@@ -51,7 +55,7 @@ namespace Game
         [Effect("mppotion+", Timing.PotionEffect)]
         public void MpPotionP(FighterData player)
         {
-            player.Heal(new BattleStatus{CurHp = (int)(player.Status.MaxMp*Bp.Param1)});
+            player.Heal(new BattleStatus{CurMp = (int)(player.Status.MaxMp*Bp.Param1)});
         }
                 
         [Effect("angerpotion+", Timing.PotionEffect)]
@@ -95,6 +99,17 @@ namespace Game
         {
             player.Strengthen(new BattleStatus{PDef = (int)Bp.Param1});
         }
+        
+        [Effect("fullpotion", Timing.PotionEffect)]
+        public void FullPotion(FighterData player)
+        {
+            player.Heal(new BattleStatus
+            {
+                CurMp = 10000,
+                CurHp = 10000
+            });
+        }
+        
         #endregion
     }
 }

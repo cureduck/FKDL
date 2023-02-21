@@ -7,6 +7,7 @@
             Potion,
             Skill,
             Gold,
+            Relic,
             Key
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
@@ -20,13 +21,16 @@ namespace Game
         [ShowInInspector] public BuffAgent Buffs;
 
         public abstract FighterData Enemy { get; }
+
+        public int Shield;
         
         private Attack InitAttack(SkillData skill = null)
         {
-            return new Attack(Status.PAtk) {Skill = skill};
+            return new Attack(Status.PAtk, manaCost: 0); //{Skill = skill};
         }
 
         [JsonIgnore] public bool IsPlayer => this == GameManager.Instance.PlayerData;
+        [JsonIgnore] public bool IsAlive => Status.CurHp > 0;
 
         public Attack Defend(Attack attack, FighterData enemy)
         {
@@ -88,6 +92,13 @@ namespace Game
                 tmp = target.Defend(tmp, this);
                 Settle(tmp, Enemy);
                 attack.Include(tmp);
+
+                if (!Enemy.IsAlive)
+                {
+                    Kill(attack, Enemy);
+                    break;
+                }
+                
             }
         }
 
@@ -103,7 +114,9 @@ namespace Game
         public Attack Settle(Attack r, FighterData enemy)
         {
 
-            CheckChain<Attack>(Timing.OnDefend, new object[] {r, this, enemy});
+            var rr = CheckChain<Attack>(Timing.OnDefend, new object[] {r, this, enemy});
+            
+            Cost(rr.Cost, rr.CostKw);
             
             CoolDown();
             Buffs.RemoveZeroStackBuff();
@@ -114,6 +127,7 @@ namespace Game
         public Attack Kill(Attack r, FighterData enemy)
         {
             r = CheckChain<Attack>(Timing.OnKill, new object[] {r, this, enemy});
+            Debug.Log("killed");
             
             return r;
         }
@@ -139,7 +153,9 @@ namespace Game
         public void Cost(BattleStatus modify, string kw = null)
         {
             modify = CheckChain<BattleStatus>(Timing.OnCost, new object[] {modify, this, kw});
-            Status -= modify;
+            Status += modify;
+            Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
+            Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
             Updated();
         }
         
@@ -147,7 +163,9 @@ namespace Game
         public void CounterCharge(BattleStatus modify, string kw = null)
         {
             modify = CheckChain<BattleStatus>(Timing.OnCounterCharge, new object[] {modify, this, kw});
-            Status -= modify;
+            Status += modify;
+            Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
+            Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
             Updated();
         }
         
@@ -254,6 +272,8 @@ namespace Game
             modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] {modify, this});
             this.Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
+            Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
+
             Updated();
         }
 
@@ -287,8 +307,21 @@ namespace Game
                     tmp.Add(buff);
                 }
             }
+
+
+            if (this is PlayerData player)
+            {
+                foreach (var relic in player.Relics)
+                {
+                    if (relic.MayAffect(timing, out _))
+                    {
+                        tmp.Add(relic);
+                    }
+                }
+            }
             
-            
+
+
             tmp.Sort(
                 (x, y) =>
                 {
@@ -326,6 +359,17 @@ namespace Game
                 }
             }
             
+            if (this is PlayerData player)
+            {
+                foreach (var relic in player.Relics)
+                {
+                    if (relic.MayAffect(timing, out _))
+                    {
+                        tmp.Add(relic);
+                    }
+                }
+            }
+            
             
             tmp.Sort(
                 (x, y) =>
@@ -340,7 +384,6 @@ namespace Game
                 sk.Affect(timing, param);
             }
         }
-        
         
         public BuffData ApplyBuff(BuffData buff)
         {
@@ -371,7 +414,7 @@ namespace Game
             if ((Skills[index].Bp.Positive))
             {
                 Skills[index].Bp.Fs[Timing.SkillEffect].Invoke(Skills[index], new object[]{this});
-                Skills[index].SetCooldown();
+                //Skills[index].SetCooldown();
                 Updated();
             }
             else
@@ -385,7 +428,7 @@ namespace Game
             if ((skill.Bp.Positive))
             {
                 skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
-                skill.SetCooldown();
+                //skill.SetCooldown();
                 Updated();
             }
             else
@@ -424,9 +467,12 @@ namespace Game
             {
                 var pa = ForgeAttack(Enemy, skill);
 
+                if (skill != null) skill.Sealed = false;
+                
                 OperateAttack(Enemy, pa);
-
+                
                 //Settle(pa, Enemy);
+                if (skill != null) skill.Sealed = true;
                 Updated();
                 return pa;
             }

@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using Object = System.Object;
 
 namespace Game
 {
@@ -16,13 +17,24 @@ namespace Game
     {
         public string Id;
         public PotionData[] Potions;
+        public List<RelicData> Relics;
         
+
+        public bool Engaging;
         public Dictionary<Rank, int> Keys;
 
         [JsonIgnore] public override FighterData Enemy => (EnemySaveData) GameManager.Instance.Focus.Data;
 
         public void March(string destination)
         {
+            Debug.Log($"destination {destination}");
+            CheckChain(Timing.OnMarch, new object[] {this});
+        }
+
+
+        public PlayerData()
+        {
+            Relics = new List<RelicData>();
             
         }
 
@@ -61,6 +73,9 @@ namespace Game
                 case Offer.OfferKind.Gold:
                     Gold += offer.Gold;
                     return true;
+                case Offer.OfferKind.Relic:
+                    return TryTakeRelic(offer.Id);
+                
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -103,6 +118,46 @@ namespace Game
 
             return false;
         }
+
+
+        public bool TryTakeRelic(string id)
+        {
+            if (RelicManager.Instance.Lib.TryGetValue(id, out var sk))
+            {
+                for (int i = 0; i < Skills.Count; i++)
+                {
+                    if ((Skills[i].Id == id))
+                    {
+                        if (sk.MaxLv <= Skills[i].CurLv)
+                        {
+                            WindowManager.Instance.Warn("Skill Max!");
+                            return false;
+                        }
+                        else
+                        {
+                            Skills[i].LvUp(this);
+                            Updated();
+                            return true;
+                        }
+                        
+                    }
+                }
+
+                for (var i = 0; i < Skills.Count; i++)
+                {
+                    if (Skills[i].IsEmpty)
+                    {
+                        Skills[i].Id = id;
+                        Skills[i].CurLv = 1;
+                        Equip(Skills[i]);
+                        Updated();
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
         
         
         public bool TryTakeSkill(string id)

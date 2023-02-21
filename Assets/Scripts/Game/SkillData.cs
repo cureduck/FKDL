@@ -360,24 +360,30 @@ namespace Game
         {
             var p = Provider.Instance.CreateRandomPotion(Rank.Normal);
             GameManager.Instance.PlayerData.TryTake(new Offer(){Id = p.Id, Kind = Offer.OfferKind.Potion});
+            SetCooldown();
         }
 
         [Effect("JSLZ_ALC", Timing.SkillEffect)]
         public void MetalTrans(FighterData fighter)
         {
             fighter.ApplySelfBuff(new BuffData{Id = "Bellow", CurLv = (int)Bp.Param1});
+            SetCooldown();
         }
+        
+        
 
         [Effect("XYLZ_ALC", Timing.SkillEffect)]
         public void BloodTrans(FighterData fighter)
         {
             fighter.Heal(new BattleStatus{CurHp = (int)Bp.Param1});
+            SetCooldown();
         }
         
         [Effect("YRLZ_ALC", Timing.SkillEffect)]
         public void FleshTrans(FighterData fighter)
         {
-            
+            fighter.Heal(new BattleStatus{CurHp = (int)Bp.Param1 * fighter.Status.MaxHp});
+            SetCooldown();
         }
         
         
@@ -484,13 +490,7 @@ namespace Game
         public Attack FireBall(Attack attack, FighterData fighter, FighterData enemy)
         {
             SetCooldown();
-            return new Attack
-            {
-                MAtk = fighter.Status.MAtk,
-                Multi = 3,
-                Combo = 1,
-                Id = "FB_MAG"
-            };
+            return new Attack(0, fighter.Status.MAtk, 0, Bp.Param1, 1, "HQ_MAG", Bp.Cost);
         }
 
 
@@ -502,7 +502,8 @@ namespace Game
                 MAtk = fighter.Status.MAtk,
                 Multi = 2,
                 Combo = 1,
-                Id = "ZZFD_MAG"
+                Id = "ZZFD_MAG",
+                Cost = BattleStatus.ManaCost(Bp.Cost)
             };
         }
         
@@ -538,16 +539,31 @@ namespace Game
         }
         
         
+        [Effect("MS_MAG", Timing.OnKill)]
+        public void MieShi(Attack attack, PlayerData player, PlayerData enemy)
+        {
+            player.Strengthen(new BattleStatus{MaxMp = (int)Bp.Param1});
+            Activate?.Invoke();
+        }
+        
 
-        [Effect("ether body", Timing.OnAttack)]
+        [Effect("YTZQ_MAG", Timing.OnAttack)]
         public Attack EtherBody(Attack attack, FighterData fighter, FighterData enemy)
         {
-            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            var num = (int) ((fighter.Status.MaxMp - fighter.Status.CurHp) / Bp.Param1) * Bp.Param2;
+            attack.MAtk += (int)num;
             Activate?.Invoke();
             return attack;
         }
         
-        
+        [Effect("FLBZ_MAG", Timing.OnAttack)]
+        public Attack FaLiBaoZou(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            var num = attack.Cost.CurMp;
+            attack.MAtk += num;
+            Activate?.Invoke();
+            return attack;
+        }
         
         
         

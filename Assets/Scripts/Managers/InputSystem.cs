@@ -126,11 +126,13 @@ namespace Managers
                             {
                                 GameManager.Instance.Focus?.UnFocus();
 
-                                if ((t is EnemySaveData es)&&(es.IsAlive))
+                                if ((GameManager.Instance.Focus.Data is EnemySaveData es)&&(es.IsAlive))
                                 {
                                     es.Chase();
                                 }
-
+                                
+                                GameManager.Instance.PlayerData.Engaging = true;
+                                
                                 previous = GameManager.Instance.Focus;
                             }
                             GameManager.Instance.Focus = sq;

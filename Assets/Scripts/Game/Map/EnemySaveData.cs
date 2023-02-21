@@ -14,7 +14,6 @@ namespace Game
 
 
         [JsonIgnore] public override FighterData Enemy => GameManager.Instance.PlayerData;
-        [JsonIgnore] public bool IsAlive => Status.CurHp > 0;
         
         public EnemySaveData(string id) : base()
         {
@@ -84,24 +83,20 @@ namespace Game
         public override void OnReact()
         {
             WindowManager.Instance.Display(this);
-            GameManager.Instance.PlayerData.ManageAttackRound();
-            if (!IsAlive)
-            {
-                Destroyed();
-                return;
-            }
-            else
-            {
-                PlanAttackRound();
-            }
-            base.OnReact();
+            OnReact(null);
         }
 
 
         public void OnReact(SkillData skill)
         {
             GameManager.Instance.PlayerData.ManageAttackRound(skill);
-            if (Status.CurHp <= 0)
+
+            if (GameManager.Instance.PlayerData.Engaging)
+            {
+                Debug.Log($"Engaging {Bp.Id}!");
+            }
+            GameManager.Instance.PlayerData.Engaging = false;
+            if (!IsAlive)
             {
                 Destroyed();
                 return;
