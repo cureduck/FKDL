@@ -71,7 +71,7 @@ namespace Game
                 case Offer.OfferKind.Skill:
                     return TryTakeSkill(offer.Id);
                 case Offer.OfferKind.Gold:
-                    Gold += offer.Gold;
+                    Gain(offer.Gold);
                     return true;
                 case Offer.OfferKind.Relic:
                     return TryTakeRelic(offer.Id);
@@ -80,6 +80,10 @@ namespace Game
                     throw new ArgumentOutOfRangeException();
             }
         }
+        
+        
+        
+        
 
 
         [Button]
@@ -199,6 +203,88 @@ namespace Game
         }
 
 
+        public void Execute(string cmds)
+        {
+            foreach (var cmd in cmds.Replace(" ","").Split('|'))
+            {
+
+                try
+                {
+                    var prefix = cmd.Split(':')[0];
+                    switch (prefix)
+                    {
+                        case "buff":
+                            var kind = cmd.Split(':')[1];
+                            var stack = cmd.Split(':')[2];
+                            break;
+                        case "gold":
+                            var count = int.Parse(cmd.Split(':')[1]);
+                            Gain(count);
+                            break;
+                        case "skill":
+                            break;
+                        case "relic":
+                            break;
+                        case "attr":
+                            var type = cmd.Split(':')[1].ToLower();
+                            var count1 = int.Parse(cmd.Split(':')[2]);
+                            switch (type)
+                            {
+                                case "curhp":
+                                    if (count1 > 0)
+                                    {
+                                        Heal(BattleStatus.Healing(count1));
+                                    }
+                                    else
+                                    {
+                                        Cost(new BattleStatus{CurHp = count1});
+                                    }
+                                    break;
+                                case "curmp":
+                                    if (count1 > 0)
+                                    {
+                                        Heal(BattleStatus.ManaCost(count1));
+                                    }
+                                    else
+                                    {
+                                        Cost(BattleStatus.ManaCost(-count1));
+                                    }
+                                    break;
+                                case "maxhp":
+                                    Strengthen(new BattleStatus{MaxHp = count1});
+                                    break;
+                                case "maxmp":
+                                    Strengthen(new BattleStatus{MaxHp = count1});
+                                    break;
+                                case "matk":
+                                    Strengthen(new BattleStatus{MAtk = count1});
+                                    break;
+                                case "patk":
+                                    Strengthen(new BattleStatus{PAtk = count1});
+                                    break;
+                                case "mdef":
+                                    Strengthen(new BattleStatus{MDef = count1});
+                                    break;
+                                case "pdef":
+                                    Strengthen(new BattleStatus{PDef = count1});
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case "jump":
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"{cmd} execute error");
+                }
+                
+            }
+        }
         
         
         public void Save()

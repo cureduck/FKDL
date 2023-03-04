@@ -30,6 +30,12 @@ namespace Managers
         public event Action GameLoaded;
 
 
+        private void Start()
+        {
+            DontDestroyOnLoad(this);
+        }
+
+
         public void RollForSkill(int rank)
         {
             RollForSkill((Rank)rank);

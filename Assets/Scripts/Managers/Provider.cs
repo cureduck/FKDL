@@ -1,4 +1,5 @@
 ﻿using Game;
+using Tools;
 
 namespace Managers
 {
@@ -8,7 +9,7 @@ namespace Managers
         {
             var potion = new PotionData
             {
-                Id = (Tools.ChooseRandom(PotionManager.Instance.Ordered[rank])).Id,
+                Id = (Tools.Tools.ChooseRandom(PotionManager.Instance.Ordered[rank])).Id,
                 Count = count
             };
 

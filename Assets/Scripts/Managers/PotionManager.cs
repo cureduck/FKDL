@@ -42,7 +42,7 @@ namespace Managers
                 }
                 catch (Exception)
                 {
-                    Debug.Log("potion load failed");
+                    Debug.Log($"{line["id"]} potion load failed");
                 }
             }
             
@@ -54,9 +54,9 @@ namespace Managers
         {
             return new Potion
             {
-                Id = line[0].ToLower().Replace(" ", ""),
-                Rank = (Rank) int.Parse(line[1]),
-                Param1 = float.Parse(line[2]),
+                Id = line["id"].ToLower().Replace(" ", ""),
+                Rank = (Rank) int.Parse(line["rarity"]),
+                Param1 = float.Parse(line["P1"]),
             };
         }
         

@@ -44,7 +44,9 @@ namespace Game
         }
         
         
-
+        /// <summary>
+        /// 面积
+        /// </summary>
         [JsonIgnore] public int Area => Placement.Height * Placement.Width;
 
         [JsonIgnore]

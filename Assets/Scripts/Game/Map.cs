@@ -51,9 +51,9 @@ namespace Game
                     }
                     catch (Exception e)
                     {
-                        if (square is EnemySaveData sq )
+                        if (square is EnemySaveData sq)
                         {
-                            Debug.Log($"{sq.Id} {floor.FloorName} {square.Placement}");
+                            Debug.Log($"missing:{sq.Id} floor:{floor.FloorName} crood:{square.Placement}");
                         }
                     }
                 }

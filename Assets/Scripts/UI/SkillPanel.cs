@@ -53,7 +53,7 @@ namespace UI
         }
         
         
-        private void ClickSkillBtn(int index)
+        public void ClickSkillBtn(int index)
         {
             var skill = _master.Skills[index];
 

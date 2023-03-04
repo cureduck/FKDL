@@ -11,6 +11,10 @@ namespace Managers
     {
         public OfferWindow OffersWindow;
         public ShopPanel ShopPanel;
+        public CrystalPanel CrystalPanel;
+        public GameObject MenuWindow;
+        public GameObject CheatWindow;
+        
         
         public Localize WarnWindow;
 
