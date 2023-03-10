@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Game;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = System.Random;
 
@@ -20,7 +21,6 @@ namespace Managers
 
         public GameObject MapGo;
 
-        public Random Random;
         public Square Focus;
 
         public bool InBattle => Focus?.Data is EnemySaveData;
@@ -32,7 +32,10 @@ namespace Managers
 
         private void Start()
         {
-            DontDestroyOnLoad(this);
+            if (Application.isPlaying)
+            {
+                DontDestroyOnLoad(this);
+            }
         }
 
 

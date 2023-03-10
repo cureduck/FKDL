@@ -74,9 +74,9 @@ namespace Managers
                 }
 
                 StartCoroutine(Play());
-                /*SoundEffect.clip = audioClip;
+                SoundEffect.clip = audioClip;
                 SoundEffect.SetScheduledEndTime(SoundEffect.clip.length * times);
-                SoundEffect.Play();*/
+                SoundEffect.Play();
             }
         }
     }

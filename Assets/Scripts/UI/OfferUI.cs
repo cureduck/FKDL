@@ -1,6 +1,7 @@
 ﻿using System;
 using Game;
 using I2.Loc;
+using Managers;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -14,8 +15,20 @@ namespace UI
     /// </summary>
     public class OfferUI : MonoBehaviour
     {
+        public Sprite PositiveImage;
+        public Sprite PassiveImage;
+        
+        
         public Image Icon;
         public Localize Id;
+        public Localize Prof;
+        public Localize Positive;
+        public Localize Description;
+
+        public Image Bg;
+        
+        public Transform RankStar;
+        
         public TMP_Text CostLabel;
         
         public int Cost;
@@ -28,6 +41,11 @@ namespace UI
         {
             UpdateData();
         }
+        
+        
+        
+        
+        
 
 
         public void UpdateData()
@@ -44,6 +62,35 @@ namespace UI
                     break;
                 case Offer.OfferKind.Skill:
                     Id.SetTerm(Offer.Id);
+                    var skill = SkillManager.Instance.Lib[Offer.Id];
+                    Positive?.SetTerm(skill.Positive? "positive" : "passive");
+                    if (Bg != null)
+                    {
+                        Bg.sprite = skill.Positive ? PositiveImage : PassiveImage;
+                    }
+                    Prof?.SetTerm(skill.Pool);
+                    Description?.SetTerm(skill.Description);
+
+                    if (RankStar != null)
+                    {
+                        foreach (Transform child in RankStar)
+                        {
+                        
+                            if (child.GetSiblingIndex() > ((int)skill.Rank))
+                            {
+                                child.gameObject.SetActive(false);
+                            }
+                            else
+                            {
+                                child.gameObject.SetActive(true);
+                            }
+                        }
+                    }
+                    
+                    if (CostLabel != null)
+                    {
+                        CostLabel.text = skill.Cost == 0 ? skill.Cost.ToString() : "";
+                    }
                     break;
                 case Offer.OfferKind.Gold:
                     Id.SetTerm(Offer.Gold.ToString());

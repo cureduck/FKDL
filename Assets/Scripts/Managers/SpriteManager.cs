@@ -6,7 +6,7 @@ namespace Managers
 {
     public class SpriteManager : Singleton<SpriteManager>
     {
-        private const string IconPath = "BuffIcon";
+        private const string IconPath = "SourceImages";
         public Dictionary<string, Sprite> BuffIcons;
 
         public Dictionary<Rank, Sprite> PotionBottleIcon;

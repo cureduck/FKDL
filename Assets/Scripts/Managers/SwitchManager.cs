@@ -10,12 +10,14 @@ namespace Managers
     public class SwitchManager : Singleton<SwitchManager>
     {
         public Animation Curtain;
-
+        public bool NewGame { get; set; }
+        
+        
         private void Start()
         {
             DontDestroyOnLoad(transform.parent);
             DontDestroyOnLoad(Curtain.transform.parent);
-            DontDestroyOnLoad(Curtain);
+            //DontDestroyOnLoad(Curtain);
         }
 
 
@@ -51,6 +53,20 @@ namespace Managers
                 yield return new WaitForEndOfFrame();
             }
             op.allowSceneActivation = true;
+            yield return new WaitForEndOfFrame();
+
+            if ((scene == "MainScene"))
+            {
+                if (NewGame)
+                {
+                    GameManager.Instance.LoadFromInit();
+                }
+                else
+                {
+                    GameManager.Instance.LoadFromSave();
+                }
+            }
+            
         }
     }
 }

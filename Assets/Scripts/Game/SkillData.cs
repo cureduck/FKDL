@@ -264,10 +264,10 @@ namespace Game
         [Effect("poison blood", Timing.OnSettle)]
         public Attack PoisonAttack(Attack result, FighterData fighter, FighterData enemy)
         {
-            if (result.Sum > 0)
+            if (result.SumDmg > 0)
             {
                 Activate?.Invoke();
-                enemy.Defend(new Attack() {MAtk = result.Sum}, fighter);
+                enemy.Defend(new Attack() {MAtk = result.SumDmg}, fighter);
             }
 
             return result;
@@ -423,10 +423,10 @@ namespace Game
         [Effect("DZXY_ALC", Timing.OnSettle)]
         public Attack PoisonBlood(Attack attack, FighterData fighter, FighterData enemy)
         {
-            if (attack.Sum > 0)
+            if (attack.SumDmg > 0)
             {
                 Activate?.Invoke();
-                enemy.Defend(new Attack() {MAtk = attack.Sum}, fighter);
+                enemy.Defend(new Attack() {MAtk = attack.SumDmg}, fighter);
             }
 
             return attack;
@@ -435,7 +435,7 @@ namespace Game
         [Effect("ZHQX_ALC", Timing.OnSettle)]
         public Attack SelfDestructive(Attack attack, FighterData fighter, FighterData enemy)
         {
-            if (attack.Sum > 0)
+            if (attack.SumDmg > 0)
             {
                 if (Random.Range(0f, 1f) < .3f)
                 {

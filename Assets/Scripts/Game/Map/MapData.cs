@@ -28,6 +28,8 @@ namespace Game
         
         public virtual void OnReact(){}
         
+        public virtual void OnLeave(){}
+        
         public event Action OnDestroy;
         public event Action OnUpdated;
 

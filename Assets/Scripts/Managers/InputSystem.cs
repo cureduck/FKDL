@@ -126,16 +126,24 @@ namespace Managers
                             {
                                 GameManager.Instance.Focus?.UnFocus();
 
-                                if ((GameManager.Instance.Focus.Data is EnemySaveData es)&&(es.IsAlive))
+                                /*if ((GameManager.Instance.Focus.Data is EnemySaveData es)&&(es.IsAlive))
                                 {
                                     es.Chase();
-                                }
+                                }*/
+                                GameManager.Instance.Focus.Data.OnLeave();
                                 
                                 GameManager.Instance.PlayerData.Engaging = true;
                                 
                                 previous = GameManager.Instance.Focus;
                             }
                             GameManager.Instance.Focus = sq;
+                            
+                            if ((GameManager.Instance.Focus.Data is EnemySaveData es))
+                            {
+                                WindowManager.Instance.EnemyPanel.gameObject.SetActive(true);
+                                WindowManager.Instance.EnemyPanel.transform.position = sq.transform.position;
+                            }
+                            
                             if (previous != null) previous.UpdateFace();
                             sq.Focus();
                             //t.RevealAround();

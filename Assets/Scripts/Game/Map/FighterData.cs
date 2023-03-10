@@ -41,7 +41,7 @@ namespace Game
             
             attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
 
-            Status.CurHp -= attack.Sum;
+            Status.CurHp -= attack.SumDmg;
             
             Updated();
             
@@ -84,22 +84,26 @@ namespace Game
 
         public void OperateAttack(FighterData target, Attack attack)
         {
-            var i = 0;
+            //当前连击段数
+            int i = 0;
+            var tmp = attack;
             while (attack.Combo > 0)
             {
-                var tmp = attack;
                 tmp = CheckChain<Attack>(Timing.OnStrike, new object[] {tmp, this, target, i});
                 tmp = target.Defend(tmp, this);
                 Settle(tmp, Enemy);
                 attack.Include(tmp);
-
+                
                 if (!Enemy.IsAlive)
                 {
                     Kill(attack, Enemy);
                     break;
                 }
-                
+
+                i += 1;
             }
+            
+            //AudioPlayer.Instance.PlaySoundEffect();
         }
 
 

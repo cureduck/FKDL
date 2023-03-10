@@ -61,7 +61,7 @@ namespace Game
         
 
 
-        [JsonIgnore] public int Sum => PDmg + MDmg + CDmg;
+        [JsonIgnore] public int SumDmg => PDmg + MDmg + CDmg;
 
         [JsonIgnore]
         private Attack SubAttack

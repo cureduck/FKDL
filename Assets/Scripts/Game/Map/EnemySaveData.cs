@@ -86,6 +86,16 @@ namespace Game
             OnReact(null);
         }
 
+        public override void OnLeave()
+        {
+            WindowManager.Instance.EnemyPanel.gameObject.SetActive(false);
+            base.OnLeave();
+            if (IsAlive)
+            {
+                Chase();
+            }
+        }
+
 
         public void OnReact(SkillData skill)
         {

@@ -14,13 +14,13 @@ namespace Managers
         public CrystalPanel CrystalPanel;
         public GameObject MenuWindow;
         public GameObject CheatWindow;
-        
+        public EnemyPanel EnemyPanel;
         
         public Localize WarnWindow;
 
         public void Display(EnemySaveData data)
         {
-            EnemyPanel.Instance.Load(data);
+            EnemyPanel.Load(data);
         }
         
         
