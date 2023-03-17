@@ -503,7 +503,7 @@ namespace Game
                 Multi = 2,
                 Combo = 1,
                 Id = "ZZFD_MAG",
-                Cost = BattleStatus.ManaCost(Bp.Cost)
+                Cost = BattleStatus.MPCOST(Bp.Cost)
             };
         }
         

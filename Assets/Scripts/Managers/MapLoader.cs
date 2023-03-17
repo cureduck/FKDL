@@ -92,7 +92,7 @@ namespace Managers
                         floor.Squares.AddLast(new KeySaveData((Rank)v) {Placement = p});
                         break;
                     case "crystal":
-                        floor.Squares.AddLast(new CrystalSaveData() {Placement = p});
+                        floor.Squares.AddLast(new CrystalSaveData((Rank)v) {Placement = p});
                         break;
                     case "traveler":
                         floor.Squares.AddLast(new TravellerSaveData() {Placement = p});
@@ -119,7 +119,7 @@ namespace Managers
                         floor.Squares.AddLast(new GoldSaveData(v) {Placement = p});
                         break;
                     default:
-                        Debug.Log("Unknown " + prefix);
+                        Debug.Log($"Unknown {prefix} {worksheet.Name} {p}");
                         break;
                 }
 

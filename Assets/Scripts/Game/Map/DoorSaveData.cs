@@ -1,4 +1,6 @@
-﻿using Managers;
+﻿using System;
+using Managers;
+using Random = UnityEngine.Random;
 
 namespace Game
 {
@@ -13,19 +15,36 @@ namespace Game
 
         public override void OnReact()
         {
-            PlaySoundEffect("door");
             Destroyed();
             
-            /*base.OnReact();
-            if (GameManager.Instance.PlayerData.Keys[Rank] > 0)
+            base.OnReact();
+            try
             {
-                GameManager.Instance.PlayerData.Keys[Rank] -= 1;
-                Destroyed();
+                if (GameManager.Instance.PlayerData.Keys[Rank] > 0)
+                {
+                    GameManager.Instance.PlayerData.Keys[Rank] -= 1;
+                    PlaySoundEffect("door");
+                    Destroyed();
+                }
+                else
+                {
+                    //WindowManager.Instance.Warn("No Key");
+                    PlaySoundEffect("block");
+                    GameManager.Instance.PlayerData.Cost(BattleStatus.HP(3), "door");
+
+                    if (Random.Range(0f, 1f) < .3f)
+                    {
+                        PlaySoundEffect("door");
+                        Destroyed();
+                    }
+                }
             }
-            else
+            catch (Exception e)
             {
-                WindowManager.Instance.Warn("No Key");
-            }*/
+                Destroyed();
+                throw new Exception();
+            }
+
         }
     }
 }

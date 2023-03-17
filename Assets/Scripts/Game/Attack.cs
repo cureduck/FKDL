@@ -53,7 +53,7 @@ namespace Game
             MDmg = 0;
             CDmg = 0;
             //Skill = null;
-            Cost = BattleStatus.ManaCost(manaCost);
+            Cost = BattleStatus.MPCOST(manaCost);
             CostKw = "";
 
             Death = false;

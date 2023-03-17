@@ -90,7 +90,7 @@ namespace Game
             CurHp = math.min(MaxHp, CurHp);
         }
 
-        public static BattleStatus Healing(int value)
+        public static BattleStatus HP(int value)
         {
             return new BattleStatus
             {
@@ -111,7 +111,7 @@ namespace Game
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static BattleStatus ManaCost(int value)
+        public static BattleStatus MPCOST(int value)
         {
             return new BattleStatus
             {

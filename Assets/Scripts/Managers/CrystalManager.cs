@@ -41,7 +41,7 @@ namespace Managers
 
         private void HandleLine(ICsvLine line)
         {
-            var id = line["id"].ToLower().Replace(" ", "");
+            var id = line["id"];//.ToLower().Replace(" ", "");
             var rank = (Rank) int.Parse(line["rank"]);
             var isTitle = line["type"].Equals("title");
 
@@ -51,6 +51,7 @@ namespace Managers
                 {
                     Id = id,
                     Rank = rank,
+                    Title = id
                 };
             }
             else

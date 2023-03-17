@@ -28,7 +28,7 @@ namespace UI
             {
                 var tmp = Instantiate(OptionPrefab, OptionList);
                 tmp.gameObject.SetActive(true);
-                tmp.GetComponentInChildren<Localize>().SetTerm(option.Line);
+                tmp.GetComponentInChildren<Localize>().SetTerm(id +"_"+ option.Line);
                 tmp.onClick.AddListener((() =>
                 {
                     gameObject.SetActive(false);

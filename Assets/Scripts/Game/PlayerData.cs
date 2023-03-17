@@ -233,7 +233,7 @@ namespace Game
                                 case "curhp":
                                     if (count1 > 0)
                                     {
-                                        Heal(BattleStatus.Healing(count1));
+                                        Heal(BattleStatus.HP(count1));
                                     }
                                     else
                                     {
@@ -243,11 +243,11 @@ namespace Game
                                 case "curmp":
                                     if (count1 > 0)
                                     {
-                                        Heal(BattleStatus.ManaCost(count1));
+                                        Heal(BattleStatus.MPCOST(count1));
                                     }
                                     else
                                     {
-                                        Cost(BattleStatus.ManaCost(-count1));
+                                        Cost(BattleStatus.MPCOST(-count1));
                                     }
                                     break;
                                 case "maxhp":
