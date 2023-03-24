@@ -17,6 +17,16 @@ namespace Game
         [JsonIgnore] public Buff Bp => BuffManager.Instance.Lib.TryGetValue(Id.ToLower(), out var buff) ? buff : null;
 
 
+        public BuffData(string id, int curLv)
+        {
+            Id = id;
+            CurLv = curLv;
+        }
+
+        public BuffData()
+        {
+        }
+
         public event Action Removed;
 
         public void Remove()

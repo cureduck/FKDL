@@ -8,6 +8,7 @@ using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using TMPro;
+using UI;
 using UnityEngine;
 using Object = System.Object;
 
@@ -216,12 +217,16 @@ namespace Game
                         case "buff":
                             var kind = cmd.Split(':')[1];
                             var stack = cmd.Split(':')[2];
+                            AppliedBuff(new BuffData(kind, int.Parse(stack)));
                             break;
                         case "gold":
                             var count = int.Parse(cmd.Split(':')[1]);
                             Gain(count);
                             break;
                         case "skill":
+                            var ess = cmd.Split(':');
+                            var r = int.Parse(ess[1]);
+                            GameManager.Instance.RollForSkill(r);
                             break;
                         case "relic":
                             break;
@@ -273,6 +278,15 @@ namespace Game
                             }
                             break;
                         case "jump":
+                            break;
+                        case "potion":
+                            var es = cmd.Split(':');
+                            var id = es[1];
+                            var c = es.Length > 1 ? int.Parse(es[2]) : 1;
+                            for (int i = 0; i < c; i++)
+                            {
+                                TryTakePotion(id);
+                            }
                             break;
                         default:
                             break;

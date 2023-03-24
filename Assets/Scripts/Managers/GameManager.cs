@@ -37,6 +37,9 @@ namespace Managers
                 DontDestroyOnLoad(this);
             }
         }
+        
+        
+        
 
 
         public void RollForSkill(int rank)

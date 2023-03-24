@@ -74,7 +74,8 @@ namespace Game
         
         
 
-        [JsonIgnore] public Skill Bp => SkillManager.Instance.Lib[Id.ToLower()];
+        [JsonIgnore] public Skill Bp => SkillManager.Instance.Lib.TryGetValue(Id.ToLower(), out var v) ? v : null;
+
         [ShowInInspector] public event Action Activate;
         
         
@@ -82,6 +83,12 @@ namespace Game
         public bool MayAffect(Timing timing, out int priority)
         {
             if (Sealed)
+            {
+                priority = 0;
+                return false;
+            }
+
+            if (!SkillManager.Instance.Lib.ContainsKey(Id.ToLower()))
             {
                 priority = 0;
                 return false;
@@ -96,7 +103,7 @@ namespace Game
             {
                 priority = 0;
                 return false;
-            }        
+            }
         }
 
         public T Affect<T>(Timing timing, object[] param)

@@ -489,7 +489,7 @@ namespace Game
         {
             for (int i = 0; i < Skills.Count; i++)
             {
-                if (Skills[i].IsEmpty)
+                if ((Skills[i].IsEmpty)||(Skills[i].Bp == null))
                 {
                     break;
                 }

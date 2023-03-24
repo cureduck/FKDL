@@ -124,8 +124,12 @@ namespace Managers
                         Ordered[Rank.Uncommon].AddLast(sk);
                     }
 #endif
-
-                    Lib[attr.id.ToLower()].Fs[attr.timing] = method;
+                    
+                    if (Lib.TryGetValue(attr.id.ToLower(), out var v))
+                    {
+                        v.Fs[attr.timing] = method;
+                    }
+                    
                 }
             }
         }
