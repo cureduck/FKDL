@@ -2,12 +2,13 @@
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using UI;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace Game
 {
-    public class MapData
+    public class MapData : IUpdateable
     {
         public Placement Placement;
         public SquareState SquareState = SquareState.UnRevealed;

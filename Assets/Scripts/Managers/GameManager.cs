@@ -14,9 +14,23 @@ namespace Managers
     [ExecuteAlways]
     public class GameManager : Singleton<GameManager>
     {
-        public PlayerData PlayerData;
-        public Map Map;
+        public PlayerData PlayerData
+        {
+            get => GameDataManager.Instance.PlayerData;
+            set => GameDataManager.Instance.PlayerData = value;
+        } 
+        public Map Map
+        {
+            get => GameDataManager.Instance.Map;
+            private set => GameDataManager.Instance.Map = value;
+        }
 
+        public SecondaryData SecondaryData
+        {
+            get => GameDataManager.Instance.SecondaryData;
+            private set => GameDataManager.Instance.SecondaryData = value;
+        }
+        
         public GameObject Prefab;
 
         public GameObject MapGo;
@@ -28,8 +42,15 @@ namespace Managers
         public Dictionary<string, Color> SquareColors;
 
         public event Action GameLoaded;
-
-
+        public event Action<Square> FocusChanged;
+        
+        public void BroadcastSquare(Square square)
+        {
+            FocusChanged?.Invoke(square);
+        }
+        
+        
+        
         private void Start()
         {
             if (Application.isPlaying)
@@ -38,16 +59,11 @@ namespace Managers
             }
         }
         
-        
-        
-
-
         public void RollForSkill(int rank)
         {
             RollForSkill((Rank)rank);
         }
-
-
+        
         public void Attack()
         {
             if (PlayerData.Enemy != null)
@@ -56,7 +72,6 @@ namespace Managers
             }
         }
         
-
         public void RollForSkill(Rank rank)
         {
             var offers = new Offer[3];
@@ -80,7 +95,7 @@ namespace Managers
             try
             {
                 PlayerData = PlayerData.LoadFromSave();
-                PlayerData.Gain(0);
+                SecondaryData = SecondaryData.LoadFromSave();
                 Map = Map.LoadFromSave();
                 LoadMap();
             }
@@ -110,6 +125,7 @@ namespace Managers
         {
             PlayerData.Save();
             Map.Save();
+            SecondaryData.Save();
         }
         
         

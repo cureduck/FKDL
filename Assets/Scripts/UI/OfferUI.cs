@@ -17,8 +17,8 @@ namespace UI
     {
         public Sprite PositiveImage;
         public Sprite PassiveImage;
-        
-        
+
+        public Button targetButton;
         public Image Icon;
         public Localize Id;
         public Localize Prof;
@@ -34,19 +34,43 @@ namespace UI
         public int Cost;
         public bool IsGood;
         
-        [ShowInInspector] public Offer Offer;
+        [ShowInInspector] 
+        public Offer Offer;
 
+        private System.Action onClick;
+
+        //public Offer Offer 
+        //{
+        //    get 
+        //    {
+        //        return offer;
+        //    }
+        //}
+
+        private void Start()
+        {
+            targetButton.onClick.AddListener(OnClick);
+        }
 
         private void OnEnable()
         {
             UpdateData();
         }
-        
-        
-        
-        
-        
 
+
+
+        public void SetData(Offer offer, System.Action onClick)
+        {
+            this.Offer = offer;
+            this.onClick = onClick;
+            UpdateData();
+        }
+
+
+        private void OnClick() 
+        {
+            onClick?.Invoke();
+        }
 
         public void UpdateData()
         {
@@ -68,6 +92,8 @@ namespace UI
                     {
                         Bg.sprite = skill.Positive ? PositiveImage : PassiveImage;
                     }
+
+                    //Debug.Log(skill.Description);
                     Prof?.SetTerm(skill.Pool);
                     Description?.SetTerm(skill.Description);
 

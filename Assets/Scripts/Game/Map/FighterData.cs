@@ -22,6 +22,8 @@ namespace Game
 
         public abstract FighterData Enemy { get; }
 
+        [JsonIgnore] public int CurHp => Status.CurHp;
+        
         public int Shield;
         
         private Attack InitAttack(SkillData skill = null)

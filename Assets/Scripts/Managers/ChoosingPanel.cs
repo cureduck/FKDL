@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Managers
 {
-    public class ChoosingPanel : SerializedMonoBehaviour
+    public class ChoosingPanel : Singleton<ChoosingPanel>
     {
         public Image MainImage;
         public Image[] Images;

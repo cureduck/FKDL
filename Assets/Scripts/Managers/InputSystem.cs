@@ -121,6 +121,8 @@ namespace Managers
                     {
                         if (GameManager.Instance.Focus != sq)
                         {
+                            GameManager.Instance.BroadcastSquare(sq);
+                            
                             Square previous = null;
                             if (GameManager.Instance.Focus != null)
                             {
