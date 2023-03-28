@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Game
@@ -6,6 +7,9 @@ namespace Game
     public class SkillAgent : List<SkillData>
     {
 
+
+        public int EmptySlot => this.Count((data => data == SkillData.Empty));
+        
         public SkillAgent(SkillData[] bp)
         {
             if (bp.Length == 0)
@@ -22,6 +26,15 @@ namespace Game
         {
             
         }
+
+        public void AddSkillSlot(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Add(SkillData.Empty);
+            }
+        }
+        
 
         public bool UpgradeRandomSkill(Rank rank)
         {

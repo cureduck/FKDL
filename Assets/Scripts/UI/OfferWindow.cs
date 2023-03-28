@@ -1,5 +1,6 @@
 ﻿using Game;
 using System.Collections;
+using Managers;
 using UnityEngine;
 using UnityEngine.UI;
 //using System.Collections.Generic;
@@ -62,6 +63,7 @@ namespace UI
         private void OnClick(Offer offer,int targetIndex) 
         {
             Debug.Log($"{offer}被点击");
+            GameManager.Instance.PlayerData.TryTake(offer);
             animationGroup.SelectTarget(targetIndex);
             StartCoroutine(CloseWindowIE());
         }
