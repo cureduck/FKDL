@@ -115,7 +115,7 @@ namespace UI
                     
                     if (CostLabel != null)
                     {
-                        CostLabel.text = skill.Cost == 0 ? skill.Cost.ToString() : "";
+                        CostLabel.text = skill.CostInfo.Value == 0 ? skill.CostInfo.Value.ToString() : "";
                     }
                     break;
                 case Offer.OfferKind.Gold:

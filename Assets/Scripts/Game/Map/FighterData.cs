@@ -26,9 +26,9 @@ namespace Game
         
         public int Shield;
         
-        private Attack InitAttack(SkillData skill = null)
+        private Attack InitAttack(SkillData skill = null, CostInfo costInfo = default)
         {
-            return new Attack(Status.PAtk, manaCost: 0); //{Skill = skill};
+            return new Attack(Status.PAtk, costInfo : costInfo); //{Skill = skill};
         }
 
         [JsonIgnore] public bool IsPlayer => this == GameManager.Instance.PlayerData;
@@ -44,6 +44,8 @@ namespace Game
             attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
 
             Status.CurHp -= attack.SumDmg;
+
+            Status.CurHp = math.max(0, Status.CurHp);
             
             Updated();
             
@@ -56,6 +58,14 @@ namespace Game
         }
 
 
+        public CostInfo GetSkillCost(SkillData skill)
+        {
+            var cost = skill.Bp.CostInfo;
+            cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[]{cost});
+            return cost;
+        }
+        
+
         public Attack Suffer(Attack attack)
         {
             return attack;
@@ -65,6 +75,8 @@ namespace Game
 
         public Attack ForgeAttack(FighterData target, SkillData skillData = null)
         {
+            var cost = GetSkillCost(skillData);
+            
             if (skillData == null)
             {
                 var atk = InitAttack();
@@ -74,7 +86,7 @@ namespace Game
             else
             {
                 skillData.Sealed = false;
-                var atk = InitAttack(skillData);
+                var atk = InitAttack(skillData, cost);
                 atk = CheckChain<Attack>(Timing.OnAttack, new object[] {atk, this, target});
                 skillData.Sealed = true;
                 //skillData.SetCooldown();
@@ -122,7 +134,7 @@ namespace Game
 
             var rr = CheckChain<Attack>(Timing.OnDefend, new object[] {r, this, enemy});
             
-            Cost(rr.Cost, rr.CostKw);
+            Cost(rr.CostInfo);
             
             CoolDown();
             Buffs.RemoveZeroStackBuff();
@@ -156,13 +168,29 @@ namespace Game
         }
 
 
-        public void Cost(BattleStatus modify, string kw = null)
+        public void Cost(CostInfo modify, string kw = null)
         {
-            modify = CheckChain<BattleStatus>(Timing.OnCost, new object[] {modify, this, kw});
+            modify = CheckChain<CostInfo>(Timing.OnCost, new object[] {modify, this, kw});
             Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
             Updated();
+        }
+
+        public void Cost(BattleStatus bs, string kw = null)
+        {
+            if (bs.CurHp != 0)
+            {
+                Cost(new CostInfo{Value = bs.CurHp, CostType = CostType.Hp});
+            }
+            else
+            {
+                if (bs.CurMp != 0)
+                {
+                    Cost(new CostInfo{Value = bs.CurMp, CostType = CostType.Mp});
+                }
+            }
+            
         }
         
         

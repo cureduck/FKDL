@@ -253,7 +253,7 @@ namespace Game
         }
 
 
-        public Light2D Light2D;
+        public Light2D[] Light2D;
         
         public void SetContent(string id, string text, Sprite icon = null)
         {
@@ -266,7 +266,11 @@ namespace Game
             {
                 if (GameManager.Instance.SquareColors.TryGetValue(icon.name, out var L))
                 {
-                    Light2D.color = L;
+                    for (int i = 0; i < Light2D.Length; i++)
+                    {
+                        Light2D[i].color = L;
+                    }
+
                 }
             }
         }

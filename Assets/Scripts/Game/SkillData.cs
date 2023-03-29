@@ -24,7 +24,7 @@ namespace Game
 
         public event Action<FighterData> OnLvUp;
         public event Action<FighterData> OnUnEquip;
-
+        public event Action<SkillData> onValueChange;
 
         
         public void LvUp(FighterData fighter, int lv = 1)
@@ -68,6 +68,7 @@ namespace Game
         public void SetCoolDown(int bonus = 0)
         {
             Cooldown = math.max(0 , Bp.Cooldown - bonus);
+            onValueChange?.Invoke(this);
         }
         
         
@@ -497,7 +498,7 @@ namespace Game
         public Attack FireBall(Attack attack, FighterData fighter, FighterData enemy)
         {
             SetCooldown();
-            return new Attack(0, fighter.Status.MAtk, 0, Bp.Param1, 1, "HQ_MAG", Bp.Cost);
+            return new Attack(0, fighter.Status.MAtk, 0, Bp.Param1, 1, "HQ_MAG");
         }
 
 
@@ -510,7 +511,6 @@ namespace Game
                 Multi = 2,
                 Combo = 1,
                 Id = "ZZFD_MAG",
-                Cost = BattleStatus.MPCOST(Bp.Cost)
             };
         }
         
@@ -566,7 +566,7 @@ namespace Game
         [Effect("FLBZ_MAG", Timing.OnAttack)]
         public Attack FaLiBaoZou(Attack attack, FighterData fighter, FighterData enemy)
         {
-            var num = attack.Cost.CurMp;
+            var num = attack.CostInfo.Value;
             attack.MAtk += num;
             Activate?.Invoke();
             return attack;

@@ -7,7 +7,7 @@ namespace Game
 {
     public class Skill
     {
-        [JsonIgnore] public Texture Icon;
+        [JsonIgnore] public Sprite Icon;
         public string Id;
         public string Pool;
         public bool Positive;
@@ -20,7 +20,7 @@ namespace Game
         public float Param1;
         public float Param2;
         public int Cooldown;
-        public int Cost;
+        public CostInfo CostInfo;
 
         [JsonIgnore] public Dictionary<Timing, MethodInfo> Fs;
     }

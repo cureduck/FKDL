@@ -19,6 +19,7 @@ namespace Managers
             {
                 if (!BuffIcons.ContainsKey(sprite.name))
                 {
+                    Debug.Log(sprite);
                     BuffIcons.Add(sprite.name, sprite);
                 }
             }

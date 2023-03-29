@@ -18,10 +18,8 @@ namespace Managers
     [ExecuteAlways]
     public class RelicManager : Singleton<RelicManager>
     {
-        public Dictionary<string, Skill> Lib;
-        public Dictionary<Rank, LinkedList<Skill>> Ordered;
-        public LanguageSource LS;
-
+        public Dictionary<string, Relic> Lib;
+        public Dictionary<Rank, LinkedList<Relic>> Ordered;
 
         private void Start()
         {
@@ -32,19 +30,19 @@ namespace Managers
         [Button]
         private void Load()
         {
-            Lib = new Dictionary<string, Skill>();
-            Ordered = new Dictionary<Rank, LinkedList<Skill>>();
+            Lib = new Dictionary<string, Relic>();
+            Ordered = new Dictionary<Rank, LinkedList<Relic>>();
 
-            var csv = File.ReadAllText(Paths.SkillDataPath, Encoding.UTF8);
+            var csv = File.ReadAllText(Paths.RelicDataPath, Encoding.UTF8);
             
             foreach (var line in CsvReader.ReadFromText(csv))
             {
                 try
                 {
-                    var skill = Line2Skill(line);
+                    var skill = Line2Relic(line);
                     Lib[skill.Id] = skill;
                     if (!Ordered.ContainsKey(skill.Rank))
-                        Ordered[skill.Rank] = new LinkedList<Skill>();
+                        Ordered[skill.Rank] = new LinkedList<Relic>();
                     Ordered[skill.Rank].AddLast(skill);
                 }
                 catch (Exception e)
@@ -70,23 +68,12 @@ namespace Managers
         }
         
         
-        private static Skill Line2Skill(ICsvLine line)
+        private static Relic Line2Relic(ICsvLine line)
         {
-            int.TryParse(line[9], out var cooldown);
-            int.TryParse(line[10], out var cost);
-            return new Skill
+            return new Relic()
             {
-                Id = line[1].ToLower(),
-                Rank = (Rank) int.Parse(line[2]),
-                Pool = line[3],
-                Positive = bool.Parse(line[4]),
-                BattleOnly = bool.Parse(line[5]),
-                MaxLv = int.Parse(line[6]),
-                Param1 = float.Parse(line[7] != ""?line[7]:"0"),
-                Param2 = float.Parse(line[8] != ""?line[8]:"0"),
-                Cooldown = cooldown,
-                Cost = cost
-                //Description = line[10]
+                Id = line["id"].ToLower(),
+                Rank = (Rank)int.Parse(line["rank"]),
             };
         }
 
@@ -97,7 +84,7 @@ namespace Managers
                 v.Fs = new Dictionary<Timing, MethodInfo>();
             }
             
-            foreach (var method in typeof(SkillData).GetMethods())
+            foreach (var method in typeof(RelicData).GetMethods())
             {
                 var attr = method.GetCustomAttribute<EffectAttribute>();
 
@@ -111,14 +98,11 @@ namespace Managers
 #if UNITY_EDITOR
                     if (!Lib.ContainsKey(attr.id.ToLower()))
                     {
-                        var sk = new Skill
+                        var sk = new Relic
                         {
                             Id = attr.id.ToLower(),
                             Fs = new Dictionary<Timing, MethodInfo>(),
                             Rank = Rank.Uncommon,
-                            MaxLv = 3,
-                            Param1 = 1,
-                            Positive = false
                         };
                         Lib[attr.id.ToLower()] = sk;
                         Ordered[Rank.Uncommon].AddLast(sk);

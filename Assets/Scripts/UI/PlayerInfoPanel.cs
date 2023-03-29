@@ -11,8 +11,15 @@ namespace UI
             Data = GameManager.Instance.PlayerData;
             GameManager.Instance.GameLoaded += () =>
             {
+                if (Data != null)
+                {
+                    Data.OnUpdated -= UpdateUI;
+                }
+                
                 Data = GameManager.Instance.PlayerData;
             };
         }
+        
+        
     }
 }

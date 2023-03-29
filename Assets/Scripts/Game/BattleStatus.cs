@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System;
+using Unity.Mathematics;
 
 namespace Game
 {
@@ -28,6 +29,37 @@ namespace Game
                 PDef = s1.PDef + s2.PDef
             };
         }
+        
+        public static BattleStatus operator +(BattleStatus s1, CostInfo s22)
+        {
+            var s2 = new BattleStatus();
+            switch (s22.CostType)
+            {
+                case CostType.Hp:
+                    s2.CurHp = s22.Value;
+                    break;
+                case CostType.Mp:
+                    s2.CurMp = s22.Value;
+                    break;
+                case CostType.Gold:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            return new BattleStatus
+            {
+                MaxHp = s1.MaxHp + s2.MaxHp,
+                CurHp = s1.CurHp + s2.CurHp,
+                MaxMp = s1.MaxMp + s2.MaxMp,
+                CurMp = s1.CurMp + s2.CurMp,
+                MAtk = s1.MAtk + s2.MAtk,
+                PAtk = s1.PAtk + s2.PAtk,
+                MDef = s1.MDef + s2.MDef,
+                PDef = s1.PDef + s2.PDef
+            };
+        }
+        
         
         
         public static BattleStatus operator -(BattleStatus s1)
@@ -106,16 +138,19 @@ namespace Game
             };
         }
 
+
+        
+        
         /// <summary>
         /// 自动将输入转为负值
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static BattleStatus MPCOST(int value)
+        public static BattleStatus Mp(int value)
         {
             return new BattleStatus
             {
-                CurMp = -value
+                CurMp = +value
             };
         }
         

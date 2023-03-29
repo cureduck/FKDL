@@ -18,7 +18,7 @@ namespace Game
     {
         public string Id;
         public PotionData[] Potions;
-        public List<RelicData> Relics;
+        public RelicAgent Relics;
         
 
         public bool Engaging;
@@ -35,7 +35,7 @@ namespace Game
 
         public PlayerData()
         {
-            Relics = new List<RelicData>();
+            Relics = new RelicAgent();
             
         }
 
@@ -129,36 +129,7 @@ namespace Game
         {
             if (RelicManager.Instance.Lib.TryGetValue(id, out var sk))
             {
-                for (int i = 0; i < Skills.Count; i++)
-                {
-                    if ((Skills[i].Id == id))
-                    {
-                        if (sk.MaxLv <= Skills[i].CurLv)
-                        {
-                            WindowManager.Instance.Warn("Skill Max!");
-                            return false;
-                        }
-                        else
-                        {
-                            Skills[i].LvUp(this);
-                            Updated();
-                            return true;
-                        }
-                        
-                    }
-                }
-
-                for (var i = 0; i < Skills.Count; i++)
-                {
-                    if (Skills[i].IsEmpty)
-                    {
-                        Skills[i].Id = id;
-                        Skills[i].CurLv = 1;
-                        Equip(Skills[i]);
-                        Updated();
-                        return true;
-                    }
-                }
+                throw new NotImplementedException();
             }
             return false;
         }
@@ -242,17 +213,17 @@ namespace Game
                                     }
                                     else
                                     {
-                                        Cost(new BattleStatus{CurHp = count1});
+                                        Cost(new CostInfo{Value = count1, CostType = CostType.Hp});
                                     }
                                     break;
                                 case "curmp":
                                     if (count1 > 0)
                                     {
-                                        Heal(BattleStatus.MPCOST(count1));
+                                        Heal(BattleStatus.Mp(count1));
                                     }
                                     else
                                     {
-                                        Cost(BattleStatus.MPCOST(-count1));
+                                        Cost(new CostInfo{Value = count1, CostType = CostType.Mp});
                                     }
                                     break;
                                 case "maxhp":

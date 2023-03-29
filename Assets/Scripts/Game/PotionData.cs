@@ -39,7 +39,7 @@ namespace Game
         {
             if (GameManager.Instance.InBattle)
             {
-                var attack = new Attack(mAtk: (int)Bp.Param1, id: "firepotion", manaCost: 0);
+                var attack = new Attack(mAtk: (int)Bp.Param1, id: "firepotion");
                 GameManager.Instance.PlayerData.Enemy.Settle(attack, player);
             }
             

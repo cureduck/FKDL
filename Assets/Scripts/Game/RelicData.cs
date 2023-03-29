@@ -1,7 +1,14 @@
-﻿namespace Game
+﻿using Managers;
+
+namespace Game
 {
     public class RelicData : IEffectContainer
     {
+        public string Id;
+        public int Counter;
+        
+        public Relic Bp => RelicManager.Instance.Lib[Id];
+        
         public bool MayAffect(Timing timing, out int priority)
         {
             throw new System.NotImplementedException();

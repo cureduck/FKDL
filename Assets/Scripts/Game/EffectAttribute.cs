@@ -22,6 +22,10 @@ namespace Game
     public enum Timing
     {
         /// <summary>
+        /// costInfo
+        /// </summary>
+        OnGetSkillCost,
+        /// <summary>
         /// fighter, enemy
         /// </summary>
         OnEngage,
@@ -126,7 +130,7 @@ namespace Game
         /// </summary>
         OnCounterCharge,
         /// <summary>
-        /// battle status, fighter, kw
+        /// Cost Info, fighter, kw
         /// </summary>
         OnCost,
         /// <summary>

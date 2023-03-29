@@ -20,8 +20,6 @@ namespace Managers
     {
         public Dictionary<string, Skill> Lib;
         public Dictionary<Rank, LinkedList<Skill>> Ordered;
-        public LanguageSource LS;
-
 
         private void Start()
         {
@@ -49,11 +47,22 @@ namespace Managers
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e);
+                     Debug.Log(e);
                     Debug.Log("skill load failed");
                 }
             }
             FuncMatch();
+        }
+
+        public Skill GetSkillByStringID(string id) 
+        {
+            Skill curSkill;
+            foreach (var c in Lib)
+            {
+                Debug.Log(c.Value.Id);
+            }
+            Lib.TryGetValue(id, out curSkill);
+            return curSkill;
         }
 
 
@@ -72,20 +81,24 @@ namespace Managers
         
         private static Skill Line2Skill(ICsvLine line)
         {
-            int.TryParse(line[9], out var cooldown);
-            int.TryParse(line[10], out var cost);
+            int.TryParse(line["cd"], out var cooldown);
+            int.TryParse(line["cost"], out var cost);
             return new Skill
             {
-                Id = line[1].ToLower(),
-                Rank = (Rank) int.Parse(line[2]),
-                Pool = line[3],
-                Positive = bool.Parse(line[4]),
-                BattleOnly = bool.Parse(line[5]),
-                MaxLv = int.Parse(line[6]),
-                Param1 = float.Parse(line[7] != ""?line[7]:"0"),
-                Param2 = float.Parse(line[8] != ""?line[8]:"0"),
+                Id = line["id"].ToLower(),
+                Rank = (Rank) int.Parse(line["Rarity"]),
+                Pool = line["Pool"],
+                Positive = bool.Parse(line["Positive"]),
+                BattleOnly = bool.Parse(line["BattleOnly"]),
+                MaxLv = int.Parse(line["MaxLv"]),
+                Param1 = float.Parse(line["P1"] != ""?line["P1"]:"0"),
+                Param2 = float.Parse(line["P2"] != ""?line["P2"]:"0"),
+                CostInfo = new CostInfo()
+                {
+                    Value = cost,
+                    CostType = line["CostType"] == "" ? CostType.Mp : CostType.Hp,
+                },
                 Cooldown = cooldown,
-                Cost = cost
                 //Description = line[10]
             };
         }
