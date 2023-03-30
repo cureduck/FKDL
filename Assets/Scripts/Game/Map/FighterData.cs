@@ -60,6 +60,7 @@ namespace Game
 
         public CostInfo GetSkillCost(SkillData skill)
         {
+            if (skill == null) return CostInfo.Zero;
             var cost = skill.Bp.CostInfo;
             cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[]{cost});
             return cost;
@@ -121,6 +122,52 @@ namespace Game
         }
 
 
+        /// <summary>
+        /// 检查条件施放资源是否足够
+        /// </summary>
+        /// <param name="costInfo"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public bool CanAfford(CostInfo costInfo)
+        {
+            switch (costInfo.CostType)
+            {
+                case CostType.Hp:
+                    return (Status.CurHp > costInfo.Value);
+                case CostType.Mp:
+                    return (Status.CurMp > costInfo.Value);
+                case CostType.Gold:
+                    return (Gold > costInfo.Value);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        
+        /// <summary>
+        /// 检查是否cd足够，资源是否足够
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <returns></returns>
+        public bool CanCast(SkillData skill)
+        {
+            return skill.CanCast && CanAfford(GetSkillCost(skill));
+        }
+        
+        /// <summary>
+        /// 跳过条件检查直接使用
+        /// </summary>
+        /// <param name="skill"></param>
+        public abstract void UseSkill(SkillData skill);
+        
+        
+        /// <summary>
+        /// 经过检查，再使用
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public abstract bool TryUseSkill(SkillData skill, out string info);
+        
 
 
         /// <summary>
@@ -156,7 +203,7 @@ namespace Game
         {
             foreach (var skill in Skills)
             {
-                if ((!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnGain)))
+                if (skill != null && (!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnGain)))
                 {
                     var f = skill.Bp.Fs[Timing.OnGain];
                     //modify = (int) f?.Invoke(skill, new object[]{gold, this});
@@ -328,7 +375,7 @@ namespace Game
             
             foreach (var skill in Skills)
             {
-                if (!skill.IsEmpty &&(skill.MayAffect(timing, out _)))
+                if ((skill != null) && !skill.IsEmpty &&(skill.MayAffect(timing, out _)))
                 {
                     tmp.Add(skill);
                 }
@@ -463,12 +510,16 @@ namespace Game
             {
                 skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
                 //skill.SetCooldown();
+                CoolDown();
                 Updated();
+
+
             }
             else
             {
                 throw new Exception();
             }
+
         }
         
 
@@ -519,9 +570,11 @@ namespace Game
         {
             for (int i = 0; i < Skills.Count; i++)
             {
+                if (Skills[i] == null) continue;
+
                 if ((Skills[i].IsEmpty)||(Skills[i].Bp == null))
                 {
-                    break;
+                    continue;
                 }
                 
                 if ((Skills[i].Bp.Positive)&&(Skills[i].Cooldown > 0))

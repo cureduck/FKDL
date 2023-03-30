@@ -23,6 +23,7 @@ namespace UI
         
         public void Load(SkillData data)
         {
+            return;
             if (data.IsEmpty)
             {
                 IdText.SetTerm("empty");

@@ -175,6 +175,37 @@ namespace Game
         }
 
 
+
+        public override void UseSkill(SkillData skill)
+        {
+            if (GameManager.Instance.InBattle)
+            {
+                ((EnemySaveData)(Enemy)).OnReact(skill);
+            }
+            else
+            {
+                CastNonAimingSkill(skill);
+            }
+        }
+        
+        
+        public override bool TryUseSkill(SkillData skill, out string info)
+        {
+            info = "";
+            if (!CanCast(skill)) return false;
+            UseSkill(skill);
+            return true;
+
+        }
+
+        public bool TryUseSkill(int index)
+        {
+            var skill = Skills[index];
+            if (skill == null || skill.IsEmpty) return false;
+            return TryUseSkill(skill, out _);
+        }
+        
+        
         public void Execute(string cmds)
         {
             foreach (var cmd in cmds.Replace(" ","").Split('|'))

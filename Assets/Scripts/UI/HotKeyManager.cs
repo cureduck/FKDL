@@ -33,8 +33,14 @@ namespace UI
             {
                 WindowManager.Instance.CheatWindow.SetActive(value:!WindowManager.Instance.CheatWindow.active);
             }
-            
-            
+
+            for (int i = 0; i < 10; i++)
+            {
+                if (Input.GetKeyDown(i.ToString()))
+                {
+                    GameManager.Instance.PlayerData.TryUseSkill(i);
+                }
+            }
         }
     }
 }

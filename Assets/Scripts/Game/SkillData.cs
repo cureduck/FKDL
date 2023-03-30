@@ -24,7 +24,6 @@ namespace Game
 
         public event Action<FighterData> OnLvUp;
         public event Action<FighterData> OnUnEquip;
-        public event Action<SkillData> onValueChange;
 
         
         public void LvUp(FighterData fighter, int lv = 1)
@@ -51,7 +50,10 @@ namespace Game
         {
             Cooldown = Bp.Cooldown - bonus;
         }
-
+        public void SetCoolDown(int bonus = 0)
+        {
+            Cooldown = math.max(0, Bp.Cooldown - bonus);
+        }
 
         [JsonIgnore] public bool CanCast
         {
@@ -65,11 +67,7 @@ namespace Game
             }
         }
 
-        public void SetCoolDown(int bonus = 0)
-        {
-            Cooldown = math.max(0 , Bp.Cooldown - bonus);
-            onValueChange?.Invoke(this);
-        }
+
         
         
         

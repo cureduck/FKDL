@@ -56,11 +56,13 @@ namespace Managers
 
         public Skill GetSkillByStringID(string id) 
         {
+            if (id == null) return null;
+
             Skill curSkill;
-            foreach (var c in Lib)
-            {
-                Debug.Log(c.Value.Id);
-            }
+            //foreach (var c in Lib)
+            //{
+            //    Debug.Log(c.Value.Id);
+            //}
             Lib.TryGetValue(id, out curSkill);
             return curSkill;
         }

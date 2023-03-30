@@ -4,7 +4,7 @@ using Managers;
 
 namespace UI
 {
-    public class NewEnemyPanel : BasePanel<EnemySaveData>
+    public class EnemyBasePanel : BasePanel<EnemySaveData>
     {
         private Square CurrentFocus;
         
@@ -36,12 +36,6 @@ namespace UI
         protected override void UpdateUI()
         {
             throw new System.NotImplementedException();
-        }
-
-
-        protected override void OnOpen()
-        {
-            base.OnOpen();
         }
     }
 }

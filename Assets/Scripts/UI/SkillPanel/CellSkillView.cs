@@ -6,6 +6,7 @@ using Managers;
 using Game;
 using I2.Loc;
 using TMPro;
+using Sirenix.OdinInspector;
 
 public class CellSkillView : MonoBehaviour
 {
@@ -34,7 +35,8 @@ public class CellSkillView : MonoBehaviour
     private Button main_btn;
 
     private SkillData skillData;
-
+    private PlayerData playerData;
+    public string value;
     [SerializeField]
     public float targetPrecent;
 
@@ -43,31 +45,38 @@ public class CellSkillView : MonoBehaviour
         main_btn.onClick.AddListener(SelectCurSkill);
         heightlightView.SetActive(false);
     }
-
-    public void SetData(SkillData skillData) 
+    [Button]
+    public void UpdateView() 
     {
-        if (this.skillData != null)
-        {
-            this.skillData.onValueChange -= SetData;
-        }
+        SetData(playerData, skillData);
+    }
 
+    public void SetData(PlayerData playerData,SkillData skillData) 
+    {
+        this.skillData = skillData;
+        this.playerData = playerData;
+        //Debug.Log(skillData);
         if (skillData == null)
         {
             haveSkillGroup.gameObject.SetActive(false);
             emptySkillGroup.gameObject.SetActive(true);
             return;
         }
-
+        //Debug.Log(skillData.Id);
         Skill curSkill = SkillManager.Instance.GetSkillByStringID(skillData.Id);
-        Debug.Log(curSkill);
+        //
 
         if (curSkill == null)
         {
             haveSkillGroup.gameObject.SetActive(false);
             emptySkillGroup.gameObject.SetActive(true);
+            Debug.LogWarning("Empty");
         }
         else 
         {
+            haveSkillGroup.gameObject.SetActive(true);
+            emptySkillGroup.gameObject.SetActive(false);
+            value = curSkill.Pool;
             if (curSkill.Icon != null) 
             {
                 icon.sprite = curSkill.Icon;
@@ -102,8 +111,8 @@ public class CellSkillView : MonoBehaviour
             {
                 coldDown.gameObject.SetActive(false);
             }
-            this.skillData = skillData;
-            skillData.onValueChange += SetData;
+
+            //skillData.onValueChange += SetData;
         }
 
 
@@ -111,19 +120,34 @@ public class CellSkillView : MonoBehaviour
 
     public void SelectCurSkill() 
     {
+        Skill curSkill = skillData.Bp;
+        Debug.Log(skillData.Cooldown);
+        if (skillData.Cooldown > 0) return;
+        if (!curSkill.Positive) return;
+
+        //if(curSelectSkill.skillData.Bp.)
+
         Debug.Log(curSelectSkill == this);
         if (curSelectSkill == this)
         {
             curSelectSkill.heightlightView.SetActive(false);
             curSelectSkill = null;
-            return;
+            //return;
         }
-        if (curSelectSkill != null)
+        if (!curSkill.BattleOnly)
         {
-            curSelectSkill.heightlightView.SetActive(false);
+            playerData.CastNonAimingSkill(skillData);
         }
-        curSelectSkill = this;
-        curSelectSkill.heightlightView.SetActive(true);
+        else 
+        {
+            if (curSelectSkill != null)
+            {
+                curSelectSkill.heightlightView.SetActive(false);
+            }
+            curSelectSkill = this;
+            curSelectSkill.heightlightView.SetActive(true);
+        }
+
     }
 
     private void Update()
@@ -133,12 +157,5 @@ public class CellSkillView : MonoBehaviour
     }
 
 
-    private void OnDisable()
-    {
-        if (skillData != null)
-        {
-            skillData.onValueChange -= SetData;
-        }
-    }
 
 }

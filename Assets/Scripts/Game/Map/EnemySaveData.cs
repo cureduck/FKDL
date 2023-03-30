@@ -26,6 +26,15 @@ namespace Game
 
         }
 
+        public override void UseSkill(SkillData skill)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool TryUseSkill(SkillData skill, out string info)
+        {
+            throw new NotImplementedException();
+        }
 
 
         public void PlanAttackRound()
