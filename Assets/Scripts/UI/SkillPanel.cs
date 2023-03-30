@@ -24,6 +24,7 @@ namespace UI
 
         private void Bind()
         {
+            return;
             for (int i = 0; i < MinLen; i++)
             {
                 _master.Skills[i].Activate += SkillItems[i].Activate;

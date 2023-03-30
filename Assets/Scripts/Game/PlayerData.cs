@@ -224,7 +224,7 @@ namespace Game
             OnSkillPointChanged?.Invoke();
         }
 
-        public void GetSkillPoint(Rank rank, int v)
+        public void GetSkillPoint(Rank rank, int v = 1)
         {
             if (GameDataManager.Instance.SecondaryData.SkillPoint.ContainsKey(rank))
             {

@@ -22,8 +22,8 @@ namespace UI
 
         protected override void UpdateData()
         {
-            Hp.text = _master.Status.CurHp + "/" + _master.Status.MaxHp;
-            Mp.text = _master.Status.CurMp + "/" + _master.Status.MaxMp;
+            Hp.text = $"<color=#01F5A9>{_master.Status.CurHp}</color>/{_master.Status.MaxHp}";
+            Mp.text = $"<color=#01F5A9>{_master.Status.CurMp}</color>/{ _master.Status.MaxMp}";
 
             if (HpBar != null)
             {

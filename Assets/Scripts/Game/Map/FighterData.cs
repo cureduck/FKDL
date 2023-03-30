@@ -509,7 +509,8 @@ namespace Game
             if ((skill.Bp.Positive)&&(skill.Bp.Fs.ContainsKey(Timing.SkillEffect)))
             {
                 skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
-                //skill.SetCooldown();
+                skill.SetCooldown();
+
                 CoolDown();
                 Updated();
             }

@@ -20,6 +20,10 @@ public class CellSkillView : MonoBehaviour
     [SerializeField]
     private GameObject emptySkillGroup;
     [SerializeField]
+    private GameObject passtiveBG;
+    [SerializeField]
+    private GameObject unPasstiveBG;
+    [SerializeField]
     private Image icon;
     [SerializeField]
     private TextMeshProUGUI levelInfo;
@@ -32,18 +36,26 @@ public class CellSkillView : MonoBehaviour
     [SerializeField]
     private Image coldDown_mask;
     [SerializeField]
+    private GameObject coolDownCompleteSign;
+    [SerializeField]
     private Button main_btn;
 
     private SkillData skillData;
     private PlayerData playerData;
     public string value;
+
+    public bool canDebug = false;
+
     [SerializeField]
-    public float targetPrecent;
+    private float targetPrecent;
+    [SerializeField]
+    private float lastPrecent;
 
     void Start()
     {
         main_btn.onClick.AddListener(SelectCurSkill);
         heightlightView.SetActive(false);
+        coolDownCompleteSign.gameObject.SetActive(false);
     }
     [Button]
     public void UpdateView() 
@@ -70,13 +82,16 @@ public class CellSkillView : MonoBehaviour
         {
             haveSkillGroup.gameObject.SetActive(false);
             emptySkillGroup.gameObject.SetActive(true);
-            Debug.LogWarning("Empty");
         }
         else 
         {
             haveSkillGroup.gameObject.SetActive(true);
             emptySkillGroup.gameObject.SetActive(false);
             value = curSkill.Pool;
+
+            passtiveBG.SetActive(curSkill.Positive);
+            unPasstiveBG.SetActive(!curSkill.Positive);
+
             if (curSkill.Icon != null) 
             {
                 icon.sprite = curSkill.Icon;
@@ -102,14 +117,15 @@ public class CellSkillView : MonoBehaviour
                 }
                 else 
                 {
-                    targetPrecent = skillData.Cooldown/ (float)curSkill.Cooldown;
+                    targetPrecent = skillData.Cooldown / (float)curSkill.Cooldown;
                 }
 
-                coldDown.gameObject.SetActive(true);
+                coldDown_txt.gameObject.SetActive(true);
             }
             else 
             {
-                coldDown.gameObject.SetActive(false);
+                coldDown_txt.gameObject.SetActive(false);
+                targetPrecent = 0;
             }
 
             //skillData.onValueChange += SetData;
@@ -121,21 +137,23 @@ public class CellSkillView : MonoBehaviour
     public void SelectCurSkill() 
     {
         Skill curSkill = skillData.Bp;
-        Debug.Log(skillData.Cooldown);
+        //Debug.Log(skillData.Cooldown);
         if (skillData.Cooldown > 0) return;
         if (!curSkill.Positive) return;
 
         //if(curSelectSkill.skillData.Bp.)
 
-        Debug.Log(curSelectSkill == this);
+        //Debug.Log(curSelectSkill == this);
         if (curSelectSkill == this)
         {
             curSelectSkill.heightlightView.SetActive(false);
             curSelectSkill = null;
             //return;
         }
+        //Debug.Log(curSkill.BattleOnly);
         if (!curSkill.BattleOnly)
         {
+            coldDown_mask.fillAmount = 1;
             playerData.CastNonAimingSkill(skillData);
         }
         else 
@@ -153,9 +171,31 @@ public class CellSkillView : MonoBehaviour
     private void Update()
     {
         if (skillData == null) return;
-        coldDown_mask.fillAmount = Mathf.Lerp(coldDown_mask.fillAmount, targetPrecent,  10 * Time.deltaTime);
+        //if (canDebug) 
+        //{
+        //    Debug.Log(targetPrecent);
+        //}
+
+        //coldDown_mask.fillAmount = targetPrecent;
+        //return;
+
+
+
+
+        lastPrecent = coldDown_mask.fillAmount;
+        if (coldDown_mask.fillAmount < targetPrecent)
+        {
+            coldDown_mask.fillAmount = targetPrecent;
+        }
+        else 
+        {
+            coldDown_mask.fillAmount -= Time.deltaTime * 0.75f;
+            if (coldDown_mask.fillAmount <= 0 && lastPrecent > 0) 
+            {
+                coolDownCompleteSign.gameObject.SetActive(false);
+                coolDownCompleteSign.gameObject.SetActive(true);
+                //Debug.Log("冷却完毕");
+            }
+        }
     }
-
-
-
 }

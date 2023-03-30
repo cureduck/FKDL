@@ -6,7 +6,7 @@ namespace UI
 {
     public class PlayerPanel : FighterPanel<PlayerPanel>
     {
-        public PotionPanel PotionPanel;
+        public PotionGroupView PotionPanel;
         public GoldPanel GoldPanel;
 
         private void Start()

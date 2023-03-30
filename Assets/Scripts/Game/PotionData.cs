@@ -42,7 +42,15 @@ namespace Game
                 var attack = new Attack(mAtk: (int)Bp.Param1, id: "firepotion");
                 GameManager.Instance.PlayerData.Enemy.Settle(attack, player);
             }
-            
+        }
+        
+        [Effect("poisionpotion", Timing.PotionEffect)]
+        public void PoisonPotion(FighterData player)
+        {
+            if (GameManager.Instance.InBattle)
+            {
+                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "poison"});
+            }
         }
         
         [Effect("hppotion+", Timing.PotionEffect)]
@@ -63,6 +71,26 @@ namespace Game
         {
             player.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "anger"});
         }
+        
+        [Effect("firepotion+", Timing.PotionEffect)]
+        public void FirePotionP(FighterData player)
+        {
+            if (GameManager.Instance.InBattle)
+            {
+                var attack = new Attack(mAtk: (int)Bp.Param1, id: "firepotion");
+                GameManager.Instance.PlayerData.Enemy.Settle(attack, player);
+            }
+        }
+        
+        
+        [Effect("poisionpotion+", Timing.PotionEffect)]
+        public void PoisonPotionP(FighterData player)
+        {
+            if (GameManager.Instance.InBattle)
+            {
+                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "poison"});
+            }
+        }
                 
         [Effect("hppotion++", Timing.PotionEffect)]
         public void HpPotionPP(FighterData player)
@@ -75,6 +103,28 @@ namespace Game
         {
             player.Strengthen(new BattleStatus{MaxMp = (int)Bp.Param1});
         }
+        
+        
+        [Effect("firepotion++", Timing.PotionEffect)]
+        public void FirePotionPP(FighterData player)
+        {
+            if (GameManager.Instance.InBattle)
+            {
+                var attack = new Attack(mAtk: (int)Bp.Param1, id: "firepotion");
+                GameManager.Instance.PlayerData.Enemy.Settle(attack, player);
+            }
+        }
+        
+        
+        [Effect("poisionpotion++", Timing.PotionEffect)]
+        public void PoisonPotionPP(FighterData player)
+        {
+            if (GameManager.Instance.InBattle)
+            {
+                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "poison"});
+            }
+        }
+        
         
         [Effect("patkpotion", Timing.PotionEffect)]
         public void AngerPotionPP(FighterData player)
@@ -109,6 +159,26 @@ namespace Game
                 CurHp = 10000
             });
         }
+
+        [Effect("skillpotion", Timing.PotionEffect)]
+        public void SkillPotion(FighterData player)
+        {
+            ((PlayerData) player).GetSkillPoint(Rank.Normal);
+        }
+        
+        
+        [Effect("skillpotion+", Timing.PotionEffect)]
+        public void SkillPotionP(FighterData player)
+        {
+            ((PlayerData) player).GetSkillPoint(Rank.Uncommon);
+        }
+        
+        [Effect("skillpotion++", Timing.PotionEffect)]
+        public void SkillPotionPP(FighterData player)
+        {
+            ((PlayerData) player).GetSkillPoint(Rank.Rare);
+        }
+        
         
         #endregion
     }

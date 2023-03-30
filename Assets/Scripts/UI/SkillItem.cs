@@ -23,6 +23,7 @@ namespace UI
         
         public void Load(SkillData data)
         {
+            Debug.LogWarning("该逻辑已被隐藏");
             return;
             if (data.IsEmpty)
             {

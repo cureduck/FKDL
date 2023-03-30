@@ -62,7 +62,7 @@ namespace UI
 
         protected override void UpdateUI()
         {
-            Debug.Log(Data);
+            //Debug.Log(Data);
             if (Data != null) 
             {
                 listView.SetData(Data, Data.Skills.ToArray());

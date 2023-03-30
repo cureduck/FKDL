@@ -50,10 +50,11 @@ namespace Game
         {
             Cooldown = Bp.Cooldown - bonus;
         }
-        public void SetCoolDown(int bonus = 0)
-        {
-            Cooldown = math.max(0, Bp.Cooldown - bonus);
-        }
+
+        //public void SetCoolDown(int bonus = 0)
+        //{
+        //    Cooldown = math.max(0, Bp.Cooldown - bonus);
+        //}
 
         [JsonIgnore] public bool CanCast
         {
