@@ -506,14 +506,12 @@ namespace Game
 
         public void CastNonAimingSkill(SkillData skill)
         {
-            if ((skill.Bp.Positive))
+            if ((skill.Bp.Positive)&&(skill.Bp.Fs.ContainsKey(Timing.SkillEffect)))
             {
                 skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
                 //skill.SetCooldown();
                 CoolDown();
                 Updated();
-
-
             }
             else
             {

@@ -85,6 +85,10 @@ namespace Managers
         {
             int.TryParse(line["cd"], out var cooldown);
             int.TryParse(line["cost"], out var cost);
+            
+            
+            Debug.Log(line["id"]);
+            
             return new Skill
             {
                 Id = line["id"].ToLower(),

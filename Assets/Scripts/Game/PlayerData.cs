@@ -142,7 +142,7 @@ namespace Game
             {
                 for (int i = 0; i < Skills.Count; i++)
                 {
-                    if ((Skills[i].Id == id))
+                    if (Skills[i] != null && (Skills[i].Id == id))
                     {
                         if (sk.MaxLv <= Skills[i].CurLv)
                         {
@@ -161,6 +161,10 @@ namespace Game
 
                 for (var i = 0; i < Skills.Count; i++)
                 {
+                    if (Skills[i] == null)
+                    {
+                        Skills[i] = new SkillData();
+                    }
                     if (Skills[i].IsEmpty)
                     {
                         Skills[i].Id = id;
@@ -204,6 +208,36 @@ namespace Game
             if (skill == null || skill.IsEmpty) return false;
             return TryUseSkill(skill, out _);
         }
+
+
+        public event Action OnSkillPointChanged;
+        
+        public bool CanUpgrade(SkillData skillData)
+        {
+            return false;
+        }
+
+        public void UpgradeWithPoint(SkillData skillData)
+        {
+            skillData.CurLv += 1;
+            Updated();
+            OnSkillPointChanged?.Invoke();
+        }
+
+        public void GetSkillPoint(Rank rank, int v)
+        {
+            if (GameDataManager.Instance.SecondaryData.SkillPoint.ContainsKey(rank))
+            {
+                GameDataManager.Instance.SecondaryData.SkillPoint[rank] += v;
+            }
+            else
+            {
+                GameDataManager.Instance.SecondaryData.SkillPoint[rank] = v;
+            }
+            OnSkillPointChanged?.Invoke();
+        }
+        
+        
         
         
         public void Execute(string cmds)

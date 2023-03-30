@@ -24,7 +24,7 @@ namespace Managers
             get => GameDataManager.Instance.Map;
             private set => GameDataManager.Instance.Map = value;
         }
-
+        
         public SecondaryData SecondaryData
         {
             get => GameDataManager.Instance.SecondaryData;

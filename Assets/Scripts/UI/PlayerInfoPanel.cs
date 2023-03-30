@@ -19,12 +19,22 @@ namespace UI
                 if (Data != null)
                 {
                     Data.OnUpdated -= UpdateUI;
+                    Data.OnSkillPointChanged -= OnSkillPointChanged;
                 }
                 
                 Data = GameManager.Instance.PlayerData;
-                //Text();
+
+                Data.OnUpdated += UpdateUI;
+                Data.OnSkillPointChanged += OnSkillPointChanged;
+                
+                Text();
             };
 
+        }
+
+        private void OnSkillPointChanged()
+        {
+            throw new NotImplementedException();
         }
 
         private void Text() 
