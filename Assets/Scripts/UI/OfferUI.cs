@@ -24,7 +24,8 @@ namespace UI
         public Localize Prof;
         public Localize Positive;
         public Localize Description;
-
+        public LocalizationParamsManager MaxLvParam;
+        
         public Image Bg;
         
         public Transform RankStar;
@@ -95,7 +96,8 @@ namespace UI
 
                     //Debug.Log(skill.Description);
                     Prof?.SetTerm(skill.Pool);
-                    Description?.SetTerm(skill.Description);
+                    Description?.SetTerm(skill.Id + "_desc" );
+                    MaxLvParam?.SetParameterValue("P", skill.MaxLv.ToString());
 
                     if (RankStar != null)
                     {

@@ -142,8 +142,11 @@ namespace Managers
                             
                             if ((GameManager.Instance.Focus.Data is EnemySaveData es))
                             {
+                                WindowManager.Instance.EnemyPanel.gameObject.SetActive(false);
                                 WindowManager.Instance.EnemyPanel.gameObject.SetActive(true);
-                                WindowManager.Instance.EnemyPanel.transform.position = sq.transform.position;
+                                Vector3 curPosition = sq.transform.position;
+                                curPosition.x = sq.centerTransform.position.x;
+                                WindowManager.Instance.EnemyPanel.transform.position = curPosition;
                             }
                             
                             if (previous != null) previous.UpdateFace();

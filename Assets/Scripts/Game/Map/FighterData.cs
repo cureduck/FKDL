@@ -36,7 +36,6 @@ namespace Game
 
         public Attack Defend(Attack attack, FighterData enemy)
         {
-            
             attack.PDmg = math.max(0, (int)(attack.PAtk * attack.Multi) - Status.PDef);
             attack.MDmg = math.max(0, (int)(attack.MAtk * attack.Multi) - Status.MDef);
             attack.CDmg = (int) (attack.CAtk * attack.Multi);
@@ -144,7 +143,7 @@ namespace Game
         }
         
         /// <summary>
-        /// 检查是否cd足够，资源是否足够
+        /// 检查是否cd足够，资源是否足够, 是否满足BattleOnly条件
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>

@@ -7,6 +7,7 @@ namespace UI
 {
     public class StatusPanel : FighterUIPanel
     {
+        public bool showName = false;
         public TMP_Text Hp;
         public TMP_Text Mp;
         public TMP_Text PA;
@@ -22,8 +23,24 @@ namespace UI
 
         protected override void UpdateData()
         {
-            Hp.text = $"<color=#01F5A9>{_master.Status.CurHp}</color>/{_master.Status.MaxHp}";
-            Mp.text = $"<color=#01F5A9>{_master.Status.CurMp}</color>/{ _master.Status.MaxMp}";
+            if (showName)
+            {
+                Hp.text = $"生命 <color=#01F5A9>{_master.Status.CurHp}</color>/{_master.Status.MaxHp}";
+            }
+            else
+            {
+                Hp.text = $"<color=#01F5A9>{_master.Status.CurHp}</color>/{_master.Status.MaxHp}";
+            }
+
+            if (showName)
+            {
+                Mp.text = $"魔力 <color=#01F5A9>{_master.Status.CurMp}</color>/{ _master.Status.MaxMp}";
+            }
+            else
+            {
+                Mp.text = $"<color=#01F5A9>{_master.Status.CurMp}</color>/{ _master.Status.MaxMp}";
+            }
+
 
             if (HpBar != null)
             {
@@ -34,11 +51,43 @@ namespace UI
                 _targetMpPercent = (float)_master.Status.CurMp / _master.Status.MaxMp;
             }
 
-            PA.text = _master.Status.PAtk.ToString();
-            MA.text = _master.Status.MAtk.ToString();
+            if (showName)
+            {
+                PA.text = $"物攻 {_master.Status.PAtk}";
+            }
+            else
+            {
+                PA.text = _master.Status.PAtk.ToString();
+            }
 
-            PD.text = _master.Status.PDef.ToString();
-            MD.text = _master.Status.MDef.ToString();
+            if (showName)
+            {
+                MA.text = $"魔攻 {_master.Status.MAtk}";
+            }
+            else
+            {
+                MA.text = _master.Status.MAtk.ToString();
+            }
+
+            if (showName)
+            {
+                PD.text = $"物防 { _master.Status.PDef}";
+            }
+            else
+            {
+                PD.text = _master.Status.PDef.ToString();
+            }
+
+            if (showName)
+            {
+                MD.text = $"魔防 {_master.Status.MDef}";
+            }
+            else 
+            {
+                MD.text = _master.Status.MDef.ToString();
+            }
+
+
         }
 
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class MountainSaveData : MapData
+    public class CemeterySaveData : MapData
     {
         public const int MaxTimes = 3;
         

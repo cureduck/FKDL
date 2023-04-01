@@ -9,6 +9,8 @@ namespace Game
         [JsonIgnore] public static string _savePath => Application.persistentDataPath + "/SecondarySaveData.json";
 
         public Dictionary<Rank, int> SkillPoint;
+
+        public int RemoveSkillPoint;
         
         public string[] Prof;
         

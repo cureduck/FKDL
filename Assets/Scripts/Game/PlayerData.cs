@@ -10,6 +10,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UI;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using Object = System.Object;
 
 namespace Game
@@ -236,7 +237,26 @@ namespace Game
             }
             OnSkillPointChanged?.Invoke();
         }
-        
+
+
+        public void GetRemoveSkillPoint(int v = 1)
+        {
+            GameDataManager.Instance.SecondaryData.RemoveSkillPoint += v;
+            OnSkillPointChanged?.Invoke();
+            Updated();
+        }
+
+        public void RemoveSkill(ref SkillData skill)
+        {
+            skill = SkillData.Empty;
+            OnSkillPointChanged?.Invoke();
+            Updated();
+        }
+
+        public bool CanBeRemoved(SkillData skill)
+        {
+            return true;
+        }
         
         
         

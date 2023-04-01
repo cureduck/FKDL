@@ -17,6 +17,7 @@ namespace Game
         {
             public string Effect;
             public string Line;
+            public CostInfo CostInfo;
         }
 
         public Rank Rank { get; set; }

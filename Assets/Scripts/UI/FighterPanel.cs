@@ -18,7 +18,6 @@ namespace UI
         private FighterData _master;
 
         public StatusPanel StatusPanel;
-        public SkillPanel SkillPanel;
         public BuffPanel BuffPanel;
         
 
@@ -33,8 +32,8 @@ namespace UI
             _master = master;
             
             StatusPanel.SetMaster(master);
-            SkillPanel.SetMaster(master);
-            BuffPanel.SetMaster(master);
+            BuffPanel.gameObject.SetActive(false);
+            //BuffPanel.SetMaster(master);
         }
     }
 }

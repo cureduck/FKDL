@@ -37,7 +37,7 @@ namespace Managers
 
         public Square Focus;
 
-        public bool InBattle => Focus?.Data is EnemySaveData;
+        public bool InBattle => (Focus?.Data is EnemySaveData e) && (e.IsAlive);
 
         public Dictionary<string, Color> SquareColors;
 
@@ -134,8 +134,10 @@ namespace Managers
             LoadFloor(Map.Floors[Map.CurrentFloor]);
         }
 
+        private List<Square> squares = new List<Square>();
         public void LoadFloor(Map.Floor floor)
         {
+            squares.Clear();
             foreach (Transform trans in MapGo.transform)
             {
                 Destroy(trans.gameObject);
@@ -144,20 +146,38 @@ namespace Managers
 
             foreach (var square in floor.Squares)
             {
-                CreateSquare(square);
+                Square curObject = CreateSquare(square);
+                if (curObject != null) 
+                {
+                    squares.Add(curObject);
+                }
             }
         }
+
+        public Square GetByData(MapData mapData) 
+        {
+            for (int i = 0; i < squares.Count; i++)
+            {
+                if (squares[i].Data == mapData) 
+                {
+                    return squares[i];
+                }
+            }
+            return null;
+        }
+
         
         [Button]
-        private void CreateSquare(MapData data)
+        private Square CreateSquare(MapData data)
         {
-            if (data == null) return;
+            if (data == null) return null;
             
             var go = Instantiate(Prefab, MapGo.transform);
             try
             {
                 var sq = go.GetComponent<Square>();
                 sq.Data = data;
+                return sq;
             }
             catch (Exception e)
             {

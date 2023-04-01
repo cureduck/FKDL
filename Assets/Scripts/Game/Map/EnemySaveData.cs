@@ -110,6 +110,10 @@ namespace Game
         {
             GameManager.Instance.PlayerData.ManageAttackRound(skill);
 
+            Square square = GameManager.Instance.GetByData(this);
+            GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
+            curEffectObject.transform.position = square.centerTransform.position;
+
             if (GameManager.Instance.PlayerData.Engaging)
             {
                 Debug.Log($"Engaging {Bp.Id}!");

@@ -112,11 +112,14 @@ namespace Managers
                     case "play":
                         floor.Squares.AddLast(new StartSaveData() {Placement = p, SquareState = SquareState.UnFocus});
                         break;
-                    case "mountain":
-                        floor.Squares.AddLast(new MountainSaveData() {Placement = p});
+                    case "cemetery":
+                        floor.Squares.AddLast(new CemeterySaveData() {Placement = p});
                         break;
                     case "gold":
                         floor.Squares.AddLast(new GoldSaveData(v) {Placement = p});
+                        break;
+                    case "totem":
+                        floor.Squares.AddLast(new TotemSaveData() {Placement = p});
                         break;
                     default:
                         Debug.Log($"Unknown {prefix} {worksheet.Name} {p}");

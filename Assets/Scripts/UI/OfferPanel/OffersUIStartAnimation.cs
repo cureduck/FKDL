@@ -39,6 +39,4 @@ public class OffersUIStartAnimation : MonoBehaviour
         targetObject.gameObject.SetActive(true);
         canvasGroup.interactable = true;
     }
-
-
 }

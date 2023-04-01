@@ -44,7 +44,9 @@ namespace Managers
             var id = line["id"];//.ToLower().Replace(" ", "");
             var rank = (Rank) int.Parse(line["rank"]);
             var isTitle = line["type"].Equals("title");
-
+            
+            
+            
             if (isTitle)
             {
                 Lib[id] = new Crystal()
@@ -59,10 +61,33 @@ namespace Managers
                 var effects = line["effects"];
                 var tit = id.Split('_')[0];
                 var suf = id.Split('_')[1];
+                CostType costType;
+                switch (line["costtype"])
+                {
+                    case "hp":
+                        costType = CostType.Hp;
+                        break;
+                    case "mp":
+                        costType = CostType.Mp;
+                        break;
+                    case "gold":
+                        costType = CostType.Gold;
+                        break;
+                    default:
+                        costType = CostType.Hp;
+                        break;
+                }
+                
                 var opt = new Crystal.Option()
                 {
                     Line = suf,
-                    Effect = effects
+                    Effect = effects,
+                    CostInfo = new CostInfo()
+                    {
+                        Value = int.TryParse(line["cost"], out var o) ? o : 0,
+                        CostType = costType
+                            
+                    }
                 };
 
                 Lib[tit].Options.Add(opt);

@@ -7,6 +7,7 @@ using Game;
 using I2.Loc;
 using TMPro;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 
 public class CellSkillView : MonoBehaviour
 {
@@ -41,15 +42,14 @@ public class CellSkillView : MonoBehaviour
     private Button main_btn;
 
     private SkillData skillData;
-    private PlayerData playerData;
-    public string value;
-
-    public bool canDebug = false;
+    private FighterData playerData;
 
     [SerializeField]
     private float targetPrecent;
     [SerializeField]
     private float lastPrecent;
+
+    public bool canInteractive = true;
 
     void Start()
     {
@@ -63,7 +63,7 @@ public class CellSkillView : MonoBehaviour
         SetData(playerData, skillData);
     }
 
-    public void SetData(PlayerData playerData,SkillData skillData) 
+    public void SetData(FighterData playerData,SkillData skillData) 
     {
         this.skillData = skillData;
         this.playerData = playerData;
@@ -87,7 +87,6 @@ public class CellSkillView : MonoBehaviour
         {
             haveSkillGroup.gameObject.SetActive(true);
             emptySkillGroup.gameObject.SetActive(false);
-            value = curSkill.Pool;
 
             passtiveBG.SetActive(curSkill.Positive);
             unPasstiveBG.SetActive(!curSkill.Positive);
@@ -105,7 +104,7 @@ public class CellSkillView : MonoBehaviour
                 levelInfo.text = $"{skillData.CurLv}/{curSkill.MaxLv}";
             }
 
-            skillName.SetTerm(curSkill.Pool);
+            skillName.SetTerm(curSkill.Id);
 
 
             if (skillData.Cooldown > 0)
@@ -124,6 +123,11 @@ public class CellSkillView : MonoBehaviour
             }
             else 
             {
+                                    
+                var dt = Time.time - t0;
+                t0 = Time.time;
+                if (dt > 0) SetNextRoundSpeed(dt);
+
                 coldDown_txt.gameObject.SetActive(false);
                 targetPrecent = 0;
             }
@@ -136,8 +140,12 @@ public class CellSkillView : MonoBehaviour
 
     public void SelectCurSkill() 
     {
+        if (!canInteractive) return;
+
         Skill curSkill = skillData.Bp;
-        //Debug.Log(skillData.Cooldown);
+        
+        
+        /*//Debug.Log(skillData.Cooldown);
         if (skillData.Cooldown > 0) return;
         if (!curSkill.Positive) return;
 
@@ -165,12 +173,30 @@ public class CellSkillView : MonoBehaviour
             curSelectSkill = this;
             curSelectSkill.heightlightView.SetActive(true);
         }
+        */
+
+        if (curSelectSkill == this)
+        {
+            curSelectSkill.heightlightView.SetActive(false);
+            curSelectSkill = null;
+            //return;
+        }
+        
+        if (playerData.CanCast(skillData))
+        {
+            coldDown_mask.fillAmount = 1;
+            playerData.UseSkill(skillData);
+        }
 
     }
 
+
+    public float Speed;
+
+    private float t0;
     private void Update()
     {
-        if (skillData == null) return;
+        if (skillData == null || skillData.IsEmpty) return;
         //if (canDebug) 
         //{
         //    Debug.Log(targetPrecent);
@@ -183,13 +209,13 @@ public class CellSkillView : MonoBehaviour
 
 
         lastPrecent = coldDown_mask.fillAmount;
-        if (coldDown_mask.fillAmount < targetPrecent)
+        if (coldDown_mask.fillAmount <= targetPrecent)
         {
             coldDown_mask.fillAmount = targetPrecent;
         }
-        else 
+        else
         {
-            coldDown_mask.fillAmount -= Time.deltaTime * 0.75f;
+            coldDown_mask.fillAmount -= Time.deltaTime * Speed;
             if (coldDown_mask.fillAmount <= 0 && lastPrecent > 0) 
             {
                 coolDownCompleteSign.gameObject.SetActive(false);
@@ -197,5 +223,17 @@ public class CellSkillView : MonoBehaviour
                 //Debug.Log("冷却完毕");
             }
         }
+    }
+
+    private const float SpeedParam = 1.1f;
+    
+    private void SetNextRoundSpeed(float dt)
+    {
+        Speed = math.max(0.8f,  math.min( Speed * 1.2f, SpeedParam / dt));
+    }
+
+    public override string ToString()
+    {
+        return $"Cell Skill Button {transform.GetSiblingIndex().ToString()}";
     }
 }

@@ -17,8 +17,10 @@ using UnityEngine.Experimental.Rendering.Universal;
 namespace Game
 {
     [DisallowMultipleComponent]
-    public class Square : SerializedMonoBehaviour
+    public partial class Square : SerializedMonoBehaviour
     {
+        public Transform centerTransform;
+
         [ShowInInspector] public MapData Data;
 
         
@@ -135,8 +137,8 @@ namespace Game
                 case ChestSaveData d2:
                     SetContent("treasure", d2.Rank.ToString(), icon: lib["chest"]);
                     break;
-                case MountainSaveData d3:
-                    SetContent("mountain", d3.TimesLeft + "/" + MountainSaveData.MaxTimes, icon: lib["mountain"]);
+                case CemeterySaveData d3:
+                    SetContent("mountain", d3.TimesLeft + "/" + CemeterySaveData.MaxTimes, icon: lib["mountain"]);
                     break;
                 case RockSaveData d4:
                     SetContent("rock", d4.Cost.ToString());
@@ -184,6 +186,9 @@ namespace Game
                     break;
                 case GoldSaveData d14:
                     SetContent("gold", d14.Count.ToString(), icon: lib["gold"]);
+                    break;
+                case TotemSaveData d15:
+                    SetContent("totem", "");
                     break;
             }
         }

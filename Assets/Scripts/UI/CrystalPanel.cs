@@ -29,6 +29,8 @@ namespace UI
                 var tmp = Instantiate(OptionPrefab, OptionList);
                 tmp.gameObject.SetActive(true);
                 tmp.GetComponentInChildren<Localize>().SetTerm(id +"_"+ option.Line);
+                tmp.GetComponent<Button>().interactable = GameManager.Instance.PlayerData.CanAfford(option.CostInfo);
+                
                 tmp.onClick.AddListener((() =>
                 {
                     gameObject.SetActive(false);
