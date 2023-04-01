@@ -20,7 +20,7 @@ namespace Game
             
             if (GameManager.Instance.PlayerData.Status.CurMp >= Cost)
             {
-                GameManager.Instance.PlayerData.Cost(new BattleStatus{CurMp = Cost});
+                GameManager.Instance.PlayerData.Cost(new BattleStatus{CurMp = -Cost});
                 Destroyed();
                 AudioPlayer.Instance.PlaySoundEffect("rock");
             }

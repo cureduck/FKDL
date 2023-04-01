@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Managers
@@ -12,6 +14,7 @@ namespace Managers
         public bool BgmMute;
         public bool SEMute;
 
+        public GameObject BG;
         
         [JsonIgnore, ShowInInspector] public float Degree
         {
@@ -22,22 +25,24 @@ namespace Managers
                 r.x = value;
                 Debug.Log(r);
                 Camera.main.transform.rotation = Quaternion.Euler(r);
+                WindowManager.Instance.EnemyPanel.transform.rotation = Camera.main.transform.rotation;
                 _degree = value;
             }
         }
 
         private float _degree;
         
-        [JsonIgnore, ShowInInspector] public float FV
+        [JsonIgnore, ShowInInspector] public float FOV
         {
-            get => _fv;
+            get => _fov;
             set
             {
-                _fv = value;
+                _fov = value;
                 Camera.main.fieldOfView = value;
+                BG.transform.localScale = new Vector3(2, 2, 0) * (float)Math.Tan(_fov / 360 * Math.PI);
             }
         }
-        private float _fv;
+        private float _fov;
 
     }
 }

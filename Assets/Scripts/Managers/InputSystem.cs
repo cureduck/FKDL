@@ -183,13 +183,14 @@ namespace Managers
         
         private void Scroll()
         {
-            var orthographicSize = Camera.main.orthographicSize;
-            orthographicSize -=  Input.mouseScrollDelta.y;
-            orthographicSize = orthographicSize > 10 ? 10 : orthographicSize;
-            orthographicSize = orthographicSize <3 ? 3 : orthographicSize;
+            var FOV = Camera.main.fieldOfView;
+            FOV -=  Input.mouseScrollDelta.y * 3;
+            FOV = FOV > 70 ? 70 : FOV;
+            FOV = FOV <30 ? 30 : FOV;
 
-            light2D.pointLightOuterRadius = orthographicSize;
-            Camera.main.orthographicSize = orthographicSize;
+            light2D.pointLightOuterRadius = FOV;
+            SettingManager.Instance.GameSettings.FOV = FOV;
+            //Camera.main.fieldOfView = FOV;
         }
         
         

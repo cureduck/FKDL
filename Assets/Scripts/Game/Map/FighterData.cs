@@ -236,7 +236,7 @@ namespace Game
                     Cost(new CostInfo{Value = bs.CurMp, CostType = CostType.Mp});
                 }
             }
-            
+            Updated();
         }
         
         
