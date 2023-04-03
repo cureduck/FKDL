@@ -1,19 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Tools
 {
     public class CustomDictionary<T> : Dictionary<string, T> where T: IRank
     {
+        public Random Random;
+        
         public T[] ChooseRandom(int count = 1)
         {
-            return Tools.ChooseRandom(count, Values.ToArray());
+            return Tools.ChooseRandom(count, Values.ToArray(), Random);
         }
         
         public T[] ChooseRandom(Rank r, int count = 1)
         {
-            return Tools.ChooseRandom<T>(count, Values.ToArray().Where(rank => rank.Rank == r).ToArray());
+            return Tools.ChooseRandom<T>(count, Values.ToArray().Where(rank => rank.Rank == r).ToArray(), Random);
         }
     }
 }

@@ -41,7 +41,6 @@ namespace Game
             attack.CDmg = (int) (attack.CAtk * attack.Multi);
             
             attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
-
             Status.CurHp -= attack.SumDmg;
 
             Status.CurHp = math.max(0, Status.CurHp);

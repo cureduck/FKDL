@@ -9,6 +9,7 @@ using Game;
 using I2.Loc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using Tools;
 using UnityEngine;
 using Random = System.Random;
 
@@ -18,7 +19,7 @@ namespace Managers
     [ExecuteAlways]
     public class RelicManager : Singleton<RelicManager>
     {
-        public Dictionary<string, Relic> Lib;
+        public CustomDictionary<Relic> Lib;
         public Dictionary<Rank, LinkedList<Relic>> Ordered;
 
         private void Start()
@@ -30,7 +31,7 @@ namespace Managers
         [Button]
         private void Load()
         {
-            Lib = new Dictionary<string, Relic>();
+            Lib = new CustomDictionary<Relic>();
             Ordered = new Dictionary<Rank, LinkedList<Relic>>();
 
             var csv = File.ReadAllText(Paths.RelicDataPath, Encoding.UTF8);

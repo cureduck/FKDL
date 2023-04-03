@@ -96,7 +96,7 @@ namespace UI
 
                     //Debug.Log(skill.Description);
                     Prof?.SetTerm(skill.Pool);
-                    Description?.SetTerm(skill.Id + "_desc" );
+                    Description?.SetTerm($"{skill.Id}_desc");
                     MaxLvParam?.SetParameterValue("P", skill.MaxLv.ToString());
 
                     if (RankStar != null)

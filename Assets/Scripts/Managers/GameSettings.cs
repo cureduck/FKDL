@@ -14,7 +14,18 @@ namespace Managers
         public bool BgmMute;
         public bool SEMute;
 
-        public GameObject BG;
+        private GameObject _bg;
+        public GameObject BG 
+        {
+            get 
+            {
+                if (_bg == null) 
+                {
+                    _bg =  Camera.main.transform.Find("BG").gameObject;
+                }
+                return _bg;
+            }
+        }
         
         [JsonIgnore, ShowInInspector] public float Degree
         {

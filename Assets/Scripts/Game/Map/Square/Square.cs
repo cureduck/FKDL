@@ -19,8 +19,6 @@ namespace Game
     [DisallowMultipleComponent]
     public partial class Square : SerializedMonoBehaviour
     {
-        public Transform centerTransform;
-
         [ShowInInspector] public MapData Data;
 
         

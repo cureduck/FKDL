@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UI
 {
-    public class PlayerInfoPanel : BasePanel<PlayerData>
+    public class PlayerInfoPanel : UpdateablePanel<PlayerData>
     {
         [SerializeField]
         private SkillListView listView;
@@ -13,7 +13,7 @@ namespace UI
 
         protected void Start()
         {
-            Data = GameManager.Instance.PlayerData;
+            Open(GameManager.Instance.PlayerData);
             GameManager.Instance.GameLoaded += () =>
             {
                 if (Data != null)
@@ -21,8 +21,9 @@ namespace UI
                     Data.OnUpdated -= UpdateUI;
                     Data.OnSkillPointChanged -= OnSkillPointChanged;
                 }
-                
-                Data = GameManager.Instance.PlayerData;
+
+                Open(GameManager.Instance.PlayerData);
+                //Data = GameManager.Instance.PlayerData;
 
                 Data.OnUpdated += UpdateUI;
                 Data.OnSkillPointChanged += OnSkillPointChanged;
@@ -40,7 +41,7 @@ namespace UI
         private void Text() 
         {
             //Data = new PlayerData();
-            SkillData skillData = new SkillData { Cooldown = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
+            SkillData skillData = new SkillData { Cooldown = 0, Id = "DZXY_ALC".ToLower(), CurLv = 1 };
             SkillData skillData02 = new SkillData { Cooldown = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
             SkillData skillData03 = new SkillData { Cooldown = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
             Debug.Log(Data.Skills.Count);

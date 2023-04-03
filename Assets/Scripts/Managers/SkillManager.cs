@@ -9,6 +9,7 @@ using Game;
 using I2.Loc;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using Tools;
 using UnityEngine;
 using Random = System.Random;
 
@@ -18,7 +19,7 @@ namespace Managers
     [ExecuteAlways]
     public class SkillManager : Singleton<SkillManager>
     {
-        public Dictionary<string, Skill> Lib;
+        public CustomDictionary<Skill> Lib;
         public Dictionary<Rank, LinkedList<Skill>> Ordered;
 
         private void Start()
@@ -30,7 +31,7 @@ namespace Managers
         [Button]
         private void Load()
         {
-            Lib = new Dictionary<string, Skill>();
+            Lib = new CustomDictionary<Skill>();
             Ordered = new Dictionary<Rank, LinkedList<Skill>>();
 
             var csv = File.ReadAllText(Paths.SkillDataPath, Encoding.UTF8);

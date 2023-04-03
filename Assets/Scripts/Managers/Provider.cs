@@ -9,7 +9,7 @@ namespace Managers
         {
             var potion = new PotionData
             {
-                Id = (Tools.Tools.ChooseRandom(PotionManager.Instance.Ordered[rank])).Id,
+                Id = (Tools.Tools.ChooseRandom(PotionManager.Instance.Ordered[rank], GameDataManager.Instance.SecondaryData.CurGameRandom)).Id,
                 Count = count
             };
 

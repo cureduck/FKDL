@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Game
 {
@@ -13,6 +14,15 @@ namespace Game
         public int RemoveSkillPoint;
         
         public string[] Prof;
+
+        public int InitGameSeed;
+        public int InitCardSeed;
+        public int InitRelicSeed;
+
+        public Random CurGameRandom;
+        public Random CurCardRandom;
+        public Random RelicRandom;
+        
         
         public void Save()
         {

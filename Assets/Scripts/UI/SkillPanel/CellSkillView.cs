@@ -14,6 +14,12 @@ public class CellSkillView : MonoBehaviour
     private static CellSkillView curSelectSkill;
     [SerializeField]
     private Transform mainView;
+    [Header("详细显示")]
+    [SerializeField]
+    private Transform showDetailPoint;
+    [SerializeField]
+    private PointEnterAndExit pointEvent;
+    [Header("其他组件")]
     [SerializeField]
     private GameObject heightlightView;
     [SerializeField]
@@ -54,9 +60,14 @@ public class CellSkillView : MonoBehaviour
     void Start()
     {
         main_btn.onClick.AddListener(SelectCurSkill);
+        pointEvent.onPointEnter.AddListener(OnPointEnter);
+        pointEvent.onPointExit.AddListener(OnPointExit);
+
+
         heightlightView.SetActive(false);
         coolDownCompleteSign.gameObject.SetActive(false);
     }
+
     [Button]
     public void UpdateView() 
     {
@@ -143,8 +154,8 @@ public class CellSkillView : MonoBehaviour
         if (!canInteractive) return;
 
         Skill curSkill = skillData.Bp;
-        
-        
+
+
         /*//Debug.Log(skillData.Cooldown);
         if (skillData.Cooldown > 0) return;
         if (!curSkill.Positive) return;
@@ -174,21 +185,50 @@ public class CellSkillView : MonoBehaviour
             curSelectSkill.heightlightView.SetActive(true);
         }
         */
+        if (!curSkill.Positive)
+        {
+            UnpositiveSkillTrigger();
 
-        if (curSelectSkill == this)
-        {
-            curSelectSkill.heightlightView.SetActive(false);
-            curSelectSkill = null;
-            //return;
         }
-        
-        if (playerData.CanCast(skillData))
+        else 
         {
-            coldDown_mask.fillAmount = 1;
-            playerData.UseSkill(skillData);
+            if (curSelectSkill == this)
+            {
+                curSelectSkill.heightlightView.SetActive(false);
+                curSelectSkill = null;
+                //return;
+            }
+
+            if (playerData.CanCast(skillData))
+            {
+                coldDown_mask.fillAmount = 1;
+                playerData.UseSkill(skillData);
+            }
         }
+
 
     }
+
+    private void UnpositiveSkillTrigger() 
+    {
+        GameObject cur = ObjectPoolManager.Instance.SpawnUnPasstiveSkillSignEffect(icon.sprite);
+        cur.transform.SetParent(transform);
+        cur.transform.localScale = Vector3.one;
+        cur.transform.localPosition = Vector3.zero;
+    }
+    #region 鼠标交互
+    private void OnPointExit()
+    {
+        WindowManager.Instance.skillInfoPanel.Close();
+        
+    }
+
+    private void OnPointEnter()
+    {
+        WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args { screenPosition = showDetailPoint.position, skillData = skillData });
+    }
+    #endregion
+
 
 
     public float Speed;

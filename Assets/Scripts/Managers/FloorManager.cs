@@ -25,8 +25,8 @@ namespace Managers
             {
                 var files = Directory.GetFiles(s).ToList().FindAll((s1 => s1.EndsWith(".json"))).ToArray();
 
-                var chosen = Random.Range(0, files.Length - 1);
-                
+                var chosen = GameDataManager.Instance.SecondaryData.CurGameRandom.Next(0, files.Length -1);
+
                 Debug.Log($"Loading {s} {chosen}");
                 
                 var f = File.ReadAllText(files[chosen]);

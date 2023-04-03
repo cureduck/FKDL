@@ -5,15 +5,16 @@ using TMPro;
 
 namespace UI
 {
-    public class NewGoldPanel : BasePanel<PlayerData>
+    public class NewGoldPanel : UpdateablePanel<PlayerData>
     {
         public TMP_Text gold;
 
         protected void Start()
         {
-            Data = GameManager.Instance.PlayerData;
+            //Data = GameManager.Instance.PlayerData;
+            Open(GameManager.Instance.PlayerData);
             GameManager.Instance.GameLoaded +=
-                () => { Data = GameManager.Instance.PlayerData; };
+                () => { Open(GameManager.Instance.PlayerData); };
         }
 
         protected override void UpdateUI()

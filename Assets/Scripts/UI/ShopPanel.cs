@@ -1,10 +1,12 @@
 ﻿using Game;
+using I2.Loc;
 using Managers;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace UI
 {
-    public class ShopPanel : MonoBehaviour
+    public class ShopPanel : SerializedMonoBehaviour
     {
 
         public OfferUI[] PotionList;
@@ -32,8 +34,10 @@ namespace UI
             }
         }
 
+        [Button]
         public void Upgrade()
         {
+            Debug.Log(LocalizationManager.GetTermTranslation("test"));
             
         }
 

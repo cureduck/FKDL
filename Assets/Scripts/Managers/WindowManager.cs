@@ -15,7 +15,9 @@ namespace Managers
         public GameObject MenuWindow;
         public GameObject CheatWindow;
         public EnemyPanel EnemyPanel;
-        
+
+        public SkillInfoPanel skillInfoPanel;
+
         public Localize WarnWindow;
 
         public void Display(EnemySaveData data)

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class Skill
+    public class Skill : IRank
     {
         [JsonIgnore] public Sprite Icon;
         public string Id;
@@ -13,7 +13,7 @@ namespace Game
         public bool Positive;
         public bool BattleOnly;
         public int MaxLv;
-        public Rank Rank;
+        public Rank Rank { get; set; }
 
         public string Description;
         

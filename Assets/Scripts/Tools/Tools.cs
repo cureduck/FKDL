@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Random = UnityEngine.Random;
+using Random = System.Random;
 
 namespace Tools
 {
     public static class Tools
     {
-        public static T[] ChooseRandom<T>(int count, IList<T> list)
+        public static T[] ChooseRandom<T>(int count, IList<T> list, Random random)
         {
             var s = new T[count];
-            int[] selectNumArray = Enumerable.Range(0, list.Count).OrderBy(t => Guid.NewGuid()).Take(count).ToArray();
+            int[] selectNumArray = Enumerable.Range(0, list.Count).OrderBy(t => random.Next(10000)).Take(count).ToArray();
             for (int i = 0; i < s.Length; i++)
             {
                 s[i] = list.ToList()[selectNumArray[i]];
@@ -18,9 +18,9 @@ namespace Tools
             return s;
         }
         
-        public static T ChooseRandom<T>(IList<T> list)
+        public static T ChooseRandom<T>(IList<T> list, Random random)
         {
-            return list[Random.Range(0, list.Count - 1)];
+            return ChooseRandom<T>(1, list, random)[0];
         }
     }
 }

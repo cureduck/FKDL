@@ -6,10 +6,12 @@ namespace Game
     public class CrystalSaveData : MapData
     {
         public Rank Rank;
+        public string Id;
 
         public CrystalSaveData(Rank r)
         {
             Rank = r;
+            Id = CrystalManager.Instance.Lib.ChooseRandom(r)[0].Id;
         }
         
         public override void OnReact()
@@ -18,8 +20,7 @@ namespace Game
 
             var panel = WindowManager.Instance.CrystalPanel;
             panel.gameObject.SetActive(true);
-            panel.Load((CrystalManager.Instance.Lib.ChooseRandom(r)[0].Id));
-            
+            panel.Load(Id);
             base.OnReact();
             Destroyed();
         }

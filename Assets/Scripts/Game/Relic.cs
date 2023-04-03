@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Game
 {
-    public class Relic
+    public class Relic : IRank
     {
         [JsonIgnore] public Texture Icon;
         public string Id;
         public string Description;
-        public Rank Rank;
 
         [JsonIgnore] public Dictionary<Timing, MethodInfo> Fs;
+        public Rank Rank { get; set; }
     }
 }

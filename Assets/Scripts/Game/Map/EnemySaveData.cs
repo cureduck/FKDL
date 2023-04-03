@@ -112,7 +112,7 @@ namespace Game
 
             Square square = GameManager.Instance.GetByData(this);
             GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
-            curEffectObject.transform.position = square.centerTransform.position;
+            curEffectObject.transform.position = square.Icon.transform.position;
 
             if (GameManager.Instance.PlayerData.Engaging)
             {
@@ -134,7 +134,10 @@ namespace Game
         protected override void Destroyed()
         {
             GameManager.Instance.PlayerData.Gain(Gold);
+
+            UI.EnemyPanel.Instance.gameObject.SetActive(false);
             base.Destroyed();
+            GameManager.Instance.GetByData(this).UpdateFace();
         }
 
 

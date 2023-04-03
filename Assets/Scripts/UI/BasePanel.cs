@@ -1,51 +1,39 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UI
 {
-    public abstract class BasePanel<T> : MonoBehaviour where T : IUpdateable
+    public abstract class BasePanel <T> : MonoBehaviour
     {
         public T Data
         {
             get => _data;
-            set => SetData(value);
         }
 
-        private T _data;
+        protected T _data;        
         
-
-        private void SetData(T d)
+        public virtual void Open(T data) 
         {
-            if (_data != null)
-            {
-                RemoveListener();
-            }
+            SetData(data);
+            OnOpen();
+            gameObject.SetActive(true);
+        }
+
+        public virtual void Close() 
+        {
+            OnClose();
+            gameObject.SetActive(false);
+        }
+        
+        protected virtual void SetData(T d)
+        {
+
             _data = d;
 
-            AddListener();
             
             UpdateUI();
         }
-
-
-        private void AddListener()
-        {
-            if (_data == null)
-            {
-                return;
-            }
-            _data.OnUpdated += UpdateUI;
-            _data.OnDestroy -= UpdateUI;
-        }
-
-        private void RemoveListener()
-        {
-            _data.OnUpdated -= UpdateUI;
-            _data.OnDestroy -= RemoveListener;
-        }
-
-        protected abstract void UpdateUI();
         
+        protected abstract void UpdateUI();
         protected virtual void OnOpen(){}
         protected virtual void OnClose(){}
     }

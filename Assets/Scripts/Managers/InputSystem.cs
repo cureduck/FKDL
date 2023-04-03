@@ -145,7 +145,7 @@ namespace Managers
                                 WindowManager.Instance.EnemyPanel.gameObject.SetActive(false);
                                 WindowManager.Instance.EnemyPanel.gameObject.SetActive(true);
                                 Vector3 curPosition = sq.transform.position;
-                                curPosition.x = sq.centerTransform.position.x;
+                                curPosition.x = sq.Icon.transform.position.x;
                                 WindowManager.Instance.EnemyPanel.transform.position = curPosition;
                             }
                             

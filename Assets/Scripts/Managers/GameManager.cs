@@ -86,9 +86,21 @@ namespace Managers
             }
             WindowManager.Instance.OffersWindow.Load(offers);
         }
+
+
+        private void SetSeed(int CardSeed, int GameSeed, int RelicSeed)
+        {
+            SecondaryData.CurCardRandom = new Random(CardSeed);
+            SecondaryData.CurGameRandom = new Random(GameSeed);
+            SecondaryData.RelicRandom = new Random(RelicSeed);
+
+            RelicManager.Instance.Lib.Random = SecondaryData.RelicRandom;
+            CrystalManager.Instance.Lib.Random = SecondaryData.CurGameRandom;
+            SkillManager.Instance.Lib.Random = SecondaryData.CurCardRandom;
+        }
         
-        
-        
+
+
         [Button]
         public void LoadFromSave()
         {
@@ -96,6 +108,7 @@ namespace Managers
             {
                 PlayerData = PlayerData.LoadFromSave();
                 SecondaryData = SecondaryData.LoadFromSave();
+                SetSeed(SecondaryData.InitCardSeed, SecondaryData.InitGameSeed, SecondaryData.InitRelicSeed);
                 Map = Map.LoadFromSave();
                 LoadMap();
             }
@@ -111,6 +124,7 @@ namespace Managers
         [Button]
         public void LoadFromInit()
         {
+            SetSeed(SecondaryData.InitCardSeed, SecondaryData.InitGameSeed, SecondaryData.InitRelicSeed);
             PlayerData = PlayerData.LoadFromInit();
             PlayerData.Gain(0);
             Map = Map.LoadFromInit();
@@ -125,6 +139,7 @@ namespace Managers
         {
             PlayerData.Save();
             Map.Save();
+            //SecondaryData.CurCardSeed = CardRand.
             SecondaryData.Save();
         }
         

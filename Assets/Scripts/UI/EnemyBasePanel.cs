@@ -4,7 +4,7 @@ using Managers;
 
 namespace UI
 {
-    public class EnemyBasePanel : BasePanel<EnemySaveData>
+    public class EnemyBasePanel : UpdateablePanel<EnemySaveData>
     {
         private Square CurrentFocus;
         
@@ -25,7 +25,8 @@ namespace UI
             {
                 if (square.Data is EnemySaveData e)
                 {
-                    Data = e;
+                    Open(e);
+                    //Data = e;
                     UpdateUI();
                     e.OnUpdated += UpdateUI;
                 }
