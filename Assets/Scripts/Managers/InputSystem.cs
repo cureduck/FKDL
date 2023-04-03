@@ -112,7 +112,7 @@ namespace Managers
                     
                     var t = sq.Data;
 
-                    if ((t != null) && (t.SquareState != SquareState.UnRevealed))
+                    if ((t != null) && (t.SquareState != SquareState.UnRevealed) && SettingManager.Instance.GameSettings.AutoGoToFocus)
                     {
                         CameraMan.Instance.Target = sq.transform.position;
                     }

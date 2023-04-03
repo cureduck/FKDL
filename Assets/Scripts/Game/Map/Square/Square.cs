@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using I2.Loc;
 using Managers;
 using Newtonsoft.Json;
@@ -13,6 +16,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -89,18 +93,21 @@ namespace Game
             switch (Data.SquareState)
             {
                 case SquareState.UnRevealed:
-                    _animator.SetTrigger("Unreveal");
+                    //_animator.SetTrigger("Unreveal");
                     break;
                 case SquareState.Focus:
-                    _animator.SetTrigger("Focus");
+                    OnFocus();
+                    //_animator.SetTrigger("Focus");
                     break;
                 case SquareState.UnFocus:
-                    _animator.SetTrigger("UnFocus");
+                    OnReveal();
+                    //_animator.SetTrigger("UnFocus");
                     break;
                 case SquareState.Done:
                     if (GameManager.Instance.Focus != this)
                     {
-                        _animator.SetTrigger("Done");
+                        OnDone();
+                        //_animator.SetTrigger("Done");
                     }
                     break;
                 default:
@@ -218,11 +225,11 @@ namespace Game
         public Localize Id;
         public TMP_Text Bonus;
 
-        private Animator _animator;
+        //private Animator _animator;
 
         private void Awake()
         {
-            _animator = GetComponent<Animator>();
+            //_animator = GetComponent<Animator>();
         }
 
         //public RectTransform Global;
@@ -233,8 +240,8 @@ namespace Game
             //transform.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
             
             Bg.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
-            bg1.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
-            bg2.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
+            Bg1.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
+            Bg2.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
             Mask.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
             
             Box.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
@@ -284,7 +291,8 @@ namespace Game
         public void Focus()
         {
             Data.SquareState = SquareState.Focus;
-            _animator.SetTrigger("Focus");
+            OnFocus();
+            //_animator.SetTrigger("Focus");
         }
         
         
@@ -295,13 +303,83 @@ namespace Game
                 return;
             }
             Data.SquareState = SquareState.UnFocus;
-            _animator.SetTrigger("UnFocus");
+            OnReveal();
+            //_animator.SetTrigger("UnFocus");
+        }
+
+        private Sequence _sequence;
+
+        private const float DownTime = .3f;
+        private const float UpTime = .4f;
+
+        private Tween _breath;
+        
+        private void OnFocus()
+        {
+            _sequence.Kill();
+            _sequence = DOTween.Sequence();
+            
+            Bonus.gameObject.SetActive(true);
+            Mask.gameObject.SetActive(false);
+            
+            _breath.Kill();
+            _breath = DOTween.To(
+                () => { return Light2D[0].intensity; },
+                (value => Light2D[0].intensity = value),
+                2, 3f).SetLoops(-1, LoopType.Yoyo);
+
+            _sequence.Append(transform.DOMoveZ(.15f, DownTime))
+                .Append(transform.DOMoveZ(-.3f, UpTime))
+                .Insert(0, Bg1.transform.DOLocalMoveZ(0, UpTime))
+                .Insert(0, Bg2.transform.DOLocalMoveZ(0, UpTime))
+                .Insert(DownTime, Bg1.transform.DOLocalMoveZ(.15f, UpTime))
+                .Insert(DownTime, Bg2.transform.DOLocalMoveZ(.3f, UpTime))
+                .OnComplete((() => {
+                    if (Data.SquareState == SquareState.Done)
+                    {
+                        OnDone();
+                    }
+                }));
+        }
+
+        private void OnReveal()
+        {
+            Bonus.gameObject.SetActive(true);
+            
+            _sequence.Kill();
+            _sequence = DOTween.Sequence();
+            _sequence.Append(transform.DOMoveZ(0f, .2f))
+                .Insert(0f, Bg1.transform.DOLocalMoveZ(0f, UpTime))
+                .Insert(0f, Bg2.transform.DOLocalMoveZ(0f, UpTime))
+                .Insert(0f, Mask.GetComponent<SpriteRenderer>().DOFade(0, .3f))
+                .OnComplete(() => Mask.gameObject.SetActive(false));
         }
         
         
+        
+        private void OnDone()
+        {
+            _sequence.Kill();
+            _sequence = DOTween.Sequence();
+            
+            Mask.gameObject.SetActive(true);
+            Bonus.gameObject.SetActive(false);
+            
+            _sequence.Append(transform.DOMoveZ(0f, .2f))
+                .Insert(0f, Bg1.transform.DOLocalMoveZ(0f, UpTime))
+                .Insert(0f, Bg2.transform.DOLocalMoveZ(0f, UpTime))
+                .Insert(0f, Mask.GetComponent<SpriteRenderer>().DOFade(.7f, UpTime))
+                .OnComplete(() => { _breath.Kill(); Light2D[0].intensity = 0; });
+        }
+        
 
-        public GameObject bg1;
-        public GameObject bg2;
+
+
+
+
+
+        public Transform Bg1;
+        public Transform Bg2;
 
 
         public override string ToString()

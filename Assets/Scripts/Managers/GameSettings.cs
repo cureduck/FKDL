@@ -13,7 +13,9 @@ namespace Managers
         [Range(0, 1)] public float SEVolume;
         public bool BgmMute;
         public bool SEMute;
+        public bool AutoGoToFocus;
 
+        
         private GameObject _bg;
         public GameObject BG 
         {
@@ -36,6 +38,10 @@ namespace Managers
                 r.x = value;
                 Debug.Log(r);
                 Camera.main.transform.rotation = Quaternion.Euler(r);
+                if (GameManager.Instance.Focus != null)
+                {
+                    CameraMan.Instance.Target = GameManager.Instance.Focus.transform.position;
+                }
                 WindowManager.Instance.EnemyPanel.transform.rotation = Camera.main.transform.rotation;
                 _degree = value;
             }

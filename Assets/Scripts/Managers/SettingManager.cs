@@ -8,8 +8,8 @@ namespace Managers
 
         public GameSettings GameSettings;
         public Slider DegreeSlider;
-
-        private float maxDegree = -35;
+        
+        private const float maxDegree = -35;
         
         protected override void Awake()
         {
