@@ -114,6 +114,8 @@ namespace Game
             GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
             curEffectObject.transform.position = square.Icon.transform.position;
 
+            AudioPlayer.Instance.PlaySoundEffect(AudioPlayer.AudioNormalAttack);
+
             if (GameManager.Instance.PlayerData.Engaging)
             {
                 Debug.Log($"Engaging {Bp.Id}!");

@@ -10,6 +10,9 @@ namespace Managers
 {
     public class AudioPlayer : Singleton<AudioPlayer>
     {
+        public const string AudioNormalAttack = "Audio_Normal_Attack";
+
+
         public AudioSource Bgm;
         public AudioSource SoundEffect;
 
@@ -30,6 +33,12 @@ namespace Managers
             SEQueue = new LinkedList<AudioClip>();
             SESlider.value = Settings.SEVolume;
             BGMSlider.value = Settings.BgmVolume;
+
+            AudioClip[] audioClips = Resources.LoadAll<AudioClip>("Audio");
+            for (int i = 0; i < audioClips.Length; i++)
+            {
+                AudioClips.Add(audioClips[i].name, audioClips[i]);
+            }
         }
 
 

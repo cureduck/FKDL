@@ -122,18 +122,27 @@ namespace Game
             {
                 case EnemySaveData d0:
                     var icon = "";
-                    switch (d0.Bp.Rank)
+                    
+                    if (SpriteManager.Instance.BuffIcons.TryGetValue(d0.Id, out _))
                     {
-                        case Rank.Normal:
-                            icon = "soldier";
-                            break;
-                        case Rank.Uncommon:
-                            icon = "elite";
-                            break;
-                        case Rank.Rare:
-                            icon = "boss";
-                            break;
+                        icon = d0.Id;
                     }
+                    else
+                    {
+                        switch (d0.Bp.Rank)
+                        {
+                            case Rank.Normal:
+                                icon = "soldier";
+                                break;
+                            case Rank.Uncommon:
+                                icon = "elite";
+                                break;
+                            case Rank.Rare:
+                                icon = "boss";
+                                break;
+                        }
+                    }
+                    
                     SetContent(d0.Id.ToLower(), d0.Status.CurHp +"/" + d0.Bp.Status.MaxHp, lib[icon]);
                     break;
                 case CasinoSaveData d1:
@@ -280,7 +289,13 @@ namespace Game
                     {
                         Light2D[i].color = L;
                     }
-
+                }
+                else
+                {
+                    for (int i = 0; i < Light2D.Length; i++)
+                    {
+                        Light2D[i].color = GameManager.Instance.SquareColors["elite"];
+                    }
                 }
             }
         }
@@ -364,8 +379,9 @@ namespace Game
             
             Mask.gameObject.SetActive(true);
             Bonus.gameObject.SetActive(false);
+            Id.gameObject.SetActive(false);
             
-            _sequence.Append(transform.DOMoveZ(0f, .2f))
+            _sequence.Append(transform.DOMoveZ(0f, .4f))
                 .Insert(0f, Bg1.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Bg2.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Mask.GetComponent<SpriteRenderer>().DOFade(.7f, UpTime))

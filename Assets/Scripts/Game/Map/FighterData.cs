@@ -167,6 +167,17 @@ namespace Game
         public abstract bool TryUseSkill(SkillData skill, out string info);
         
 
+        public void SwapSkill(int index01,int index02) 
+        {
+            if (index01 >= 0 && index01 < Skills.Count && index02 >= 0 && index02 < Skills.Count) 
+            {
+                var temp = Skills[index01];
+                Skills[index01] = Skills[index02];
+                Skills[index02] = temp;
+                Updated();
+            }
+
+        }
 
         /// <summary>
         /// 进攻时的触发条件

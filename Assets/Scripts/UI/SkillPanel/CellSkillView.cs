@@ -19,6 +19,18 @@ public class CellSkillView : MonoBehaviour
     private Transform showDetailPoint;
     [SerializeField]
     private PointEnterAndExit pointEvent;
+    [Header("拖拽与交互组件")]
+    [SerializeField]
+    private CellUIDragView cellUIDragView;
+    [SerializeField]
+    private CellSkillViewDragReceive dragReceive;
+    public int Index 
+    {
+        get 
+        {
+            return dragReceive.index;
+        }
+    }
     [Header("其他组件")]
     [SerializeField]
     private GameObject heightlightView;
@@ -44,10 +56,15 @@ public class CellSkillView : MonoBehaviour
     private Image coldDown_mask;
     [SerializeField]
     private GameObject coolDownCompleteSign;
-    [SerializeField]
-    private Button main_btn;
 
     private SkillData skillData;
+    public SkillData Data 
+    {
+        get 
+        {
+            return skillData;
+        }
+    }
     private FighterData playerData;
 
     [SerializeField]
@@ -59,25 +76,32 @@ public class CellSkillView : MonoBehaviour
 
     void Start()
     {
-        main_btn.onClick.AddListener(SelectCurSkill);
+        cellUIDragView.onLeftClick.AddListener(SelectCurSkill);
         pointEvent.onPointEnter.AddListener(OnPointEnter);
         pointEvent.onPointExit.AddListener(OnPointExit);
 
 
         heightlightView.SetActive(false);
         coolDownCompleteSign.gameObject.SetActive(false);
+        cellUIDragView.Init(this);
+        cellUIDragView.dragParent = WindowManager.Instance.dragViewParent;
     }
 
     [Button]
     public void UpdateView() 
     {
-        SetData(playerData, skillData);
+        SetData(playerData, skillData, dragReceive.index, this.cellUIDragView.beginDrag, this.cellUIDragView.endDrag, dragReceive.onEndDrag);
     }
 
-    public void SetData(FighterData playerData,SkillData skillData) 
+    public void SetData(FighterData playerData,SkillData skillData,int index,System.Action<object> onStartDrag,System.Action<object> onEndDrag, System.Action<CellSkillView, CellSkillViewDragReceive> onEndDragComplete) 
     {
         this.skillData = skillData;
         this.playerData = playerData;
+        this.cellUIDragView.beginDrag = onStartDrag;
+        this.cellUIDragView.endDrag = onEndDrag;
+
+        this.dragReceive.index = index;
+        this.dragReceive.onEndDrag = onEndDragComplete;
         //Debug.Log(skillData);
         if (skillData == null)
         {

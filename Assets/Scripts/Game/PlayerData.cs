@@ -253,6 +253,18 @@ namespace Game
             Updated();
         }
 
+        public void RemoveSkill(int index) 
+        {
+            if (index >= 0 && index < Skills.Count)
+            {
+                Skills[index] = null;
+                OnSkillPointChanged?.Invoke();
+                Updated();
+                //RemoveSkill(ref temp);
+            }
+        }
+
+
         public bool CanBeRemoved(SkillData skill)
         {
             return true;

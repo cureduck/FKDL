@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Tools;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -13,7 +14,7 @@ namespace Managers
 {
     public class PotionManager : Singleton<PotionManager>
     {
-        public Dictionary<string, Potion> Lib;
+        public CustomDictionary<Potion> Lib;
 
         public Dictionary<Rank, List<Potion>> Ordered;
         
@@ -25,7 +26,7 @@ namespace Managers
 
         private void Load()
         {
-            Lib = new Dictionary<string, Potion>();
+            Lib = new CustomDictionary<Potion>();
             var csv = File.ReadAllText(Paths.PotionDataPath);
             Ordered = new Dictionary<Rank, List<Potion>>();
 

@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace Game
 {
-    public class Potion
+    public class Potion : IRank
     {
         [JsonIgnore] public Texture Icon;
         public string Id;
-        public Rank Rank;
+        public Rank Rank { get; set; }
         public float Param1;
         
         public Dictionary<Timing, MethodInfo> Fs;

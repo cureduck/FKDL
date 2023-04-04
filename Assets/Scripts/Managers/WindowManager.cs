@@ -15,10 +15,20 @@ namespace Managers
         public GameObject MenuWindow;
         public GameObject CheatWindow;
         public EnemyPanel EnemyPanel;
+        public ConfirmPanel confirmPanel;
 
         public SkillInfoPanel skillInfoPanel;
 
+        public Transform dragViewParent;
+
         public Localize WarnWindow;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            confirmPanel.gameObject.SetActive(false);
+            dragViewParent.transform.SetAsLastSibling();
+        }
 
         public void Display(EnemySaveData data)
         {

@@ -35,7 +35,8 @@ namespace UI
 
         private void OnSkillPointChanged()
         {
-            throw new NotImplementedException();
+            Debug.LogWarning("屏蔽警告");
+            //throw new NotImplementedException();
         }
 
         private void Text() 
