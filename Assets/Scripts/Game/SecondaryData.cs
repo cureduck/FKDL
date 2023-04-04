@@ -25,7 +25,14 @@ namespace Game
         public Random CurCardRandom;
         public Random RelicRandom;
         public Random PotionRandom;
-        
+
+        public List<string> DiscoveredRelics;
+
+
+        public SecondaryData()
+        {
+            DiscoveredRelics = new List<string>();
+        }
         
         public void Save()
         {

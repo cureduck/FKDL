@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = System.Random;
 
@@ -10,6 +11,8 @@ namespace Tools
     {
         public Random Random;
         
+        public int RankLevels => Values.GroupBy(skill => skill.Rank).Count();
+        
         public T[] ChooseRandom(int count = 1)
         {
             return Tools.ChooseRandom(count, Values.ToArray(), Random);
@@ -17,7 +20,8 @@ namespace Tools
         
         public T[] ChooseRandom(Rank r, int count = 1)
         {
-            return Tools.ChooseRandom<T>(count, Values.ToArray().Where(rank => rank.Rank == r).ToArray(), Random);
+            return Tools.ChooseRandom(count, Values.ToArray().Where(rank => rank.Rank == r).ToArray(), Random);
         }
+        
     }
 }

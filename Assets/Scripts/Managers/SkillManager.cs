@@ -27,6 +27,12 @@ namespace Managers
             Load();
         }
 
+        [Button]
+        public void Test()
+        {
+            Debug.Log(Lib.RankLevels);
+        }
+
 
         [Button]
         private void Load()
@@ -59,12 +65,11 @@ namespace Managers
         {
             if (id == null) return null;
 
-            Skill curSkill;
             //foreach (var c in Lib)
             //{
             //    Debug.Log(c.Value.Id);
             //}
-            Lib.TryGetValue(id, out curSkill);
+            Lib.TryGetValue(id, out var curSkill);
             return curSkill;
         }
 
@@ -80,8 +85,7 @@ namespace Managers
             }
             return s;
         }
-        
-        
+
         private static Skill Line2Skill(ICsvLine line)
         {
             int.TryParse(line["cd"], out var cooldown);
