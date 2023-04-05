@@ -104,8 +104,8 @@ namespace Managers
             var ray = Camera.main.ScreenPointToRay(Pos);
             if (IntersectionOfRayAndFace(ray, Vector3.forward, Vector3.zero, out var ret))
             {
-                Debug.Log(ray);
-                Debug.Log(ret);
+                // Debug.Log(ray);
+                // Debug.Log(ret);
                 var hit = Physics2D.Raycast(ret, Vector2.zero);
                 if (hit.transform != null)
                 {

@@ -152,7 +152,7 @@ namespace Game
                     SetContent("treasure", d2.Rank.ToString(), icon: lib["chest"]);
                     break;
                 case CemeterySaveData d3:
-                    SetContent("mountain", d3.TimesLeft + "/" + CemeterySaveData.MaxTimes, icon: lib["mountain"]);
+                    SetContent("cemetery", d3.TimesLeft + "/" + CemeterySaveData.MaxTimes, icon: lib["cemetery"]);
                     break;
                 case RockSaveData d4:
                     SetContent("rock", d4.Cost.ToString());

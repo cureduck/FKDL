@@ -597,9 +597,6 @@ namespace Game
                 Updated();
                 return pa;
             }
-
-
-            
         }
         
         
