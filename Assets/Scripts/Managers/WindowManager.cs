@@ -28,6 +28,7 @@ namespace Managers
             base.Awake();
             confirmPanel.gameObject.SetActive(false);
             dragViewParent.transform.SetAsLastSibling();
+            CrystalPanel.Init();
         }
 
         public void Display(EnemySaveData data)

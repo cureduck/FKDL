@@ -1,13 +1,18 @@
 ﻿using Boo.Lang;
+using Managers;
 
 namespace Game
 {
-    public class Crystal : IRank
+    public class Crystal : CsvData
     {
-        public string Id;
         public string Title;
         public List<Option> Options;
 
+        public Crystal(Rank rank) : base(rank)
+        {
+            Options = new List<Option>();
+        }
+        
         public Crystal()
         {
             Options = new List<Option>();
@@ -19,7 +24,5 @@ namespace Game
             public string Line;
             public CostInfo CostInfo;
         }
-
-        public Rank Rank { get; set; }
     }
 }

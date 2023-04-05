@@ -5,15 +5,27 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
+using CH.ObjectPool;
 
 namespace Managers
 {
     public class AudioPlayer : Singleton<AudioPlayer>
     {
         public const string AudioNormalAttack = "Audio_Normal_Attack";
+        public const string AudioOpenChest = "Audio_Open_Chest";
+        public const string AudioCrystal = "Audio_Crystal";
+        public const string AudioClearRock = "Audio_Clear_Rock";
 
+        [SerializeField]
+        private CellAudioPrefab cellAudioPrefab;
+        private ObjectPool objectPool;
+        [SerializeField]
+        private AudioClip[] normalBGMs;
+        [SerializeField]
+        private AudioClip[] bossBGMs;
 
-        public AudioSource Bgm;
+        public LerpMoveAudio Bgm;
+        public LerpMoveAudio bossBgm;
         public AudioSource SoundEffect;
 
         public Slider SESlider;
@@ -29,8 +41,20 @@ namespace Managers
 
         private void Start()
         {
+            objectPool = new ObjectPool(cellAudioPrefab.gameObject);
+
             LoadVolumeSettings();
             SEQueue = new LinkedList<AudioClip>();
+
+            if (normalBGMs.Length > 0)
+            {
+                Bgm.SetData(normalBGMs[UnityEngine.Random.Range(0, normalBGMs.Length)]);
+            }
+            if (bossBGMs.Length > 0) 
+            {
+                bossBgm.SetData(bossBGMs[UnityEngine.Random.Range(0, bossBGMs.Length)]);
+            }
+
             SESlider.value = Settings.SEVolume;
             BGMSlider.value = Settings.BgmVolume;
 
@@ -39,8 +63,16 @@ namespace Managers
             {
                 AudioClips.Add(audioClips[i].name, audioClips[i]);
             }
+            SwitchBossOrNormalBGM(true);
         }
 
+        //[ContextMenu("!!")]
+        [Button]
+        public void SwitchBossOrNormalBGM(bool toNormal) 
+        {
+            Bgm.isOn = toNormal;
+            bossBgm.isOn = !toNormal;
+        }
 
         public void SetSEVolume(float f)
         {
@@ -51,15 +83,14 @@ namespace Managers
         public void SetBGMVolume(float f)
         {
             Settings.BgmVolume = f;
-            Bgm.volume = Settings.BgmMute ? 0 : Settings.BgmVolume;
+            Bgm.targetVolume = Settings.BgmMute ? 0 : Settings.BgmVolume;
+            bossBgm.targetVolume = Settings.BgmMute ? 0 : Settings.BgmVolume;
         }
-
-        
-        
 
         public void LoadVolumeSettings()
         {
-            Bgm.volume = Settings.BgmMute ? 0 : Settings.BgmVolume;
+            Bgm.targetVolume = Settings.BgmMute ? 0 : Settings.BgmVolume;
+            bossBgm.targetVolume = Settings.BgmMute ? 0 : Settings.BgmVolume;
             SoundEffect.volume = Settings.SEMute ? 0 : Settings.SEVolume;
         }
 
@@ -86,10 +117,12 @@ namespace Managers
         [Button]
         public void Play(string id)
         {
-            if(AudioClips.TryGetValue(id, out var audioClip))
+            AudioClip curClip;
+
+            if(AudioClips.TryGetValue(id, out curClip))
             {
-                Bgm.clip = AudioClips[id];
-                Bgm.Play();
+                GameObject cur = objectPool.CreatInstance(new CellAudioPrefab.Args { audioClip = curClip, volume = SESlider.value });
+                cur.AddComponent<InvokeTrigger>().Set(curClip.length + 0.5f, () => objectPool.UnSpawnInstance(cur));
             }
         }
 

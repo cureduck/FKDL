@@ -74,7 +74,7 @@ namespace Game
         
         
 
-        [JsonIgnore] public Skill Bp => SkillManager.Instance.Lib.TryGetValue(Id.ToLower(), out var v) ? v : null;
+        [JsonIgnore] public Skill Bp => SkillManager.Instance.GetById(Id.ToLower());
 
         [ShowInInspector] public event Action Activate;
         
@@ -88,7 +88,7 @@ namespace Game
                 return false;
             }
 
-            if (!SkillManager.Instance.Lib.ContainsKey(Id.ToLower()))
+            if (!SkillManager.Instance.ContainsKey(Id.ToLower()))
             {
                 priority = 0;
                 return false;
@@ -365,8 +365,8 @@ namespace Game
         [Effect("YWLZ_ALC", Timing.SkillEffect)]
         public void BrewPotion(FighterData fighter)
         {
-            var p = Provider.Instance.CreateRandomPotion(Rank.Normal);
-            GameManager.Instance.PlayerData.TryTake(new Offer(){Id = p.Id, Kind = Offer.OfferKind.Potion});
+            var p = PotionManager.Instance.Roll(Rank.Normal)[0];
+            GameManager.Instance.PlayerData.TryTake(new Offer(){Id = p, Kind = Offer.OfferKind.Potion});
             SetCooldown();
         }
 

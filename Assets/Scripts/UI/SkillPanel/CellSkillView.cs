@@ -110,7 +110,7 @@ public class CellSkillView : MonoBehaviour
             return;
         }
         //Debug.Log(skillData.Id);
-        Skill curSkill = SkillManager.Instance.GetSkillByStringID(skillData.Id);
+        Skill curSkill = SkillManager.Instance.GetById(skillData.Id);
         //
 
         if (curSkill == null)

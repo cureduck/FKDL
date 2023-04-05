@@ -41,6 +41,7 @@ namespace UI
                 offerUI.SetData(offer,()=> { OnClick(offer, targetIndex); });
                 offersUIStartAnimations[i] = offerUI.GetComponent<OffersUIStartAnimation>();
             }
+            skip_btn.gameObject.SetActive(true);
             gameObject.SetActive(true);
             animationGroup.Set(offersUIStartAnimations);
         }

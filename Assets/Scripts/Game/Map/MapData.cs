@@ -108,7 +108,7 @@ namespace Game
 
         protected void PlaySoundEffect(string id)
         {
-            AudioPlayer.Instance.PlaySoundEffect(id);
+            AudioPlayer.Instance.Play(id);
         }
 
 

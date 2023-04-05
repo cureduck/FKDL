@@ -3,40 +3,55 @@ using Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
+using Game;
+using CH.ObjectPool;
 
 namespace UI
 {
-    public class CrystalPanel : Singleton<CrystalPanel>
+    public class CrystalPanel : BasePanel<CrystalPanel.Args>
     {
-        public Localize Title;
-        public Button OptionPrefab;
-
-        public Transform OptionList;
-        
-        [Button]
-        public void Load(string id)
+        public class Args
         {
-            var crystal = CrystalManager.Instance.Lib[id];
-            Title.SetTerm(crystal.Title);
+            public PlayerData playerData;
+            public Crystal crystal;
+        }
 
-            foreach (Transform trans in OptionList)
-            {
-                Destroy(trans.gameObject);
-            }
+        [SerializeField]
+        private Localize describe;
+        [SerializeField]
+        private CellCrystalOptionView crystalOptionPrefab;
+        [SerializeField]
+        private Transform OptionList;
+
+        private UIViewObjectPool<CellCrystalOptionView, Crystal.Option> objectPools;
+
+        public override void Init()
+        {
+            objectPools = new UIViewObjectPool<CellCrystalOptionView, Crystal.Option>(crystalOptionPrefab, null);
+            gameObject.SetActive(false);
+        }
+
+        protected override void OnOpen()
+        {
+            describe.SetTerm(Data.crystal.Title);
+            objectPools.SetDatas(Data.crystal.Options, OnSet, OptionList);
+            transform.SetAsLastSibling();
+        }
+
+        private void OnSet(CellCrystalOptionView cellCrystalOptionView, Crystal.Option data) 
+        {
+            cellCrystalOptionView.SetData(this.Data.playerData, Data.crystal.Id, data, CellOptionClick);
+        }
+
+        private void CellOptionClick(PlayerData playerData, Crystal.Option option) 
+        {
+            playerData.Execute(option.Effect);
+            Close();
+        }
+
+        protected override void UpdateUI()
+        {
             
-            foreach (var option in crystal.Options)
-            {
-                var tmp = Instantiate(OptionPrefab, OptionList);
-                tmp.gameObject.SetActive(true);
-                tmp.GetComponentInChildren<Localize>().SetTerm(id +"_"+ option.Line);
-                tmp.GetComponent<Button>().interactable = GameManager.Instance.PlayerData.CanAfford(option.CostInfo);
-                
-                tmp.onClick.AddListener((() =>
-                {
-                    gameObject.SetActive(false);
-                    GameManager.Instance.PlayerData.Execute(option.Effect);
-                }));
-            }
         }
     }
 }

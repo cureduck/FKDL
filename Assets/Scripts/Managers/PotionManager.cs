@@ -12,46 +12,11 @@ using UnityEngine.Serialization;
 
 namespace Managers
 {
-    public class PotionManager : Singleton<PotionManager>
+    public class PotionManager : XMLDataManager<Potion, PotionData>
     {
-        public CustomDictionary<Potion> Lib;
+        protected override string CsvPath => Paths.PotionDataPath;
 
-        public Dictionary<Rank, List<Potion>> Ordered;
-        
-        private void Start()
-        {
-            Load();
-        }
-
-
-        private void Load()
-        {
-            Lib = new CustomDictionary<Potion>();
-            var csv = File.ReadAllText(Paths.PotionDataPath);
-            Ordered = new Dictionary<Rank, List<Potion>>();
-
-            foreach (var line in CsvReader.ReadFromText(csv))
-            {
-                try
-                {
-                    var potion = Line2Potion(line);
-                    Lib[potion.Id] = potion;
-
-                    if (!Ordered.ContainsKey(potion.Rank))
-                        Ordered[potion.Rank] = new List<Potion>();
-                    Ordered[potion.Rank].Add(potion);
-                }
-                catch (Exception)
-                {
-                    Debug.Log($"{line["id"]} potion load failed");
-                }
-            }
-            
-            FuncMatch();
-        }
-
-
-        private static Potion Line2Potion(ICsvLine line)
+        protected override Potion Line2T(ICsvLine line)
         {
             return new Potion
             {
@@ -60,37 +25,5 @@ namespace Managers
                 Param1 = float.Parse(line["P1"]),
             };
         }
-        
-        
-        public string[] Roll(Rank roll, int count)
-        {
-            var s = new string[count];
-            int[] selectNumArray = Enumerable.Range(0, Ordered[roll].Count).OrderBy(t => Guid.NewGuid()).Take(count).ToArray();
-            for (int i = 0; i < s.Length; i++)
-            {
-                s[i] = Ordered[roll].ToList()[selectNumArray[i]].Id;
-            }
-            return s;
-        }
-
-
-        private void FuncMatch()
-        {
-            foreach (var v in Lib.Values)
-            {
-                v.Fs = new Dictionary<Timing, MethodInfo>();
-            }
-
-            foreach (var method in typeof(PotionData).GetMethods())
-            {
-                var attr = method.GetCustomAttribute<EffectAttribute>();
-
-                if ((attr != null) && (Lib.ContainsKey(attr.id.ToLower())))
-                {
-                    Lib[attr.id.ToLower().Trim()].Fs[attr.timing] = method;
-                }
-            }
-        }
-
     }
 }

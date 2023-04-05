@@ -140,7 +140,25 @@ namespace Game
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
+        public bool CanAfford(CostInfo costInfo,out string cantInfo)
+        {
+            switch (costInfo.CostType)
+            {
+                case CostType.Hp:
+                    cantInfo = $"生命值不足";
+                    return (Status.CurHp > costInfo.Value);
+                case CostType.Mp:
+                    cantInfo = $"法力值不足";
+                    return (Status.CurMp > costInfo.Value);
+                case CostType.Gold:
+                    cantInfo = $"金币不足";
+                    return (Gold > costInfo.Value);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         /// <summary>
         /// 检查是否cd足够，资源是否足够, 是否满足BattleOnly条件
         /// </summary>
@@ -192,7 +210,7 @@ namespace Game
             
             Cost(rr.CostInfo);
             
-            CoolDown();
+            //CoolDown();
             Buffs.RemoveZeroStackBuff();
             return r;
         }
@@ -518,9 +536,11 @@ namespace Game
             if ((skill.Bp.Positive)&&(skill.Bp.Fs.ContainsKey(Timing.SkillEffect)))
             {
                 skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
-                skill.SetCooldown();
+                
 
-                CoolDown();
+                //CoolDown();
+
+                
                 Updated();
             }
             else
@@ -554,6 +574,10 @@ namespace Game
             if ((skill!=null)&&(!skill.Bp.BattleOnly))
             {
                 CastNonAimingSkill(skill);
+                
+                skill?.SetCooldown();
+                CoolDown();
+                
                 return null;
             }
             else
@@ -566,9 +590,16 @@ namespace Game
                 
                 //Settle(pa, Enemy);
                 if (skill != null) skill.Sealed = true;
+                
+                skill?.SetCooldown();
+                CoolDown();
+                
                 Updated();
                 return pa;
             }
+
+
+            
         }
         
         

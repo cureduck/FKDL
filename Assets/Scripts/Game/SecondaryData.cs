@@ -31,6 +31,13 @@ namespace Game
 
         public SecondaryData()
         {
+            SkillPoint = new Dictionary<Rank, int>
+            {
+                [Rank.Normal] = 0,
+                [Rank.Uncommon] = 0,
+                [Rank.Rare] = 0
+            };
+
             DiscoveredRelics = new List<string>();
         }
         
@@ -56,10 +63,17 @@ namespace Game
             RelicRandom = new Random(InitRelicSeed);
             PotionRandom = new Random(PotionSeed);
             
-            RelicManager.Instance.Lib.Random = RelicRandom;
+            RelicManager.Instance.SetRandom(RelicRandom);
             CrystalManager.Instance.Lib.Random = CurGameRandom;
-            SkillManager.Instance.Lib.Random = CurCardRandom;
-            PotionManager.Instance.Lib.Random = PotionRandom;
+            SkillManager.Instance.SetRandom(CurCardRandom);
+            PotionManager.Instance.SetRandom(PotionRandom);
+            
+            SkillPoint = new Dictionary<Rank, int>
+            {
+                [Rank.Normal] = 0,
+                [Rank.Uncommon] = 0,
+                [Rank.Rare] = 0
+            };
         }
         
         public static SecondaryData Load(string path)

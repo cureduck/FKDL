@@ -10,7 +10,7 @@ namespace Game
         public int Count;
         
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
-        [JsonIgnore] public Potion Bp => PotionManager.Instance.Lib[Id];
+        [JsonIgnore] public Potion Bp => PotionManager.Instance.GetById(Id);
 
 
 

@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Managers;
 using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Game
 {
-    public class Potion : IRank
+    public class Potion : CsvData
     {
         [JsonIgnore] public Texture Icon;
-        public string Id;
         public Rank Rank { get; set; }
         public float Param1;
         
-        public Dictionary<Timing, MethodInfo> Fs;
     }
 }

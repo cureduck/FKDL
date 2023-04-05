@@ -14,7 +14,7 @@ namespace UI
         private int index;
 
         private string Id => data.Id;
-        [JsonIgnore] public Potion Target => PotionManager.Instance.Lib[Id];
+        [JsonIgnore] public Potion Target => PotionManager.Instance.GetById(Id);
         public PotionData data;
 
         public Localize IdText;

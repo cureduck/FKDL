@@ -34,6 +34,7 @@ namespace Game
         public override void OnReact()
         {
             base.OnReact();
+            AudioPlayer.Instance.Play(AudioPlayer.AudioOpenChest);
             WindowManager.Instance.OffersWindow.Load(Offers);
             Destroyed();
         }

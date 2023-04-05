@@ -112,6 +112,7 @@ namespace Managers
         [Button]
         public void LoadFromInit()
         {
+
             SecondaryData.Init();
             PlayerData = PlayerData.LoadFromInit();
             PlayerData.Gain(0);
@@ -140,6 +141,7 @@ namespace Managers
         private List<Square> squares = new List<Square>();
         public void LoadFloor(Map.Floor floor)
         {
+
             squares.Clear();
             foreach (Transform trans in MapGo.transform)
             {

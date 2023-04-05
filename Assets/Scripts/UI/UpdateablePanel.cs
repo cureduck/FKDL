@@ -7,7 +7,7 @@ namespace UI
     {
         protected override void SetData(T d)
         {
-            if (_data != null)
+            if (Data != null)
             {
                 RemoveListener();
             }
@@ -26,19 +26,19 @@ namespace UI
 
         private void AddListener()
         {
-            if (_data != null) 
+            if (Data != null) 
             {
-                _data.OnUpdated += UpdateUI;
-                _data.OnDestroy += RemoveListener;
+                Data.OnUpdated += UpdateUI;
+                Data.OnDestroy += RemoveListener;
             }
         }
 
         private void RemoveListener()
         {
-            if (_data != null)
+            if (Data != null)
             {
-                _data.OnUpdated -= UpdateUI;
-                _data.OnDestroy -= RemoveListener;
+                Data.OnUpdated -= UpdateUI;
+                Data.OnDestroy -= RemoveListener;
             }
         }
 

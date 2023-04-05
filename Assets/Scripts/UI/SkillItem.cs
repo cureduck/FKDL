@@ -80,7 +80,7 @@ namespace UI
             }
         }
 
-        private Dictionary<string, Skill> Lib => SkillManager.Instance.Lib;
+        //private Dictionary<string, Skill> Lib => SkillManager.Instance.Lib;
         
         [Button]
         public void Activate()
@@ -90,13 +90,13 @@ namespace UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            DescriptionPanel.gameObject.SetActive(true);
+            /*DescriptionPanel.gameObject.SetActive(true);
             if (Lib.ContainsKey(IdText.Term))
             {
                 ParamsManager.SetParameterValue("P1", Lib[IdText.Term].Param1.ToString());
                 ParamsManager.SetParameterValue("P2", Lib[IdText.Term].Param2.ToString());
                 Description.SetTerm(Lib[IdText.Term].Description);
-            }
+            }*/
         }
 
         public void OnPointerExit(PointerEventData eventData)

@@ -22,7 +22,7 @@ public class EnemySkillInfoView : MonoBehaviour
         this.skillData = skillData;
 
         skillView.SetData(fighterData, skillData,0,null,null,null);
-        Skill curSkill = SkillManager.Instance.GetSkillByStringID(skillData.Id);
+        Skill curSkill = SkillManager.Instance.GetById(skillData.Id);
         if (curSkill != null)
         {
             skillName.SetTerm(curSkill.Pool);

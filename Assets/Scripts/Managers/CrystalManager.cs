@@ -12,18 +12,17 @@ namespace Managers
     public class CrystalManager : Singleton<CrystalManager>
     {
         public CustomDictionary<Crystal> Lib;
+        protected string CsvPath => Paths.CrystalDataPath;
 
-        
         private void Start()
         {
             Load();
         }
 
-
-        private void Load()
+        protected void Load()
         {
             Lib = new CustomDictionary<Crystal>();
-            var csv = File.ReadAllText(Paths.CrystalDataPath);
+            var csv = File.ReadAllText(CsvPath);
 
             foreach (var line in CsvReader.ReadFromText(csv))
             {
@@ -44,15 +43,12 @@ namespace Managers
             var id = line["id"];//.ToLower().Replace(" ", "");
             var rank = (Rank) int.Parse(line["rank"]);
             var isTitle = line["type"].Equals("title");
-            
-            
-            
+
             if (isTitle)
             {
-                Lib[id] = new Crystal()
+                Lib[id] = new Crystal(rank)
                 {
                     Id = id,
-                    Rank = rank,
                     Title = id
                 };
             }

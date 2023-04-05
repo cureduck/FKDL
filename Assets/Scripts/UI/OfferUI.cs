@@ -87,7 +87,7 @@ namespace UI
                     break;
                 case Offer.OfferKind.Skill:
                     Id.SetTerm(Offer.Id);
-                    var skill = SkillManager.Instance.Lib[Offer.Id];
+                    var skill = SkillManager.Instance.GetById(Offer.Id);
                     Positive?.SetTerm(skill.Positive? "positive" : "passive");
                     if (Bg != null)
                     {

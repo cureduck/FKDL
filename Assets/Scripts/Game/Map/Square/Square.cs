@@ -336,12 +336,17 @@ namespace Game
             
             Bonus.gameObject.SetActive(true);
             Mask.gameObject.SetActive(false);
-            
-            _breath.Kill();
-            _breath = DOTween.To(
-                () => { return Light2D[0].intensity; },
-                (value => Light2D[0].intensity = value),
-                2, 3f).SetLoops(-1, LoopType.Yoyo);
+
+
+            if (!(Data is ObsidianSaveData))
+            {
+                _breath.Kill();
+                _breath = DOTween.To(
+                    () => { return Light2D[0].intensity; },
+                    (value => Light2D[0].intensity = value),
+                    2, 3f).SetLoops(-1, LoopType.Yoyo);
+            }
+
 
             _sequence.Append(transform.DOMoveZ(.15f, DownTime))
                 .Append(transform.DOMoveZ(-.3f, UpTime))

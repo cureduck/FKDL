@@ -98,7 +98,7 @@ namespace Game
 
         public bool TryTakePotion(string id)
         {
-            if (PotionManager.Instance.Lib.TryGetValue(id, out var sk))
+            if (PotionManager.Instance.TryGetById(id, out var sk))
             {
                 for (var i = 0; i < Potions.Length; i++)
                 {
@@ -128,7 +128,7 @@ namespace Game
 
         public bool TryTakeRelic(string id)
         {
-            if (RelicManager.Instance.Lib.TryGetValue(id, out var sk))
+            if (RelicManager.Instance.TryGetById(id, out var sk))
             {
                 throw new NotImplementedException();
             }
@@ -139,7 +139,7 @@ namespace Game
         
         public bool TryTakeSkill(string id)
         {
-            if (SkillManager.Instance.Lib.TryGetValue(id, out var sk))
+            if (SkillManager.Instance.TryGetById(id, out var sk))
             {
                 for (int i = 0; i < Skills.Count; i++)
                 {
@@ -191,6 +191,7 @@ namespace Game
             {
                 CastNonAimingSkill(skill);
             }
+            skill.SetCooldown();
         }
         
         

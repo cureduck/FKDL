@@ -114,7 +114,17 @@ namespace Game
             GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
             curEffectObject.transform.position = square.Icon.transform.position;
 
-            AudioPlayer.Instance.PlaySoundEffect(AudioPlayer.AudioNormalAttack);
+            AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
+
+            EnemyBp enemyBp = Bp;
+            if (enemyBp != null && enemyBp.Rank >= Rank.Rare)
+            {
+                AudioPlayer.Instance.SwitchBossOrNormalBGM(false);
+            }
+            else
+            {
+                AudioPlayer.Instance.SwitchBossOrNormalBGM(true);
+            }
 
             if (GameManager.Instance.PlayerData.Engaging)
             {

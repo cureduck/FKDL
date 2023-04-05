@@ -7,7 +7,7 @@ namespace Game
         public string Id;
         public int Counter;
         
-        public Relic Bp => RelicManager.Instance.Lib[Id];
+        public Relic Bp => RelicManager.Instance.GetById(Id);
         
         public bool MayAffect(Timing timing, out int priority)
         {

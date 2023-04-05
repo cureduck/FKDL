@@ -9,8 +9,13 @@ namespace UI
             get => _data;
         }
 
-        protected T _data;        
-        
+        private T _data;
+
+        public virtual void Init() 
+        {
+            
+        }
+
         public virtual void Open(T data) 
         {
             SetData(data);

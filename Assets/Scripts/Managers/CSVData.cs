@@ -1,14 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using Game;
+using Sirenix.OdinInspector;
 
 namespace Managers
 {
-    public class CsvData : IEffector, IRank
+
+    public class CsvData : IRank
     {
-        public CsvData(Dictionary<Timing, MethodInfo> fs)
+        protected CsvData(Rank rank, string id) : this(rank)
         {
-            Fs = fs;
+            Id = id;
+        }
+
+        protected CsvData()
+        {
+            Fs = new Dictionary<Timing, MethodInfo>();
+        }
+
+        protected CsvData(Rank rank) : this()
+        {
+            Rank = rank;
         }
 
         public void AddEffect(Timing timing, MethodInfo methodInfo)
@@ -16,8 +28,10 @@ namespace Managers
             Fs[timing] = methodInfo;
         }
 
-        public Dictionary<Timing, MethodInfo> Fs { get; private set; }
+        public Dictionary<Timing, MethodInfo> Fs { get; }
 
+
+        public string Id { get; set; }
         public Rank Rank { get; }
     }
 }
