@@ -44,7 +44,7 @@ namespace Managers
         public event Action GameLoaded;
         public event Action<Square> FocusChanged;
         
-        public void BroadcastSquare(Square square)
+        public void BroadcastSquareChanged(Square square)
         {
             FocusChanged?.Invoke(square);
         }

@@ -300,7 +300,29 @@ namespace Game
             }
         }
 
+
+        public void OnReact()
+        {
+            if (Data is EnemySaveData d)
+            {
+                GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
+                curEffectObject.transform.position = Icon.transform.position;
+                
+                AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
+                
+                EnemyBp enemyBp = d.Bp;
+                if (enemyBp != null && enemyBp.Rank >= Rank.Rare)
+                {
+                    AudioPlayer.Instance.SwitchBossOrNormalBGM(false);
+                }
+                else
+                {
+                    AudioPlayer.Instance.SwitchBossOrNormalBGM(true);
+                }
+            }
+        }
         
+
 
         [Button]
         public void Focus()

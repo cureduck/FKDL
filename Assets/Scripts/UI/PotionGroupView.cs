@@ -27,7 +27,7 @@ namespace UI
         
         protected override void UpdateData()
         {
-            Debug.LogWarning("gengx!");
+            //Debug.LogWarning("gengx!");
             PlayerData playerData = _master as PlayerData;
             if (playerData != null) 
             {

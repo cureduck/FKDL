@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using Object = System.Object;
 using Random = UnityEngine.Random;
 
@@ -575,9 +576,9 @@ namespace Game
             {
                 CastNonAimingSkill(skill);
                 
-                skill?.SetCooldown();
                 CoolDown();
-                
+                skill.SetCooldown();
+                Updated();
                 return null;
             }
             else
@@ -591,9 +592,8 @@ namespace Game
                 //Settle(pa, Enemy);
                 if (skill != null) skill.Sealed = true;
                 
-                skill?.SetCooldown();
                 CoolDown();
-                
+                skill?.SetCooldown();
                 Updated();
                 return pa;
             }

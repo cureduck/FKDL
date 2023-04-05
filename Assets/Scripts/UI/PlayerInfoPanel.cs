@@ -28,7 +28,7 @@ namespace UI
                 Data.OnUpdated += UpdateUI;
                 Data.OnSkillPointChanged += OnSkillPointChanged;
                 
-                Text();
+                Test();
             };
 
         }
@@ -39,7 +39,7 @@ namespace UI
             //throw new NotImplementedException();
         }
 
-        private void Text() 
+        private void Test() 
         {
             //Data = new PlayerData();
             SkillData skillData = new SkillData { Cooldown = 0, Id = "DZXY_ALC".ToLower(), CurLv = 1 };

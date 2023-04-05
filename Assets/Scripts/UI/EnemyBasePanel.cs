@@ -7,6 +7,10 @@ namespace UI
     public class EnemyBasePanel : UpdateablePanel<EnemySaveData>
     {
         private Square CurrentFocus;
+
+        public StatusPanel StatusPanel;
+        public BuffPanel BuffPanel;
+        public EnemySkillInfoView EnemySkillInfoView;
         
         private void Start()
         {
@@ -36,7 +40,7 @@ namespace UI
 
         protected override void UpdateUI()
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }

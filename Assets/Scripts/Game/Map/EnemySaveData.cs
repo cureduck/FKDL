@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace Game
 {
@@ -39,6 +40,15 @@ namespace Game
 
         public void PlanAttackRound()
         {
+            foreach (var skill in Skills)
+            {
+                if (CanCast(skill))
+                {
+                    ManageAttackRound(skill);
+                    return;
+                }
+            }
+
             ManageAttackRound();
         }
 
@@ -109,22 +119,7 @@ namespace Game
         public void OnReact(SkillData skill)
         {
             GameManager.Instance.PlayerData.ManageAttackRound(skill);
-
-            Square square = GameManager.Instance.GetByData(this);
-            GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
-            curEffectObject.transform.position = square.Icon.transform.position;
-
-            AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
-
-            EnemyBp enemyBp = Bp;
-            if (enemyBp != null && enemyBp.Rank >= Rank.Rare)
-            {
-                AudioPlayer.Instance.SwitchBossOrNormalBGM(false);
-            }
-            else
-            {
-                AudioPlayer.Instance.SwitchBossOrNormalBGM(true);
-            }
+            
 
             if (GameManager.Instance.PlayerData.Engaging)
             {
@@ -141,6 +136,7 @@ namespace Game
                 PlanAttackRound();
             }
             base.OnReact();
+            Updated();
         }
 
         protected override void Destroyed()

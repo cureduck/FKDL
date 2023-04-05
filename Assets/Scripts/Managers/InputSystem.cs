@@ -122,7 +122,7 @@ namespace Managers
                     {
                         if (GameManager.Instance.Focus != sq)
                         {
-                            GameManager.Instance.BroadcastSquare(sq);
+                            GameManager.Instance.BroadcastSquareChanged(sq);
                             
                             Square previous = null;
                             if (GameManager.Instance.Focus != null)
@@ -148,14 +148,29 @@ namespace Managers
                                 Vector3 curPosition = sq.transform.position;
                                 curPosition.x = sq.Icon.transform.position.x;
                                 WindowManager.Instance.EnemyPanel.transform.position = curPosition;
+                                WindowManager.Instance.EnemyPanel.Load(es);
                             }
                             
                             if (previous != null) previous.UpdateFace();
                             sq.Focus();
-                            //t.RevealAround();
+
+                            if (t is EnemySaveData)
+                            {
+                            }
+                            else
+                            {
+                                sq.OnReact();
+                                t.OnReact();
+                            }
+
                         }
-                        //t.OnFocus();
-                        t.OnReact();
+                        else
+                        {
+                            sq.OnReact();
+                            t.OnReact();
+                        }
+
+
                     }
                 }
             }

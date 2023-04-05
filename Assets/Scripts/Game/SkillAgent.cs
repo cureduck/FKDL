@@ -18,7 +18,7 @@ namespace Game
             }
             for (int i = 0; i < bp.Length; i++)
             {
-                Add(bp[i]);
+                Add((SkillData)bp[i].Clone());
             }
         }
 

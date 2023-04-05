@@ -23,18 +23,19 @@ namespace Game
         
         public new void Add(BuffData data)
         {
-            data.Id = data.Id.ToLower();
-            if (BuffManager.Instance.Lib.TryGetValue(data.Id, out _))
+            var d = (BuffData)data.Clone();
+            d.Id = d.Id.ToLower();
+            if (BuffManager.Instance.Lib.TryGetValue(d.Id, out _))
             {
-                var buff = Find((buffData => buffData.Id == data.Id));
+                var buff = Find((buffData => buffData.Id == d.Id));
                 if (buff == null)
                 {
-                    base.Add(data);
-                    BuffAdded?.Invoke(data);
+                    base.Add(d);
+                    BuffAdded?.Invoke(d);
                 }
                 else
                 {
-                    buff.CurLv += data.CurLv;
+                    buff.CurLv += d.CurLv;
                 }
             }
         }

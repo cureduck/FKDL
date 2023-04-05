@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class BuffData : IEffectContainer
+    public class BuffData : IEffectContainer, ICloneable
     {
         public string Id;
         public int CurLv;
@@ -108,6 +108,10 @@ namespace Game
             return attack;
         }        
         #endregion
-        
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

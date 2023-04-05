@@ -29,8 +29,8 @@ public class EnemySkillInfoView : MonoBehaviour
         }
         else 
         {
-            skillName.SetTerm("Unknow");
-            skillDescribe.SetTerm("Unknow");
+            skillName.SetTerm("Unknown");
+            skillDescribe.SetTerm("Unknown");
         }
 
 

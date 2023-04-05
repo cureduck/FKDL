@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace Game
 {
-    public class SkillData : IEffectContainer
+    public class SkillData : IEffectContainer, ICloneable
     {
         public string Id;
         public int CurLv;
@@ -496,7 +496,6 @@ namespace Game
         [Effect("HQ_MAG", Timing.OnAttack, priority = -100)]
         public Attack FireBall(Attack attack, FighterData fighter, FighterData enemy)
         {
-            SetCooldown();
             return new Attack(0, fighter.Status.MAtk, 0, Bp.Param1, 1, "HQ_MAG");
         }
 
@@ -576,5 +575,10 @@ namespace Game
         
 
         #endregion
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }
