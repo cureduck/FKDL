@@ -94,14 +94,14 @@ namespace Game
 
         public override void OnFocus()
         {
-            WindowManager.Instance.Display(this);
             base.OnFocus();
+            WindowManager.Instance.Display(this);
         }
 
         public override void OnReact()
         {
-            WindowManager.Instance.Display(this);
             OnReact(null);
+            WindowManager.Instance.Display(this);
         }
 
         public override void OnLeave()
