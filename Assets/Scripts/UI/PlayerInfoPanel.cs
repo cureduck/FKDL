@@ -45,7 +45,7 @@ namespace UI
             SkillData skillData = new SkillData { Cooldown = 0, Id = "DZXY_ALC".ToLower(), CurLv = 1 };
             SkillData skillData02 = new SkillData { Cooldown = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
             SkillData skillData03 = new SkillData { Cooldown = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
-            Debug.Log(Data.Skills.Count);
+            //Debug.Log(Data.Skills.Count);
             for (int i = 0; i < 6; i++)
             {
                 if (Data.Skills.Count >= 6)
@@ -69,7 +69,6 @@ namespace UI
             {
                 listView.SetData(Data, Data.Skills.ToArray());
             }
-
         }
     }
 }

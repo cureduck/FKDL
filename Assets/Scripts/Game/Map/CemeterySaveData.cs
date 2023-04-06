@@ -32,13 +32,11 @@ namespace Game
                 GameManager.Instance.PlayerData.Cost(new BattleStatus{CurMp = Cost});
                 if (Random.Range(0f, 1f)> .5f)
                 {
-                    PlaySoundEffect("casino_win");
-                    GameManager.Instance.RollForSkill(Rank);
+                    OnReactInfo(new CasinoArgs(){CanReact = true, Win = true});
                 }
                 else
                 {
-                    PlaySoundEffect("casino_lose");
-                    WindowManager.Instance.Warn("You Lose");
+                    OnReactInfo(new CasinoArgs(){CanReact = true, Win = false});
                 }
                 
                 TimesLeft -= 1;
@@ -50,7 +48,7 @@ namespace Game
             }
             else
             {
-                WindowManager.Instance.Warn("Not Enough Sp");
+                OnReactInfo(new CasinoArgs(){CanReact = false, Win = false});
             }
         }
     }

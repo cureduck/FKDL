@@ -21,12 +21,12 @@ namespace Game
             if (GameManager.Instance.PlayerData.Status.CurMp >= Cost)
             {
                 GameManager.Instance.PlayerData.Cost(new BattleStatus{CurMp = -Cost});
+                OnReactInfo(new RockArgs(){CanReact = true});
                 Destroyed();
-                AudioPlayer.Instance.Play(AudioPlayer.AudioClearRock);
             }
             else
             {
-                WindowManager.Instance.Warn("Not Enough Sp");
+                OnReactInfo(new RockArgs(){CanReact = false});
             }
         }
     }

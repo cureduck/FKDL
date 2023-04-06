@@ -47,6 +47,7 @@ namespace Game
             
             Data.OnDestroy += OnSquareDestroy;
             Data.OnUpdated += UpdateFace;
+            Data.ReactInfo += HandleReactArgs;
             //Data.RevealAround += RevealAround;
             
             Data.Load();
@@ -152,7 +153,7 @@ namespace Game
                     SetContent("treasure", d2.Rank.ToString(), icon: lib["chest"]);
                     break;
                 case CemeterySaveData d3:
-                    SetContent("mountain", d3.TimesLeft + "/" + CemeterySaveData.MaxTimes, icon: lib["mountain"]);
+                    SetContent("cemetery", d3.TimesLeft + "/" + CemeterySaveData.MaxTimes, icon: lib["cemetery"]);
                     break;
                 case RockSaveData d4:
                     SetContent("rock", d4.Cost.ToString());
@@ -292,35 +293,34 @@ namespace Game
                 }
                 else
                 {
-                    for (int i = 0; i < Light2D.Length; i++)
+                    var color = Color.red;
+                    if (Data is EnemySaveData e)
                     {
-                        Light2D[i].color = GameManager.Instance.SquareColors["elite"];
+                        switch (e.Bp.Rank)
+                        {
+                            case Rank.Normal:
+                                color = GameManager.Instance.SquareColors["soldier"];
+                                break;
+                            case Rank.Uncommon:
+                                color = GameManager.Instance.SquareColors["elite"];
+                                break;
+                            case Rank.Rare:
+                                color = GameManager.Instance.SquareColors["boss"];
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        
+                        for (int i = 0; i < Light2D.Length; i++)
+                        {
+                            Light2D[i].color = color;
+                        }
                     }
+                    
                 }
             }
         }
-
-
-        public void OnReact()
-        {
-            if (Data is EnemySaveData d)
-            {
-                GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
-                curEffectObject.transform.position = Icon.transform.position;
-                
-                AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
-                
-                EnemyBp enemyBp = d.Bp;
-                if (enemyBp != null && enemyBp.Rank >= Rank.Rare)
-                {
-                    AudioPlayer.Instance.SwitchBossOrNormalBGM(false);
-                }
-                else
-                {
-                    AudioPlayer.Instance.SwitchBossOrNormalBGM(true);
-                }
-            }
-        }
+        
         
 
 
@@ -437,6 +437,7 @@ namespace Game
             {
                 Data.OnDestroy -= OnSquareDestroy;
                 Data.OnUpdated -= UpdateFace;
+                Data.ReactInfo -= HandleReactArgs;
             }
         }
         #endregion

@@ -117,6 +117,17 @@ namespace Game
         }
 
         public static SkillData Empty => new SkillData();
+        
+        
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+        public override string ToString()
+        {
+            return Id;
+        }
 
 
         #region 具体技能
@@ -576,9 +587,5 @@ namespace Game
 
         #endregion
 
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
     }
 }

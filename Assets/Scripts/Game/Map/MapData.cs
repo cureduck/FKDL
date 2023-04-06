@@ -13,7 +13,7 @@ namespace Game
         public Placement Placement;
         public SquareState SquareState = SquareState.UnRevealed;
 
-        public Func<FighterData> SkillBody;
+        public event Action<Args> ReactInfo;
         
         /// <summary>
         /// 新游戏时调用
@@ -106,12 +106,13 @@ namespace Game
         }
 
 
-        protected void PlaySoundEffect(string id)
+
+
+
+        protected virtual void OnReactInfo(Args obj)
         {
-            AudioPlayer.Instance.Play(id);
+            ReactInfo?.Invoke(obj);
         }
-
-
     }
 
 

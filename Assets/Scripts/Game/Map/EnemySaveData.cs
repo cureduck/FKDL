@@ -38,18 +38,17 @@ namespace Game
         }
 
 
-        public void PlanAttackRound()
+        public Attack? PlanAttackRound()
         {
             foreach (var skill in Skills)
             {
                 if (CanCast(skill))
                 {
-                    ManageAttackRound(skill);
-                    return;
+                    return ManageAttackRound(skill);
                 }
             }
 
-            ManageAttackRound();
+            return ManageAttackRound();
         }
 
 
@@ -118,24 +117,25 @@ namespace Game
 
         public void OnReact(SkillData skill)
         {
-            GameManager.Instance.PlayerData.ManageAttackRound(skill);
+            var playerAttack = GameManager.Instance.PlayerData.ManageAttackRound(skill);
+            Attack? enemyAttack;
             
-
             if (GameManager.Instance.PlayerData.Engaging)
             {
-                Debug.Log($"Engaging {Bp.Id}!");
+                //Debug.Log($"Engaging {Bp.Id}!");
             }
             GameManager.Instance.PlayerData.Engaging = false;
             if (!IsAlive)
             {
                 Destroyed();
-                return;
+                enemyAttack = null;
             }
             else
             {
-                PlanAttackRound();
+                enemyAttack = PlanAttackRound();
             }
             base.OnReact();
+            OnReactInfo(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
             Updated();
         }
 

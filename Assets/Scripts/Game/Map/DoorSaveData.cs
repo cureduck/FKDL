@@ -23,19 +23,22 @@ namespace Game
                 if (GameManager.Instance.PlayerData.Keys[Rank] > 0)
                 {
                     GameManager.Instance.PlayerData.Keys[Rank] -= 1;
-                    PlaySoundEffect("door");
+                    OnReactInfo(new DoorArgs(){CanReact = true});
                     Destroyed();
                 }
                 else
                 {
                     //WindowManager.Instance.Warn("No Key");
-                    PlaySoundEffect("block");
                     GameManager.Instance.PlayerData.Cost(BattleStatus.HP(3), "door");
 
                     if (Random.Range(0f, 1f) < .3f)
                     {
-                        PlaySoundEffect("door");
+                        OnReactInfo(new DoorArgs(){CanReact = true});
                         Destroyed();
+                    }
+                    else
+                    {
+                        OnReactInfo(new DoorArgs(){CanReact = false});
                     }
                 }
             }

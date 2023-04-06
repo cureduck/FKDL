@@ -56,7 +56,7 @@ namespace UI
 
         private void OnClick(Offer offer,int targetIndex) 
         {
-            Debug.Log($"{offer}被点击");
+            //Debug.Log($"{offer}被点击");
             GameManager.Instance.PlayerData.TryTake(offer);
             animationGroup.SelectTarget(targetIndex);
             StartCoroutine(CloseWindowIE());

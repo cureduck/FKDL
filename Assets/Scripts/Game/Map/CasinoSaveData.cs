@@ -43,12 +43,9 @@ namespace Game
                         };
                     }
                     WindowManager.Instance.OffersWindow.Load(offers);
-                    PlaySoundEffect("casino_win");
                 }
                 else
                 {
-                    WindowManager.Instance.Warn("You Lose");
-                    PlaySoundEffect("casino_lose");
                 }
                 
                 TimesLeft -= 1;

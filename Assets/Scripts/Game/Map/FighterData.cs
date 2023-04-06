@@ -220,7 +220,7 @@ namespace Game
         public Attack Kill(Attack r, FighterData enemy)
         {
             r = CheckChain<Attack>(Timing.OnKill, new object[] {r, this, enemy});
-            Debug.Log("killed");
+            //Debug.Log("killed");
             
             return r;
         }

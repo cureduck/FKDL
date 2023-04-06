@@ -11,9 +11,14 @@ namespace Game
         public CrystalSaveData(Rank r)
         {
             Rank = r;
-            Id = CrystalManager.Instance.Lib.ChooseRandom(r)[0].Id;
         }
-        
+
+        public override void Init()
+        {
+            base.Init();
+            Id = CrystalManager.Instance.Lib.ChooseRandom(Rank)[0].Id;
+        }
+
         public override void OnReact()
         {
             var r = (Area > 9) ? Rank.Uncommon : Rank.Normal;
