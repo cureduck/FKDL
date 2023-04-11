@@ -47,7 +47,7 @@ namespace Game
             
             Data.OnDestroy += OnSquareDestroy;
             Data.OnUpdated += UpdateFace;
-            Data.ReactInfo += HandleReactArgs;
+            Data.ReactResultInfo += HandleReactResultArgs;
             //Data.RevealAround += RevealAround;
             
             Data.Load();
@@ -162,7 +162,7 @@ namespace Game
                     SetContent("door", d5.Rank.ToString(), icon: lib["door"]);
                     break;
                 case KeySaveData d6:
-                    SetContent("key", d6.Rank.ToString());
+                    SetContent("key", d6.KeyRank.ToString());
                     break;
                 case CrystalSaveData d7:
                     SetContent("crystal", "", icon: lib["crystal"]);
@@ -226,7 +226,7 @@ namespace Game
 
         #region base
         public SpriteRenderer Bg;
-        public SpriteRenderer Box;
+        public SpriteRenderer OutLine;
         public SpriteRenderer Mask;
         
         private const float Spacing = .02f;
@@ -234,6 +234,10 @@ namespace Game
         public SpriteRenderer Icon;
         public Localize Id;
         public TMP_Text Bonus;
+
+        public SpriteRenderer OutLine1;
+        public SpriteRenderer OutLine2;
+        
 
         //private Animator _animator;
 
@@ -244,7 +248,7 @@ namespace Game
 
         //public RectTransform Global;
 
-        public void SetSize(Placement d)
+        private void SetSize(Placement d)
         {
             transform.position = new Vector3(d.x + Spacing/2, -d.y + Spacing/2, 0);
             //transform.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
@@ -252,22 +256,40 @@ namespace Game
             Bg.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
             Bg1.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
             Bg2.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
+            OutLine1.transform.localScale = new Vector3(1/(d.Width - Spacing), 1/(d.Height -Spacing), 0);
+            OutLine2.transform.localScale = new Vector3(1/(d.Width - Spacing), 1/(d.Height -Spacing), 0);
+            OutLine1.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
+            OutLine2.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
+
+
             Mask.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
             
-            Box.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
+            OutLine.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
             
+            
+            
+            
+            if ((d.Height == 1)||(d.Width == 1))
+            {
+                Id.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f +.3f, -0.01f);
+                Bonus.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f - .2f, -0.01f);
+                //Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f, 0);
+                return;
+            }
+            if ((d.Height >= 3)&&(d.Width >= 3))
+            {
+                Id.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f +.8f, -0.01f);
+                Bonus.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f - .8f, -0.01f);
+                Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f, 0);
+                Icon.transform.localScale = new Vector3(1.3f, 1.3f, 0);
+                return;
+            }
             
             Id.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f +.6f, -0.01f);
             Bonus.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f - .6f, -0.01f);
-            
             Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f, 0);
 
             
-            if (d.Height == 1)
-            {
-                Id.GetComponent<RectTransform>().localPosition -= new Vector3(0, .2f, 0);
-                Bonus.GetComponent<RectTransform>().localPosition -= new Vector3(0, -.2f, 0);
-            }
             
             //Global.sizeDelta = new Vector2(d.Width - Spacing, d.Height - Spacing);
         }
@@ -350,6 +372,8 @@ namespace Game
         private const float UpTime = .4f;
 
         private Tween _breath;
+        public Light2D _breathLight;
+        
         
         private void OnFocus()
         {
@@ -363,9 +387,10 @@ namespace Game
             if (!(Data is ObsidianSaveData))
             {
                 _breath.Kill();
+                _breathLight.intensity += .4f;
                 _breath = DOTween.To(
-                    () => { return Light2D[0].intensity; },
-                    (value => Light2D[0].intensity = value),
+                    () => _breathLight.intensity,
+                    (value => _breathLight.intensity = value),
                     2, 3f).SetLoops(-1, LoopType.Yoyo);
             }
 
@@ -403,6 +428,7 @@ namespace Game
         {
             _sequence.Kill();
             _sequence = DOTween.Sequence();
+            _breath.Kill();
             
             Mask.gameObject.SetActive(true);
             Bonus.gameObject.SetActive(false);
@@ -412,7 +438,12 @@ namespace Game
                 .Insert(0f, Bg1.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Bg2.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Mask.GetComponent<SpriteRenderer>().DOFade(.7f, UpTime))
-                .OnComplete(() => { _breath.Kill(); Light2D[0].intensity = 0; });
+                .Insert(0f, 
+                    DOTween.To(
+                        ()=> _breathLight.intensity,
+                        (value => _breathLight.intensity = value),
+                        0, UpTime))
+                .OnComplete(() => { _breathLight.intensity = 0; });
         }
         
 
@@ -437,7 +468,7 @@ namespace Game
             {
                 Data.OnDestroy -= OnSquareDestroy;
                 Data.OnUpdated -= UpdateFace;
-                Data.ReactInfo -= HandleReactArgs;
+                Data.ReactResultInfo -= HandleReactResultArgs;
             }
         }
         #endregion

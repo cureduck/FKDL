@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Managers;
 
 namespace Game
@@ -11,7 +12,6 @@ namespace Game
         public ChestSaveData(Rank rank) : base()
         {
             Rank = rank;
-            
         }
         
 
@@ -20,22 +20,13 @@ namespace Game
             base.Init();
 
             Offers = new Offer[3];
-            var skills = SkillManager.Instance.Roll(Rank, 3);
-            for (int i = 0; i < 3; i++)
-            {
-                Offers[i] = new Offer()
-                {
-                    Id = skills[i],
-                    Kind = Offer.OfferKind.Skill
-                };
-            }
+            var skills = SkillManager.Instance.RollT(Rank, 3);
+            Offers = skills.Select((s => new Offer(s))).ToArray();
         }
 
         public override void OnReact()
         {
             base.OnReact();
-            AudioPlayer.Instance.Play(AudioPlayer.AudioOpenChest);
-            WindowManager.Instance.OffersWindow.Load(Offers);
             Destroyed();
         }
     }

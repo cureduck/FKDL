@@ -26,19 +26,19 @@ namespace UI
         {
             if (Input.GetKeyDown(KeyCode.F1))
             {
-                WindowManager.Instance.MenuWindow.SetActive(value:!WindowManager.Instance.MenuWindow.active);
+                WindowManager.Instance.MenuWindow.SetActive(value:!WindowManager.Instance.MenuWindow.activeInHierarchy);
             }
             
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                WindowManager.Instance.CheatWindow.SetActive(value:!WindowManager.Instance.CheatWindow.active);
+                WindowManager.Instance.CheatWindow.SetActive(value:!WindowManager.Instance.CheatWindow.activeInHierarchy);
             }
 
             for (int i = 0; i < 10; i++)
             {
                 if (Input.GetKeyDown(i.ToString()))
                 {
-                    GameManager.Instance.PlayerData.TryUseSkill(i);
+                    GameManager.Instance.PlayerData.TryUseSkill(i, out _);
                 }
             }
         }

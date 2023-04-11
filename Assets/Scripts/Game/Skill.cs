@@ -8,7 +8,6 @@ namespace Game
 {
     public class Skill : CsvData
     {
-        [JsonIgnore] public Sprite Icon;
         public string Pool;
         public bool Positive;
         public bool BattleOnly;
@@ -21,6 +20,11 @@ namespace Game
         public int Cooldown;
         public CostInfo CostInfo;
 
+        public Skill(Rank rank, string id, Sprite icon) : base(rank, id, icon)
+        {
+            
+        }
+        
 
         public Skill(Rank rank, string id) : base(rank, id)
         {

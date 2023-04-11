@@ -17,16 +17,22 @@ namespace Game
         public override void OnReact()
         {
             base.OnReact();
+
+            var cost = CostInfo.MpCost(Cost);
             
-            if (GameManager.Instance.PlayerData.Status.CurMp >= Cost)
+            if (GameManager.Instance.PlayerData.CanAfford(cost, out _))
             {
-                GameManager.Instance.PlayerData.Cost(new BattleStatus{CurMp = -Cost});
-                OnReactInfo(new RockArgs(){CanReact = true});
+                GameManager.Instance.PlayerData.Cost(cost, "rock");
+                InformReactResult(new RockArgs(){CanReact = true});
                 Destroyed();
             }
             else
             {
-                OnReactInfo(new RockArgs(){CanReact = false});
+                InformReactResult(new RockArgs()
+                {
+                    CanReact = false,
+                    Info = new FailureInfo(FailureReason.NotEnoughMp)
+                });
             }
         }
     }

@@ -32,7 +32,7 @@ namespace Editors
             
             [TableColumnWidth(50, false)]
             [ShowInInspector, PreviewField(45, ObjectFieldAlignment.Center)]
-            public Texture Icon { get { return this.EnemyData.Icon; } set { this.EnemyData.Icon = value; EditorUtility.SetDirty(this.EnemyData); } }
+            public Sprite Icon { get { return this.EnemyData.Icon; } set { this.EnemyData.Icon = value; EditorUtility.SetDirty(this.EnemyData); } }
             
         }
     }

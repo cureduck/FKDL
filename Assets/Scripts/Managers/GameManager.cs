@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using Cysharp.Threading.Tasks;
 using Game;
@@ -74,16 +76,10 @@ namespace Managers
         
         public void RollForSkill(Rank rank)
         {
-            var offers = new Offer[3];
-            var skills = SkillManager.Instance.Roll(rank, 3);
-            for (int i = 0; i < 3; i++)
-            {
-                offers[i] = new Offer()
-                {
-                    Id = skills[i],
-                    Kind = Offer.OfferKind.Skill
-                };
-            }
+            var skills = SkillManager.Instance.RollT(rank, 3);
+
+            var offers = skills.Select((s => new Offer(s)));
+            
             WindowManager.Instance.OffersWindow.Load(offers);
         }
         
@@ -159,19 +155,7 @@ namespace Managers
             }
         }
 
-        public Square GetByData(MapData mapData) 
-        {
-            for (int i = 0; i < squares.Count; i++)
-            {
-                if (squares[i].Data == mapData) 
-                {
-                    return squares[i];
-                }
-            }
-            return null;
-        }
 
-        
         [Button]
         private Square CreateSquare(MapData data)
         {

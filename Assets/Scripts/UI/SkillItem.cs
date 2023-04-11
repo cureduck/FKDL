@@ -25,6 +25,7 @@ namespace UI
         {
             Debug.LogWarning("该逻辑已被隐藏");
             return;
+            /*
             if (data.IsEmpty)
             {
                 IdText.SetTerm("empty");
@@ -59,7 +60,7 @@ namespace UI
                     GetComponent<Button>().interactable = false;
                 }
                 
-                /*if ((data.Bp.Positive) && (data.Cooldown > 0))
+                if ((data.Bp.Positive) && (data.Cooldown > 0))
                 {
                     CdText.gameObject.SetActive(true);
                     CdText.text = data.Cooldown.ToString();
@@ -77,7 +78,7 @@ namespace UI
                     }
                     CdText.gameObject.SetActive(false);
                 }*/
-            }
+            
         }
 
         //private Dictionary<string, Skill> Lib => SkillManager.Instance.Lib;

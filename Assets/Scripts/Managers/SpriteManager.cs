@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Managers
 {
+    [ExecuteAlways]
     public class SpriteManager : Singleton<SpriteManager>
     {
         private const string IconPath = "SourceImages";

@@ -18,10 +18,11 @@ namespace Managers
 
         protected override Potion Line2T(ICsvLine line)
         {
-            return new Potion
+            var id = line["id"].ToLower().Replace(" ", "");
+            var rank = (Rank) int.Parse(line["rarity"]);
+            var icon = GetIcon(id);
+            return new Potion(rank, id, icon)
             {
-                Id = line["id"].ToLower().Replace(" ", ""),
-                Rank = (Rank) int.Parse(line["rarity"]),
                 Param1 = float.Parse(line["P1"]),
             };
         }

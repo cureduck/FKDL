@@ -19,15 +19,22 @@ namespace Managers
     [ExecuteAlways]
     public class RelicManager : XMLDataManager<Relic, RelicData>
     {
-
         protected override string CsvPath => Paths.RelicDataPath;
         
-        
-
         protected override Relic Line2T(ICsvLine line)
         {
             return new Relic((Rank) int.Parse(line["rank"]),line["id"].ToLower());
         }
-        
+
+        protected override IEnumerable<Relic> GetCandidates(Rank rank)
+        {
+            var banList = GetBanList();
+            return base.GetCandidates(rank).Where(relic => !banList.Contains(relic.Id));
+        }
+
+        private IEnumerable<string> GetBanList()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

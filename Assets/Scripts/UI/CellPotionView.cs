@@ -88,6 +88,8 @@ namespace UI
             {
                 curSelectSign.SetActive(true);
             }
+            Potion potion = PotionManager.Instance.GetById(data.Id);
+            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = potion.Des, screenPosition = transform.position, title = data.Id });
         }
 
 
@@ -100,6 +102,7 @@ namespace UI
             {
                 curSelectSign.SetActive(false);
             }
+            WindowManager.Instance.simpleInfoItemPanel.Close();
         }
 
     }

@@ -201,7 +201,7 @@ namespace Managers
         {
             var FOV = Camera.main.fieldOfView;
             FOV -=  Input.mouseScrollDelta.y * 3;
-            FOV = FOV > 70 ? 70 : FOV;
+            FOV = FOV > 80 ? 80 : FOV;
             FOV = FOV <30 ? 30 : FOV;
 
             light2D.pointLightOuterRadius = FOV;

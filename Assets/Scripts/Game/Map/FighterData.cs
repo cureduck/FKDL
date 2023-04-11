@@ -17,7 +17,13 @@ namespace Game
     public abstract class FighterData : MapData
     {
         public BattleStatus Status;
-        public int Gold;
+
+        [JsonIgnore]
+        public int Gold
+        {
+            get => Status.Gold;
+            protected set => Status.Gold = value;
+        }
         [ShowInInspector] public SkillAgent Skills;
         [ShowInInspector] public BuffAgent Buffs;
 
@@ -61,7 +67,7 @@ namespace Game
         {
             if (skill == null) return CostInfo.Zero;
             var cost = skill.Bp.CostInfo;
-            cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[]{cost});
+            cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[]{cost, this});
             return cost;
         }
         
@@ -120,41 +126,58 @@ namespace Game
             //AudioPlayer.Instance.PlaySoundEffect();
         }
 
-
+        public CostInfo GetActualCostInfo(CostInfo costInfo, string kw = "")
+        {
+            return CheckChain<CostInfo>(Timing.OnCost, new object[] {costInfo, this, kw});
+        }
+        
+        
         /// <summary>
         /// 检查条件施放资源是否足够
         /// </summary>
-        /// <param name="costInfo"></param>
+        /// <param name="originalCost"></param>
+        /// <param name="info"></param>
+        /// <param name="kw"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public bool CanAfford(CostInfo costInfo)
+        public bool CanAfford(CostInfo originalCost, out Info info, string kw = "")
         {
-            switch (costInfo.CostType)
+            var actualCost = GetActualCostInfo(originalCost);
+            switch (actualCost.CostType)
             {
                 case CostType.Hp:
-                    return (Status.CurHp > costInfo.Value);
+                    if (Status.CurHp > actualCost.ActualValue)
+                    {
+                        info = new SuccessInfo();
+                        return true;
+                    }
+                    else
+                    {
+                        info = new FailureInfo(FailureReason.NotEnoughHp, IsPlayer);
+                        return false;
+                    }
                 case CostType.Mp:
-                    return (Status.CurMp > costInfo.Value);
+                    if (Status.CurMp >= actualCost.ActualValue)
+                    {
+                        info = new SuccessInfo();
+                        return true;
+                    }
+                    else
+                    {
+                        info = new FailureInfo(FailureReason.NotEnoughMp, IsPlayer);
+                        return false;
+                    }
                 case CostType.Gold:
-                    return (Gold > costInfo.Value);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        public bool CanAfford(CostInfo costInfo,out string cantInfo)
-        {
-            switch (costInfo.CostType)
-            {
-                case CostType.Hp:
-                    cantInfo = $"生命值不足";
-                    return (Status.CurHp > costInfo.Value);
-                case CostType.Mp:
-                    cantInfo = $"法力值不足";
-                    return (Status.CurMp > costInfo.Value);
-                case CostType.Gold:
-                    cantInfo = $"金币不足";
-                    return (Gold > costInfo.Value);
+                    if (Status.Gold > actualCost.ActualValue)
+                    {
+                        info = new SuccessInfo();
+                        return true;
+                    }
+                    else
+                    {
+                        info = new FailureInfo(FailureReason.NotEnoughGold, IsPlayer);
+                        return false;
+                    }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -164,10 +187,11 @@ namespace Game
         /// 检查是否cd足够，资源是否足够, 是否满足BattleOnly条件
         /// </summary>
         /// <param name="skill"></param>
+        /// <param name="info"></param>
         /// <returns></returns>
-        public bool CanCast(SkillData skill)
+        public bool CanCast(SkillData skill, out Info info)
         {
-            return skill.CanCast && CanAfford(GetSkillCost(skill));
+            return skill.CanCast(out info) && CanAfford(GetSkillCost(skill), out info);
         }
         
         /// <summary>
@@ -183,7 +207,7 @@ namespace Game
         /// <param name="skill"></param>
         /// <param name="info"></param>
         /// <returns></returns>
-        public abstract bool TryUseSkill(SkillData skill, out string info);
+        public abstract bool TryUseSkill(SkillData skill, out Info info);
         
 
         public void SwapSkill(int index01,int index02) 
@@ -226,19 +250,16 @@ namespace Game
         }
 
 
-        [Button]
-        public void Gain(int gold)
+        /// <summary>
+        /// 只有获得金币走这个，消耗金币还是走Cost
+        /// </summary>
+        /// <param name="gold"></param>
+        /// <param name="kw"></param>
+        public void Gain(int gold, string kw = null)
         {
-            foreach (var skill in Skills)
-            {
-                if (skill != null && (!skill.IsEmpty)&&(skill.Bp.Fs.ContainsKey(Timing.OnGain)))
-                {
-                    var f = skill.Bp.Fs[Timing.OnGain];
-                    //modify = (int) f?.Invoke(skill, new object[]{gold, this});
-                }
-            }
-
-            Gold += gold;
+            var g = CheckChain<int>(Timing.OnGain, new object[] {gold, this, kw});
+            
+            Gold += g;
             Updated();
         }
 
@@ -246,29 +267,13 @@ namespace Game
         public void Cost(CostInfo modify, string kw = null)
         {
             modify = CheckChain<CostInfo>(Timing.OnCost, new object[] {modify, this, kw});
-            Status += modify;
+            Status -= modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
             Updated();
         }
 
-        public void Cost(BattleStatus bs, string kw = null)
-        {
-            if (bs.CurHp != 0)
-            {
-                Cost(new CostInfo{Value = bs.CurHp, CostType = CostType.Hp});
-            }
-            else
-            {
-                if (bs.CurMp != 0)
-                {
-                    Cost(new CostInfo{Value = bs.CurMp, CostType = CostType.Mp});
-                }
-            }
-            Updated();
-        }
-        
-        
+
         public void CounterCharge(BattleStatus modify, string kw = null)
         {
             modify = CheckChain<BattleStatus>(Timing.OnCounterCharge, new object[] {modify, this, kw});
@@ -335,7 +340,7 @@ namespace Game
         public void Strengthen(BattleStatus modify)
         {
             modify = CheckChain<BattleStatus>(Timing.OnStrengthen, new object[] {modify, this});
-            this.Status += modify;
+            Status += modify;
             Updated();
         }
 
@@ -429,8 +434,6 @@ namespace Game
                 }
             }
             
-
-
             tmp.Sort(
                 (x, y) =>
                 {
@@ -454,7 +457,7 @@ namespace Game
             
             foreach (var skill in Skills)
             {
-                if (!skill.IsEmpty &&(skill.MayAffect(timing, out _)))
+                if ((skill != null)&& !skill.IsEmpty &&(skill.MayAffect(timing, out _)))
                 {
                     tmp.Add(skill);
                 }

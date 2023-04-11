@@ -78,12 +78,7 @@ namespace Managers
                 {
                     Line = suf,
                     Effect = effects,
-                    CostInfo = new CostInfo()
-                    {
-                        Value = int.TryParse(line["cost"], out var o) ? o : 0,
-                        CostType = costType
-                            
-                    }
+                    CostInfo = new CostInfo(int.TryParse(line["cost"], out var o) ? o : 0, costType)
                 };
 
                 Lib[tit].Options.Add(opt);

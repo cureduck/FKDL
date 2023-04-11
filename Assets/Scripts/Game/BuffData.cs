@@ -14,7 +14,7 @@ namespace Game
         public int CurLv;
 
         [JsonIgnore] public bool Positive => CurLv > 0;
-        [JsonIgnore] public Buff Bp => BuffManager.Instance.Lib.TryGetValue(Id.ToLower(), out var buff) ? buff : null;
+        [JsonIgnore] public Buff Bp => BuffManager.Instance.TryGetById(Id.ToLower(), out var buff) ? buff : null;
 
 
         public BuffData(string id, int curLv)

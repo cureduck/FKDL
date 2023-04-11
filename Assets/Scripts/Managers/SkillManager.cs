@@ -16,7 +16,6 @@ using Random = System.Random;
 
 namespace Managers
 {
-    [ExecuteAlways]
     public class SkillManager : XMLDataManager<Skill, SkillData>
     {
         protected override string CsvPath => Paths.SkillDataPath;
@@ -24,8 +23,9 @@ namespace Managers
         {
             int.TryParse(line["cd"], out var cooldown);
             int.TryParse(line["cost"], out var cost);
-            
-            return new Skill((Rank) int.Parse(line["Rarity"]), line["id"].ToLower())
+            var id = line["id"].ToLower();
+            var icon = GetIcon(id);
+            return new Skill((Rank) int.Parse(line["Rarity"]), id, icon)
             {
                 Pool = line["Pool"],
                 Positive = bool.Parse(line["Positive"]),
@@ -33,11 +33,7 @@ namespace Managers
                 MaxLv = int.Parse(line["MaxLv"]),
                 Param1 = float.Parse(line["P1"] != ""?line["P1"]:"0"),
                 Param2 = float.Parse(line["P2"] != ""?line["P2"]:"0"),
-                CostInfo = new CostInfo()
-                {
-                    Value = cost,
-                    CostType = line["CostType"] == "" ? CostType.Mp : CostType.Hp,
-                },
+                CostInfo = new CostInfo(cost, line["CostType"] == "" ? CostType.Mp : CostType.Hp),
                 Cooldown = cooldown,
                 //Description = line[10]
             };

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class OfferBtn : Button
+    /*public class OfferBtn : Button
     {
         private OfferUI _offerUi;
 
@@ -35,7 +35,7 @@ namespace UI
                     {
                     }
                     
-                    if (GameManager.Instance.PlayerData.TryTake(_offerUi.Offer))
+                    if (GameManager.Instance.PlayerData.TryTake(_offerUi.Offer, out _))
                     {
                         if (_offerUi.IsGood)
                         {
@@ -85,5 +85,5 @@ namespace UI
         {
             base.OnPointerEnter(eventData);
         }
-    }
+    }*/
 }

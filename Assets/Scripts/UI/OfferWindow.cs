@@ -1,5 +1,7 @@
 ﻿using Game;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Managers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +9,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class OfferWindow : MonoBehaviour
+    public class OfferWindow : BasePanel<Offer[]>
     {
         [SerializeField]
         private OfferUI prefab;
@@ -26,8 +28,9 @@ namespace UI
             skip_btn.onClick.AddListener(OnSkipButtonClick);
         }
 
-        public void Load(Offer[] offers)
+        public void Load(IEnumerable<Offer> ofs)
         {
+            var offers = ofs.ToArray();
             OffersUIStartAnimation[] offersUIStartAnimations = new OffersUIStartAnimation[offers.Length];
             for (int i = 0; i < offers.Length; i++)
             {
@@ -57,7 +60,7 @@ namespace UI
         private void OnClick(Offer offer,int targetIndex) 
         {
             //Debug.Log($"{offer}被点击");
-            GameManager.Instance.PlayerData.TryTake(offer);
+            GameManager.Instance.PlayerData.TryTakeOffer(offer, out _);
             animationGroup.SelectTarget(targetIndex);
             StartCoroutine(CloseWindowIE());
         }
@@ -74,7 +77,11 @@ namespace UI
             yield return new WaitForSeconds(delayCloseTime);
             gameObject.SetActive(false);
         }
-
-
+        
+        
+        protected override void UpdateUI()
+        {
+            Load(Data);
+        }
     }
 }

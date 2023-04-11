@@ -7,7 +7,7 @@ namespace Game
     [CreateAssetMenu(menuName = "SO/Enemy", fileName = "Enemy")]
     public class EnemyBp : SerializedScriptableObject
     {
-        public Texture Icon;
+        public Sprite Icon;
         public string Id;
         public BattleStatus Status;
 

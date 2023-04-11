@@ -25,7 +25,7 @@ namespace Game
         {
             var d = (BuffData)data.Clone();
             d.Id = d.Id.ToLower();
-            if (BuffManager.Instance.Lib.TryGetValue(d.Id, out _))
+            if (BuffManager.Instance.TryGetById(d.Id, out _))
             {
                 var buff = Find((buffData => buffData.Id == d.Id));
                 if (buff == null)

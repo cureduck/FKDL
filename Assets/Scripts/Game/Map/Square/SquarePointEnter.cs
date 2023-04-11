@@ -10,14 +10,15 @@ public class SquarePointEnter : MonoBehaviour
     [SerializeField]
     private Light2D targetLight;
     [SerializeField]
-    private float targetIntensity = 1.2f;
+    private const float targetIntensity = 2.5f;
     [SerializeField]
-    private float changeSpeed = 1.0f;
+    private const float changeSpeed = .7f;
     [SerializeField]
     private GameObject targetMask;
-    private float curTargetIntensity = 0;
+    //private float curTargetIntensity = 0;
 
-
+    private Tween anim;
+    
     private void Start()
     {
         targetLight.intensity = 0;
@@ -27,33 +28,53 @@ public class SquarePointEnter : MonoBehaviour
     {
         if (!targetMask.activeInHierarchy)
         {
-            curTargetIntensity = targetIntensity;
-        } 
+            //curTargetIntensity = targetIntensity;
+            anim.Kill();
+            anim = DOTween.To(Getter, Setter, targetIntensity, changeSpeed);
+        }
 
     }
 
+
+    private float Getter()
+    {
+        return targetLight.intensity;
+    }
+
+    private void Setter(float f)
+    {
+        targetLight.intensity = f;
+    }
+    
     private void Update()
     {
-        targetLight.intensity = Mathf.Lerp(targetLight.intensity, curTargetIntensity, changeSpeed * Time.deltaTime);
+        //targetLight.intensity = Mathf.Lerp(targetLight.intensity, curTargetIntensity, changeSpeed * Time.deltaTime);
     }
 
     private void OnMouseExit()
     {
         if (targetMask.activeInHierarchy) return;
-
-        curTargetIntensity = 0;
+        
+        anim.Kill();
+        anim = DOTween.To(Getter, Setter, 0, changeSpeed / 1.5f)
+            .OnComplete(() => Setter(0f));
+        //curTargetIntensity = 0;
     }
 
     private void OnMouseUp()
     {
         if (targetMask.activeInHierarchy) return;
-
-        if (curClick != null) 
+        anim.Kill();
+        
+        anim = DOTween.To(Getter, Setter, 0, 0.1f)
+            .OnComplete(() => Setter(0f));
+        
+        /*if (curClick != null) 
         {
             curClick.curTargetIntensity = 0;
         }
         curTargetIntensity = targetIntensity;
-        curClick = this;
+        curClick = this;*/
 
     }
 

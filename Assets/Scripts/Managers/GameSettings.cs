@@ -17,7 +17,7 @@ namespace Managers
 
         
         private GameObject _bg;
-        public GameObject BG 
+        public GameObject BG
         {
             get 
             {

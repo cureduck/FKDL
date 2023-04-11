@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Managers;
 using UnityEngine;
 
@@ -32,20 +33,26 @@ namespace Game
                 GameManager.Instance.PlayerData.Gain(-Cost);
                 if (Random.Range(0f, 1f)> .5f)
                 {
-                    var offers = new Offer[3];
-                    var potions = PotionManager.Instance.Roll(Rank, 3);
-                    for (int i = 0; i < 3; i++)
+                    var potions = PotionManager.Instance.RollT(Rank, 3);
+                    var offers = potions.
+                        Select((s => new Offer(s)));
+                    
+                    InformReactResult(new CasinoArgs()
                     {
-                        offers[i] = new Offer()
-                        {
-                            Id = potions[i],
-                            Kind = Offer.OfferKind.Potion
-                        };
-                    }
-                    WindowManager.Instance.OffersWindow.Load(offers);
+                        CanReact = true,
+                        Info = new SuccessInfo(),
+                        Win = true,
+                        Offers = offers.ToArray()
+                    });
                 }
                 else
                 {
+                    InformReactResult(new CasinoArgs()
+                    {
+                        CanReact = true,
+                        Info = new SuccessInfo(),
+                        Win = false
+                    });
                 }
                 
                 TimesLeft -= 1;
@@ -57,7 +64,11 @@ namespace Game
             }
             else
             {
-                WindowManager.Instance.Warn("Not Enough Gold");
+                InformReactResult(new CasinoArgs()
+                {
+                    CanReact = false,
+                    Info = new FailureInfo(FailureReason.NotEnoughGold)
+                });
             }
         }
     }

@@ -9,76 +9,16 @@ using UnityEngine;
 
 namespace Managers
 {
-    public class BuffManager : Singleton<BuffManager>
+    public class BuffManager : XMLDataManager<Buff, BuffData>
     {
-        public Dictionary<string, Buff> Lib;
-        
-        private void Start()
-        {
-            Load();
-        }
+        protected override string CsvPath => Paths.BuffDataPath;
 
-        private void Load()
+        protected override Buff Line2T(ICsvLine line)
         {
-            Lib = new Dictionary<string, Buff>();
-            
-            var csv = File.ReadAllText(Paths.BuffDataPath);
-            
-            foreach (var line in CsvReader.ReadFromText(csv))
-            {
-                try
-                {
-                    var buff = Line2Buff(line);
-                    Lib[buff.Id] = buff;
-                }
-                catch (Exception e)
-                {
-                    Debug.Log(e);
-                    Debug.Log($"buff load failed");
-                }
-            }
-            FuncMatch();
-        }
-
-        private static Buff Line2Buff(ICsvLine line)
-        {
-            var buff = new Buff {Id = line[0].ToLower()};
-            if (SpriteManager.Instance.BuffIcons.TryGetValue(buff.Id, out buff.Icon)){}
-
+            var id = line[0].ToLower();
+            var icon = GetIcon(id);
+            var buff = new Buff (id, Rank.Normal, icon);
             return buff;
-        }
-
-        private void FuncMatch()
-        {
-            foreach (var v in Lib.Values)
-            {
-                v.Fs = new Dictionary<Timing, MethodInfo>();
-            }
-            
-            foreach (var method in typeof(BuffData).GetMethods())
-            {
-                var attr = method.GetCustomAttribute<EffectAttribute>();
-
-                if (attr!=null)
-                {
-#if UNITY_EDITOR
-                    if (!Lib.ContainsKey(attr.id.ToLower()))
-                    {
-                        var sk = new Buff
-                        {
-                            Id = attr.id.ToLower(),
-                            Fs = new Dictionary<Timing, MethodInfo>(),
-                        };
-                        Lib[attr.id.ToLower()] = sk;
-                    }
-#endif
-
-                    if (Lib.TryGetValue(attr.id.ToLower(), out var v))
-                    {
-                        v.Fs[attr.timing] = method;
-                    }
-                }
-            }
         }
     }
 }

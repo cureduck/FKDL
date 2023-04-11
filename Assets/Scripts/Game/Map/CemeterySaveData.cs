@@ -29,14 +29,14 @@ namespace Game
             base.OnReact();
             if (GameManager.Instance.PlayerData.CurHp >= Cost)
             {
-                GameManager.Instance.PlayerData.Cost(new BattleStatus{CurMp = Cost});
+                GameManager.Instance.PlayerData.Cost(new CostInfo(_cost[Rank], CostType.Mp));
                 if (Random.Range(0f, 1f)> .5f)
                 {
-                    OnReactInfo(new CasinoArgs(){CanReact = true, Win = true});
+                    InformReactResult(new CasinoArgs(){CanReact = true, Win = true});
                 }
                 else
                 {
-                    OnReactInfo(new CasinoArgs(){CanReact = true, Win = false});
+                    InformReactResult(new CasinoArgs(){CanReact = true, Win = false});
                 }
                 
                 TimesLeft -= 1;
@@ -48,7 +48,12 @@ namespace Game
             }
             else
             {
-                OnReactInfo(new CasinoArgs(){CanReact = false, Win = false});
+                InformReactResult(new CasinoArgs()
+                {
+                    CanReact = false,
+                    Win = false,
+                    Info = new FailureInfo(FailureReason.NotEnoughHp)
+                });
             }
         }
     }

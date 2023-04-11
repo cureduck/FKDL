@@ -1,4 +1,5 @@
 ﻿using System;
+using Managers;
 using Unity.Mathematics;
 
 namespace Game
@@ -14,6 +15,8 @@ namespace Game
         public int MDef;
         public int PDef;
 
+        public int Gold;
+
 
         public static BattleStatus operator +(BattleStatus s1, BattleStatus s2)
         {
@@ -26,38 +29,48 @@ namespace Game
                 MAtk = s1.MAtk + s2.MAtk,
                 PAtk = s1.PAtk + s2.PAtk,
                 MDef = s1.MDef + s2.MDef,
-                PDef = s1.PDef + s2.PDef
+                PDef = s1.PDef + s2.PDef,
+                Gold = s1.Gold + s2.Gold
+
             };
         }
         
-        public static BattleStatus operator +(BattleStatus s1, CostInfo s22)
+        public static BattleStatus operator +(BattleStatus s1, CostInfo s2)
         {
-            var s2 = new BattleStatus();
-            switch (s22.CostType)
+            switch (s2.CostType)
             {
                 case CostType.Hp:
-                    s2.CurHp = s22.Value;
+                    s1.CurHp += s2.ActualValue;
                     break;
                 case CostType.Mp:
-                    s2.CurMp = s22.Value;
+                    s1.CurMp += s2.ActualValue;
                     break;
                 case CostType.Gold:
+                    s1.Gold += s2.ActualValue;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-            return new BattleStatus
+            return s1;
+        }
+        
+        public static BattleStatus operator -(BattleStatus s1, CostInfo s2)
+        {
+            switch (s2.CostType)
             {
-                MaxHp = s1.MaxHp + s2.MaxHp,
-                CurHp = s1.CurHp + s2.CurHp,
-                MaxMp = s1.MaxMp + s2.MaxMp,
-                CurMp = s1.CurMp + s2.CurMp,
-                MAtk = s1.MAtk + s2.MAtk,
-                PAtk = s1.PAtk + s2.PAtk,
-                MDef = s1.MDef + s2.MDef,
-                PDef = s1.PDef + s2.PDef
-            };
+                case CostType.Hp:
+                    s1.CurHp -= s2.ActualValue;
+                    break;
+                case CostType.Mp:
+                    s1.CurMp -= s2.ActualValue;
+                    break;
+                case CostType.Gold:
+                    s1.Gold -= s2.ActualValue;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return s1;
         }
         
         

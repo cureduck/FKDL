@@ -13,6 +13,10 @@ namespace Game
         [JsonIgnore] public Potion Bp => PotionManager.Instance.GetById(Id);
 
 
+        public override string ToString()
+        {
+            return Id;
+        }
 
         #region 具体效果
 

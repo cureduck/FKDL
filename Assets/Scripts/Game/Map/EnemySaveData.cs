@@ -32,7 +32,7 @@ namespace Game
             throw new NotImplementedException();
         }
 
-        public override bool TryUseSkill(SkillData skill, out string info)
+        public override bool TryUseSkill(SkillData skill, out Info info)
         {
             throw new NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace Game
         {
             foreach (var skill in Skills)
             {
-                if (CanCast(skill))
+                if (CanCast(skill, out _))
                 {
                     return ManageAttackRound(skill);
                 }
@@ -135,17 +135,16 @@ namespace Game
                 enemyAttack = PlanAttackRound();
             }
             base.OnReact();
-            OnReactInfo(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
+            InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
             Updated();
         }
 
         protected override void Destroyed()
         {
-            GameManager.Instance.PlayerData.Gain(Gold);
+            GameManager.Instance.PlayerData.Gain(Gold, "trophy");
 
             UI.EnemyPanel.Instance.gameObject.SetActive(false);
             base.Destroyed();
-            GameManager.Instance.GetByData(this).UpdateFace();
         }
 
 

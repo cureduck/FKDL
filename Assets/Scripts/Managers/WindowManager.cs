@@ -18,36 +18,23 @@ namespace Managers
         public ConfirmPanel confirmPanel;
 
         public SkillInfoPanel skillInfoPanel;
+        public SimpleInfoItemPanel simpleInfoItemPanel;
 
         public Transform dragViewParent;
-
-        public Localize WarnWindow;
-
+        
         protected override void Awake()
         {
             base.Awake();
             confirmPanel.gameObject.SetActive(false);
             dragViewParent.transform.SetAsLastSibling();
             CrystalPanel.Init();
+            ShopPanel.Init();
+            //simpleInfoItemPanel.Init();
         }
 
         public void Display(EnemySaveData data)
         {
             EnemyPanel.Load(data);
-        }
-        
-        
-        public void Warn(string log)
-        {
-            WarnWindow.gameObject.SetActive(true);
-            WarnWindow.SetTerm(log);
-            StartCoroutine(WarnDisappear());
-        }
-
-        private IEnumerator WarnDisappear()
-        {
-            yield return new WaitForSeconds(3f);
-            WarnWindow.gameObject.SetActive(false);
         }
     }
 }

@@ -4,17 +4,17 @@ namespace Game
 {
     public class KeySaveData : MapData
     {
-        public Rank Rank;
+        public Rank KeyRank;
 
         public KeySaveData(Rank rank)
         {
-            Rank = rank;
+            KeyRank = rank;
         }
 
         public override void OnReact()
         {
             base.OnReact();
-            GameManager.Instance.PlayerData.Keys[Rank] += 1;
+            GameManager.Instance.PlayerData.TryTakeKey(KeyRank, out _);
             Destroyed();
         }
     }

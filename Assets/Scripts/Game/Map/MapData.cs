@@ -13,7 +13,10 @@ namespace Game
         public Placement Placement;
         public SquareState SquareState = SquareState.UnRevealed;
 
-        public event Action<Args> ReactInfo;
+        [JsonIgnore] protected PlayerData Player => GameManager.Instance.PlayerData;
+        [JsonIgnore] protected SecondaryData SecondaryData => GameDataManager.Instance.SecondaryData;
+        
+        public event Action<Args> ReactResultInfo;
         
         /// <summary>
         /// 新游戏时调用
@@ -109,9 +112,9 @@ namespace Game
 
 
 
-        protected virtual void OnReactInfo(Args obj)
+        protected virtual void InformReactResult(Args obj)
         {
-            ReactInfo?.Invoke(obj);
+            ReactResultInfo?.Invoke(obj);
         }
     }
 

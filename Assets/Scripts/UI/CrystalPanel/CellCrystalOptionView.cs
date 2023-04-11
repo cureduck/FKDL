@@ -52,8 +52,7 @@ public class CellCrystalOptionView : MonoBehaviour
         this.option = option;
 
         optionDescribe.SetTerm($"{craystalID}_{option.Line}");
-        string info;
-        if (playerData.CanAfford(option.CostInfo,out info))
+        if (playerData.CanAfford(option.CostInfo,out var info))
         {
             button.interactable = true;
             optionDescribe_alpha.alpha = 1;

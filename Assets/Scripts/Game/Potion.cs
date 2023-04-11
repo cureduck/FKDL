@@ -7,10 +7,20 @@ using UnityEngine;
 namespace Game
 {
     public class Potion : CsvData
-    {
-        [JsonIgnore] public Texture Icon;
-        public Rank Rank { get; set; }
+    { 
         public float Param1;
-        
+        public string Des 
+        {
+            get 
+            {
+                return $"{Id}_desc";
+            }
+        }
+        public Potion(Rank rank, string id, Sprite icon) : base(rank, id, icon)
+        {
+        }
+        public Potion(Rank rank, string id) : base(rank, id)
+        {
+        }
     }
 }

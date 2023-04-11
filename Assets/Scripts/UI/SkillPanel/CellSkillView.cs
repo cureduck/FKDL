@@ -223,7 +223,7 @@ public class CellSkillView : MonoBehaviour
                 //return;
             }
 
-            if (playerData.CanCast(skillData))
+            if (playerData.CanCast(skillData, out _))
             {
                 coldDown_mask.fillAmount = 1;
                 playerData.UseSkill(skillData);

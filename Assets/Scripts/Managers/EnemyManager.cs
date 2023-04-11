@@ -26,6 +26,12 @@ namespace Managers
                 {
                     bp.Buffs = new BuffAgent();
                 }
+
+                if (!SpriteManager.Instance.BuffIcons.TryGetValue(bp.Id.ToLower(), out bp.Icon))
+                {
+                    bp.Icon = SpriteManager.Instance.BuffIcons["soldier"];
+                }
+
             }
         }
     }

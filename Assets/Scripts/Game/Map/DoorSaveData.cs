@@ -16,29 +16,30 @@ namespace Game
         public override void OnReact()
         {
             Destroyed();
-            
+
             base.OnReact();
             try
             {
                 if (GameManager.Instance.PlayerData.Keys[Rank] > 0)
                 {
                     GameManager.Instance.PlayerData.Keys[Rank] -= 1;
-                    OnReactInfo(new DoorArgs(){CanReact = true});
+                    InformReactResult(new DoorArgs(){CanReact = true});
                     Destroyed();
                 }
                 else
                 {
-                    //WindowManager.Instance.Warn("No Key");
-                    GameManager.Instance.PlayerData.Cost(BattleStatus.HP(3), "door");
+                    var cost = CostInfo.HpCost(3);
+                    
+                    GameManager.Instance.PlayerData.Cost(cost, "door");
 
                     if (Random.Range(0f, 1f) < .3f)
                     {
-                        OnReactInfo(new DoorArgs(){CanReact = true});
+                        InformReactResult(new DoorArgs(){CanReact = true});
                         Destroyed();
                     }
                     else
                     {
-                        OnReactInfo(new DoorArgs(){CanReact = false});
+                        InformReactResult(new DoorArgs(){CanReact = false});
                     }
                 }
             }

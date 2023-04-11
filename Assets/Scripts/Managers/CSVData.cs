@@ -1,13 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using Game;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Managers
 {
 
     public class CsvData : IRank
     {
+        [JsonIgnore] public Sprite Icon { get; }
+        
+        protected CsvData(Rank rank, string id, Sprite icon) : this(rank, id)
+        {
+            Icon = icon;
+        }        
         protected CsvData(Rank rank, string id) : this(rank)
         {
             Id = id;

@@ -22,7 +22,7 @@ namespace Game
     public enum Timing
     {
         /// <summary>
-        /// costInfo
+        /// costInfo, fighter
         /// </summary>
         OnGetSkillCost,
         /// <summary>
@@ -106,7 +106,7 @@ namespace Game
         /// </summary>
         OnMarch,
         /// <summary>
-        /// coin, fighter
+        /// coin, fighter, kw
         /// </summary>
         OnGain,
         /// <summary>

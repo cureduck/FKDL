@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Managers;
 using Newtonsoft.Json;
+using UI;
 using UnityEngine;
 
 namespace Game
 {
-    public class Buff
+    public class Buff : CsvData
     {
-        [JsonIgnore] public Sprite Icon;
-        
-        public string Id;
-
-        [JsonIgnore] public Dictionary<Timing, MethodInfo> Fs;
+        public Buff(string id, Rank rank, Sprite icon) : base(rank, id, icon)
+        {
+            
+        }
     }
 }

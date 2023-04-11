@@ -117,11 +117,11 @@ namespace UI
                     
                     if (CostLabel != null)
                     {
-                        CostLabel.text = skill.CostInfo.Value == 0 ? skill.CostInfo.Value.ToString() : "";
+                        CostLabel.text = skill.CostInfo.ActualValue == 0 ? skill.CostInfo.ActualValue.ToString() : "";
                     }
                     break;
                 case Offer.OfferKind.Gold:
-                    Id.SetTerm(Offer.Gold.ToString());
+                    Id.SetTerm(Offer.Cost.ActualValue.ToString());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

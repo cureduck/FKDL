@@ -28,6 +28,8 @@ namespace Game
 
         public List<string> DiscoveredRelics;
 
+        public float LuckyChance;
+        public float UnluckyChance;
 
         public SecondaryData()
         {
@@ -37,6 +39,9 @@ namespace Game
                 [Rank.Uncommon] = 0,
                 [Rank.Rare] = 0
             };
+
+            LuckyChance = .5f;
+            UnluckyChance = .2f;
 
             DiscoveredRelics = new List<string>();
         }

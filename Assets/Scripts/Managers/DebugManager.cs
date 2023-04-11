@@ -28,23 +28,27 @@ namespace Managers
         [Button]
         public void AddPotion(string id)
         {
-            GameManager.Instance.PlayerData.TryTake(new Offer()
+            GameManager.Instance.PlayerData.TryTakeOffer(new Offer()
             {
                 Id = id,
                 Kind = Offer.OfferKind.Potion
-            });
+            }, out _);
         }
 
 
         public void AddPotion()
         {
-            GameManager.Instance.PlayerData.TryTake(new Offer()
+            GameManager.Instance.PlayerData.TryTakeOffer(new Offer()
             {
                 Id = PotionDebugInput.text,
                 Kind = Offer.OfferKind.Potion
-            });
+            }, out _);
         }
-        
+
+        public void Add100Gold()
+        {
+            GameManager.Instance.PlayerData.Gain(100);
+        }
         
         
         public void Add1Atk()
@@ -57,19 +61,5 @@ namespace Managers
             GameManager.Instance.PlayerData.Strengthen(new BattleStatus{PDef = 1});
         }
         
-        [Button]
-        public void Test()
-        {
-            var t1 = UniTask.WhenAll(AsyncTest());
-            
-        }
-
-        public async UniTask<string> AsyncTest()
-        {
-            await UniTask.DelayFrame(100);
-            Debug.Log("123");
-            return "sdff";
-        }
-
     }
 }

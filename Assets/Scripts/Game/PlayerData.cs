@@ -64,25 +64,50 @@ namespace Game
         }
         
         
-        public bool TryTake(Offer offer)
+        public bool TryTakeOffer(Offer offer, out Info info, string kw = "")
         {
+            bool success;
             switch (offer.Kind)
             {
                 case Offer.OfferKind.Potion:
-                    return TryTakePotion(offer.Id);
+                    success = TryTakePotion(offer.Id, out info);
+                    break;
                 case Offer.OfferKind.Skill:
-                    return TryTakeSkill(offer.Id);
+                    success = TryTakeSkill(offer.Id, out info);
+                    break;
                 case Offer.OfferKind.Gold:
-                    Gain(offer.Gold);
-                    return true;
+                    Gain(offer.Cost.ActualValue);
+                    success = true;
+                    info = null;
+                    break;
                 case Offer.OfferKind.Relic:
-                    return TryTakeRelic(offer.Id);
-                
+                    success = TryTakeRelic(offer.Id, out info);
+                    break;
+                case Offer.OfferKind.Key:
+                    success = TryTakeKey(offer.Rank, out info);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            
+            if (success)
+            {
+                Cost(offer.Cost, kw);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        
+
+        public bool TryTakeKey(Rank rank, out Info info)
+        {
+            info = new SuccessInfo();
+            var outRank = CheckChain<Rank>(Timing.OnGetKey, new object[] {rank, this});
+            Keys[outRank] += 1;
+            return true;
+        }
         
         
         
@@ -96,8 +121,9 @@ namespace Game
         
         
 
-        public bool TryTakePotion(string id)
+        public bool TryTakePotion(string id, out Info msg)
         {
+            msg = new Info();
             if (PotionManager.Instance.TryGetById(id, out var sk))
             {
                 for (var i = 0; i < Potions.Length; i++)
@@ -126,8 +152,9 @@ namespace Game
         }
 
 
-        public bool TryTakeRelic(string id)
+        public bool TryTakeRelic(string id, out Info msg)
         {
+            msg = new Info();
             if (RelicManager.Instance.TryGetById(id, out var sk))
             {
                 throw new NotImplementedException();
@@ -137,8 +164,9 @@ namespace Game
         
         
         
-        public bool TryTakeSkill(string id)
+        public bool TryTakeSkill(string id, out Info info)
         {
+            info = new Info();
             if (SkillManager.Instance.TryGetById(id, out var sk))
             {
                 for (int i = 0; i < Skills.Count; i++)
@@ -147,7 +175,7 @@ namespace Game
                     {
                         if (sk.MaxLv <= Skills[i].CurLv)
                         {
-                            WindowManager.Instance.Warn("Skill Max!");
+                            info = new FailureInfo(FailureReason.SkillAlreadyMax);
                             return false;
                         }
                         else
@@ -195,17 +223,18 @@ namespace Game
         }
         
         
-        public override bool TryUseSkill(SkillData skill, out string info)
+        public override bool TryUseSkill(SkillData skill, out Info info)
         {
-            info = "";
-            if (!CanCast(skill)) return false;
+            info = new Info();
+            if (!CanCast(skill, out _)) return false;
             UseSkill(skill);
             return true;
 
         }
 
-        public bool TryUseSkill(int index)
+        public bool TryUseSkill(int index, out Info info)
         {
+            info = new Info();
             var skill = Skills[index];
             if (skill == null || skill.IsEmpty) return false;
             return TryUseSkill(skill, out _);
@@ -214,8 +243,14 @@ namespace Game
 
         public event Action OnSkillPointChanged;
         
-        public bool CanUpgrade(SkillData skillData)
+        public bool CanUpgrade(SkillData skillData, out Info info)
         {
+            if (skillData.CurLv < skillData.Bp.MaxLv)
+            {
+                info = new SuccessInfo();
+                return true;
+            }
+            info = new FailureInfo(FailureReason.SkillAlreadyMax);
             return false;
         }
 
@@ -311,7 +346,7 @@ namespace Game
                                     }
                                     else
                                     {
-                                        Cost(new CostInfo{Value = count1, CostType = CostType.Hp});
+                                        Cost(CostInfo.HpCost(count1));
                                     }
                                     break;
                                 case "curmp":
@@ -321,7 +356,7 @@ namespace Game
                                     }
                                     else
                                     {
-                                        Cost(new CostInfo{Value = count1, CostType = CostType.Mp});
+                                        Cost(CostInfo.MpCost(count1));
                                     }
                                     break;
                                 case "maxhp":
@@ -354,7 +389,7 @@ namespace Game
                             var c = es.Length > 1 ? int.Parse(es[2]) : 1;
                             for (int i = 0; i < c; i++)
                             {
-                                TryTakePotion(id);
+                                TryTakePotion(id, out _);
                             }
                             break;
                         default:

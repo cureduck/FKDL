@@ -11,7 +11,23 @@ namespace Tools
     {
         public Random Random;
         
-        public int RankLevels => Values.GroupBy(skill => skill.Rank).Count();
+        public int RankLevels
+        {
+            get
+            {
+                if (_rankLevels == 0)
+                {
+                    _rankLevels = Values.GroupBy(skill => skill.Rank).Count();
+                    return _rankLevels;
+                }
+                else
+                {
+                    return _rankLevels;
+                }
+            }
+        }
+
+        private int _rankLevels;
         
         public T[] ChooseRandom(int count = 1)
         {
