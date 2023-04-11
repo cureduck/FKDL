@@ -12,6 +12,7 @@ namespace Managers
     public class DebugManager : Singleton<DebugManager>
     {
         public TMP_InputField PotionDebugInput;
+        public TMP_InputField BuffDebugInput;
         
         [Button]
         public void Apply(string id, int lv)
@@ -35,6 +36,20 @@ namespace Managers
             }, out _);
         }
 
+        [Button]
+        public void AddBuff(string id)
+        {
+            GameManager.Instance.PlayerData.ApplySelfBuff(new BuffData(id, 1));
+        }
+
+        
+        [Button]
+        public void AddBuff()
+        {
+            AddBuff(BuffDebugInput.text);
+        }
+
+        
 
         public void AddPotion()
         {

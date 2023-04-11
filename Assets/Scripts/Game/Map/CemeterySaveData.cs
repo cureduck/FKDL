@@ -44,7 +44,7 @@ namespace Game
                 {
                     Destroyed();
                 }
-                Updated();
+                DelayUpdate();
             }
             else
             {

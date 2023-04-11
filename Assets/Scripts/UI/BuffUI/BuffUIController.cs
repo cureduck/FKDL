@@ -9,12 +9,43 @@ namespace UI.BuffUI
         private BuffListPanel _buffListPanel;
         public bool IsPlayerBuffUI;
         
+        private Square CurrentFocus;
+
         private void Start()
         {
             _buffListPanel = GetComponent<BuffListPanel>();
-            GameManager.Instance.GameLoaded +=
-                () => { SetData(GameManager.Instance.PlayerData); };
+
+            if (IsPlayerBuffUI)
+            {
+                GameManager.Instance.GameLoaded += () =>
+                {
+                    SetData(GameManager.Instance.PlayerData);
+                };
+            }
+            else
+            {
+                GameManager.Instance.FocusChanged += OnSquareChanged;
+            }
+
         }
+
+
+        private void OnSquareChanged(Square square)
+        {
+            if (CurrentFocus != null)
+            {
+                CurrentFocus.Data.OnUpdated -= UpdateUI;
+            }
+
+            if (square.Data != null)
+            {
+                if (square.Data is EnemySaveData e)
+                {
+                    SetData(e);
+                }
+            }
+        }
+        
 
         protected override void UpdateUI()
         {

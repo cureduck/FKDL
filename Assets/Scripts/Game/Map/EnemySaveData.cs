@@ -136,7 +136,7 @@ namespace Game
             }
             base.OnReact();
             InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
-            Updated();
+            DelayUpdate();
         }
 
         protected override void Destroyed()

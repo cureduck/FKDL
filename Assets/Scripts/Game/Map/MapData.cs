@@ -44,7 +44,13 @@ namespace Game
             OnDestroy?.Invoke();
         }
 
-        protected void Updated()
+        
+        protected void DelayUpdate()
+        {
+            DelayBroadCastManager.Instance.Add(this);
+        }
+
+        public void BroadCastUpdated()
         {
             OnUpdated?.Invoke();
         }
@@ -72,7 +78,7 @@ namespace Game
         public void Reveal()
         {
             SquareState = SquareState.UnFocus;
-            Updated();
+            DelayUpdate();
         }
         
         [Button]

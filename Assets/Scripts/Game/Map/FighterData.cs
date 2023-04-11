@@ -52,11 +52,11 @@ namespace Game
 
             Status.CurHp = math.max(0, Status.CurHp);
             
-            Updated();
+            DelayUpdate();
             
             if ((Status.CurHp <= 0)&&(this is EnemySaveData))
             {
-                Updated();
+                DelayUpdate();
             }
             
             return attack;
@@ -217,7 +217,7 @@ namespace Game
                 var temp = Skills[index01];
                 Skills[index01] = Skills[index02];
                 Skills[index02] = temp;
-                Updated();
+                DelayUpdate();
             }
 
         }
@@ -260,7 +260,7 @@ namespace Game
             var g = CheckChain<int>(Timing.OnGain, new object[] {gold, this, kw});
             
             Gold += g;
-            Updated();
+            DelayUpdate();
         }
 
 
@@ -270,7 +270,7 @@ namespace Game
             Status -= modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
-            Updated();
+            DelayUpdate();
         }
 
 
@@ -280,7 +280,7 @@ namespace Game
             Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
-            Updated();
+            DelayUpdate();
         }
         
         
@@ -307,7 +307,7 @@ namespace Game
             {
                 f = sk.Bp.Fs[Timing.OnEquip];
                 f.Invoke(sk, new object[] {this});
-                Updated();
+                DelayUpdate();
             }
 
             if ((sk.Bp.Positive))
@@ -320,7 +320,7 @@ namespace Game
         {
             var f = sk.Bp.Fs[Timing.OnUnEquip];
             f.Invoke(this, new object[] {sk, this});
-            Updated();
+            DelayUpdate();
         }
         
         
@@ -331,7 +331,7 @@ namespace Game
                 var msg = pi.GetCustomAttribute<EffectAttribute>();
                 if ((msg == null)||(msg.id != sk.Id)) continue;
             }
-            Updated();
+            DelayUpdate();
         }
         
         
@@ -341,7 +341,7 @@ namespace Game
         {
             modify = CheckChain<BattleStatus>(Timing.OnStrengthen, new object[] {modify, this});
             Status += modify;
-            Updated();
+            DelayUpdate();
         }
 
 
@@ -378,7 +378,7 @@ namespace Game
             modify = CheckChain<BattleStatus>(Timing.OnRecover, new object[] {modify, this, enemy});
             this.Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
-            Updated();
+            DelayUpdate();
         }
 
         public void Heal(BattleStatus modify)
@@ -388,7 +388,7 @@ namespace Game
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
 
-            Updated();
+            DelayUpdate();
         }
 
 
@@ -527,7 +527,7 @@ namespace Game
             {
                 Skills[index].Bp.Fs[Timing.SkillEffect].Invoke(Skills[index], new object[]{this});
                 //Skills[index].SetCooldown();
-                Updated();
+                DelayUpdate();
             }
             else
             {
@@ -545,7 +545,7 @@ namespace Game
                 //CoolDown();
 
                 
-                Updated();
+                DelayUpdate();
             }
             else
             {
@@ -581,7 +581,7 @@ namespace Game
                 
                 CoolDown();
                 skill.SetCooldown();
-                Updated();
+                DelayUpdate();
                 return null;
             }
             else
@@ -597,7 +597,7 @@ namespace Game
                 
                 CoolDown();
                 skill?.SetCooldown();
-                Updated();
+                DelayUpdate();
                 return pa;
             }
         }

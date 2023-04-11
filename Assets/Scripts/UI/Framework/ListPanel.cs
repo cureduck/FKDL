@@ -17,9 +17,9 @@ namespace UI
         {
             var delayList = Cells.FindAll((view => !data.Contains(view.Data)));
             Cells.RemoveAll((view => delayList.Contains(view)));
-            foreach (var view in delayList)
+            foreach (var cell in delayList)
             {
-                Destroy(view.gameObject);
+                cell.Removed();
             }
             
             foreach (var d in data)
@@ -28,6 +28,7 @@ namespace UI
                 if (tmp == null)
                 {
                     tmp = Instantiate(CellPrefab, ListTransform);
+                    tmp.gameObject.SetActive(true);
                     tmp.Data = d;
                     tmp.UpdateUI();
                     Cells.Add(tmp);

@@ -7,5 +7,7 @@ namespace UI
     {
         event Action OnUpdated;
         event Action OnDestroy;
+
+        void BroadCastUpdated();
     }
 }

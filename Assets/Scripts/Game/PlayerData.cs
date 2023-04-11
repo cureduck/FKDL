@@ -58,7 +58,7 @@ namespace Game
                         Potions[index].Id = "";
                     }
                     AudioPlayer.Instance.PlaySoundEffect("potion");
-                    Updated();
+                    DelayUpdate();
                 }
             }
         }
@@ -131,7 +131,7 @@ namespace Game
                     if ((Potions[i].Id == id))
                     {
                         Potions[i].Count += 1;
-                        Updated();
+                        DelayUpdate();
                         return true;
                     }
                 }
@@ -142,7 +142,7 @@ namespace Game
                     {
                         Potions[i].Id = id;
                         Potions[i].Count = 1;
-                        Updated();
+                        DelayUpdate();
                         return true;
                     }
                 }
@@ -181,7 +181,7 @@ namespace Game
                         else
                         {
                             Skills[i].LvUp(this);
-                            Updated();
+                            DelayUpdate();
                             return true;
                         }
                         
@@ -199,7 +199,7 @@ namespace Game
                         Skills[i].Id = id;
                         Skills[i].CurLv = 1;
                         Equip(Skills[i]);
-                        Updated();
+                        DelayUpdate();
                         return true;
                     }
                 }
@@ -257,7 +257,7 @@ namespace Game
         public void UpgradeWithPoint(SkillData skillData)
         {
             skillData.CurLv += 1;
-            Updated();
+            DelayUpdate();
             OnSkillPointChanged?.Invoke();
         }
 
@@ -279,14 +279,14 @@ namespace Game
         {
             GameDataManager.Instance.SecondaryData.RemoveSkillPoint += v;
             OnSkillPointChanged?.Invoke();
-            Updated();
+            DelayUpdate();
         }
 
         public void RemoveSkill(ref SkillData skill)
         {
             skill = SkillData.Empty;
             OnSkillPointChanged?.Invoke();
-            Updated();
+            DelayUpdate();
         }
 
         public void RemoveSkill(int index) 
@@ -295,7 +295,7 @@ namespace Game
             {
                 Skills[index] = null;
                 OnSkillPointChanged?.Invoke();
-                Updated();
+                DelayUpdate();
                 //RemoveSkill(ref temp);
             }
         }
