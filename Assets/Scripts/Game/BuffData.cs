@@ -66,6 +66,11 @@ namespace Game
             Bp.Fs[timing].Invoke(this, param);
         }
 
+        public override string ToString()
+        {
+            return $"{Id}:{CurLv}";
+        }
+
 
         #region 具体效果
 
