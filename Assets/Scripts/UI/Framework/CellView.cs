@@ -2,9 +2,11 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace UI
 {
+    [DisallowMultipleComponent]
     public abstract class CellView<T> : SerializedMonoBehaviour
     {
         public T Data;

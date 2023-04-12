@@ -25,6 +25,8 @@ namespace Game
         public bool Engaging;
         public Dictionary<Rank, int> Keys;
 
+        public string[] profInfo;
+
         [JsonIgnore] public override FighterData Enemy => (EnemySaveData) GameManager.Instance.Focus.Data;
 
         public void March(string destination)
@@ -36,6 +38,7 @@ namespace Game
 
         public PlayerData()
         {
+            profInfo = new string[3] {"CUR","BAR","KNI" };
             Relics = new RelicAgent();
             
         }
@@ -93,6 +96,7 @@ namespace Game
             if (success)
             {
                 Cost(offer.Cost, kw);
+                DelayUpdate();
                 return true;
             }
             else
@@ -154,12 +158,12 @@ namespace Game
 
         public bool TryTakeRelic(string id, out Info msg)
         {
-            msg = new Info();
+            msg = new SuccessInfo();
             if (RelicManager.Instance.TryGetById(id, out var sk))
             {
-                throw new NotImplementedException();
+                Relics.Add(new RelicData(sk));
             }
-            return false;
+            return true;
         }
         
         
@@ -256,7 +260,7 @@ namespace Game
 
         public void UpgradeWithPoint(SkillData skillData)
         {
-            skillData.CurLv += 1;
+            Upgrade(skillData);
             DelayUpdate();
             OnSkillPointChanged?.Invoke();
         }

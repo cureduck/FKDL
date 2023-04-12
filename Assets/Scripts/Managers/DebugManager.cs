@@ -13,6 +13,7 @@ namespace Managers
     {
         public TMP_InputField PotionDebugInput;
         public TMP_InputField BuffDebugInput;
+        public TMP_InputField RelicDebugInput;
         
         [Button]
         public void Apply(string id, int lv)
@@ -42,6 +43,19 @@ namespace Managers
             GameManager.Instance.PlayerData.ApplySelfBuff(new BuffData(id, 1));
         }
 
+        public void AddRelic(string id)
+        {
+            if (RelicManager.Instance.TryGetById(id, out var relic))
+            {
+                GameManager.Instance.PlayerData.TryTakeOffer(new Offer(relic), out _);
+            }
+        }
+
+        public void AddRelic()
+        {
+            AddRelic(RelicDebugInput.text);
+        }
+        
         
         [Button]
         public void AddBuff()

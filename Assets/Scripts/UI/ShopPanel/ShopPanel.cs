@@ -58,10 +58,10 @@ namespace UI
 
         protected override void UpdateUI()
         {
-            Data.Goods.SkillList = new Offer[2] { 
-                new Offer { Id = "DZXY_ALC".ToLower(), Kind = Offer.OfferKind.Skill, Cost = new CostInfo(10) },
-                new Offer { Id = "YWLZ_ALC".ToLower(), Kind = Offer.OfferKind.Skill, Cost = new CostInfo(10) },
-            };
+            //Data.Goods.SkillList = new Offer[2] { 
+            //    new Offer { Id = "DZXY_ALC".ToLower(), Kind = Offer.OfferKind.Skill, Cost = new CostInfo(10) },
+            //    new Offer { Id = "YWLZ_ALC".ToLower(), Kind = Offer.OfferKind.Skill, Cost = new CostInfo(10) },
+            //};
 
             Args[] args = new Args[Data.Goods.SkillList.Length];
             for (int i = 0; i < args.Length; i++)
@@ -103,11 +103,31 @@ namespace UI
             if (PlayerData.CanAfford(offer.Cost, out info))
             {
                 //可能会有技能槽位不够、药水槽位不够等info返回
-                PlayerData.TryTakeOffer(offer, out info);
+                if (PlayerData.TryTakeOffer(offer, out info))
+                {
+                    if (offer.Kind == Offer.OfferKind.Skill)
+                    {
+                        Data.Goods.SkillList[index].isSold = true;
+                    }
+                    else if (offer.Kind == Offer.OfferKind.Potion)
+                    {
+                        Data.Goods.PotionList[index].isSold = true;
+                    }
+                    else if (offer.Kind == Offer.OfferKind.Key) 
+                    {
+                        Data.Goods.KeyList[index].isSold = true;
+                    }
+                    UpdateUI();
+
+                }
+                else 
+                {
+                    info.BroadCastInfo();
+                }
             }
             else
             {
-                
+                info.BroadCastInfo();
             }
             
             /*if (playerData.Gold < offer.Cost.ActualValue)

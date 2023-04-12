@@ -71,6 +71,7 @@ namespace Managers
         [Button]
         public void SetMainImage(string id)
         {
+            Debug.Log(id);
             MainImage.sprite = Icons[id];
             SetChosenProf();
         }

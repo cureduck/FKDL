@@ -7,11 +7,19 @@ namespace Managers
     [ExecuteAlways]
     public class SpriteManager : Singleton<SpriteManager>
     {
+        public enum IconType 
+        {
+            Prof,
+            Buff
+        }
+
         private const string IconPath = "SourceImages";
         public Dictionary<string, Sprite> BuffIcons;
 
+        private Dictionary<IconType, Dictionary<string, Sprite>> iconDatas;
+
         public Dictionary<Rank, Sprite> PotionBottleIcon;
-        
+
         protected override void Awake()
         {
             base.Awake();
@@ -24,6 +32,41 @@ namespace Managers
                     BuffIcons[sprite.name.ToLower()] = sprite;
                 }
             }
+
+            iconDatas = new Dictionary<IconType, Dictionary<string, Sprite>>();
+
+            Dictionary<string, Sprite> ProfIcons = new Dictionary<string, Sprite>();
+            Sprite[] icons = Resources.LoadAll<Sprite>("SourceImages/Icon/Profs");
+            for (int i = 0; i < icons.Length; i++)
+            {
+                ProfIcons.Add(icons[i].name, icons[i]);
+            }
+            iconDatas.Add(IconType.Prof, ProfIcons);
+
+
+            Dictionary<string, Sprite> newBuffIcons = new Dictionary<string, Sprite>();
+            icons = Resources.LoadAll<Sprite>("SourceImages/Icon/Buff");
+            for (int i = 0; i < icons.Length; i++)
+            {
+                newBuffIcons.Add(icons[i].name, icons[i]);
+            }
+            iconDatas.Add(IconType.Buff, newBuffIcons);
+        }
+
+        public Sprite GetIcon(IconType iconType, string stringID) 
+        {
+            Dictionary<string, Sprite> cur;
+            if (iconDatas.TryGetValue(iconType, out cur))
+            {
+                Sprite curIcon;
+                cur.TryGetValue($"{stringID}", out curIcon);
+                return curIcon;
+            }
+            else 
+            {
+                return null;
+            }
+
         }
     }
 }

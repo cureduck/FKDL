@@ -116,6 +116,7 @@ namespace Managers
             Map.Init();
             LoadMap();
             GameLoaded?.Invoke();
+            //GameManager.Instance.PlayerData.Gain(10000);
             //GC.Collect();
         }
         

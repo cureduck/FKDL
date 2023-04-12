@@ -19,6 +19,11 @@ namespace Game
                 buff.Removed += () => { Remove(buff); };
             }
         }
+
+        public void Add_Test(BuffData data)
+        {
+            base.Add(data);
+        }
         
         
         public new void Add(BuffData data)
@@ -60,7 +65,6 @@ namespace Game
                 Remove(buff);
                 BuffRemoved?.Invoke(buff);
             }
-            
         }
         
     }

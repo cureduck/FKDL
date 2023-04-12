@@ -30,6 +30,5 @@ namespace Managers
                 List.Add(updateable);
             }
         }
-
     }
 }

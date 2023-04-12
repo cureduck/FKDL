@@ -13,16 +13,16 @@ namespace UI
 
         public CellView<T> CellPrefab;
         
-        public void UpdateUI(IEnumerable<T> data)
+        public void UpdateUI(IEnumerable<T> datas)
         {
-            var delayList = Cells.FindAll((view => !data.Contains(view.Data)));
+            var delayList = Cells.FindAll((view => !datas.Contains(view.Data)));
             Cells.RemoveAll((view => delayList.Contains(view)));
             foreach (var cell in delayList)
             {
                 cell.Removed();
             }
             
-            foreach (var d in data)
+            foreach (var d in datas)
             {
                 var tmp = Cells.Find((view => view.Data == d));
                 if (tmp == null)
@@ -38,9 +38,6 @@ namespace UI
                     tmp.UpdateUI();
                 }
             }
-            
-            
-            
         }
         
         

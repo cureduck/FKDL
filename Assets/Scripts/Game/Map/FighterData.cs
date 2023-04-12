@@ -126,6 +126,15 @@ namespace Game
             //AudioPlayer.Instance.PlaySoundEffect();
         }
 
+
+        public void Purify(BuffData buff)
+        {
+            buff = CheckChain<BuffData>(Timing.OnPurify, new object[] {buff, this});
+            Buffs.Remove(buff);
+        }
+        
+        
+
         public CostInfo GetActualCostInfo(CostInfo costInfo, string kw = "")
         {
             return CheckChain<CostInfo>(Timing.OnCost, new object[] {costInfo, this, kw});
@@ -303,9 +312,9 @@ namespace Game
                 }
             }*/
 
-            if (sk.Bp.Fs.TryGetValue(Timing.OnEquip, out var f))
+            if (sk.Bp.Fs.TryGetValue(Timing.OnSkillEquip, out var f))
             {
-                f = sk.Bp.Fs[Timing.OnEquip];
+                f = sk.Bp.Fs[Timing.OnSkillEquip];
                 f.Invoke(sk, new object[] {this});
                 DelayUpdate();
             }
@@ -318,7 +327,7 @@ namespace Game
         
         public void OnUnEquip(SkillData sk)
         {
-            var f = sk.Bp.Fs[Timing.OnUnEquip];
+            var f = sk.Bp.Fs[Timing.OnSkillUnEquip];
             f.Invoke(this, new object[] {sk, this});
             DelayUpdate();
         }
@@ -497,24 +506,41 @@ namespace Game
             }
         }
         
+        
+        /// <summary>
+        /// 用于给敌人施加buff，获取最终生成的buff
+        /// </summary>
+        /// <param name="buff"></param>
+        /// <returns></returns>
         public BuffData ApplyBuff(BuffData buff)
         {
             buff = CheckChain<BuffData>(Timing.OnApply, new object[] {buff, this });
+            DelayUpdate();
             return buff;
         }
         
-
+        
+        
+        /// <summary>
+        /// 用于被添加buff时，获取最终生成的buff
+        /// </summary>
+        /// <param name="buff"></param>
         public void AppliedBuff(BuffData buff)
         {
             buff = CheckChain<BuffData>(Timing.OnApplied, new object[] {buff, this });
             Buffs.Add(buff);
+            DelayUpdate();
         }
 
-
+        /// <summary>
+        /// 用于给自己添加buff
+        /// </summary>
+        /// <param name="buff"></param>
         public void ApplySelfBuff(BuffData buff)
         {
             buff = CheckChain<BuffData>(Timing.OnApply, new object[] {buff, this });
             buff = CheckChain<BuffData>(Timing.OnApplied, new object[] {buff, this });
+            DelayUpdate();
 
             Buffs.Add(buff);
         }
@@ -627,7 +653,12 @@ namespace Game
             }
         }
 
-
+        public void Upgrade(SkillData skillData, int lv = 1)
+        {
+            skillData.CurLv += lv;
+            CheckChain<SkillData>(Timing.OnLvUp, new object[] {skillData, this});
+        }
+        
 
         /*public void Attack(FighterData target, Attack attack)
         {

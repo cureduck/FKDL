@@ -40,7 +40,7 @@ namespace Game
 
         public void UnEquip(FighterData fighter)
         {
-            if (Bp.Fs.TryGetValue(Timing.OnUnEquip, out var method))
+            if (Bp.Fs.TryGetValue(Timing.OnSkillUnEquip, out var method))
             {
                 method.Invoke(this, new object[]{fighter});
             }

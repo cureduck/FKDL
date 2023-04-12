@@ -2,19 +2,21 @@
 using I2.Loc;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Managers;
 
-namespace UI.BuffUI
+public class CellBuffView : MonoBehaviour
 {
-    public class CellBuffView : CellView<BuffData>
+    private const string IconTitle = "UI_Icon_Buff_";
+    [SerializeField]
+    private Text level_txt;
+    [SerializeField]
+    private Image icon_img;
+
+    public void SetData(BuffData buffData)
     {
-        public Localize Id;
-        public TMP_Text Stack;
-        
-        public override void UpdateUI()
-        {
-            Id.SetTerm(Data.Id);
-            Stack.text = Data.CurLv.ToString();
-            Debug.Log(Data);
-        }
+        level_txt.text = buffData.CurLv.ToString();
+        icon_img.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Buff, $"{IconTitle}{buffData.Id}");
+        Debug.Log(buffData);
     }
 }

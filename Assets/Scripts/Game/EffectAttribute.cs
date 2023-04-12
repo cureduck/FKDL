@@ -64,11 +64,11 @@ namespace Game
         /// <summary>
         /// skill data, fighter
         /// </summary>
-        OnEquip,
+        OnSkillEquip,
         /// <summary>
         /// skill data, fighter
         /// </summary>
-        OnUnEquip,
+        OnSkillUnEquip,
         /// <summary>
         /// skill data, fighter
         /// </summary>
@@ -118,13 +118,15 @@ namespace Game
         /// </summary>
         OnApply,
         /// <summary>
-        /// 净化时 fighter
+        /// 净化时 buffData, fighter
         /// </summary>
         OnPurify,
-        /// <summary>
+        
+        /*/// <summary>
         /// buff, fighter
         /// </summary>
-        OnBuffLvChange,
+        OnBuffLvChange,*/
+        
         /// <summary>
         /// battle status, fighter, kw
         /// </summary>

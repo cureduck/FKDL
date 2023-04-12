@@ -48,8 +48,10 @@ public class CellGoodView : MonoBehaviour
         this.index = index;
         this.onClick = onClick;
 
-        soldOutSign.gameObject.SetActive(false);
+
         discountSign.gameObject.SetActive(false);
+
+        soldOutSign.gameObject.SetActive(offer.isSold);
 
         if (offer.Kind == Offer.OfferKind.Skill)
         {
