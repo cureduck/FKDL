@@ -143,6 +143,7 @@ namespace Game
         {
             GameManager.Instance.PlayerData.Gain(Gold, "trophy");
 
+            
             UI.EnemyPanel.Instance.gameObject.SetActive(false);
             base.Destroyed();
         }
