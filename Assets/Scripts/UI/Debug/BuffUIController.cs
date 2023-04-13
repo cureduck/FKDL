@@ -6,14 +6,14 @@ namespace UI.BuffUI
 {
     public class BuffUIController : UpdateablePanel<FighterData>
     {
-        private BuffListView _buffListPanel;
+        private BuffListPanel _buffListPanel;
         public bool IsPlayerBuffUI;
         
         private Square CurrentFocus;
 
         private void Start()
         {
-            _buffListPanel = GetComponent<BuffListView>();
+            _buffListPanel = GetComponent<BuffListPanel>();
 
             if (IsPlayerBuffUI)
             {
@@ -49,7 +49,7 @@ namespace UI.BuffUI
 
         protected override void UpdateUI()
         {
-            //_buffListPanel.UpdateUI(Data.Buffs);
+            _buffListPanel.UpdateUI(Data.Buffs);
         }
     }
 }

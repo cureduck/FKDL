@@ -8,6 +8,7 @@ namespace UI
 
         public EnemySkillInfoView skillView;
 
+
         private void Start()
         {
             GetComponent<UnityEngine.Canvas>().worldCamera = Camera.main;

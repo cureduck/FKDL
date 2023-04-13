@@ -10,7 +10,8 @@ namespace Managers
         public enum IconType 
         {
             Prof,
-            Buff
+            Buff,
+            Relic,
         }
 
         private const string IconPath = "SourceImages";
@@ -34,7 +35,7 @@ namespace Managers
             }
 
             iconDatas = new Dictionary<IconType, Dictionary<string, Sprite>>();
-
+            //职业图标
             Dictionary<string, Sprite> ProfIcons = new Dictionary<string, Sprite>();
             Sprite[] icons = Resources.LoadAll<Sprite>("SourceImages/Icon/Profs");
             for (int i = 0; i < icons.Length; i++)
@@ -43,7 +44,7 @@ namespace Managers
             }
             iconDatas.Add(IconType.Prof, ProfIcons);
 
-
+            //状态图标
             Dictionary<string, Sprite> newBuffIcons = new Dictionary<string, Sprite>();
             icons = Resources.LoadAll<Sprite>("SourceImages/Icon/Buff");
             for (int i = 0; i < icons.Length; i++)
@@ -51,6 +52,16 @@ namespace Managers
                 newBuffIcons.Add(icons[i].name, icons[i]);
             }
             iconDatas.Add(IconType.Buff, newBuffIcons);
+
+            //魔器图标
+            Dictionary<string, Sprite> relicIcons = new Dictionary<string, Sprite>();
+            icons = Resources.LoadAll<Sprite>("SourceImages/Icon/Relic");
+            for (int i = 0; i < icons.Length; i++)
+            {
+                relicIcons.Add(icons[i].name, icons[i]);
+            }
+            iconDatas.Add(IconType.Relic, relicIcons);
+
         }
 
         public Sprite GetIcon(IconType iconType, string stringID) 

@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using Cysharp.Threading.Tasks;
 using Game;
 using Sirenix.OdinInspector;
+using Tools;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -33,9 +34,9 @@ namespace Managers
             private set => GameDataManager.Instance.SecondaryData = value;
         }
         
-        public GameObject Prefab;
+        public Square Prefab;
 
-        public GameObject MapGo;
+        public Transform MapGo;
 
         public Square Focus;
 
@@ -50,8 +51,13 @@ namespace Managers
         {
             FocusChanged?.Invoke(square);
         }
+
+        private Square CreateSquare()
+        {
+            return Instantiate(Prefab, MapGo);
+        }
         
-        
+        private ObjectPool<Square> _pool;
         
         private void Start()
         {
@@ -59,6 +65,8 @@ namespace Managers
             {
                 DontDestroyOnLoad(this);
             }
+            
+            _pool = new ObjectPool<Square>(CreateSquare);
         }
         
         public void RollForSkill(int rank)
@@ -136,14 +144,19 @@ namespace Managers
         }
 
         private List<Square> squares = new List<Square>();
+        
         public void LoadFloor(Map.Floor floor)
         {
+            foreach (var square in squares)
+            {
+                _pool.Return(square);
+            }
 
             squares.Clear();
-            foreach (Transform trans in MapGo.transform)
+            /*foreach (Transform trans in MapGo)
             {
-                Destroy(trans.gameObject);
-            }
+                _pool.Return(trans.gameObject.GetComponent<>());
+            }*/
             
 
             foreach (var square in floor.Squares)
@@ -162,16 +175,18 @@ namespace Managers
         {
             if (data == null) return null;
             
-            var go = Instantiate(Prefab, MapGo.transform);
+            //var sq = Instantiate(Prefab, MapGo);
+            var sq = _pool.Get();
+            sq.Reload(data);
+            
             try
             {
-                var sq = go.GetComponent<Square>();
                 sq.Data = data;
                 return sq;
             }
             catch (Exception e)
             {
-                DestroyImmediate(go);
+                DestroyImmediate(sq.gameObject);
                 Console.WriteLine(e);
                 throw;
             }

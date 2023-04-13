@@ -26,7 +26,12 @@ namespace Managers
             Curtain.Play("FadeIn");
             StartCoroutine(StartLoading_4(scene));
         }
-        
+
+
+        public void ExitGame()
+        {
+            Application.Quit();
+        }
         
         private IEnumerator StartLoading_4(string scene) {
             int displayProgress = 0;

@@ -45,9 +45,7 @@ namespace Game
         {
             SetSize(Data.Placement);
             
-            Data.OnDestroy += OnSquareDestroy;
-            Data.OnUpdated += UpdateFace;
-            Data.ReactResultInfo += HandleReactResultArgs;
+
             //Data.RevealAround += RevealAround;
             
             Data.Load();
@@ -55,6 +53,23 @@ namespace Game
             UpdateFace();
         }
 
+        private void Bind(MapData mapData)
+        {
+            Data.OnDestroy += OnSquareDestroy;
+            Data.OnUpdated += UpdateFace;
+            Data.ReactResultInfo += HandleReactResultArgs;
+        }
+
+        public void Reload(MapData mapData)
+        {
+            UnbindCurrent();
+            Data = mapData;
+            SetSize(Data.Placement);
+            Bind(mapData);
+            UpdateFace();
+            _breathLight.intensity = 0;
+        }
+        
 
         public void UpdateFace()
         {
@@ -95,6 +110,7 @@ namespace Game
             {
                 case SquareState.UnRevealed:
                     //_animator.SetTrigger("Unreveal");
+                    OnUnReveal();
                     break;
                 case SquareState.Focus:
                     OnFocus();
@@ -207,7 +223,9 @@ namespace Game
                     break;
             }
         }
-        
+
+
+
 
         private void OnSquareDestroy()
         {
@@ -343,7 +361,6 @@ namespace Game
             }
         }
         
-        
 
 
         [Button]
@@ -408,6 +425,17 @@ namespace Game
                     }
                 }));
         }
+        
+        
+        private void OnUnReveal()
+        {
+            _breath.Kill();
+            _sequence.Kill();
+            Mask.gameObject.SetActive(true);
+            Bonus.gameObject.SetActive(true);
+            Id.gameObject.SetActive(true);
+            Mask.GetComponent<SpriteRenderer>().DOFade(1, .1f);
+        }
 
         private void OnReveal()
         {
@@ -461,8 +489,7 @@ namespace Game
             return Icon.sprite.name;
         }
 
-
-        private void OnDestroy()
+        private void UnbindCurrent()
         {
             if (Data != null)
             {
@@ -470,6 +497,12 @@ namespace Game
                 Data.OnUpdated -= UpdateFace;
                 Data.ReactResultInfo -= HandleReactResultArgs;
             }
+        }
+        
+
+        private void OnDestroy()
+        {
+            UnbindCurrent();
         }
         #endregion
     }

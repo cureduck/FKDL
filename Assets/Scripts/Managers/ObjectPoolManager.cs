@@ -14,17 +14,19 @@ namespace Managers
         private GameObject attackEffect;
         [SerializeField]
         private UnpasstiveSkillTriggerSign skillTriggerSign;
+        [SerializeField]
+        private GameObject damageSignEffect;
 
         private ObjectPool attackEffectPool;
         private ObjectPool unpasstivePool;
-
+        private ObjectPool damageSignEffectPool;
 
         protected override void Awake()
         {
             base.Awake();
             attackEffectPool = new ObjectPool(attackEffect);
-
             unpasstivePool = new ObjectPool(skillTriggerSign.gameObject);
+            damageSignEffectPool = new ObjectPool(damageSignEffect);
 
         }
         #region 攻击特效
@@ -46,14 +48,30 @@ namespace Managers
         public GameObject SpawnUnPasstiveSkillSignEffect(Sprite icon)
         {
             GameObject cur = unpasstivePool.CreatInstance(icon);
-            cur.AddComponent<InvokeTrigger>().Set(1.0f, () => UnSpawnAttackEffect(cur));
+            cur.AddComponent<InvokeTrigger>().Set(1.0f, () => UnSpawnUnPasstiveSkillSignEffect(cur));
             return cur;
         }
 
-        public void UnSpawnUnPasstiveSkillSignEffect(GameObject targetObject)
+        private void UnSpawnUnPasstiveSkillSignEffect(GameObject targetObject)
         {
             unpasstivePool.UnSpawnInstance(targetObject);
         }
+        #endregion
+
+        #region 伤害显示
+        public GameObject SpawnDamageSignEffect(int damage,int damageType)
+        {
+            GameObject cur = damageSignEffectPool.CreatInstance(new DamageSign.Args { value = damage, damageType = damageType });
+            cur.AddComponent<InvokeTrigger>().Set(1.0f, () => UnSpawnDamageSignEffect(cur));
+            return cur;
+        }
+
+        private void UnSpawnDamageSignEffect(GameObject targetObject)
+        {
+            damageSignEffectPool.UnSpawnInstance(targetObject);
+        }
+
+
         #endregion
 
 

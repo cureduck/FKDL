@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Game;
 
-namespace UI.BuffUI
+namespace UI
 {
     public class BuffListPanel : ListPanel<BuffData>
     {

@@ -16,6 +16,7 @@ namespace Managers
         public GameObject CheatWindow;
         public EnemyPanel EnemyPanel;
         public ConfirmPanel confirmPanel;
+        
 
         public SkillInfoPanel skillInfoPanel;
         public SimpleInfoItemPanel simpleInfoItemPanel;
@@ -29,7 +30,8 @@ namespace Managers
             dragViewParent.transform.SetAsLastSibling();
             CrystalPanel.Init();
             ShopPanel.Init();
-            //simpleInfoItemPanel.Init();
+            EnemyPanel.Init();
+            simpleInfoItemPanel.Init();
         }
 
         public void Display(EnemySaveData data)

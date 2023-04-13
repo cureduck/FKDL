@@ -14,6 +14,7 @@ namespace UI
         
         private void Start()
         {
+            
             GameManager.Instance.FocusChanged += OnSquareChanged;
         }
 

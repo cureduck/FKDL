@@ -43,6 +43,7 @@ namespace Managers
             GameManager.Instance.PlayerData.ApplySelfBuff(new BuffData(id, 1));
         }
 
+        [Button]
         public void AddRelic(string id)
         {
             if (RelicManager.Instance.TryGetById(id, out var relic))

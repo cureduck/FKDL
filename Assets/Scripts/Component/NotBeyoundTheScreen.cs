@@ -50,7 +50,7 @@ public class NotBeyoundTheScreen : MonoBehaviour
 
     public void AdjustPanel()
     {
-        Debug.Log(transform.position);
+        //Debug.Log(transform.position);
         if (!canvas)
         {
             canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
@@ -140,5 +140,34 @@ public class NotBeyoundTheScreen : MonoBehaviour
         }
     }
 
+    public void PanelFollowQuadrant(Vector2 curScreenPosition) 
+    {
+        Vector3 screenCenter = new Vector3(Screen.width / 2.0f, Screen.height / 2.0f);
+        Vector2 curQuadrant = new Vector2();
+
+        //Debug.Log(curScreenPosition);
+        //Debug.Log(screenCenter);
+
+        if (curScreenPosition.x >= screenCenter.x)
+        {
+            curQuadrant.x = 1;
+        }
+        else
+        {
+            curQuadrant.x = 0;
+        }
+
+        if (curScreenPosition.y >= screenCenter.y)
+        {
+            curQuadrant.y = 1;
+        }
+        else 
+        {
+            curQuadrant.y = 0;
+        }
+        //Debug.Log(curQuadrant);
+        uiTransform.pivot = curQuadrant;
+
+    }
 
 }

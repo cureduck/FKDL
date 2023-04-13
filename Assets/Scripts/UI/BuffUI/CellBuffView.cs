@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Managers;
+using System;
 
 public class CellBuffView : MonoBehaviour
 {
@@ -12,11 +13,43 @@ public class CellBuffView : MonoBehaviour
     private Text level_txt;
     [SerializeField]
     private Image icon_img;
+    [SerializeField]
+    private PointEnterAndExit pointEnterAndExit;
+
+    private BuffData buffData;
+    private void Start()
+    {
+        pointEnterAndExit.onPointEnter.AddListener(OnPointEnter);
+        pointEnterAndExit.onPointExit.AddListener(OnPointExit);
+    }
+
+    private void OnPointExit()
+    {
+        if (buffData != null)
+        {
+            WindowManager.Instance.simpleInfoItemPanel.Close();
+        }
+
+    }
+
+    private void OnPointEnter()
+    {
+        if (buffData != null)
+        {
+            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = "状态", title = buffData.Id, screenPosition = transform.position });
+        }
+    }
 
     public void SetData(BuffData buffData)
     {
+        this.buffData = buffData;
+
+        level_txt.gameObject.SetActive(buffData.CurLv > 1);
         level_txt.text = buffData.CurLv.ToString();
         icon_img.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Buff, $"{IconTitle}{buffData.Id}");
         Debug.Log(buffData);
     }
+
+
+
 }

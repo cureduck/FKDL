@@ -102,7 +102,7 @@ namespace Game
 
 
 
-        public void OperateAttack(FighterData target, Attack attack)
+        public Attack OperateAttack(FighterData target, Attack attack)
         {
             //当前连击段数
             int i = 0;
@@ -122,7 +122,8 @@ namespace Game
 
                 i += 1;
             }
-            
+
+            return tmp;
             //AudioPlayer.Instance.PlaySoundEffect();
         }
 
@@ -616,7 +617,7 @@ namespace Game
 
                 if (skill != null) skill.Sealed = false;
                 
-                OperateAttack(Enemy, pa);
+                pa = OperateAttack(Enemy, pa);
                 
                 //Settle(pa, Enemy);
                 if (skill != null) skill.Sealed = true;

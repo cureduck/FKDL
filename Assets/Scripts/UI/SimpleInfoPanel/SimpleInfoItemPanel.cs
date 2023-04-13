@@ -23,13 +23,15 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
 
     public override void Init()
     {
-        //notBeyoundTheScreen.Init(transform.parent.GetComponent<Canvas>());
+        notBeyoundTheScreen.Init(transform.parent.GetComponent<Canvas>());
     }
 
     protected override void UpdateUI()
     {
         title_txt.SetTerm(Data.title);
         describe_txt.SetTerm(Data.describe);
+
+        notBeyoundTheScreen.PanelFollowQuadrant(Data.screenPosition);
         transform.position = Data.screenPosition;
     }
 
