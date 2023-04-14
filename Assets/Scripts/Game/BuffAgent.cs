@@ -29,10 +29,11 @@ namespace Game
         public new void Add(BuffData data)
         {
             var d = (BuffData)data.Clone();
-            d.Id = d.Id.ToLower();
-            if (BuffManager.Instance.TryGetById(d.Id, out _))
+            //d.Id = d.Id.ToLower();
+            if (BuffManager.Instance.TryGetById(d.Id, out var dBp))
             {
-                var buff = Find((buffData => buffData.Id == d.Id));
+                var oppositeId = dBp.OppositeId.ToLower();
+                var buff = Find((buffData => buffData.Id == d.Id || buffData.Id == oppositeId));
                 if (buff == null)
                 {
                     base.Add(d);
@@ -40,9 +41,17 @@ namespace Game
                 }
                 else
                 {
-                    buff.CurLv += d.CurLv;
+                    if (buff.Id == d.Id)
+                    {
+                        buff.StackChange(d.CurLv);
+                    }
+                    else
+                    {
+                        buff.StackChange(-d.CurLv);
+                    }
                 }
             }
+            RemoveZeroStackBuff();
         }
 
         public new void Remove(BuffData data)
@@ -54,17 +63,11 @@ namespace Game
 
         public void RemoveZeroStackBuff()
         {
-            var tmp = new LinkedList<BuffData>();
-            foreach (BuffData buff in this.Where(buff => buff.CurLv == 0))
+            RemoveAll(data =>
             {
-                tmp.AddLast(buff);
-            }
-
-            foreach (var buff in tmp)
-            {
-                Remove(buff);
-                BuffRemoved?.Invoke(buff);
-            }
+                BuffRemoved?.Invoke(data);
+                return data.CurLv <= 0;
+            });
         }
         
     }

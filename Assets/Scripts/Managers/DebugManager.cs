@@ -19,11 +19,7 @@ namespace Managers
         public void Apply(string id, int lv)
         {
             GameManager.Instance.PlayerData.AppliedBuff(
-                new BuffData
-                {
-                    Id = id,
-                    CurLv = lv
-                });
+                new BuffData(id, lv));
         }
 
 

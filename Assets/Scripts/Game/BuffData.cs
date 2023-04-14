@@ -10,16 +10,39 @@ namespace Game
 {
     public class BuffData : IEffectContainer, ICloneable
     {
-        public string Id;
-        public int CurLv;
-
-        [JsonIgnore] public bool Positive => CurLv > 0;
+        public string Id { get; private set; }
+        [ShowInInspector] public int CurLv { get; private set; }
         [JsonIgnore] public Buff Bp => BuffManager.Instance.TryGetById(Id.ToLower(), out var buff) ? buff : null;
+        
 
 
+
+        public void StackChange(int value)
+        {
+            CurLv += value;
+            if (CurLv == 0)
+            {
+                Remove();
+            }
+
+            if (CurLv < 0)
+            {
+                if (Bp.OppositeBp != null)
+                {
+                    Id = Bp.OppositeId;
+                    CurLv = -CurLv;
+                }
+                else
+                {
+                    Remove();
+                }
+            }
+        }
+        
+        
         public BuffData(string id, int curLv)
         {
-            Id = id;
+            Id = id.ToLower();
             CurLv = curLv;
         }
 
@@ -74,7 +97,7 @@ namespace Game
 
         #region 具体效果
 
-        [Effect("anger", Timing.OnAttack, priority = -4)]
+        [Effect("PPlus", Timing.OnAttack, priority = -4)]
         public Attack Anger(Attack attack, FighterData f1, FighterData f2)
         {
             attack.PAtk += CurLv;
@@ -83,7 +106,7 @@ namespace Game
             return attack;
         }
 
-        [Effect("Surging", Timing.OnAttack, priority = -4)]
+        [Effect("MPlus", Timing.OnAttack, priority = -4)]
         public Attack Surging(Attack attack, FighterData f1, FighterData f2)
         {
             attack.MAtk += CurLv;
@@ -91,6 +114,25 @@ namespace Game
             Activate?.Invoke();
             return attack;
         }
+        
+        [Effect("PMinus", Timing.OnAttack, priority = -4)]
+        public Attack PMinus(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.PAtk -= CurLv;
+            CurLv -= 1;
+            Activate?.Invoke();
+            return attack;
+        }
+
+        [Effect("MMinus", Timing.OnAttack, priority = -4)]
+        public Attack MMinus(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.MAtk -= CurLv;
+            CurLv -= 1;
+            Activate?.Invoke();
+            return attack;
+        }
+        
         
         [Effect("Poison", Timing.OnPreAttack, priority = -4)]
         public Attack Poison(Attack attack, FighterData f1, FighterData f2)

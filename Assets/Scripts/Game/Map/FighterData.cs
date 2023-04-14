@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
@@ -414,34 +415,16 @@ namespace Game
         /// <returns></returns>
         protected T CheckChain<T>(Timing timing, object[] param)
         {
-            var tmp = new List<IEffectContainer>();
-            
-            foreach (var skill in Skills)
-            {
-                if ((skill != null) && !skill.IsEmpty &&(skill.MayAffect(timing, out _)))
-                {
-                    tmp.Add(skill);
-                }
-            }
+            var tmp = Skills.
+                Where(skill => (skill != null) && !skill.IsEmpty && (skill.MayAffect(timing, out _)))
+                .Cast<IEffectContainer>().ToList();
 
-            foreach (var buff in Buffs)
-            {
-                if (buff.MayAffect(timing, out _))
-                {
-                    tmp.Add(buff);
-                }
-            }
+            tmp.AddRange(Buffs.Where(buff => (buff != null) && (buff.MayAffect(timing, out _))));
 
 
             if (this is PlayerData player)
             {
-                foreach (var relic in player.Relics)
-                {
-                    if (relic.MayAffect(timing, out _))
-                    {
-                        tmp.Add(relic);
-                    }
-                }
+                tmp.AddRange(player.Relics.Where(relic => relic != null && relic.MayAffect(timing, out _)));
             }
             
             tmp.Sort(
@@ -537,13 +520,15 @@ namespace Game
         /// 用于给自己添加buff
         /// </summary>
         /// <param name="buff"></param>
+        [Button]
         public void ApplySelfBuff(BuffData buff)
         {
             buff = CheckChain<BuffData>(Timing.OnApply, new object[] {buff, this });
             buff = CheckChain<BuffData>(Timing.OnApplied, new object[] {buff, this });
-            DelayUpdate();
 
             Buffs.Add(buff);
+            DelayUpdate();
+
         }
         
         

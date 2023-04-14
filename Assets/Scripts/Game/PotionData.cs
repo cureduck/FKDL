@@ -35,7 +35,8 @@ namespace Game
         [Effect("angerpotion", Timing.PotionEffect)]
         public void AngerPotion(FighterData player)
         {
-            player.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "anger"});
+            player.AppliedBuff(new BuffData("anger", (int)Bp.Param1));
+
         }
 
         [Effect("firepotion", Timing.PotionEffect)]
@@ -53,7 +54,7 @@ namespace Game
         {
             if (GameManager.Instance.InBattle)
             {
-                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "poison"});
+                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData("poison", (int)Bp.Param1));
             }
         }
         
@@ -73,7 +74,7 @@ namespace Game
         [Effect("angerpotion+", Timing.PotionEffect)]
         public void AngerPotionP(FighterData player)
         {
-            player.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "anger"});
+            player.AppliedBuff(new BuffData("anger", (int)Bp.Param1));
         }
         
         [Effect("firepotion+", Timing.PotionEffect)]
@@ -92,7 +93,7 @@ namespace Game
         {
             if (GameManager.Instance.InBattle)
             {
-                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "poison"});
+                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData("poison", (int)Bp.Param1));
             }
         }
                 
@@ -125,7 +126,7 @@ namespace Game
         {
             if (GameManager.Instance.InBattle)
             {
-                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData{CurLv = (int)Bp.Param1, Id = "poison"});
+                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData("poison", (int)Bp.Param1));
             }
         }
         

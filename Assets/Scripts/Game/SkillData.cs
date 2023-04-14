@@ -396,7 +396,7 @@ namespace Game
         [Effect("JSLZ_ALC", Timing.SkillEffect)]
         private void MetalTrans(FighterData fighter)
         {
-            fighter.ApplySelfBuff(new BuffData{Id = "Bellow", CurLv = (int)Bp.Param1});
+            fighter.ApplySelfBuff(new BuffData("Bellow", (int) Bp.Param1));
             SetCooldown();
         }
         
@@ -562,7 +562,7 @@ namespace Game
         [Effect("JZ_MAG", Timing.OnEngage)]
         private void Arrogance(PlayerData player, PlayerData enemy)
         {
-            ((PlayerData)player).ApplySelfBuff(new BuffData(){CurLv = CurLv, Id = "surging"});
+            ((PlayerData)player).ApplySelfBuff(new BuffData("surging", CurLv));
             Activate?.Invoke();
         }
         

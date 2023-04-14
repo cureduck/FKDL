@@ -59,5 +59,11 @@ namespace Game
         {
             return Id;
         }
+
+        #region Effects
+        
+        
+
+        #endregion
     }
 }
