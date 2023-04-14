@@ -61,12 +61,15 @@ namespace Managers
         
         private void Start()
         {
-            if (Application.isPlaying)
-            {
-                DontDestroyOnLoad(this);
-            }
-            
             _pool = new ObjectPool<Square>(CreateSquare);
+            if (SceneSwitchManager.Instance.NewGame)
+            {
+                LoadFromInit();
+            }
+            else
+            {
+                LoadFromSave();
+            }
         }
         
         public void RollForSkill(int rank)

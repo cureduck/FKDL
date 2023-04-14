@@ -11,7 +11,6 @@ namespace Managers
         protected override void Awake()
         {
             base.Awake();
-            DontDestroyOnLoad(transform.parent);
         }
 
         public void SetProf()

@@ -59,9 +59,11 @@ public class CellCrystalOptionView : MonoBehaviour
         }
         else 
         {
+            
             button.interactable = false;
             optionDescribe_alpha.alpha = 0.5f;
-            optionDescribe_txt.text += $"(<color=yellow>{info}</color>)";
+            
+            optionDescribe_txt.text += $"(<color=yellow>{LocalizationManager.GetTranslation(info.ToString())}</color>)";
         }
     }
 

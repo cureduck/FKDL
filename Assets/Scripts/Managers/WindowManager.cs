@@ -26,12 +26,16 @@ namespace Managers
         protected override void Awake()
         {
             base.Awake();
-            confirmPanel.gameObject.SetActive(false);
-            dragViewParent.transform.SetAsLastSibling();
-            CrystalPanel.Init();
-            ShopPanel.Init();
-            EnemyPanel.Init();
-            simpleInfoItemPanel.Init();
+            confirmPanel?.gameObject.SetActive(false);
+            if (dragViewParent != null)
+            {
+                dragViewParent.transform.SetAsLastSibling();
+            }
+
+            CrystalPanel?.Init();
+            ShopPanel?.Init();
+            EnemyPanel?.Init();
+            simpleInfoItemPanel?.Init();
         }
 
         public void Display(EnemySaveData data)

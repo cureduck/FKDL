@@ -49,7 +49,8 @@ namespace Managers
                 Lib[id] = new Crystal(rank)
                 {
                     Id = id,
-                    Title = id
+                    Title = id,
+                    OptionLimit = int.TryParse(line["limit"], out var limit)? limit : 999
                 };
             }
             else
@@ -73,13 +74,14 @@ namespace Managers
                         costType = CostType.Hp;
                         break;
                 }
-                
-                var opt = new Crystal.Option()
-                {
-                    Line = suf,
-                    Effect = effects,
-                    CostInfo = new CostInfo(int.TryParse(line["cost"], out var o) ? o : 0, costType)
-                };
+
+                var opt = new Crystal.Option(
+                    effects,
+                    suf,
+                    new CostInfo(int.TryParse(line["cost"], out var o) ? o : 0, costType),
+                    int.TryParse(line["priority"], out var p)? p : 0,
+                    int.TryParse(line["weight"], out var w)? w: 1
+                );
 
                 Lib[tit].Options.Add(opt);
 

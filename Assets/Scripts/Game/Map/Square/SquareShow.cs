@@ -1,11 +1,38 @@
 ﻿using System;
 using Managers;
+using UI;
 using UnityEngine;
 
 namespace Game
 {
     public partial class Square
     {
+        
+        private void OnSquareDestroy()
+        {
+            if ((Data is EnemySaveData ee)&&(ee.Bp.Rank == Rank.Rare))
+            {
+                WindowManager.Instance.CrystalPanel.Open(new CrystalPanel.Args()
+                {
+                    crystal = CrystalManager.Instance.Lib["boss"],
+                    playerData = GameManager.Instance.PlayerData
+                });
+            }
+            
+            try
+            {
+                UpdateFace();
+                //UnFocus();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+            //DestroyImmediate(gameObject);
+        }
+        
+        
+        
 
         public void OnReact()
         {
@@ -71,10 +98,10 @@ namespace Game
                     curEffectObject.transform.position = Icon.transform.position;
                     AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
                     Attack result = args0.PlayerAttack.GetValueOrDefault();
-                    GameObject temp = ObjectPoolManager.Instance.SpawnDamageSignEffect(10, 0);
+                    //GameObject temp = ObjectPoolManager.Instance.SpawnDamageSignEffect(10, 0);
                     float range = 0.5f;
-                    temp.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
-                    Debug.Log(result);
+                    //temp.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
+                    //Debug.Log(result);
                     if (result.PDmg > 0) 
                     {
                         GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.PDmg, 0);

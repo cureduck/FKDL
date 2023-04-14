@@ -8,7 +8,8 @@
             Skill,
             Gold,
             Relic,
-            Key
+            Key,
+            SkillSlot
         }
 
 

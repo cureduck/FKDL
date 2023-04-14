@@ -227,19 +227,7 @@ namespace Game
 
 
 
-        private void OnSquareDestroy()
-        {
-            try
-            {
-                UpdateFace();
-                //UnFocus();
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-            }
-            //DestroyImmediate(gameObject);
-        }
+
 
 
         #region base

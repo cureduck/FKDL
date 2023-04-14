@@ -106,7 +106,7 @@ namespace Managers
 
         public void GoAhead()
         {
-            SwitchManager.Instance.SwitchScene("MainScene");
+            SceneSwitchManager.Instance.SwitchScene("MainScene");
         }
         
     }

@@ -34,13 +34,13 @@ namespace UI
         protected override void OnOpen()
         {
             describe.SetTerm(Data.crystal.Title);
-            objectPools.SetDatas(Data.crystal.Options, OnSet, OptionList);
+            objectPools.SetDatas(Data.crystal.GetOptions(CrystalManager.Instance.Lib.Random), OnSet, OptionList);
             transform.SetAsLastSibling();
         }
 
         private void OnSet(CellCrystalOptionView cellCrystalOptionView, Crystal.Option data) 
         {
-            cellCrystalOptionView.SetData(this.Data.playerData, Data.crystal.Id, data, CellOptionClick);
+            cellCrystalOptionView.SetData(Data.playerData, Data.crystal.Id, data, CellOptionClick);
         }
 
         private void CellOptionClick(PlayerData playerData, Crystal.Option option) 
