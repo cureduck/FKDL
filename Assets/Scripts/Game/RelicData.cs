@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
+using UnityEngine.Assertions.Must;
 
 namespace Game
 {
@@ -61,7 +62,14 @@ namespace Game
         }
 
         #region Effects
-        
+
+        [Effect("test", Timing.OnApplied, 900)]
+        private BuffData Test(BuffData buff, FighterData fighterData)
+        {
+            var tmp = buff;
+            tmp.StackChange(1);
+            return tmp;
+        }
         
 
         #endregion

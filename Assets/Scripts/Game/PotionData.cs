@@ -21,26 +21,26 @@ namespace Game
         #region 具体效果
 
         [Effect("hppotion", Timing.PotionEffect)]
-        public void HpPotion(FighterData player)
+        private void HpPotion(FighterData player)
         {
             player.Heal(new BattleStatus{CurHp = (int)Bp.Param1});
         }
         
         [Effect("mppotion", Timing.PotionEffect)]
-        public void MpPotion(FighterData player)
+        private void MpPotion(FighterData player)
         {
             player.Heal(new BattleStatus{CurMp = (int)Bp.Param1});
         }
                 
         [Effect("angerpotion", Timing.PotionEffect)]
-        public void AngerPotion(FighterData player)
+        private void AngerPotion(FighterData player)
         {
             player.AppliedBuff(new BuffData("anger", (int)Bp.Param1));
 
         }
 
         [Effect("firepotion", Timing.PotionEffect)]
-        public void FirePotion(FighterData player)
+        private void FirePotion(FighterData player)
         {
             if (GameManager.Instance.InBattle)
             {
@@ -50,7 +50,7 @@ namespace Game
         }
         
         [Effect("poisionpotion", Timing.PotionEffect)]
-        public void PoisonPotion(FighterData player)
+        private void PoisonPotion(FighterData player)
         {
             if (GameManager.Instance.InBattle)
             {
@@ -59,26 +59,26 @@ namespace Game
         }
         
         [Effect("hppotion+", Timing.PotionEffect)]
-        public void HpPotionP(FighterData player)
+        private void HpPotionP(FighterData player)
         {
             player.Heal(new BattleStatus{CurHp = (int)(player.Status.MaxHp*Bp.Param1)});
         }
         
                 
         [Effect("mppotion+", Timing.PotionEffect)]
-        public void MpPotionP(FighterData player)
+        private void MpPotionP(FighterData player)
         {
             player.Heal(new BattleStatus{CurMp = (int)(player.Status.MaxMp*Bp.Param1)});
         }
                 
         [Effect("angerpotion+", Timing.PotionEffect)]
-        public void AngerPotionP(FighterData player)
+        private void AngerPotionP(FighterData player)
         {
             player.AppliedBuff(new BuffData("anger", (int)Bp.Param1));
         }
         
         [Effect("firepotion+", Timing.PotionEffect)]
-        public void FirePotionP(FighterData player)
+        private void FirePotionP(FighterData player)
         {
             if (GameManager.Instance.InBattle)
             {
@@ -89,7 +89,7 @@ namespace Game
         
         
         [Effect("poisionpotion+", Timing.PotionEffect)]
-        public void PoisonPotionP(FighterData player)
+        private void PoisonPotionP(FighterData player)
         {
             if (GameManager.Instance.InBattle)
             {
@@ -98,20 +98,20 @@ namespace Game
         }
                 
         [Effect("hppotion++", Timing.PotionEffect)]
-        public void HpPotionPP(FighterData player)
+        private void HpPotionPP(FighterData player)
         {
             player.Strengthen(new BattleStatus{MaxHp = (int)Bp.Param1});
         }
                 
         [Effect("mppotion++", Timing.PotionEffect)]
-        public void MpPotionPP(FighterData player)
+        private void MpPotionPP(FighterData player)
         {
             player.Strengthen(new BattleStatus{MaxMp = (int)Bp.Param1});
         }
         
         
         [Effect("firepotion++", Timing.PotionEffect)]
-        public void FirePotionPP(FighterData player)
+        private void FirePotionPP(FighterData player)
         {
             if (GameManager.Instance.InBattle)
             {
@@ -122,7 +122,7 @@ namespace Game
         
         
         [Effect("poisionpotion++", Timing.PotionEffect)]
-        public void PoisonPotionPP(FighterData player)
+        private void PoisonPotionPP(FighterData player)
         {
             if (GameManager.Instance.InBattle)
             {
@@ -132,7 +132,7 @@ namespace Game
         
         
         [Effect("patkpotion", Timing.PotionEffect)]
-        public void AngerPotionPP(FighterData player)
+        private void AngerPotionPP(FighterData player)
         {
             player.Strengthen(new BattleStatus{PAtk = (int)Bp.Param1});
         }
@@ -150,13 +150,13 @@ namespace Game
         }
         
         [Effect("pdefpotion", Timing.PotionEffect)]
-        public void PDef(FighterData player)
+        private void PDef(FighterData player)
         {
             player.Strengthen(new BattleStatus{PDef = (int)Bp.Param1});
         }
         
         [Effect("fullpotion", Timing.PotionEffect)]
-        public void FullPotion(FighterData player)
+        private void FullPotion(FighterData player)
         {
             player.Heal(new BattleStatus
             {
@@ -166,20 +166,20 @@ namespace Game
         }
 
         [Effect("skillpotion", Timing.PotionEffect)]
-        public void SkillPotion(FighterData player)
+        private void SkillPotion(FighterData player)
         {
             ((PlayerData) player).GetSkillPoint(Rank.Normal);
         }
         
         
         [Effect("skillpotion+", Timing.PotionEffect)]
-        public void SkillPotionP(FighterData player)
+        private void SkillPotionP(FighterData player)
         {
             ((PlayerData) player).GetSkillPoint(Rank.Uncommon);
         }
         
         [Effect("skillpotion++", Timing.PotionEffect)]
-        public void SkillPotionPP(FighterData player)
+        private void SkillPotionPP(FighterData player)
         {
             ((PlayerData) player).GetSkillPoint(Rank.Rare);
         }

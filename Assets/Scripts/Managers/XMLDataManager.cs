@@ -9,6 +9,7 @@ using Csv;
 using Game;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using Tools;
 using Unity.Mathematics;
 using UnityEngine;
@@ -47,8 +48,9 @@ namespace Managers
 
         protected abstract string CsvPath { get; }
 
-        private void Start()
+        protected override void Awake()
         {
+            base.Awake();
             Load();
         }
 
@@ -88,9 +90,11 @@ namespace Managers
 
         [CanBeNull] protected abstract T1 Line2T(ICsvLine line);
 
+        private const BindingFlags Flag = (BindingFlags.NonPublic)|(BindingFlags.Instance);
+        
         private void FuncMatch()
         {
-            foreach (var method in typeof(T2).GetMethods())
+            foreach (var method in typeof(T2).GetMethods(Flag))
             {
                 var attr = method.GetCustomAttribute<EffectAttribute>();
                 if (attr != null)
@@ -211,6 +215,11 @@ namespace Managers
 
         public bool TryGetById(string id, out T1 v)
         {
+            if (id.IsNullOrWhitespace())
+            {
+                v = null;
+                return false;
+            }
             return Lib.TryGetValue(id, out v);
         }
     }

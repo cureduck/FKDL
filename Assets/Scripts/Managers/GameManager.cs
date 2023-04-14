@@ -62,13 +62,17 @@ namespace Managers
         private void Start()
         {
             _pool = new ObjectPool<Square>(CreateSquare);
-            if (SceneSwitchManager.Instance.NewGame)
+
+            if (Application.isPlaying)
             {
-                LoadFromInit();
-            }
-            else
-            {
-                LoadFromSave();
+                if (SceneSwitchManager.Instance.NewGame)
+                {
+                    LoadFromInit();
+                }
+                else
+                {
+                    LoadFromSave();
+                }
             }
         }
         

@@ -9,7 +9,10 @@ namespace Managers
 {
     public class SceneSwitchManager : Singleton<SceneSwitchManager>
     {
-        public bool NewGame { get; set; }
+        /// <summary>
+        /// TRUE就是新游戏，FALSE就是加载游戏
+        /// </summary>
+        public bool NewGame;
 
 
         public void SwitchScene(string id)

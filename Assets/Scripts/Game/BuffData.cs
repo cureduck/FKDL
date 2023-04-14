@@ -4,17 +4,17 @@ using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace Game
 {
     public class BuffData : IEffectContainer, ICloneable
     {
-        public string Id { get; private set; }
+        [ShowInInspector] public string Id { get; private set; }
         [ShowInInspector] public int CurLv { get; private set; }
-        [JsonIgnore] public Buff Bp => BuffManager.Instance.TryGetById(Id.ToLower(), out var buff) ? buff : null;
-        
-
+        [JsonIgnore] public Buff Bp => BuffManager.Instance.TryGetById(Id, out var buff)? buff : null;
 
 
         public void StackChange(int value)
@@ -61,7 +61,7 @@ namespace Game
 
         public bool MayAffect(Timing timing, out int priority)
         {
-            if (Bp == null)
+            if (Id.IsNullOrWhitespace()||(Bp == null))
             {
                 priority = 0;
                 return false;
@@ -98,7 +98,7 @@ namespace Game
         #region 具体效果
 
         [Effect("PPlus", Timing.OnAttack, priority = -4)]
-        public Attack Anger(Attack attack, FighterData f1, FighterData f2)
+        private Attack Anger(Attack attack, FighterData f1, FighterData f2)
         {
             attack.PAtk += CurLv;
             CurLv -= 1;
@@ -107,7 +107,7 @@ namespace Game
         }
 
         [Effect("MPlus", Timing.OnAttack, priority = -4)]
-        public Attack Surging(Attack attack, FighterData f1, FighterData f2)
+        private Attack Surging(Attack attack, FighterData f1, FighterData f2)
         {
             attack.MAtk += CurLv;
             CurLv -= 1;
@@ -116,7 +116,7 @@ namespace Game
         }
         
         [Effect("PMinus", Timing.OnAttack, priority = -4)]
-        public Attack PMinus(Attack attack, FighterData f1, FighterData f2)
+        private Attack PMinus(Attack attack, FighterData f1, FighterData f2)
         {
             attack.PAtk -= CurLv;
             CurLv -= 1;
@@ -125,7 +125,7 @@ namespace Game
         }
 
         [Effect("MMinus", Timing.OnAttack, priority = -4)]
-        public Attack MMinus(Attack attack, FighterData f1, FighterData f2)
+        private Attack MMinus(Attack attack, FighterData f1, FighterData f2)
         {
             attack.MAtk -= CurLv;
             CurLv -= 1;
@@ -135,7 +135,7 @@ namespace Game
         
         
         [Effect("Poison", Timing.OnPreAttack, priority = -4)]
-        public Attack Poison(Attack attack, FighterData f1, FighterData f2)
+        private Attack Poison(Attack attack, FighterData f1, FighterData f2)
         {
             f1.Suffer(new Attack{MAtk = CurLv});
             CurLv -= 1;
@@ -144,7 +144,7 @@ namespace Game
         }
         
         [Effect("Bellow", Timing.OnAttack, priority = -4)]
-        public Attack Bellow(Attack attack, FighterData f1, FighterData f2)
+        private Attack Bellow(Attack attack, FighterData f1, FighterData f2)
         {
             if (attack.PAtk > 0) attack.PAtk += CurLv;
             if (attack.MAtk > 0) attack.MAtk += CurLv;
@@ -153,7 +153,7 @@ namespace Game
             CurLv = 0;
             Activate?.Invoke();
             return attack;
-        }        
+        }
         #endregion
 
         public object Clone()

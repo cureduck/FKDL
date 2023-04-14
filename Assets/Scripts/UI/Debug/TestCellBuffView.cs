@@ -19,7 +19,7 @@ namespace UI
             level_txt.gameObject.SetActive(true);
             icon_img.gameObject.SetActive(true);
             level_txt.text = Data.CurLv.ToString();
-            icon_img.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Buff, $"{IconTitle}{Data.Id}");
+            icon_img.sprite = Data?.Bp?.Icon;
             Debug.Log(Data);
         }
     }
