@@ -10,8 +10,8 @@ namespace Game
     {
         public event Action<BuffData> BuffAdded;
         public event Action<BuffData> BuffRemoved;
-
-
+        
+        
         public BuffAgent() : base()
         {
             foreach (var  buff in this)

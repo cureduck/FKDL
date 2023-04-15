@@ -23,7 +23,11 @@ namespace Managers
         
         protected override Relic Line2T(ICsvLine line)
         {
-            return new Relic((Rank) int.Parse(line["rank"]),line["id"].ToLower());
+            bool usedUp = bool.TryParse(line["usedup"], out var uu) && uu;
+            bool useCounter = bool.TryParse(line["usecounter"], out var us) && us;
+
+            
+            return new Relic((Rank) int.Parse(line["rank"]),line["id"].ToLower(), usedUp, useCounter);
         }
 
         protected override IEnumerable<Relic> GetCandidates(Rank rank)

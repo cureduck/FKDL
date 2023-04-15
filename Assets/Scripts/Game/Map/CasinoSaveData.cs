@@ -28,9 +28,9 @@ namespace Game
         public override void OnReact()
         {
             base.OnReact();
-            if (GameManager.Instance.PlayerData.Gold >= Cost)
+            if (Player.Gold >= Cost)
             {
-                GameManager.Instance.PlayerData.Gain(-Cost);
+                Player.Gain(-Cost);
                 if (Random.Range(0f, 1f)> .5f)
                 {
                     var potions = PotionManager.Instance.RollT(Rank, 3);

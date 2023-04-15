@@ -10,6 +10,7 @@ namespace Managers
         
         protected override void Awake()
         {
+            DontDestroyOnLoad(gameObject);
             base.Awake();
         }
 

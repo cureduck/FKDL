@@ -9,6 +9,7 @@ namespace Managers
     {
         public enum IconType 
         {
+            ChooseProf,
             Prof,
             Buff,
             Relic,
@@ -24,6 +25,7 @@ namespace Managers
         protected override void Awake()
         {
             base.Awake();
+            //DontDestroyOnLoad(gameObject);
             BuffIcons = new Dictionary<string, Sprite>();
             foreach (var sprite in Resources.LoadAll<Sprite>(IconPath))
             {
@@ -62,11 +64,21 @@ namespace Managers
             }
             iconDatas.Add(IconType.Relic, relicIcons);
 
+            //职业选择详情图标
+            Dictionary<string, Sprite> chooseProfIcons = new Dictionary<string, Sprite>();
+            icons = Resources.LoadAll<Sprite>("SourceImages/Icon/ChooseProf");
+            for (int i = 0; i < icons.Length; i++)
+            {
+                chooseProfIcons.Add(icons[i].name, icons[i]);
+            }
+            iconDatas.Add(IconType.ChooseProf, chooseProfIcons);
+
         }
 
         public Sprite GetIcon(IconType iconType, string stringID) 
         {
             Dictionary<string, Sprite> cur;
+
             if (iconDatas.TryGetValue(iconType, out cur))
             {
                 Sprite curIcon;

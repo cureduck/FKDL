@@ -8,9 +8,13 @@ namespace Game
 {
     public class Relic : CsvData
     {
-        public Relic(Rank rank, string id) : base(rank, id)
+        public bool UsedUp;
+        public bool UseCounter;
+
+        public Relic(Rank rank, string id, bool usedUp, bool useCounter) : base(rank, id)
         {
-            
+            UsedUp = usedUp;
+            UseCounter = useCounter;
         }
     }
 }

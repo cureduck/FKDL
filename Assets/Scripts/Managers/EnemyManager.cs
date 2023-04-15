@@ -31,7 +31,6 @@ namespace Managers
                 {
                     bp.Icon = SpriteManager.Instance.BuffIcons["soldier"];
                 }
-
             }
         }
     }

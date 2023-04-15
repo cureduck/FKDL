@@ -65,7 +65,9 @@ namespace Managers
             Lib = new CustomDictionary<T1>();
 
             var csv = File.ReadAllText(CsvPath, Encoding.UTF8);
-
+            
+            Debug.Log($"-----------------------------------------{typeof(T1).Name} 加载中-----------------------------------------------");
+            
             foreach (var line in CsvReader.ReadFromText(csv))
             {
                 try
@@ -75,6 +77,7 @@ namespace Managers
                     {
                         Lib[t.Id] = t;
                     }
+                    Debug.Log($"{t.Id}    加载成功");
                 }
                 catch (Exception e)
                 {
@@ -82,7 +85,7 @@ namespace Managers
                     Debug.LogError($"{line} read error");
                 }
             }
-            
+            Debug.Log($"-----------------------------------------{typeof(T1).Name} 加载完毕-----------------------------------------------");
             FuncMatch();
         }
         

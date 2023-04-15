@@ -2,6 +2,7 @@
 using I2.Loc;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI.BuffUI
 {
@@ -9,11 +10,12 @@ namespace UI.BuffUI
     {
         public Localize Id;
         public TMP_Text Stack;
+        public Image Icon;
         
         public override void UpdateUI()
         {
             Id.SetTerm(Data.Id);
-            Debug.Log(Data);
+            Icon.sprite = Data?.Bp?.Icon;
         }
     }
 }

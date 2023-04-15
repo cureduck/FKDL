@@ -38,7 +38,6 @@ namespace Game
 
         public PlayerData()
         {
-            profInfo = new string[3] {"CUR","BAR","KNI" };
             Relics = new RelicAgent();
             
         }

@@ -117,6 +117,7 @@ namespace UI
                     {
                         Data.Goods.KeyList[index].isSold = true;
                     }
+                    PlayerMainPanel.Instance.PlayGetItemEffect(offer, cellGoodView.transform.position);
                     UpdateUI();
 
                 }

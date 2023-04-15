@@ -26,6 +26,7 @@ namespace UI
         {
             var t = Instantiate(CellPrefab, ListTransform);
             t.gameObject.SetActive(true);
+            t.transform.SetAsFirstSibling();
             return t;
         }
 
@@ -36,6 +37,7 @@ namespace UI
             foreach (var cell in delayList)
             {
                 cell.gameObject.SetActive(false);
+                cell.UnBind();
                 _pool.Return(cell);
             }
             
@@ -47,6 +49,7 @@ namespace UI
                     tmp = _pool.Get();
                     tmp.gameObject.SetActive(true);
                     tmp.Data = d;
+                    tmp.Bind();
                     tmp.UpdateUI();
                     Cells.Add(tmp);
                 }

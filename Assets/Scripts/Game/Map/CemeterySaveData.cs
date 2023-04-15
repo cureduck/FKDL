@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Managers;
 using UnityEngine;
 
@@ -27,12 +28,23 @@ namespace Game
         public override void OnReact()
         {
             base.OnReact();
-            if (GameManager.Instance.PlayerData.CurHp >= Cost)
+            if (Player.CurHp >= Cost)
             {
-                GameManager.Instance.PlayerData.Cost(new CostInfo(_cost[Rank], CostType.Mp));
-                if (Random.Range(0f, 1f)> .5f)
+                Player.Cost(new CostInfo(_cost[Rank], CostType.Mp));
+                if (SecondaryData.CurGameRandom.NextDouble() < SecondaryData.LuckyChance)
                 {
-                    InformReactResult(new CasinoArgs(){CanReact = true, Win = true});
+                    
+                    var skills = SkillManager.Instance.RollT(Rank, 3);
+                    var offers = skills.
+                        Select((s => new Offer(s)));
+                    
+                    InformReactResult(new CasinoArgs()
+                    {
+                        CanReact = true,
+                        Info = new SuccessInfo(),
+                        Win = true,
+                        Offers = offers.ToArray()
+                    });
                 }
                 else
                 {

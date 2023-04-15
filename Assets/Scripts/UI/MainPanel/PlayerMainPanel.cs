@@ -20,6 +20,17 @@ namespace UI
                 Init();
                 relicListView.Init();
                 PlayerData playerData = GameManager.Instance.PlayerData;
+                if (GameDataManager.Instance.SecondaryData.Prof == null|| GameDataManager.Instance.SecondaryData.Prof.Length<3)
+                {
+                    GameDataManager.Instance.SecondaryData.Prof = new string[3] { "CUR", "BAR", "KNI" };
+                }
+                Debug.LogWarning(GameDataManager.Instance.SecondaryData.Prof.Length);
+                for (int i = 0; i < GameDataManager.Instance.SecondaryData.Prof.Length; i++)
+                {
+                    Debug.Log(GameDataManager.Instance.SecondaryData.Prof[i]);
+                }
+                playerData.profInfo = GameDataManager.Instance.SecondaryData.Prof;
+
                 playerData.Buffs.Add_Test(new BuffData("Blood", 1));
                 playerData.Buffs.Add_Test(new BuffData("Attack_Increase", 4));
 
@@ -30,6 +41,15 @@ namespace UI
                 Debug.Log(playerData.Buffs.Count);
 
             };
+        }
+
+        public void PlayGetItemEffect(Offer offer,Vector2 screenPosiion) 
+        {
+            if (offer.Kind == Offer.OfferKind.Key) 
+            {
+                GoldPanel.PlayGetKeyEffect(screenPosiion, offer.Rank);
+            }
+
         }
 
 

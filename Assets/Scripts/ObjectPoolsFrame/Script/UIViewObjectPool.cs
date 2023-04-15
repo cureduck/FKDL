@@ -61,6 +61,15 @@ namespace CH.ObjectPool
 
         }
 
+        public int ActiveCount() 
+        {
+            return curActive.Count;
+        }
+
+        public MONO GetCurActiveMemberByIndex(int index) 
+        {
+            return curActive[index];
+        }
 
     }
 }

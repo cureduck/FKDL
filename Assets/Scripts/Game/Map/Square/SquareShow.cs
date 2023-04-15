@@ -53,6 +53,17 @@ namespace Game
                     AudioPlayer.Instance.Play(AudioPlayer.AudioOpenChest);
                     WindowManager.Instance.OffersWindow.Open(chestSaveData.Offers);
                     break;
+                case CrystalSaveData crystalPanel:
+                    AudioPlayer.Instance.Play(AudioPlayer.AudioCrystal);
+
+                    var panel = WindowManager.Instance.CrystalPanel;
+                    WindowManager.Instance.CrystalPanel.Open(new CrystalPanel.Args
+                    {
+                        crystal = CrystalManager.Instance.Lib[crystalPanel.Id], playerData = GameManager.Instance.PlayerData
+                    });
+                    panel.gameObject.SetActive(true);
+                    
+                    break;;
             }
         }
 

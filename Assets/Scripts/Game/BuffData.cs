@@ -5,12 +5,13 @@ using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using UI;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 
 namespace Game
 {
-    public class BuffData : IEffectContainer, ICloneable
+    public class BuffData : IEffectContainer, ICloneable, IActivated
     {
         [ShowInInspector] public string Id { get; private set; }
         [ShowInInspector] public int CurLv { get; private set; }
@@ -57,7 +58,7 @@ namespace Game
             Removed?.Invoke();
         }
         
-        public event Action Activate;
+        public event Action Activated;
 
         public bool MayAffect(Timing timing, out int priority)
         {
@@ -102,7 +103,7 @@ namespace Game
         {
             attack.PAtk += CurLv;
             CurLv -= 1;
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
 
@@ -111,7 +112,7 @@ namespace Game
         {
             attack.MAtk += CurLv;
             CurLv -= 1;
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
         
@@ -120,7 +121,7 @@ namespace Game
         {
             attack.PAtk -= CurLv;
             CurLv -= 1;
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
 
@@ -129,7 +130,7 @@ namespace Game
         {
             attack.MAtk -= CurLv;
             CurLv -= 1;
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
         
@@ -139,7 +140,7 @@ namespace Game
         {
             f1.Suffer(new Attack{MAtk = CurLv});
             CurLv -= 1;
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
         
@@ -151,7 +152,7 @@ namespace Game
             if (attack.CAtk > 0) attack.CAtk += CurLv;
             
             CurLv = 0;
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
         #endregion
@@ -160,5 +161,6 @@ namespace Game
         {
             return MemberwiseClone();
         }
+
     }
 }
