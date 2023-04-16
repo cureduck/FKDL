@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Game
 {
     public class RelicAgent : List<RelicData>
     {
+        
+        [JsonConstructor]
         public RelicAgent(RelicData[] bp)
         {
             if (bp.Length == 0)

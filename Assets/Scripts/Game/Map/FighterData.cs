@@ -538,6 +538,12 @@ namespace Game
             if ((Skills[index].Bp.Positive))
             {
                 Skills[index].Bp.Fs[Timing.SkillEffect].Invoke(Skills[index], new object[]{this});
+                
+                CoolDown();
+                Skills[index].SetCooldown(Skills[index].Bp.Cooldown);
+                Skills[index] = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {Skills[index], this}));
+
+                
                 //Skills[index].SetCooldown();
                 DelayUpdate();
             }
@@ -551,12 +557,13 @@ namespace Game
         {
             if ((skill.Bp.Positive)&&(skill.Bp.Fs.ContainsKey(Timing.SkillEffect)))
             {
+                
                 skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
                 
+                CoolDown();
+                skill.SetCooldown(skill.Bp.Cooldown);
+                skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
 
-                //CoolDown();
-
-                
                 DelayUpdate();
             }
             else
@@ -592,7 +599,9 @@ namespace Game
                 CastNonAimingSkill(skill);
                 
                 CoolDown();
-                skill.SetCooldown();
+                //skill.SetCooldown(skill.Bp.Cooldown);
+                //skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
+                
                 DelayUpdate();
                 return null;
             }
@@ -608,7 +617,8 @@ namespace Game
                 if (skill != null) skill.Sealed = true;
                 
                 CoolDown();
-                skill?.SetCooldown();
+                skill?.SetCooldown(skill.Bp.Cooldown);
+                skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
                 DelayUpdate();
                 return pa;
             }

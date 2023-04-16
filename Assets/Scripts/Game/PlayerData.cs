@@ -39,7 +39,6 @@ namespace Game
         public PlayerData()
         {
             Relics = new RelicAgent();
-            
         }
 
 
@@ -222,7 +221,6 @@ namespace Game
             {
                 CastNonAimingSkill(skill);
             }
-            skill.SetCooldown();
         }
         
         

@@ -47,9 +47,10 @@ namespace Game
             OnUnEquip?.Invoke(fighter);
         }
 
-        public void SetCooldown(int bonus = 0)
+        public void SetCooldown(int cd = 0)
         {
-            Cooldown = Bp.Cooldown - bonus;
+            Cooldown = cd;
+            Cooldown = Cooldown < 0 ? 0 : Cooldown;
         }
 
         //public void SetCoolDown(int bonus = 0)
@@ -390,7 +391,7 @@ namespace Game
         {
             var p = PotionManager.Instance.RollT(Rank.Normal).First();
             GameManager.Instance.PlayerData.TryTakeOffer(new Offer(p), out _);
-            SetCooldown();
+            //SetCooldown();
         }
 
         [Effect("JSLZ_ALC", Timing.SkillEffect)]

@@ -36,7 +36,7 @@ namespace Managers
             Fs[timing] = methodInfo;
         }
 
-        public Dictionary<Timing, MethodInfo> Fs { get; }
+        [ShowInInspector, JsonIgnore] public Dictionary<Timing, MethodInfo> Fs { get; }
 
 
         public string Id { get; set; }

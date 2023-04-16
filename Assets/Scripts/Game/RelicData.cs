@@ -71,7 +71,30 @@ namespace Game
             return tmp;
         }
         
+        
+        [Effect("test2", Timing.OnApplied, 900)]
+        private BuffData Test2(BuffData buff, FighterData fighterData)
+        {
+            var tmp = buff;
+            tmp.StackChange(-1);
+            return tmp;
+        }
+        
+        [Effect("test3", Timing.OnApplied, 900)]
+        private BuffData Test3(BuffData buff, FighterData fighterData)
+        {
+            var tmp = buff;
+            tmp.StackChange(-1);
+            return tmp;
+        }
 
+        [Effect("test4", Timing.OnSetCoolDown, 900)]
+        private SkillData Test4(SkillData skill, FighterData fighterData)
+        {
+            skill.Cooldown += GameDataManager.Instance.SecondaryData.CurGameRandom.Next(-3, 2);
+            return skill;
+        }
+        
         #endregion
     }
 }

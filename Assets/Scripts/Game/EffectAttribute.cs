@@ -122,6 +122,11 @@ namespace Game
         /// </summary>
         OnPurify,
         
+        /// <summary>
+        /// 冷却时 SkillData, fighter
+        /// </summary>
+        OnSetCoolDown,
+        
         /*/// <summary>
         /// buff, fighter
         /// </summary>
