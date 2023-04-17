@@ -17,7 +17,11 @@ public class BuffListView : MonoBehaviour
     BuffAgent buffDatas;
     public void Init()
     {
-        objectPoolData = new UIViewObjectPool<CellBuffView, BuffData>(cellBuffView,null);
+        if (objectPoolData == null) 
+        {
+            objectPoolData = new UIViewObjectPool<CellBuffView, BuffData>(cellBuffView, null);
+        }
+
     }
 
     public void SetData(BuffAgent buffDatas)

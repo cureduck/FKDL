@@ -1,11 +1,13 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
+using UI;
 using UnityEngine.Assertions.Must;
 
 namespace Game
 {
-    public class RelicData : IEffectContainer
+    public class RelicData : IEffectContainer, IActivated
     {
         public readonly string Id;
         public int Counter;
@@ -96,5 +98,7 @@ namespace Game
         }
         
         #endregion
+
+        public event Action Activated;
     }
 }

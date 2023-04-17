@@ -12,6 +12,7 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
         public Vector2 screenPosition;
         public string title;
         public string describe;
+        public string param;
     }
 
     [SerializeField]
@@ -20,6 +21,8 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
     private Localize describe_txt;
     [SerializeField]
     private NotBeyoundTheScreen notBeyoundTheScreen;
+    [SerializeField]
+    private LocalizationParamsManager _paramsManager;
 
     public override void Init()
     {
@@ -30,7 +33,7 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
     {
         title_txt.SetTerm(Data.title);
         describe_txt.SetTerm(Data.describe);
-
+        _paramsManager.SetParameterValue("P1", Data.param);
         notBeyoundTheScreen.PanelFollowQuadrant(Data.screenPosition);
         transform.position = Data.screenPosition;
     }

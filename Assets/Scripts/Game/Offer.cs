@@ -4,12 +4,14 @@
     {
         public enum OfferKind
         {
-            Potion,
-            Skill,
-            Gold,
-            Relic,
-            Key,
-            SkillSlot
+            Potion   =  0b000001,
+            Skill    =  0b000010,
+            Gold     =  0b000100,
+            Relic    =  0b001000,
+            Key      =  0b010000,
+            SkillSlot = 0b100000,
+            
+            NeedOnGetCheck = Skill | Relic
         }
 
 

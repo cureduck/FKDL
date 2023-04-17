@@ -64,14 +64,6 @@ namespace Game
         /// <summary>
         /// skill data, fighter
         /// </summary>
-        OnSkillEquip,
-        /// <summary>
-        /// skill data, fighter
-        /// </summary>
-        OnSkillUnEquip,
-        /// <summary>
-        /// skill data, fighter
-        /// </summary>
         OnLvUp,
         /// <summary>
         /// modifier, fighter
@@ -143,6 +135,16 @@ namespace Game
         /// <summary>
         /// battle status, fighter, kw
         /// </summary>
-        OnLoss
+        OnLoss,
+        
+        /// <summary>
+        /// fighter
+        /// </summary>
+        OnGet,
+        
+        /// <summary>
+        /// fighter
+        /// </summary>
+        OnUnGet
     }
 }

@@ -62,6 +62,7 @@ namespace Game
 
         public void Reload(MapData mapData)
         {
+            gameObject.SetActive(true);
             UnbindCurrent();
             Data = mapData;
             SetSize(Data.Placement);

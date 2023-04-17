@@ -16,13 +16,23 @@ public class PlayerRelicListView : MonoBehaviour
 
     public void Init() 
     {
-        objectPool = new UIViewObjectPool<CellRelicView, RelicData>(relicViewPrefab, null);
+        if (objectPool == null)
+        {
+            objectPool = new UIViewObjectPool<CellRelicView, RelicData>(relicViewPrefab, null);
+        }
     }
 
     public void SetData(RelicAgent relicDatas) 
     {
+        //Debug.LogWarning(relicDatas.Count);
+        //for (int i = 0; i < relicDatas.Count; i++)
+        //{
+        //    Debug.Log($"{relicDatas[i].Id}");
+        //}
         objectPool.SetDatas(relicDatas, CellRelicViewSet, listParent);
+        //Debug.LogError("Pause");
     }
+
 
     private void CellRelicViewSet(CellRelicView arg1, RelicData arg2)
     {

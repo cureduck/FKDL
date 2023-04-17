@@ -11,10 +11,15 @@ namespace UI
         event Action Activated;
     }
     
-    
-    
+    public interface ISimpleDataHolder
+    {
+        string Id { get; }
+        string Desc { get; }
+    }
+
+
     [DisallowMultipleComponent]
-    public abstract class CellView<T> : SerializedMonoBehaviour
+    public abstract class CellView<T> : MonoBehaviour, ISimpleDataHolder
     {
         public T Data;
         
@@ -59,5 +64,7 @@ namespace UI
             Destroy(gameObject);
         }
 
+        public abstract string Id { get; }
+        public abstract string Desc { get; }
     }
 }

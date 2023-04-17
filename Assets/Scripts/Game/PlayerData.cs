@@ -94,6 +94,8 @@ namespace Game
             if (success)
             {
                 Cost(offer.Cost, kw);
+                
+                
                 DelayUpdate();
                 return true;
             }
@@ -159,13 +161,14 @@ namespace Game
             msg = new SuccessInfo();
             if (RelicManager.Instance.TryGetById(id, out var sk))
             {
-                Relics.Add(new RelicData(sk));
+                var relic = new RelicData(sk);
+                Relics.Add(relic);
+                OnGet(relic);
             }
             return true;
         }
-        
-        
-        
+
+
         public bool TryTakeSkill(string id, out Info info)
         {
             info = new Info();
@@ -200,7 +203,8 @@ namespace Game
                     {
                         Skills[i].Id = id;
                         Skills[i].CurLv = 1;
-                        Equip(Skills[i]);
+                        //Equip(Skills[i]);
+                        OnGet(Skills[i]);
                         DelayUpdate();
                         return true;
                     }

@@ -49,7 +49,7 @@ namespace Game
             }
         }
         
-        [Effect("poisionpotion", Timing.PotionEffect)]
+        [Effect("poisonpotion", Timing.PotionEffect)]
         private void PoisonPotion(FighterData player)
         {
             if (GameManager.Instance.InBattle)
@@ -88,7 +88,7 @@ namespace Game
         }
         
         
-        [Effect("poisionpotion+", Timing.PotionEffect)]
+        [Effect("poisonpotion+", Timing.PotionEffect)]
         private void PoisonPotionP(FighterData player)
         {
             if (GameManager.Instance.InBattle)
@@ -121,7 +121,7 @@ namespace Game
         }
         
         
-        [Effect("poisionpotion++", Timing.PotionEffect)]
+        [Effect("poisonpotion++", Timing.PotionEffect)]
         private void PoisonPotionPP(FighterData player)
         {
             if (GameManager.Instance.InBattle)

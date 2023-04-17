@@ -1,5 +1,8 @@
-﻿﻿using Game;
-using UnityEngine;
+﻿﻿using System;
+ using Game;
+ using I2.Loc;
+ using TMPro;
+ using UnityEngine;
 
 namespace UI
 {
@@ -8,7 +11,8 @@ namespace UI
 
         public EnemySkillInfoView skillView;
 
-
+        public Localize RewardInfo;
+        
         private void Start()
         {
             GetComponent<UnityEngine.Canvas>().worldCamera = Camera.main;
@@ -33,8 +37,14 @@ namespace UI
                 skillView.SetData(master, master.Skills[0]);
                 skillView.gameObject.SetActive(true);
             }
-
         }
 
+        private void Update()
+        {
+            buffListView.UpdateUI(Master.Buffs);
+            RewardInfo.SetTerm("RewardInfo");
+            var t = RewardInfo.GetComponent<TMP_Text>();
+            t.text = t.text.Replace("{Gold}", Master.Status.Gold.ToString());
+        }
     }
 }

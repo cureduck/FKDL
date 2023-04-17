@@ -37,15 +37,7 @@ namespace Game
             }
             OnLvUp?.Invoke(fighter);
         }
-
-        public void UnEquip(FighterData fighter)
-        {
-            if (Bp.Fs.TryGetValue(Timing.OnSkillUnEquip, out var method))
-            {
-                method.Invoke(this, new object[]{fighter});
-            }
-            OnUnEquip?.Invoke(fighter);
-        }
+        
 
         public void SetCooldown(int cd = 0)
         {

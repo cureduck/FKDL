@@ -4,18 +4,25 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.BuffUI
+namespace UI
 {
     public class CellRelicView : CellView<RelicData>
     {
-        public Localize Id;
         public TMP_Text Stack;
         public Image Icon;
         
         public override void UpdateUI()
         {
-            Id.SetTerm(Data.Id);
+            if (Data?.Bp == null) return;
+            Stack.gameObject.SetActive(Data.Bp.UseCounter);
+            if (Data.Bp.UseCounter)
+            {
+                Stack.text = Data.Counter.ToString();
+            }
             Icon.sprite = Data?.Bp?.Icon;
         }
+
+        public override string Id => Data.Id;
+        public override string Desc => $"{Data.Id}_desc";
     }
 }

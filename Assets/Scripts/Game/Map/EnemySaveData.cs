@@ -77,7 +77,7 @@ namespace Game
             
             foreach (var sk in Skills)
             {
-                Equip(sk);
+                OnGet(sk);
             }
         }
 

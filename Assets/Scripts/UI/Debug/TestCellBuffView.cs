@@ -1,6 +1,8 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using Game;
 using Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,10 +12,11 @@ namespace UI
     {
         private const string IconTitle = "UI_Icon_Buff_";
         [SerializeField]
-        public Text level_txt;
+        public TMP_Text level_txt;
         [SerializeField]
         public Image icon_img;
-
+        public Image OutLine;
+        
         protected override void OnActivated()
         {
             base.OnActivated();
@@ -24,16 +27,43 @@ namespace UI
                 .OnComplete(() => icon_img.transform.localScale = Vector3.one);
         }
 
+        public override string Id => Data.Id;
+        public override string Desc => $"{Data.Id}_desc";
+
         private Sequence _seq;
         
 
         public override void UpdateUI()
         {
-            level_txt.gameObject.SetActive(true);
+            if (Data.Bp == null)
+            {
+                return;
+            }
+            
             icon_img.gameObject.SetActive(true);
-            level_txt.text = Data.CurLv.ToString();
+            level_txt.gameObject.SetActive(Data.Bp.Stackable);
+            if (Data.Bp.Stackable)
+            {
+                level_txt.text = Data.CurLv.ToString();
+            }
             icon_img.sprite = Data?.Bp?.Icon;
-            Debug.Log(Data);
+            switch (Data.Bp.BuffType)
+            {
+                case BuffType.Positive:
+                    OutLine.color = Color.yellow;
+                    break;
+                case BuffType.Negative:
+                    OutLine.color = Color.red;
+                    break;
+                case BuffType.Bless:
+                    OutLine.color = Color.black;
+                    break;
+                case BuffType.Curse:
+                    OutLine.color = Color.cyan;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

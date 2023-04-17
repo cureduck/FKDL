@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -295,8 +296,16 @@ namespace Game
         }
         
         
+        protected void OnGet(IEffectContainer c)
+        {
+            if (c.MayAffect(Timing.OnGet, out _))
+            {
+                c.Affect(Timing.OnGet, new object[]{this});
+            }
+        }
         
-        protected void Equip(SkillData sk)
+        
+        /*protected void Equip(SkillData sk)
         {
             /*foreach (var pi in typeof(SkillData).GetMethods())
             {
@@ -312,7 +321,7 @@ namespace Game
                     default:
                         break;
                 }
-            }*/
+            }#1#
 
             if (sk.Bp.Fs.TryGetValue(Timing.OnSkillEquip, out var f))
             {
@@ -333,6 +342,7 @@ namespace Game
             f.Invoke(this, new object[] {sk, this});
             DelayUpdate();
         }
+        */
         
         
         protected void Load(SkillData sk)
@@ -535,21 +545,9 @@ namespace Game
         [Button]
         public void CastNonAimingSkill(int index)
         {
-            if ((Skills[index].Bp.Positive))
+            if (Skills[index] != null && Skills[index] != SkillData.Empty)
             {
-                Skills[index].Bp.Fs[Timing.SkillEffect].Invoke(Skills[index], new object[]{this});
-                
-                CoolDown();
-                Skills[index].SetCooldown(Skills[index].Bp.Cooldown);
-                Skills[index] = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {Skills[index], this}));
-
-                
-                //Skills[index].SetCooldown();
-                DelayUpdate();
-            }
-            else
-            {
-                throw new Exception();
+                CastNonAimingSkill(Skills[index]);
             }
         }
 
@@ -560,10 +558,7 @@ namespace Game
                 
                 skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
                 
-                CoolDown();
-                skill.SetCooldown(skill.Bp.Cooldown);
-                skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
-
+                AfterSkillUsed(skill);
                 DelayUpdate();
             }
             else
@@ -587,6 +582,9 @@ namespace Game
         }
         
         
+        
+        
+        
         /// <summary>
         /// 参数为使用的技能
         /// </summary>
@@ -594,11 +592,20 @@ namespace Game
         /// <returns></returns>
         public Attack? ManageAttackRound(SkillData skill = null)
         {
+
+            CheckChain(Timing.OnPreAttack, new object[] {this, Enemy});
+
+            if (!IsAlive)
+            {
+                return null;
+            }
+            
+            
             if ((skill!=null)&&(!skill.Bp.BattleOnly))
             {
                 CastNonAimingSkill(skill);
                 
-                CoolDown();
+                AfterSkillUsed(skill);
                 //skill.SetCooldown(skill.Bp.Cooldown);
                 //skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
                 
@@ -616,16 +623,29 @@ namespace Game
                 //Settle(pa, Enemy);
                 if (skill != null) skill.Sealed = true;
                 
-                CoolDown();
-                skill?.SetCooldown(skill.Bp.Cooldown);
-                skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
+                AfterSkillUsed(skill);
                 DelayUpdate();
                 return pa;
             }
         }
-        
-        
 
+
+        private void AfterSkillUsed([CanBeNull] SkillData skill)
+        {
+            if (GameManager.Instance.InBattle)
+            {
+                CoolDown();
+            }
+            
+            if (skill == null)
+            {
+                return;
+            }
+            
+            skill.SetCooldown(skill.Bp.Cooldown);
+            skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
+        }
+        
 
         public void CoolDown(int x = 1)
         {

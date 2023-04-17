@@ -156,6 +156,7 @@ namespace Managers
         {
             foreach (var square in squares)
             {
+                square.gameObject.SetActive(false);
                 _pool.Return(square);
             }
 

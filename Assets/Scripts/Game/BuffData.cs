@@ -136,12 +136,11 @@ namespace Game
         
         
         [Effect("Poison", Timing.OnPreAttack, priority = -4)]
-        private Attack Poison(Attack attack, FighterData f1, FighterData f2)
+        private void Poison(FighterData f1, FighterData f2)
         {
-            f1.Suffer(new Attack{MAtk = CurLv});
+            f1.Defend(new Attack(mAtk: CurLv), null);
             CurLv -= 1;
             Activated?.Invoke();
-            return attack;
         }
         
         [Effect("Bellow", Timing.OnAttack, priority = -4)]
