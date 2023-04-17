@@ -15,6 +15,7 @@ namespace UI
     {
         string Id { get; }
         string Desc { get; }
+        string Param { get; }
     }
 
 
@@ -66,5 +67,6 @@ namespace UI
 
         public abstract string Id { get; }
         public abstract string Desc { get; }
+        public abstract string Param { get; }
     }
 }

@@ -22,6 +22,7 @@ namespace UI
             {
                 title = _cellView.Id,
                 describe = _cellView.Desc,
+                param = _cellView.Param,
                 screenPosition = transform.position
             });
         }

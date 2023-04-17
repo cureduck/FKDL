@@ -24,5 +24,6 @@ namespace UI
 
         public override string Id => Data.Id;
         public override string Desc => $"{Data.Id}_desc";
+        public override string Param => Data.Counter.ToString();
     }
 }
