@@ -109,6 +109,7 @@ namespace Managers
                 SecondaryData = SecondaryData.LoadFromSave();
                 SecondaryData.Init();
                 Map = Map.LoadFromSave();
+                PlayerData.BroadCastUpdated();
                 LoadMap();
             }
             catch (Exception e)
@@ -126,7 +127,7 @@ namespace Managers
 
             SecondaryData.Init();
             PlayerData = PlayerData.LoadFromInit();
-            PlayerData.Gain(0);
+            PlayerData.BroadCastUpdated();
             Map = Map.LoadFromInit();
             Map.Init();
             LoadMap();

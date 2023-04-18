@@ -241,6 +241,13 @@ namespace Game
         public void UpgradeWithPoint(SkillData skillData)
         {
             Upgrade(skillData);
+
+            for (var i = skillData.Bp.Rank; i < Rank.God; i++)
+            {
+                if (SecondaryData.SkillPoint[i] <= 0) continue;
+                SecondaryData.SkillPoint[i] -= 1;
+                break;
+            }
             DelayUpdate();
             SkillPointChanged?.Invoke();
         }

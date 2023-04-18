@@ -10,7 +10,7 @@ namespace Managers
 
     public class CsvData : IRank
     {
-        [JsonIgnore] public Sprite Icon { get; }
+        [JsonIgnore, ShowInInspector] public Sprite Icon { get; }
         
         protected CsvData(Rank rank, string id, Sprite icon) : this(rank, id)
         {

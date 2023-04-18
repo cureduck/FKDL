@@ -696,7 +696,7 @@ namespace Game
             }
         }
 
-        public void Upgrade(SkillData skillData, int lv = 1)
+        protected void Upgrade(SkillData skillData, int lv = 1)
         {
             skillData.CurLv += lv;
             CheckChain<SkillData>(Timing.OnLvUp, new object[] {skillData, this});
