@@ -215,35 +215,7 @@ namespace Game
 
 
 
-        public override void UseSkill(SkillData skill)
-        {
-            if (GameManager.Instance.InBattle)
-            {
-                ((EnemySaveData)(Enemy)).OnReact(skill);
-            }
-            else
-            {
-                CastNonAimingSkill(skill);
-            }
-        }
-        
-        
-        public override bool TryUseSkill(SkillData skill, out Info info)
-        {
-            info = new Info();
-            if (!CanCast(skill, out _)) return false;
-            UseSkill(skill);
-            return true;
 
-        }
-
-        public bool TryUseSkill(int index, out Info info)
-        {
-            info = new Info();
-            var skill = Skills[index];
-            if (skill == null || skill.IsEmpty) return false;
-            return TryUseSkill(skill, out _);
-        }
 
 
         public event Action SkillPointChanged;

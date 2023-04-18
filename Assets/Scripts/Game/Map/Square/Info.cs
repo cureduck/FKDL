@@ -2,6 +2,9 @@
 
 namespace Game
 {
+    /// <summary>
+    /// 没消息就是好消息，空消息即为成功消息
+    /// </summary>
     public class Info
     {
         public virtual void BroadCastInfo()

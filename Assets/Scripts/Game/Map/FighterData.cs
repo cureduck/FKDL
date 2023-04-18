@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Managers;
 using Newtonsoft.Json;
@@ -206,25 +207,45 @@ namespace Game
         /// <returns></returns>
         public bool CanCast(SkillData skill, out Info info)
         {
-            return skill.CanCast(out info) && CanAfford(GetSkillCost(skill), out info);
+            skill.CanCast(out var basicInfo);
+            info = CheckChain<Info>(Timing.OnHandleSkillInfo, new object[] {basicInfo, skill, this});
+            return  (info is SuccessInfo|| info == null)&& CanAfford(GetSkillCost(skill), out info);
         }
         
-        /// <summary>
-        /// 跳过条件检查直接使用
-        /// </summary>
-        /// <param name="skill"></param>
-        public abstract void UseSkill(SkillData skill);
         
         
-        /// <summary>
-        /// 经过检查，再使用
-        /// </summary>
-        /// <param name="skill"></param>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        public abstract bool TryUseSkill(SkillData skill, out Info info);
         
+        public  void UseSkill(SkillData skill)
+        {
+            if (GameManager.Instance.InBattle)
+            {
+                ((EnemySaveData)(Enemy)).OnReact(skill);
+            }
+            else
+            {
+                CastNonAimingSkill(skill);
+            }
+        }
+        
+        
+        public bool TryUseSkill(SkillData skill, out Info info)
+        {
+            info = new Info();
+            if (!CanCast(skill, out info)) return false;
+            UseSkill(skill);
+            return true;
 
+        }
+
+        public bool TryUseSkill(int index, out Info info)
+        {
+            info = new Info();
+            var skill = Skills[index];
+            if (skill == null || skill.IsEmpty) return false;
+            return TryUseSkill(skill, out info);
+        }
+        
+        
         public void SwapSkill(int index01,int index02) 
         {
             if (index01 >= 0 && index01 < Skills.Count && index02 >= 0 && index02 < Skills.Count) 

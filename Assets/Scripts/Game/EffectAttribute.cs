@@ -24,7 +24,7 @@ namespace Game
         /// <summary>
         /// info, skillData, fighter
         /// </summary>
-        OnGetSkillReady,
+        OnHandleSkillInfo,
         /// <summary>
         /// costInfo, skillData, fighter
         /// </summary>
