@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Managers;
 using Newtonsoft.Json;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = System.Random;
 
@@ -45,7 +46,7 @@ namespace Game
 
             DiscoveredRelics = new List<string>();
         }
-        
+
         public void Save()
         {
             Save(_savePath);

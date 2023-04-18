@@ -26,7 +26,15 @@ namespace UI
 
         protected override void SetMaster(FighterData master)
         {
+            if (Master != null) 
+            {
+                Master.OnUpdated -= UpdateView;
+            }
             base.SetMaster(master);
+            if (Master != null)
+            {
+                Master.OnUpdated += UpdateView;
+            }
             //获得主技能
             if (master.Skills.Count <= 0 || master.Skills[0] == null)
             {
@@ -39,9 +47,15 @@ namespace UI
             }
         }
 
+
+        private void UpdateView() 
+        {
+            buffListView.SetData(Master.Buffs);
+        }
+
         private void Update()
         {
-            buffListView.UpdateUI(Master.Buffs);
+
             RewardInfo.SetTerm("RewardInfo");
             var t = RewardInfo.GetComponent<TMP_Text>();
             t.text = t.text.Replace("{Gold}", Master.Status.Gold.ToString());

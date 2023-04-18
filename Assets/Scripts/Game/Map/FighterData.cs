@@ -69,7 +69,7 @@ namespace Game
         {
             if (skill == null) return CostInfo.Zero;
             var cost = skill.Bp.CostInfo;
-            cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[]{cost, this});
+            cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[]{cost, skill, this});
             return cost;
         }
         
@@ -142,6 +142,9 @@ namespace Game
         {
             return CheckChain<CostInfo>(Timing.OnCost, new object[] {costInfo, this, kw});
         }
+
+
+
         
         
         /// <summary>
@@ -270,7 +273,10 @@ namespace Game
         public void Gain(int gold, string kw = null)
         {
             var g = CheckChain<int>(Timing.OnGain, new object[] {gold, this, kw});
-            
+            if (g > 0)
+            {
+                AudioPlayer.Instance.Play(AudioPlayer.AudioGainCoin);
+            }
             Gold += g;
             DelayUpdate();
         }
@@ -658,12 +664,12 @@ namespace Game
                     continue;
                 }
                 
-                if ((Skills[i].Bp.Positive)&&(Skills[i].Cooldown > 0))
+                if ((Skills[i].Bp.Positive)&&(Skills[i].CooldownLeft > 0))
                 {
-                    Skills[i].Cooldown -= x;
-                    if (Skills[i].Cooldown < 0)
+                    Skills[i].CooldownLeft -= x;
+                    if (Skills[i].CooldownLeft < 0)
                     {
-                        Skills[i].Cooldown = 0;
+                        Skills[i].CooldownLeft = 0;
                     }
                 }
             }

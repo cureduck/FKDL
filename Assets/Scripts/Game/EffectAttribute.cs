@@ -22,7 +22,11 @@ namespace Game
     public enum Timing
     {
         /// <summary>
-        /// costInfo, fighter
+        /// info, skillData, fighter
+        /// </summary>
+        OnGetSkillReady,
+        /// <summary>
+        /// costInfo, skillData, fighter
         /// </summary>
         OnGetSkillCost,
         /// <summary>

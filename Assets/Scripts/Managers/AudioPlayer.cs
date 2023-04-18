@@ -15,6 +15,7 @@ namespace Managers
         public const string AudioOpenChest = "Audio_Open_Chest";
         public const string AudioCrystal = "Audio_Crystal";
         public const string AudioClearRock = "Audio_Clear_Rock";
+        public const string AudioGainCoin = "Audio_Gain_Coin";
 
         [SerializeField]
         private CellAudioPrefab cellAudioPrefab;

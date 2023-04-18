@@ -246,7 +246,14 @@ namespace Game
         }
 
 
-        public event Action OnSkillPointChanged;
+        public event Action SkillPointChanged;
+
+        [Button]
+        public void SKillChanged()
+        {
+            SkillPointChanged?.Invoke();
+        }
+        
         
         public bool CanUpgrade(SkillData skillData, out Info info)
         {
@@ -263,7 +270,7 @@ namespace Game
         {
             Upgrade(skillData);
             DelayUpdate();
-            OnSkillPointChanged?.Invoke();
+            SkillPointChanged?.Invoke();
         }
 
         public void GetSkillPoint(Rank rank, int v = 1)
@@ -276,21 +283,21 @@ namespace Game
             {
                 GameDataManager.Instance.SecondaryData.SkillPoint[rank] = v;
             }
-            OnSkillPointChanged?.Invoke();
+            SkillPointChanged?.Invoke();
         }
 
 
         public void GetRemoveSkillPoint(int v = 1)
         {
             GameDataManager.Instance.SecondaryData.RemoveSkillPoint += v;
-            OnSkillPointChanged?.Invoke();
+            SkillPointChanged?.Invoke();
             DelayUpdate();
         }
 
         public void RemoveSkill(ref SkillData skill)
         {
             skill = SkillData.Empty;
-            OnSkillPointChanged?.Invoke();
+            SkillPointChanged?.Invoke();
             DelayUpdate();
         }
 
@@ -299,7 +306,7 @@ namespace Game
             if (index >= 0 && index < Skills.Count)
             {
                 Skills[index] = null;
-                OnSkillPointChanged?.Invoke();
+                SkillPointChanged?.Invoke();
                 DelayUpdate();
                 //RemoveSkill(ref temp);
             }

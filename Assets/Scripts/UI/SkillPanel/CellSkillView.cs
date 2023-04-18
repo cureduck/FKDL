@@ -142,16 +142,16 @@ public class CellSkillView : MonoBehaviour
             skillName.SetTerm(curSkill.Id);
 
 
-            if (skillData.Cooldown > 0)
+            if (skillData.CooldownLeft > 0)
             {
-                coldDown_txt.text = skillData.Cooldown.ToString();
+                coldDown_txt.text = skillData.CooldownLeft.ToString();
                 if (curSkill.Cooldown <= 0)
                 {
                     targetPrecent = 1;
                 }
                 else 
                 {
-                    targetPrecent = skillData.Cooldown / (float)curSkill.Cooldown;
+                    targetPrecent = skillData.CooldownLeft / (float)curSkill.Cooldown;
                 }
 
                 coldDown_txt.gameObject.SetActive(true);

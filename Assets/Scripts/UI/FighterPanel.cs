@@ -19,11 +19,11 @@ namespace UI
 
         public StatusPanel StatusPanel;
         //public BuffPanel BuffPanel;
-        public BuffListPanel buffListView;
+        public BuffListView buffListView;
 
         public void Init() 
         {
-            //buffListView.Init();
+            buffListView.Init();
         }
 
         protected virtual void SetMaster(FighterData master)
@@ -41,5 +41,7 @@ namespace UI
             //BuffPanel.gameObject.SetActive(false);
             //BuffPanel.SetMaster(master);
         }
+
+
     }
 }

@@ -19,32 +19,33 @@ namespace UI
                 if (Data != null)
                 {
                     Data.OnUpdated -= UpdateUI;
-                    Data.OnSkillPointChanged -= OnSkillPointChanged;
+                    Data.SkillPointChanged -= SkillPointChanged;
                 }
 
                 Open(GameManager.Instance.PlayerData);
                 //Data = GameManager.Instance.PlayerData;
 
                 Data.OnUpdated += UpdateUI;
-                Data.OnSkillPointChanged += OnSkillPointChanged;
+                Data.SkillPointChanged += SkillPointChanged;
                 
                 Test();
             };
 
         }
 
-        private void OnSkillPointChanged()
+        private void SkillPointChanged()
         {
             Debug.LogWarning("屏蔽警告");
             //throw new NotImplementedException();
         }
 
+
         private void Test() 
         {
             //Data = new PlayerData();
-            SkillData skillData = new SkillData { Cooldown = 0, Id = "DZXY_ALC".ToLower(), CurLv = 1 };
-            SkillData skillData02 = new SkillData { Cooldown = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
-            SkillData skillData03 = new SkillData { Cooldown = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
+            SkillData skillData = new SkillData { CooldownLeft = 0, Id = "DZXY_ALC".ToLower(), CurLv = 1 };
+            SkillData skillData02 = new SkillData { CooldownLeft = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
+            SkillData skillData03 = new SkillData { CooldownLeft = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
             //Debug.Log(Data.Skills.Count);
             for (int i = 0; i < 6; i++)
             {

@@ -40,7 +40,7 @@ namespace Game
             }
         }
         
-        
+        [JsonConstructor]
         public BuffData(string id, int curLv)
         {
             Id = id.ToLower();

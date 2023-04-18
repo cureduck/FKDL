@@ -30,12 +30,13 @@ namespace UI
                     Debug.Log(GameDataManager.Instance.SecondaryData.Prof[i]);
                 }
                 playerData.profInfo = GameDataManager.Instance.SecondaryData.Prof;
+                //playerData.OnUpdated +=
 
-                playerData.Buffs.Add_Test(new BuffData("Blood", 1));
+                /*playerData.Buffs.Add_Test(new BuffData("Blood", 1));
                 playerData.Buffs.Add_Test(new BuffData("Attack_Increase", 4));
 
                 playerData.Relics.Add(new RelicData("1203",2));
-                playerData.Relics.Add(new RelicData("Luck",1));
+                playerData.Relics.Add(new RelicData("Luck",1));*/
 
                 Master = playerData;
                 Debug.Log(playerData.Buffs.Count);
@@ -55,7 +56,14 @@ namespace UI
 
         protected override void SetMaster(FighterData master)
         {
+            if (this.Master != null)
+            {
+                Master.OnUpdated -= UpdateView;
+            }
             base.SetMaster(master);
+            master.OnUpdated += UpdateView;
+
+
             GoldPanel.SetMaster(master);
             PotionPanel.SetMaster(master);
             PlayerData playerData = master as PlayerData;
@@ -66,5 +74,19 @@ namespace UI
             }
 
         }
+
+
+        public void UpdateView()
+        {
+            PlayerData playerData = Master as PlayerData;
+            buffListView.SetData(playerData.Buffs);
+            if (playerData != null)
+            {
+                profInformationView.SetData(playerData.profInfo);
+                relicListView.SetData(playerData.Relics);
+            }
+        }
+
+
     }
 }

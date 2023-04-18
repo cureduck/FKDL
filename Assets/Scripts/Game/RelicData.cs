@@ -93,7 +93,7 @@ namespace Game
         [Effect("test4", Timing.OnSetCoolDown, 900)]
         private SkillData Test4(SkillData skill, FighterData fighterData)
         {
-            skill.Cooldown += GameDataManager.Instance.SecondaryData.CurGameRandom.Next(-3, 2);
+            skill.CooldownLeft += GameDataManager.Instance.SecondaryData.CurGameRandom.Next(-3, 2);
             return skill;
         }
         

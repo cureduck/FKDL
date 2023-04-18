@@ -17,8 +17,9 @@ namespace Game
         public int CurLv;
 
         public int Counter;
-        
-        public int Cooldown;
+
+        public int InitCoolDown;
+        public int CooldownLeft;
         public bool Sealed = false;
         
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
@@ -39,10 +40,11 @@ namespace Game
         }
         
 
-        public void SetCooldown(int cd = 0)
+        public void SetCooldown(int cd = default)
         {
-            Cooldown = cd;
-            Cooldown = Cooldown < 0 ? 0 : Cooldown;
+            CooldownLeft = cd;
+            CooldownLeft = CooldownLeft < 0 ? 0 : CooldownLeft;
+            InitCoolDown = CooldownLeft;
         }
 
         //public void SetCoolDown(int bonus = 0)
@@ -64,7 +66,7 @@ namespace Game
                 return false;
             }
 
-            if (Cooldown > 0)
+            if (CooldownLeft > 0)
             {
                 info = new FailureInfo(FailureReason.SkillNotReady);
                 return false;
