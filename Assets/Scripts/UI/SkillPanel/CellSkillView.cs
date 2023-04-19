@@ -31,6 +31,17 @@ public class CellSkillView : MonoBehaviour
             return dragReceive.index;
         }
     }
+    [Header("消耗颜色")]
+    [SerializeField]
+    private TMP_Text cost_txt;
+    [SerializeField]
+    private Color magicCost_color;
+    [SerializeField]
+    private Color healthCost_color;
+    [SerializeField]
+    private Color goldCost_color;
+    [SerializeField]
+    private Color notEnough_Color;
     [Header("其他组件")]
     [SerializeField]
     private GameObject heightlightView;
@@ -48,8 +59,6 @@ public class CellSkillView : MonoBehaviour
     private TextMeshProUGUI levelInfo;
     [SerializeField]
     private Localize skillName;
-    [SerializeField]
-    private GameObject coldDown;
     [SerializeField]
     private TextMeshProUGUI coldDown_txt;
     [SerializeField]
@@ -260,7 +269,9 @@ public class CellSkillView : MonoBehaviour
     private float t0;
     private void Update()
     {
+
         if (skillData == null || skillData.IsEmpty) return;
+        //Debug.Log(skillData.IsEmpty);
         //if (canDebug) 
         //{
         //    Debug.Log(targetPrecent);

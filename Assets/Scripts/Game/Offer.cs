@@ -67,5 +67,11 @@
         /// 花费的金币，若OfferKind = Gold，则将其设为正值即可变成获得金币
         /// </summary>
         public CostInfo Cost;
+
+
+        public override string ToString()
+        {
+            return $"{Kind} : {Id}";
+        }
     }
 }

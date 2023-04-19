@@ -97,6 +97,8 @@ namespace UI
                     //Debug.Log(skill.Description);
                     Prof?.SetTerm(skill.Pool);
                     Description?.SetTerm($"{skill.Id}_desc");
+                    Description.GetComponent<LocalizationParamsManager>().SetParameterValue("P1", skill.Param1.ToString());
+                    Description.GetComponent<LocalizationParamsManager>().SetParameterValue("P2", skill.Param2.ToString());
                     MaxLvParam?.SetParameterValue("P", skill.MaxLv.ToString());
 
                     if (RankStar != null)
@@ -122,6 +124,14 @@ namespace UI
                     break;
                 case Offer.OfferKind.Gold:
                     Id.SetTerm(Offer.Cost.ActualValue.ToString());
+                    break;
+                case Offer.OfferKind.Relic:
+                    break;
+                case Offer.OfferKind.Key:
+                    break;
+                case Offer.OfferKind.SkillSlot:
+                    break;
+                case Offer.OfferKind.NeedOnGetCheck:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

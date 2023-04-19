@@ -14,6 +14,7 @@ namespace Managers
         public TMP_InputField PotionDebugInput;
         public TMP_InputField BuffDebugInput;
         public TMP_InputField RelicDebugInput;
+        public TMP_InputField SKillDebugInput;
         
         [Button]
         public void Apply(string id, int lv)
@@ -51,6 +52,20 @@ namespace Managers
         public void AddRelic()
         {
             AddRelic(RelicDebugInput.text);
+        }
+        
+        
+        public void AddSkill(string id)
+        {
+            if (SkillManager.Instance.TryGetById(id, out var skill))
+            {
+                GameManager.Instance.PlayerData.TryTakeOffer(new Offer(skill), out _);
+            }
+        }
+
+        public void AddSkill()
+        {
+            AddSkill(SKillDebugInput.text);
         }
         
         

@@ -46,7 +46,8 @@ public class CellBuffView : MonoBehaviour
 
         level_txt.gameObject.SetActive(buffData.CurLv > 1);
         level_txt.text = buffData.CurLv.ToString();
-        icon_img.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Buff, $"{IconTitle}{buffData.Id}");
+        icon_img.sprite = buffData.Bp.Icon;
+        //icon_img.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Buff, $"{IconTitle}{buffData.Id}");
         Debug.Log(buffData);
     }
 

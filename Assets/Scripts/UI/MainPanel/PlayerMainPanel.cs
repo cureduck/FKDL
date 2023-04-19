@@ -72,7 +72,7 @@ namespace UI
                 profInformationView.SetData(playerData.profInfo);
                 relicListView.SetData(playerData.Relics);
             }
-
+            UpdateView();
         }
 
 

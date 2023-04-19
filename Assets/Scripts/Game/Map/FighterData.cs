@@ -125,12 +125,20 @@ namespace Game
 
                 i += 1;
             }
-
+            
+            tmp = CheckChain<Attack>(Timing.OnAttackSettle, new object[] {attack, this, target});
+            tmp = target.DefendSettle(tmp, this);
+            
             return tmp;
             //AudioPlayer.Instance.PlaySoundEffect();
         }
 
 
+        private Attack DefendSettle(Attack attack, FighterData target)
+        {
+            return CheckChain<Attack>(Timing.OnDefendSettle, new object[] {attack, this, target});
+        }
+        
         public void Purify(BuffData buff)
         {
             buff = CheckChain<BuffData>(Timing.OnPurify, new object[] {buff, this});
@@ -269,7 +277,7 @@ namespace Game
 
             var rr = CheckChain<Attack>(Timing.OnDefend, new object[] {r, this, enemy});
             
-            Cost(rr.CostInfo);
+            Damaged(rr.CostInfo);
             
             //CoolDown();
             Buffs.RemoveZeroStackBuff();
@@ -312,6 +320,14 @@ namespace Game
             DelayUpdate();
         }
 
+        public void Damaged(CostInfo modify, string kw = null)
+        {
+            Status -= modify;
+            Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
+            Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
+            DelayUpdate();
+        }
+        
 
         public void CounterCharge(BattleStatus modify, string kw = null)
         {
@@ -421,18 +437,18 @@ namespace Game
         
 
         [Button]
-        public void Recover(BattleStatus modify, FighterData enemy)
+        public void Recover(BattleStatus modify, FighterData enemy, string kw = null)
         {
-            modify = CheckChain<BattleStatus>(Timing.OnRecover, new object[] {modify, this, enemy});
-            this.Status += modify;
+            modify = CheckChain<BattleStatus>(Timing.OnRecover, new object[] {modify, this, enemy ,kw});
+            Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             DelayUpdate();
         }
 
-        public void Heal(BattleStatus modify)
+        public void Heal(BattleStatus modify, string kw = null)
         {
-            modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] {modify, this});
-            this.Status += modify;
+            modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] {modify, this, kw});
+            Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
 
@@ -540,7 +556,12 @@ namespace Game
             return buff;
         }
         
-        
+        public void ApplyBuff(BuffData buff, FighterData target)
+        {
+            buff = CheckChain<BuffData>(Timing.OnApply, new object[] {buff, this });
+            target.AppliedBuff(buff);
+            DelayUpdate();
+        }
         
         /// <summary>
         /// 用于被添加buff时，获取最终生成的buff
@@ -585,11 +606,12 @@ namespace Game
                 
                 skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
                 
-                AfterSkillUsed(skill);
+                CoolDownSettle(skill);
                 DelayUpdate();
             }
             else
             {
+                Debug.LogError($"{skill.Id} Cast Failed");
                 throw new Exception();
             }
 
@@ -632,7 +654,7 @@ namespace Game
             {
                 CastNonAimingSkill(skill);
                 
-                AfterSkillUsed(skill);
+                CoolDownSettle(skill);
                 //skill.SetCooldown(skill.Bp.Cooldown);
                 //skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
                 
@@ -650,14 +672,14 @@ namespace Game
                 //Settle(pa, Enemy);
                 if (skill != null) skill.Sealed = true;
                 
-                AfterSkillUsed(skill);
+                CoolDownSettle(skill);
                 DelayUpdate();
                 return pa;
             }
         }
 
 
-        private void AfterSkillUsed([CanBeNull] SkillData skill)
+        private void CoolDownSettle([CanBeNull] SkillData skill)
         {
             if (GameManager.Instance.InBattle)
             {
@@ -730,12 +752,5 @@ namespace Game
             }*/
         }
         
-    }
-
-    public enum HealType
-    {
-        Heal,
-        Rest,
-        Blood
     }
 }

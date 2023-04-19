@@ -11,11 +11,10 @@ using UnityEngine.Assertions.Must;
 
 namespace Game
 {
-    public class BuffData : IEffectContainer, ICloneable, IActivated
+    public class BuffData : BpData<Buff>, IEffectContainer, ICloneable, IActivated
     {
-        [ShowInInspector] public string Id { get; private set; }
         [ShowInInspector] public int CurLv { get; private set; }
-        [JsonIgnore] public Buff Bp => BuffManager.Instance.TryGetById(Id, out var buff)? buff : null;
+        [JsonIgnore] public override Buff Bp => BuffManager.Instance.TryGetById(Id, out var buff)? buff : null;
 
 
         public void StackChange(int value)
@@ -59,36 +58,7 @@ namespace Game
         }
         
         public event Action Activated;
-
-        public bool MayAffect(Timing timing, out int priority)
-        {
-            if (Id.IsNullOrWhitespace()||(Bp == null))
-            {
-                priority = 0;
-                return false;
-            }
-            
-            if (Bp.Fs.TryGetValue(timing, out var f))
-            {
-                priority = f.GetCustomAttribute<EffectAttribute>().priority;
-                return true;
-            }
-            else
-            {
-                priority = 0;
-                return false;
-            }
-        }
-
-        public T Affect<T>(Timing timing, object[] param)
-        {
-            return (T) Bp.Fs[timing].Invoke(this, param);
-        }
-
-        public void Affect(Timing timing, object[] param)
-        {
-            Bp.Fs[timing].Invoke(this, param);
-        }
+        
 
         public override string ToString()
         {

@@ -85,8 +85,9 @@ namespace Managers
                     Debug.LogError($"{line} read error");
                 }
             }
-            Debug.Log($"-----------------------------------------{typeof(T1).Name} 加载完毕-----------------------------------------------");
             FuncMatch();
+            FuncMatchCheck();
+            Debug.Log($"-----------------------------------------{typeof(T1).Name} 加载完毕-----------------------------------------------");
         }
         
 
@@ -224,6 +225,18 @@ namespace Managers
                 return false;
             }
             return Lib.TryGetValue(id, out v);
+        }
+
+
+        private void FuncMatchCheck()
+        {
+            foreach (var value in Lib.Values)
+            {
+                if (value.Fs.Values.Count == 0)
+                {
+                    Debug.LogWarning($"{typeof(T1).Name}:{value.Id} No Matching Function!");
+                }
+            }
         }
     }
 }

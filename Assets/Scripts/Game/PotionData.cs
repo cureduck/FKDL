@@ -4,15 +4,23 @@ using Sirenix.Utilities;
 
 namespace Game
 {
-    public struct PotionData
+    public class PotionData : BpData<Potion>
     {
-        public string Id;
         public int Count;
         
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
-        [JsonIgnore] public Potion Bp => PotionManager.Instance.GetById(Id);
+        [JsonIgnore] public override Potion Bp => PotionManager.Instance.GetById(Id);
 
+        public void SetEmpty()
+        {
+            Id = "";
+        }
 
+        public void SetPotion(string id)
+        {
+            Id = id;
+        }
+        
         public override string ToString()
         {
             return Id;

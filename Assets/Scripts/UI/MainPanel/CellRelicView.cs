@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Game;
 using Managers;
+using System;
 
 public class CellRelicView : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class CellRelicView : MonoBehaviour
 
     [SerializeField]
     private Image relicIcon;
+    [SerializeField]
+    private Image activeIcon;
     [SerializeField]
     private Text relic_count;
     [SerializeField]
@@ -22,6 +25,7 @@ public class CellRelicView : MonoBehaviour
     {
         pointEnterAndExit.onPointEnter.AddListener(OnPointEnter);
         pointEnterAndExit.onPointExit.AddListener(OnPointExit);
+        activeIcon.gameObject.SetActive(false);
     }
 
     private void OnPointExit()
@@ -43,13 +47,30 @@ public class CellRelicView : MonoBehaviour
 
     public void SetData(RelicData relicData)
     {
+        if (this.relicData != null) 
+        {
+            this.relicData.Activated-=OnTrigger;
+        }
         this.relicData = relicData;
+        if (this.relicData != null)
+        {
+            this.relicData.Activated += OnTrigger;
+        }
         //Debug.Log($"{Title}{relicData.Id}");
 
         relic_count.gameObject.SetActive(relicData.Counter > 1);
         relic_count.text = $"{relicData.Counter}";
-        relicIcon.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Relic, $"{Title}{relicData.Id}");
+        relicIcon.sprite = relicData.Bp.Icon;
+        activeIcon.sprite = relicData.Bp.Icon;
+
+        //relicIcon.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Relic, $"{Title}{relicData.Id}");
 
     }
 
+    private void OnTrigger()
+    {
+        Debug.LogError("触发relic效果！并播放动画（这段代码如果影响测试，请删除，当出现需要删除该代码时，说明接入成功）");
+        activeIcon.gameObject.SetActive(false);
+        activeIcon.gameObject.SetActive(true);
+    }
 }

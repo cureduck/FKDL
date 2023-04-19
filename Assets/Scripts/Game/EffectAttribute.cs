@@ -30,10 +30,6 @@ namespace Game
         /// </summary>
         OnGetSkillCost,
         /// <summary>
-        /// fighter, enemy
-        /// </summary>
-        OnEngage,
-        /// <summary>
         /// attack, fighter, enemy
         /// </summary>
         OnPreAttack,
@@ -50,9 +46,13 @@ namespace Game
         /// </summary>
         OnDefend,
         /// <summary>
-        /// attack, fighter, enemy
+        /// attack, attacker, enemy
         /// </summary>
-        OnSettle,
+        OnAttackSettle,
+        /// <summary>
+        /// attack, defender, enemy
+        /// </summary>
+        OnDefendSettle,
         /// <summary>
         /// attack, fighter, enemy
         /// </summary>
@@ -62,7 +62,7 @@ namespace Game
         /// </summary>
         OnDrawBack,
         /// <summary>
-        /// Heal Data, fighter, enemy
+        /// Heal Data, fighter, enemy, kw
         /// </summary>
         OnRecover,
         /// <summary>
@@ -70,7 +70,7 @@ namespace Game
         /// </summary>
         OnLvUp,
         /// <summary>
-        /// modifier, fighter
+        /// modifier, fighter, kw
         /// </summary>
         OnHeal,
         /// <summary>

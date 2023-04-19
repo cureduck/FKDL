@@ -244,9 +244,11 @@ namespace Game
 
             for (var i = skillData.Bp.Rank; i < Rank.God; i++)
             {
-                if (SecondaryData.SkillPoint[i] <= 0) continue;
-                SecondaryData.SkillPoint[i] -= 1;
-                break;
+                if (SecondaryData.SkillPoint[i] > 0)
+                {
+                    SecondaryData.SkillPoint[i] -= 1;
+                    break;
+                }
             }
             DelayUpdate();
             SkillPointChanged?.Invoke();
