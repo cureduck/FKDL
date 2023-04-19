@@ -46,6 +46,14 @@ namespace Game
             InitCoolDown = CooldownLeft;
         }
 
+
+        public void BonusCooldown(int cd)
+        {
+            CooldownLeft -= cd;
+            CooldownLeft = CooldownLeft < 0 ? 0 : CooldownLeft;
+        }
+
+
         //public void SetCoolDown(int bonus = 0)
         //{
         //    Cooldown = math.max(0, Bp.Cooldown - bonus);
@@ -82,8 +90,7 @@ namespace Game
 
         [JsonIgnore] public override Skill Bp => SkillManager.Instance.GetById(Id.ToLower());
 
-        [ShowInInspector] public event Action Activate;
-        
+        [ShowInInspector] public event Action Activated;
         
         
         public override bool MayAffect(Timing timing, out int priority)
@@ -351,7 +358,7 @@ namespace Game
 
         private bool InBattle => GameManager.Instance.InBattle;
         private PlayerData Player => GameManager.Instance.PlayerData;
-        
+        private SecondaryData SData => GameDataManager.Instance.SecondaryData;
         
         [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
 
@@ -365,6 +372,15 @@ namespace Game
             Player.TryTakeOffer(new Offer(p), out _);
             //SetCooldown();
         }
+        
+        [Effect("YWLZ_ALC", Timing.OnSetCoolDown, priority = -100)]
+        private SkillData YWLZ_ALC(SkillData skill, FighterData fighter)
+        {
+            skill.InitCoolDown -= CurLv;
+            skill.BonusCooldown(CurLv);
+            return skill;
+        }
+        
 
         [Effect("JSLC_ALC", Timing.SkillEffect)]
         private void MetalTrans(FighterData fighter)
@@ -401,7 +417,7 @@ namespace Game
         {
             //var potion = PotionManager.Instance.
             fighter.Recover(BattleStatus.HP(CurLv), enemy);
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
         
@@ -410,7 +426,7 @@ namespace Game
         private Attack Anatomy(Attack attack, FighterData fighter, FighterData enemy)
         {
             fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
         
@@ -419,8 +435,21 @@ namespace Game
         {
             status.CurHp -= (int)(Bp.Param1 * CurLv);
             status.CurHp = math.max(status.CurHp, 0);
-            Activate?.Invoke();
+            Activated?.Invoke();
             return status;
+        }
+
+
+
+        [Effect("DYX_ALC", Timing.OnApply)]
+        private BuffData DYX_ALC(BuffData buff, FighterData fighter)
+        {
+            if (buff.Id == "poison")
+            {
+                buff.StackChange((int)(CurLv * Bp.Param1));
+            }
+
+            return buff;
         }
         
         
@@ -429,8 +458,8 @@ namespace Game
         {
             if (attack.SumDmg > 0)
             {
-                Activate?.Invoke();
-                fighter.ApplyBuff(new BuffData("poison", attack.SumDmg), enemy);
+                Activated?.Invoke();
+                fighter.ApplyBuff(new BuffData("poison",  (int)(CurLv * Bp.Param1* attack.PDmg)), enemy);
             }
 
             return attack;
@@ -444,7 +473,7 @@ namespace Game
                 if (Random.Range(0f, 1f) < .3f)
                 {
                     fighter.RandomStrengthen();
-                    Activate?.Invoke();
+                    Activated?.Invoke();
                 }
             }
             return attack;
@@ -454,7 +483,7 @@ namespace Game
         private PotionData MagicAddiction(PotionData potion, FighterData fighter)
         {
             fighter.Heal(new BattleStatus{CurHp = CurLv, CurMp = CurLv});
-            Activate?.Invoke();
+            Activated?.Invoke();
             return potion;
         }
         
@@ -462,32 +491,33 @@ namespace Game
         private BattleStatus SelfAbuse(BattleStatus status, FighterData fighter, string kw)
         {
             fighter.RandomStrengthen();
-            Activate?.Invoke();
+            Activated?.Invoke();
             return status;
         }
         
         
-        [Effect("BXTY_ALC", Timing.OnStrengthen)]
+        [Effect("BS_ALC", Timing.OnStrengthen)]
         private Attack NDE(Attack attack, FighterData fighter, FighterData enemy)
         {
             
             fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
 
         [Effect("JLYJ_ALC", Timing.OnUsePotion)]
         private PotionData RefiningElixir(PotionData potion, FighterData fighter)
         {
-            if (Random.Range(0, 1f) < .2f)
+            if (Random.Range(0, 1f) < SData.LuckyChance * Bp.Param1)
             {
-                var p = potion;
-                ((PlayerData) fighter).TryTakePotion(p.Id, out _);
-                Activate?.Invoke();
+                ((PlayerData) fighter).TryTakePotion(potion.Id, out _);
+                Activated?.Invoke();
             }
 
             return potion;
         }
+        
+        
 
 
         [Effect("HQ_MAG", Timing.OnAttack, priority = -100)]
@@ -540,7 +570,7 @@ namespace Game
             {
                 ((PlayerData)player).ApplySelfBuff(new BuffData("surging", CurLv));
             }
-            Activate?.Invoke();
+            Activated?.Invoke();
         }
         
         
@@ -548,7 +578,7 @@ namespace Game
         private Attack MieShi(Attack attack, FighterData player, FighterData enemy)
         {
             player.Strengthen(new BattleStatus{MaxMp = (int)Bp.Param1});
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
         
@@ -558,7 +588,7 @@ namespace Game
         {
             var num = (int) ((fighter.Status.MaxMp - fighter.Status.CurHp) / Bp.Param1) * Bp.Param2;
             attack.MAtk += (int)num;
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
         
@@ -567,7 +597,7 @@ namespace Game
         {
             var num = attack.CostInfo.ActualValue;
             attack.MAtk += num;
-            Activate?.Invoke();
+            Activated?.Invoke();
             return attack;
         }
 
@@ -582,7 +612,7 @@ namespace Game
             var count = enemy.Buffs.Sum((data => data.Bp.BuffType == BuffType.Negative ? data.CurLv : 0));
             if (count > 0)
             {
-                Activate?.Invoke();
+                Activated?.Invoke();
             }
             attack.PAtk -= count;
             return attack;
@@ -594,7 +624,7 @@ namespace Game
             var v = (int) Bp.Param1 + (int) Bp.Param2 * CurLv;
             if (GameManager.Instance.InBattle)
             {
-                player.Enemy.Suffer(new Attack(cAtk: v));
+                player.Enemy.Suffer(new Attack(cAtk: v), player);
             }
             else
             {

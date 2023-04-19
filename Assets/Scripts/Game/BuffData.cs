@@ -124,6 +124,89 @@ namespace Game
             Activated?.Invoke();
             return attack;
         }
+
+        [Effect("Divinity", Timing.OnAttack, priority = -4)]
+        private Attack Divinity(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.Multi += 1;
+            CurLv -= 1;
+            Activated?.Invoke();
+            return attack;
+        }
+
+        [Effect("Vigor", Timing.OnAttack, priority = -4)]
+        private Attack Vigor(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.Combo += 1;
+            CurLv -= 1;
+            Activated?.Invoke();
+            return attack;
+        }
+        
+        
+        [Effect("Weaken", Timing.OnAttack, priority = -4)]
+        private Attack Weaken(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.Combo -= 1;
+            CurLv -= 1;
+            Activated?.Invoke();
+            return attack;
+        }
+        
+        [Effect("Thorn", Timing.OnDefend, priority = -4)]
+        private Attack Thorn(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (f2 == null || !f2.IsAlive) return attack;
+            
+            f2.Suffer(new Attack(pAtk: CurLv), f1);
+            CurLv -= 1;
+            Activated?.Invoke();
+            return attack;
+        }
+        
+        [Effect("Flaming", Timing.OnAttack, priority = -4)]
+        private Attack Flaming(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.MAtk += CurLv;
+            CurLv -= 1;
+            Activated?.Invoke();
+            return attack;
+        }
+
+
+        [Effect("Clarity", Timing.OnGetSkillCost, priority = 3)]
+        private CostInfo Clarity(CostInfo cost,SkillData skill,  FighterData f1, bool test = true)
+        {
+            if (cost.ActualValue > 0)
+            {
+                cost.Discount -= .5f;
+                if (!test) CurLv -= 1;
+                Activated?.Invoke();
+            }
+            return cost;
+        }
+        
+        [Effect("Leakage", Timing.OnGetSkillCost, priority = -1)]
+        private CostInfo Leakage(CostInfo cost, SkillData skill, FighterData f1, bool test = true)
+        {
+            if (cost.ActualValue > 0)
+            {
+                cost.Discount += .5f;
+                if (!test) CurLv -= 1;
+                Activated?.Invoke();
+            }
+            return cost;
+        }
+
+        [Effect("BloodLust", Timing.OnAttackSettle, priority = 100)]
+        private Attack BloodLust(Attack attack, FighterData f1, FighterData f2)
+        {
+            f1.Recover(BattleStatus.HP(attack.SumDmg), f2);
+            CurLv = 0;
+            return attack;
+        }
+        
+        
         #endregion
 
         public object Clone()

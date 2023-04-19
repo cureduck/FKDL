@@ -84,7 +84,7 @@ namespace UI
         //private Dictionary<string, Skill> Lib => SkillManager.Instance.Lib;
         
         [Button]
-        public void Activate()
+        public void Activated()
         {
             GetComponent<Animator>().SetTrigger("activate");
         }

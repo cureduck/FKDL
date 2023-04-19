@@ -26,7 +26,7 @@ namespace Game
         /// </summary>
         OnHandleSkillInfo,
         /// <summary>
-        /// costInfo, skillData, fighter
+        /// costInfo, skillData, fighter, Try
         /// </summary>
         OnGetSkillCost,
         /// <summary>
@@ -42,7 +42,7 @@ namespace Game
         /// </summary>
         OnStrike,
         /// <summary>
-        /// attack, fighter, enemy
+        /// attack, fighter, enemy 注意enemy可能为空
         /// </summary>
         OnDefend,
         /// <summary>
@@ -50,7 +50,7 @@ namespace Game
         /// </summary>
         OnAttackSettle,
         /// <summary>
-        /// attack, defender, enemy
+        /// attack, defender, enemy 注意enemy可能为空
         /// </summary>
         OnDefendSettle,
         /// <summary>
@@ -142,7 +142,7 @@ namespace Game
         OnLoss,
         
         /// <summary>
-        /// fighter
+        /// fighter 获取
         /// </summary>
         OnGet,
         

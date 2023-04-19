@@ -16,6 +16,8 @@ public class CellBuffView : MonoBehaviour
     [SerializeField]
     private PointEnterAndExit pointEnterAndExit;
 
+    [SerializeField] private CanvasRenderer OutLine;
+
     private BuffData buffData;
     private void Start()
     {
@@ -49,6 +51,24 @@ public class CellBuffView : MonoBehaviour
         icon_img.sprite = buffData.Bp.Icon;
         //icon_img.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Buff, $"{IconTitle}{buffData.Id}");
         Debug.Log(buffData);
+
+        switch (buffData.Bp.BuffType)
+        {
+            case BuffType.Positive:
+                OutLine.SetColor(Color.yellow);
+                break;
+            case BuffType.Negative:
+                OutLine.SetColor(Color.red);
+                break;
+            case BuffType.Bless:
+                OutLine.SetColor(Color.black);
+                break;
+            case BuffType.Curse:
+                OutLine.SetColor(Color.cyan);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
 

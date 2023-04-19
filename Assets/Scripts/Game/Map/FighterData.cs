@@ -66,17 +66,24 @@ namespace Game
         }
 
 
-        public CostInfo GetSkillCost(SkillData skill)
+        public CostInfo GetSkillCost(SkillData skill, bool test = true)
         {
             if (skill == null) return CostInfo.Zero;
             var cost = skill.Bp.CostInfo;
-            cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[]{cost, skill, this});
+            cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[]{cost, skill, this, test});
             return cost;
         }
         
 
-        public Attack Suffer(Attack attack)
+        public Attack Suffer(Attack attack, FighterData enemy)
         {
+            attack.PDmg = math.max(0, (int)(attack.PAtk * attack.Multi) - Status.PDef);
+            attack.MDmg = math.max(0, (int)(attack.MAtk * attack.Multi) - Status.MDef);
+            attack.CDmg = (int) (attack.CAtk * attack.Multi);
+            
+            Status.CurHp -= attack.SumDmg;
+
+            Status.CurHp = math.max(0, Status.CurHp);
             return attack;
         }
         
@@ -84,7 +91,7 @@ namespace Game
 
         public Attack ForgeAttack(FighterData target, SkillData skillData = null)
         {
-            var cost = GetSkillCost(skillData);
+            var cost = GetSkillCost(skillData, false);
             
             if (skillData == null)
             {
@@ -132,11 +139,19 @@ namespace Game
             return tmp;
             //AudioPlayer.Instance.PlaySoundEffect();
         }
-
-
+        
+        
+        /// <summary>
+        /// 会走DefendSettle的伤害结算过程
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
         private Attack DefendSettle(Attack attack, FighterData target)
         {
-            return CheckChain<Attack>(Timing.OnDefendSettle, new object[] {attack, this, target});
+            var atk = CheckChain<Attack>(Timing.OnDefendSettle, new object[] {attack, this, target});
+            Suffer(atk, target);
+            return atk;
         }
         
         public void Purify(BuffData buff)
@@ -147,7 +162,7 @@ namespace Game
         
         
 
-        public CostInfo GetActualCostInfo(CostInfo costInfo, string kw = "")
+        private CostInfo GetActualCostInfo(CostInfo costInfo, string kw = "")
         {
             return CheckChain<CostInfo>(Timing.OnCost, new object[] {costInfo, this, kw});
         }
@@ -223,7 +238,7 @@ namespace Game
         
         
         
-        public  void UseSkill(SkillData skill)
+        public void UseSkill(SkillData skill)
         {
             if (GameManager.Instance.InBattle)
             {
@@ -277,11 +292,9 @@ namespace Game
 
             var rr = CheckChain<Attack>(Timing.OnDefend, new object[] {r, this, enemy});
             
-            Damaged(rr.CostInfo);
-            
             //CoolDown();
             Buffs.RemoveZeroStackBuff();
-            return r;
+            return rr;
         }
 
 
@@ -607,6 +620,8 @@ namespace Game
                 skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
                 
                 CoolDownSettle(skill);
+                var cost = GetSkillCost(skill, false);
+                Cost(cost);
                 DelayUpdate();
             }
             else
@@ -671,7 +686,7 @@ namespace Game
                 
                 //Settle(pa, Enemy);
                 if (skill != null) skill.Sealed = true;
-                
+                Cost(pa.CostInfo);
                 CoolDownSettle(skill);
                 DelayUpdate();
                 return pa;
