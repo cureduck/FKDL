@@ -18,6 +18,19 @@ namespace Game
         public int Gold;
 
 
+
+        public BattleStatus LvUp(int lv)
+        {
+            if (MaxHp > 0) MaxHp += lv;
+            if (MaxMp > 0) MaxMp += lv;
+            if (MAtk > 0) MAtk += lv;
+            if (MDef > 0) MDef += lv;
+            if (PAtk > 0) PAtk += lv;
+            if (PDef > 0) PDef += lv;
+            return this;
+        }
+        
+
         public static BattleStatus operator +(BattleStatus s1, BattleStatus s2)
         {
             return new BattleStatus
@@ -166,7 +179,11 @@ namespace Game
                 CurMp = +value
             };
         }
-        
-        
+
+
+        public override string ToString()
+        {
+            return $"({CurHp}/{MaxHp},{CurMp}/{MaxMp})";
+        }
     }
 }

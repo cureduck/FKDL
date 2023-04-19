@@ -146,13 +146,13 @@ namespace Game
         }
 
         [Effect("matkpotion", Timing.PotionEffect)]
-        public void MatkPotion(FighterData player)
+        private void MatkPotion(FighterData player)
         {
             player.Strengthen(new BattleStatus{MAtk = (int)Bp.Param1});
         }
 
         [Effect("mdefpotion", Timing.PotionEffect)]
-        public void MDef(FighterData player)
+        private void MDef(FighterData player)
         {
             player.Strengthen(new BattleStatus{MDef = (int)Bp.Param1});
         }

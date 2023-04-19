@@ -57,7 +57,12 @@ namespace Game
                 return true;
             }
         }
-        
+
+
+        public bool CooldownRandomSkill(int count = 1)
+        {
+            return false;
+        }
         
         public bool MayAffect(Timing timing, out int priority)
         {

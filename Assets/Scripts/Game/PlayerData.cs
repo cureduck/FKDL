@@ -23,6 +23,7 @@ namespace Game
         
 
         public bool Engaging;
+        public bool DrawBack;
         public Dictionary<Rank, int> Keys;
 
         public string[] profInfo;
@@ -419,11 +420,7 @@ namespace Game
         {
             return Load<PlayerData>(path);
         }
-
-        public override string ToString()
-        {
-            return "player";
-        }
+        
 
 
         private static T Load<T>(string path)
@@ -449,6 +446,12 @@ namespace Game
                 TypeNameHandling = TypeNameHandling.All
             });
             File.WriteAllText(path, f);
+        }
+
+
+        public override string ToString()
+        {
+            return "Player :" + base.ToString();
         }
     }
 }

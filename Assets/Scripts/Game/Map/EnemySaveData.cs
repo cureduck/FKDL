@@ -42,9 +42,11 @@ namespace Game
         }
 
 
-        public void Chase()
+        private void Chase()
         {
+            Player.DrawBack = true;
             ManageAttackRound();
+            Player.DrawBack = false;
         }
 
 
@@ -92,6 +94,10 @@ namespace Game
         {
             OnReact(null);
             WindowManager.Instance.Display(this);
+            
+            Debug.Log(this);
+            Debug.Log(Player);
+            
         }
 
         public override void OnLeave()
@@ -110,11 +116,6 @@ namespace Game
             var playerAttack = GameManager.Instance.PlayerData.ManageAttackRound(skill);
             Attack? enemyAttack;
             
-            if (GameManager.Instance.PlayerData.Engaging)
-            {
-                //Debug.Log($"Engaging {Bp.Id}!");
-            }
-            GameManager.Instance.PlayerData.Engaging = false;
             if (!IsAlive)
             {
                 Destroyed();
@@ -126,6 +127,8 @@ namespace Game
             }
             base.OnReact();
             InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
+            
+            GameManager.Instance.PlayerData.Engaging = false;
             DelayUpdate();
         }
 
@@ -154,7 +157,7 @@ namespace Game
 
         public override string ToString()
         {
-            return Id;
+            return Id + "|" + base.ToString();
         }
     }
 }

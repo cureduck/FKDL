@@ -69,6 +69,10 @@ namespace Game
                 return data.CurLv <= 0;
             });
         }
-        
+
+        public override string ToString()
+        {
+            return string.Join("-", this);
+        }
     }
 }

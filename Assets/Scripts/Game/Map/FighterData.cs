@@ -413,7 +413,7 @@ namespace Game
 
         public void RandomStrengthen(int v = 1)
         {
-            var r = Random.Range(0, 6);
+            var r = SecondaryData.CurGameRandom.Next(0, 6);// Random.Range(0, 6);
             switch (r)
             {
                 case 0:
@@ -740,10 +740,13 @@ namespace Game
             }
         }
         */
-        
-        
-        
-        
+
+        public override string ToString()
+        {
+            return $"status:{Status.ToString()},Buffs:{Buffs.ToString()}";
+        }
+
+
         ~FighterData()
         {
             /*if (this is EnemySaveData d)

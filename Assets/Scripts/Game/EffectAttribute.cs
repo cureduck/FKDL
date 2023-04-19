@@ -57,10 +57,10 @@ namespace Game
         /// attack, fighter, enemy
         /// </summary>
         OnKill,
-        /// <summary>
+        /*/// <summary>
         /// attack, fighter, enemy
         /// </summary>
-        OnDrawBack,
+        OnDrawBack,*/
         /// <summary>
         /// Heal Data, fighter, enemy, kw
         /// </summary>
@@ -136,11 +136,7 @@ namespace Game
         /// Cost Info, fighter, kw
         /// </summary>
         OnCost,
-        /// <summary>
-        /// battle status, fighter, kw
-        /// </summary>
-        OnLoss,
-        
+
         /// <summary>
         /// fighter 获取
         /// </summary>

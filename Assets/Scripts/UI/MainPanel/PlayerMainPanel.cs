@@ -24,7 +24,6 @@ namespace UI
                 {
                     GameDataManager.Instance.SecondaryData.Prof = new string[3] { "CUR", "BAR", "KNI" };
                 }
-                Debug.LogWarning(GameDataManager.Instance.SecondaryData.Prof.Length);
                 for (int i = 0; i < GameDataManager.Instance.SecondaryData.Prof.Length; i++)
                 {
                     Debug.Log(GameDataManager.Instance.SecondaryData.Prof[i]);

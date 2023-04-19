@@ -399,7 +399,7 @@ namespace Game
         }
         
         
-        [Effect("YRLC_ALC", Timing.SkillEffect)]
+        [Effect("XRLC_ALC", Timing.SkillEffect)]
         private void FleshTrans(FighterData fighter)
         {
             if (InBattle)
@@ -454,6 +454,21 @@ namespace Game
         }
         
         
+        [Effect("XYLC_ALC", Timing.SkillEffect)]
+        private void XYLC_ALC(FighterData player)
+        {
+            var v = (int) Bp.Param1 + (int) Bp.Param2 * CurLv;
+            if (GameManager.Instance.InBattle)
+            {
+                player.Enemy.Suffer(new Attack(cAtk: v));
+            }
+            else
+            {
+                player.Heal(BattleStatus.HP(v));
+            }
+        }
+        
+        
         [Effect("DZXY_ALC", Timing.OnDefendSettle)]
         private Attack PoisonBlood(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -466,12 +481,13 @@ namespace Game
             return attack;
         }
         
-        [Effect("ZHQX_ALC", Timing.OnDefendSettle)]
+        [Effect("ZH_ALC", Timing.OnDefendSettle)]
         private Attack SelfDestructive(Attack attack, FighterData fighter, FighterData enemy)
         {
+            var c = Bp.Param1 + Bp.Param2 * CurLv;
             if (attack.SumDmg > 0)
             {
-                if (Random.Range(0f, 1f) < .3f)
+                if (SData.CurGameRandom.NextDouble() < c)
                 {
                     fighter.RandomStrengthen();
                     Activated?.Invoke();
@@ -497,13 +513,16 @@ namespace Game
         }
         
         
-        [Effect("BS_ALC", Timing.OnStrengthen)]
-        private Attack NDE(Attack attack, FighterData fighter, FighterData enemy)
+        [Effect("BSTY_ALC", Timing.OnStrengthen)]
+        private BattleStatus NDE(BattleStatus modify, FighterData fighter)
         {
-            
-            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
-            Activated?.Invoke();
-            return attack;
+            var chance = fighter.Status.CurHp / fighter.Status.MaxHp;
+            if (SData.CurGameRandom.NextDouble() < chance)
+            {
+                modify = modify.LvUp(1);
+                Activated?.Invoke();
+            }
+            return modify;
         }
 
         [Effect("JLYJ_ALC", Timing.OnUsePotion)]
@@ -548,10 +567,15 @@ namespace Game
         [Effect("ZZFD_MAG", Timing.OnAttack, priority = -100)]
         private Attack TraceMissile(Attack attack, FighterData fighter, FighterData enemy)
         {
+            var multi = 2;
+            if (enemy.Buffs.Any((data => data.Bp.BuffType == BuffType.Negative)))
+            {
+                multi += 2;
+            }
             return new Attack
             {
                 MAtk = fighter.Status.MAtk,
-                Multi = 2,
+                Multi = multi,
                 Combo = 1,
                 Kw = "ZZFD_MAG",
             };
@@ -581,12 +605,32 @@ namespace Game
             };
         }
 
+        [Effect("AFLQ_MAG", Timing.SkillEffect)]
+        private void AFLQ_MAG(FighterData player)
+        {
+            player.CoolDown(1);
+        }
+        
+        [Effect("MDX_MAG", Timing.OnStrengthen)]
+        private BattleStatus MDX_MAG(BattleStatus modify, FighterData player)
+        {
+            if (modify.MAtk > 0)
+            {
+                modify.MDef += 1;
+                Activated?.Invoke();
+            }
+
+            return modify;
+        }
+        
+        
+
         [Effect("JZ_MAG", Timing.BeforeAttack)]
         private void Arrogance(PlayerData player, FighterData enemy)
         {
             if (player.Engaging)
             {
-                ((PlayerData)player).ApplySelfBuff(new BuffData("surging", CurLv));
+                ((PlayerData)player).ApplySelfBuff(new BuffData("Mplus", CurLv));
             }
             Activated?.Invoke();
         }
@@ -619,6 +663,40 @@ namespace Game
             return attack;
         }
 
+        [Effect("ADLF_MAG", Timing.OnAttack)]
+        private Attack ADLF_MAG(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (attack.Combo > 1)
+            {
+                attack.Combo += 1;
+                SetCooldown(Bp.Cooldown);
+                Activated?.Invoke();
+            }
+            return attack;
+        }
+
+
+        [Effect("LJZL_MAG", Timing.OnAttackSettle)]
+        private Attack LJZL_MAG(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (fighter.Skills.CooldownRandomSkill(1))
+            {
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+
+        [Effect("YLK_MAG", Timing.SkillEffect)]
+        private void YLK_MAG(FighterData player)
+        {
+            player.ApplySelfBuff(new BuffData("divinity", 1));
+            player.ApplySelfBuff(new BuffData("leakage", 3));
+            player.ApplySelfBuff(new BuffData("vigor", 1));
+        }
+        
+
         [Effect("ZHYJ_ALC", Timing.OnDefend)]
         private Attack ZHYJ_ALC(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -636,19 +714,9 @@ namespace Game
             return attack;
         }
 
-        [Effect("XYLC_ALC", Timing.SkillEffect)]
-        private void XYLC_ALC(FighterData player)
-        {
-            var v = (int) Bp.Param1 + (int) Bp.Param2 * CurLv;
-            if (GameManager.Instance.InBattle)
-            {
-                player.Enemy.Suffer(new Attack(cAtk: v));
-            }
-            else
-            {
-                player.Heal(BattleStatus.HP(v));
-            }
-        }
+
+        
+        
         
         #endregion
 
