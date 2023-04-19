@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using Csv;
 using Game;
@@ -76,8 +77,8 @@ namespace Managers
                     if (t != null)
                     {
                         Lib[t.Id] = t;
+                        Debug.Log($"{t.Id}    加载成功");
                     }
-                    Debug.Log($"{t.Id}    加载成功");
                 }
                 catch (Exception e)
                 {
@@ -90,11 +91,21 @@ namespace Managers
             Debug.Log($"-----------------------------------------{typeof(T1).Name} 加载完毕-----------------------------------------------");
         }
         
-
-
+        
+        /// <summary>
+        /// 如果是数据行则加载，如果是翻译行则跳过
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
         [CanBeNull] protected abstract T1 Line2T(ICsvLine line);
 
         private const BindingFlags Flag = (BindingFlags.NonPublic)|(BindingFlags.Instance);
+
+        protected virtual void Bind(T1 v, MethodInfo method, EffectAttribute attr)
+        {
+            v.Fs[attr.timing] = method;
+        }
+        
         
         private void FuncMatch()
         {
@@ -106,7 +117,8 @@ namespace Managers
                     
                     if (Lib.TryGetValue(attr.id.ToLower(), out  var v))
                     {
-                        v.Fs[attr.timing] = method;
+                        Bind(v, method, attr);
+                        //v.Fs[attr.timing] = method;
                     }
                     else
                     {

@@ -25,7 +25,8 @@ namespace Game
 
         public event Action<FighterData> OnLvUp;
         public event Action<FighterData> OnUnEquip;
-
+        
+        
         
         public void LvUp(FighterData fighter, int lv = 1)
         {
@@ -59,23 +60,23 @@ namespace Game
         //    Cooldown = math.max(0, Bp.Cooldown - bonus);
         //}
         
-        public bool CanCast(out Info info)
+        public bool CanCast(out Info info, bool autoBroadcast)
         {
             if (!Bp.Positive)
             {
-                info = new FailureInfo(FailureReason.SkillPassive);
+                info = new FailureInfo(FailureReason.SkillPassive, autoBroadcast);
                 return false;
             }
 
             if ((Bp.BattleOnly) && (!GameManager.Instance.InBattle))
             {
-                info = new FailureInfo(FailureReason.NoTarget);
+                info = new FailureInfo(FailureReason.NoTarget, autoBroadcast);
                 return false;
             }
 
             if (CooldownLeft > 0)
             {
-                info = new FailureInfo(FailureReason.SkillNotReady);
+                info = new FailureInfo(FailureReason.SkillNotReady, autoBroadcast);
                 return false;
             }
             info = new SuccessInfo();
@@ -95,7 +96,7 @@ namespace Game
         
         public override bool MayAffect(Timing timing, out int priority)
         {
-            if (Sealed)
+            if (Sealed && !Bp.AlwaysActiveTiming.Contains(timing))
             {
                 priority = 0;
                 return false;
@@ -517,6 +518,23 @@ namespace Game
             return potion;
         }
         
+        [Effect("TNFB_ALC", Timing.OnUsePotion, alwaysActive = true)]
+        private PotionData TNFB_ALC(PotionData potion, FighterData fighter)
+        {
+            if (CooldownLeft > 0)
+            {
+                BonusCooldown(1);
+                Activated?.Invoke();
+            }
+            return potion;
+        }
+        
+        [Effect("TNFB_ALC", Timing.SkillEffect)]
+        private void TNFB_ALC2(FighterData fighter)
+        {
+            fighter.Heal(BattleStatus.HP(10));
+        }    
+        
         
 
 
@@ -535,7 +553,7 @@ namespace Game
                 MAtk = fighter.Status.MAtk,
                 Multi = 2,
                 Combo = 1,
-                Id = "ZZFD_MAG",
+                Kw = "ZZFD_MAG",
             };
         }
         
@@ -547,7 +565,7 @@ namespace Game
                 MAtk = fighter.Status.MAtk,
                 Multi = 1,
                 Combo = (int)Bp.Param1,
-                Id = "ASFD_MAG"
+                Kw = "ASFD_MAG"
             };
         }
         
@@ -559,11 +577,11 @@ namespace Game
                 MAtk = fighter.Status.MAtk,
                 Multi = 1,
                 Combo = (int)Bp.Param1,
-                Id = "ASFD_MAG"
+                Kw = "ASFD_MAG"
             };
         }
 
-        [Effect("JZ_MAG", Timing.OnPreAttack)]
+        [Effect("JZ_MAG", Timing.BeforeAttack)]
         private void Arrogance(PlayerData player, FighterData enemy)
         {
             if (player.Engaging)
@@ -624,7 +642,7 @@ namespace Game
             var v = (int) Bp.Param1 + (int) Bp.Param2 * CurLv;
             if (GameManager.Instance.InBattle)
             {
-                player.Enemy.Suffer(new Attack(cAtk: v), player);
+                player.Enemy.Suffer(new Attack(cAtk: v));
             }
             else
             {

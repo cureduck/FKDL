@@ -44,16 +44,16 @@ namespace Game
         [JsonIgnore] public bool IsPlayer => this == GameManager.Instance.PlayerData;
         [JsonIgnore] public bool IsAlive => Status.CurHp > 0;
 
-        public Attack Defend(Attack attack, FighterData enemy)
+        private Attack Defend(Attack attack, FighterData enemy)
         {
             attack.PDmg = math.max(0, (int)(attack.PAtk * attack.Multi) - Status.PDef);
             attack.MDmg = math.max(0, (int)(attack.MAtk * attack.Multi) - Status.MDef);
             attack.CDmg = (int) (attack.CAtk * attack.Multi);
             
             attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
-            Status.CurHp -= attack.SumDmg;
+            /*Status.CurHp -= attack.SumDmg;
 
-            Status.CurHp = math.max(0, Status.CurHp);
+            Status.CurHp = math.max(0, Status.CurHp);*/
             
             DelayUpdate();
             
@@ -75,16 +75,11 @@ namespace Game
         }
         
 
-        public Attack Suffer(Attack attack, FighterData enemy)
+        public void Suffer(Attack attack)
         {
-            attack.PDmg = math.max(0, (int)(attack.PAtk * attack.Multi) - Status.PDef);
-            attack.MDmg = math.max(0, (int)(attack.MAtk * attack.Multi) - Status.MDef);
-            attack.CDmg = (int) (attack.CAtk * attack.Multi);
-            
             Status.CurHp -= attack.SumDmg;
 
             Status.CurHp = math.max(0, Status.CurHp);
-            return attack;
         }
         
 
@@ -135,6 +130,8 @@ namespace Game
             
             tmp = CheckChain<Attack>(Timing.OnAttackSettle, new object[] {attack, this, target});
             tmp = target.DefendSettle(tmp, this);
+
+            
             
             return tmp;
             //AudioPlayer.Instance.PlaySoundEffect();
@@ -147,10 +144,10 @@ namespace Game
         /// <param name="attack"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        private Attack DefendSettle(Attack attack, FighterData target)
+        public Attack DefendSettle(Attack attack, FighterData target)
         {
             var atk = CheckChain<Attack>(Timing.OnDefendSettle, new object[] {attack, this, target});
-            Suffer(atk, target);
+            Suffer(atk);
             return atk;
         }
         
@@ -230,7 +227,7 @@ namespace Game
         /// <returns></returns>
         public bool CanCast(SkillData skill, out Info info)
         {
-            skill.CanCast(out var basicInfo);
+            skill.CanCast(out var basicInfo, IsPlayer);
             info = CheckChain<Info>(Timing.OnHandleSkillInfo, new object[] {basicInfo, skill, this});
             return  (info is SuccessInfo|| info == null)&& CanAfford(GetSkillCost(skill), out info);
         }
@@ -333,14 +330,6 @@ namespace Game
             DelayUpdate();
         }
 
-        public void Damaged(CostInfo modify, string kw = null)
-        {
-            Status -= modify;
-            Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
-            Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
-            DelayUpdate();
-        }
-        
 
         public void CounterCharge(BattleStatus modify, string kw = null)
         {
@@ -657,7 +646,7 @@ namespace Game
         public Attack? ManageAttackRound(SkillData skill = null)
         {
 
-            CheckChain(Timing.OnPreAttack, new object[] {this, Enemy});
+            CheckChain(Timing.BeforeAttack, new object[] {this, Enemy});
 
             if (!IsAlive)
             {

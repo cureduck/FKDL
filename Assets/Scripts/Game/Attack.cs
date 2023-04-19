@@ -9,7 +9,7 @@ namespace Game
         public int PAtk;
         public int MAtk;
         public int CAtk;
-        public string Id;
+        public string Kw;
 
         public int PDmg;
         public int MDmg;
@@ -39,14 +39,14 @@ namespace Game
         }*/
         
         
-        public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1, string id ="", CostInfo costInfo = default)
+        public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1, string kw ="", CostInfo costInfo = default)
         {
             Combo = combo;
             Multi = multi;
             PAtk = pAtk;
             MAtk = mAtk;
             CAtk = cAtk;
-            Id = id;
+            Kw = kw;
             PDmg = 0;
             MDmg = 0;
             CDmg = 0;

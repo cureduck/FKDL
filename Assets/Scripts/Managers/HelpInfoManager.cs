@@ -9,12 +9,15 @@ namespace Managers
     {
         public Localize Helper;
 
+        private Tween dt;
+        
         public void SetTerm(string term)
         {
             Helper.gameObject.SetActive(true);
             Helper.SetTerm(term);
-
-            Helper.GetComponent<TMP_Text>().DOFade(0f, 3f)
+            Helper.GetComponent<TMP_Text>().alpha = 1f;
+            dt.Kill();
+            dt = Helper.GetComponent<TMP_Text>().DOFade(0.2f, 3f)
                 .OnComplete(() => Helper.gameObject.SetActive(false));
         }
     }

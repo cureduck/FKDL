@@ -38,5 +38,11 @@ namespace Managers
                 //Description = line[10]
             };
         }
+
+        protected override void Bind(Skill v, MethodInfo method, EffectAttribute attr)
+        {
+            if (attr.alwaysActive) v.AlwaysActiveTiming.Add(attr.timing); 
+            base.Bind(v, method, attr);
+        }
     }
 }

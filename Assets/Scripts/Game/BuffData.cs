@@ -105,10 +105,10 @@ namespace Game
         }
         
         
-        [Effect("Poison", Timing.OnPreAttack, priority = -4)]
+        [Effect("Poison", Timing.BeforeAttack, priority = -4)]
         private void Poison(FighterData f1, FighterData f2)
         {
-            f1.Defend(new Attack(mAtk: CurLv), null);
+            f1.DefendSettle(new Attack(mAtk: CurLv, kw : "poison"), null);
             CurLv -= 1;
             Activated?.Invoke();
         }
@@ -158,7 +158,7 @@ namespace Game
         {
             if (f2 == null || !f2.IsAlive) return attack;
             
-            f2.Suffer(new Attack(pAtk: CurLv), f1);
+            f2.Suffer(new Attack(pAtk: CurLv));
             CurLv -= 1;
             Activated?.Invoke();
             return attack;
@@ -205,8 +205,16 @@ namespace Game
             CurLv = 0;
             return attack;
         }
-        
-        
+
+
+        [Effect("Swift", Timing.OnSetCoolDown)]
+        private SkillData Swift(SkillData skill, FighterData fighter)
+        {
+            skill.InitCoolDown -= 1;
+            skill.BonusCooldown(1);
+            Activated?.Invoke();
+            return skill;
+        }
         #endregion
 
         public object Clone()

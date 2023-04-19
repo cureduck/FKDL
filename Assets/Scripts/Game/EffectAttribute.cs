@@ -4,18 +4,18 @@ namespace Game
 {
     public class EffectAttribute : Attribute
     {
-        public EffectAttribute(string id, Timing timing, int priority = 1, bool activated = true)
+        public EffectAttribute(string id, Timing timing, int priority = 1, bool alwaysActive = false)
         {
             this.id = id;
             this.timing = timing;
             this.priority = priority;
-            this.activated = activated;
+            this.alwaysActive = alwaysActive;
         }
 
         public string id;
         public Timing timing;
         public int priority;
-        public bool activated;
+        public bool alwaysActive;
     }
     
     
@@ -32,7 +32,7 @@ namespace Game
         /// <summary>
         /// attack, fighter, enemy
         /// </summary>
-        OnPreAttack,
+        BeforeAttack,
         /// <summary>
         /// attack, fighter, enemy
         /// </summary>
