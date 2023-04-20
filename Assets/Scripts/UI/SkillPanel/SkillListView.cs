@@ -96,4 +96,9 @@ public class SkillListView : MonoBehaviour
 
     }
 
+    private void UpgradeSkill() 
+    {
+        
+    }
+
 }

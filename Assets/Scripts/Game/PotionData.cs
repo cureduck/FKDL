@@ -53,7 +53,7 @@ namespace Game
             if (GameManager.Instance.InBattle)
             {
                 var attack = new Attack(mAtk: (int)Bp.Param1, kw: "firepotion");
-                GameManager.Instance.PlayerData.Enemy.Settle(attack, player);
+                GameManager.Instance.PlayerData.Enemy.SingleDefendSettle(attack, player);
             }
         }
         
@@ -91,7 +91,7 @@ namespace Game
             if (GameManager.Instance.InBattle)
             {
                 var attack = new Attack(mAtk: (int)Bp.Param1, kw: "firepotion");
-                GameManager.Instance.PlayerData.Enemy.Settle(attack, player);
+                GameManager.Instance.PlayerData.Enemy.SingleDefendSettle(attack, player);
             }
         }
         
@@ -124,7 +124,7 @@ namespace Game
             if (GameManager.Instance.InBattle)
             {
                 var attack = new Attack(mAtk: (int)Bp.Param1, kw: "firepotion");
-                GameManager.Instance.PlayerData.Enemy.Settle(attack, player);
+                GameManager.Instance.PlayerData.Enemy.SingleDefendSettle(attack, player);
             }
         }
         

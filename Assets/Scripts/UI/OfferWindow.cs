@@ -31,6 +31,10 @@ namespace UI
         public void Load(IEnumerable<Offer> ofs)
         {
             var offers = ofs.ToArray();
+            //foreach (var c in ofs)
+            //{
+            //    Debug.Log(c.Kind);
+            //}
             OffersUIStartAnimation[] offersUIStartAnimations = new OffersUIStartAnimation[offers.Length];
             for (int i = 0; i < offers.Length; i++)
             {

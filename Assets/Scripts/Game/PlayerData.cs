@@ -25,6 +25,13 @@ namespace Game
         public bool Engaging;
         public bool DrawBack;
         public Dictionary<Rank, int> Keys;
+        public Dictionary<Rank, int> skillPoint 
+        {
+            get 
+            {
+                return GameDataManager.Instance.SecondaryData.SkillPoint;
+            }
+        }
 
         public string[] profInfo;
 
@@ -266,6 +273,7 @@ namespace Game
                 GameDataManager.Instance.SecondaryData.SkillPoint[rank] = v;
             }
             SkillPointChanged?.Invoke();
+            
         }
 
 
@@ -287,6 +295,7 @@ namespace Game
         {
             if (index >= 0 && index < Skills.Count)
             {
+                GetSkillPoint(Skills[index].Bp.Rank);
                 Skills[index] = null;
                 SkillPointChanged?.Invoke();
                 DelayUpdate();

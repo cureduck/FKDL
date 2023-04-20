@@ -24,9 +24,9 @@ public class CellSkillView : MonoBehaviour
     private CellUIDragView cellUIDragView;
     [SerializeField]
     private CellSkillViewDragReceive dragReceive;
-    public int Index 
+    public int Index
     {
-        get 
+        get
         {
             return dragReceive.index;
         }
@@ -42,6 +42,11 @@ public class CellSkillView : MonoBehaviour
     private Color goldCost_color;
     [SerializeField]
     private Color notEnough_Color;
+    [Header("技能升级按钮")]
+    [SerializeField]
+    private GameObject levelUpObject;
+    [SerializeField]
+    private Button levelUp_btn;
     [Header("其他组件")]
     [SerializeField]
     private GameObject heightlightView;
@@ -67,9 +72,9 @@ public class CellSkillView : MonoBehaviour
     private GameObject coolDownCompleteSign;
 
     private SkillData skillData;
-    public SkillData Data 
+    public SkillData Data
     {
-        get 
+        get
         {
             return skillData;
         }
@@ -88,7 +93,7 @@ public class CellSkillView : MonoBehaviour
         cellUIDragView.onLeftClick.AddListener(SelectCurSkill);
         pointEvent.onPointEnter.AddListener(OnPointEnter);
         pointEvent.onPointExit.AddListener(OnPointExit);
-
+        levelUp_btn.onClick.AddListener(UpgradeSkill);
 
         heightlightView.SetActive(false);
         coolDownCompleteSign.gameObject.SetActive(false);
@@ -97,14 +102,23 @@ public class CellSkillView : MonoBehaviour
     }
 
     [Button]
-    public void UpdateView() 
+    public void UpdateView()
     {
         SetData(playerData, skillData, dragReceive.index, this.cellUIDragView.beginDrag, this.cellUIDragView.endDrag, dragReceive.onEndDrag);
     }
 
-    public void SetData(FighterData playerData,SkillData skillData,int index,System.Action<object> onStartDrag,System.Action<object> onEndDrag, System.Action<CellSkillView, CellSkillViewDragReceive> onEndDragComplete) 
+    public void SetData(FighterData playerData, SkillData skillData, int index, System.Action<object> onStartDrag, System.Action<object> onEndDrag, System.Action<CellSkillView, CellSkillViewDragReceive> onEndDragComplete)
     {
+        if (this.skillData != null)
+        {
+            this.skillData.Activated -= UnpositiveSkillTrigger;
+        }
         this.skillData = skillData;
+        if (this.skillData != null)
+        {
+            this.skillData.Activated += UnpositiveSkillTrigger;
+        }
+
         this.playerData = playerData;
         this.cellUIDragView.beginDrag = onStartDrag;
         this.cellUIDragView.endDrag = onEndDrag;
@@ -127,7 +141,7 @@ public class CellSkillView : MonoBehaviour
             haveSkillGroup.gameObject.SetActive(false);
             emptySkillGroup.gameObject.SetActive(true);
         }
-        else 
+        else
         {
             haveSkillGroup.gameObject.SetActive(true);
             emptySkillGroup.gameObject.SetActive(false);
@@ -135,7 +149,7 @@ public class CellSkillView : MonoBehaviour
             passtiveBG.SetActive(curSkill.Positive);
             unPasstiveBG.SetActive(!curSkill.Positive);
 
-            if (curSkill.Icon != null) 
+            if (curSkill.Icon != null)
             {
                 icon.sprite = curSkill.Icon;
             }
@@ -143,14 +157,28 @@ public class CellSkillView : MonoBehaviour
             {
                 levelInfo.text = $"<color=yellow>{skillData.CurLv}/{curSkill.MaxLv}</color>";
             }
-            else 
+            else
             {
                 levelInfo.text = $"{skillData.CurLv}/{curSkill.MaxLv}";
             }
 
             skillName.SetTerm(curSkill.Id);
+            //消耗显示
+            cost_txt.text = skillData.Bp.Positive ? skillData.Bp.CostInfo.Value.ToString() : string.Empty;
+            if (skillData.Bp.CostInfo.CostType == CostType.Gold)
+            {
+                cost_txt.color = goldCost_color;
+            }
+            else if (skillData.Bp.CostInfo.CostType == CostType.Hp)
+            {
+                cost_txt.color = healthCost_color;
+            }
+            else
+            {
+                cost_txt.color = magicCost_color;
+            }
 
-
+            //冷却显示
             if (skillData.CooldownLeft > 0)
             {
                 coldDown_txt.text = skillData.CooldownLeft.ToString();
@@ -158,22 +186,33 @@ public class CellSkillView : MonoBehaviour
                 {
                     targetPrecent = 1;
                 }
-                else 
+                else
                 {
-                    targetPrecent = skillData.CooldownLeft / (float)curSkill.Cooldown;
+                    targetPrecent = skillData.CooldownLeft / (float)skillData.InitCoolDown;
                 }
 
                 coldDown_txt.gameObject.SetActive(true);
             }
-            else 
+            else
             {
-                                    
+
                 var dt = Time.time - t0;
                 t0 = Time.time;
                 if (dt > 0) SetNextRoundSpeed(dt);
 
                 coldDown_txt.gameObject.SetActive(false);
                 targetPrecent = 0;
+            }
+            //levelUpObject
+
+            PlayerData player = playerData as PlayerData;
+            if (player != null)
+            {
+                levelUpObject.SetActive(player.skillPoint[curSkill.Rank] > 0);
+            }
+            else
+            {
+                levelUpObject.SetActive(false);
             }
 
             //skillData.onValueChange += SetData;
@@ -182,7 +221,7 @@ public class CellSkillView : MonoBehaviour
 
     }
 
-    public void SelectCurSkill() 
+    private void SelectCurSkill()
     {
         if (!canInteractive) return;
 
@@ -220,10 +259,10 @@ public class CellSkillView : MonoBehaviour
         */
         if (!curSkill.Positive)
         {
-            UnpositiveSkillTrigger();
+            //UnpositiveSkillTrigger();
 
         }
-        else 
+        else
         {
             if (curSelectSkill == this)
             {
@@ -242,6 +281,15 @@ public class CellSkillView : MonoBehaviour
 
     }
 
+    private void UpgradeSkill()
+    {
+        PlayerData temp = playerData as PlayerData;
+        if (temp != null)
+        {
+            temp.UpgradeWithPoint(skillData);
+        }
+    }
+
     private void UnpositiveSkillTrigger() 
     {
         GameObject cur = ObjectPoolManager.Instance.SpawnUnPasstiveSkillSignEffect(icon.sprite);
@@ -249,6 +297,8 @@ public class CellSkillView : MonoBehaviour
         cur.transform.localScale = Vector3.one;
         cur.transform.localPosition = Vector3.zero;
     }
+
+
     #region 鼠标交互
     private void OnPointExit()
     {

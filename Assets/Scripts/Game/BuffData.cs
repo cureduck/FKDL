@@ -108,7 +108,7 @@ namespace Game
         [Effect("Poison", Timing.BeforeAttack, priority = -4)]
         private void Poison(FighterData f1, FighterData f2)
         {
-            f1.DefendSettle(new Attack(mAtk: CurLv, kw : "poison"), null);
+            f1.SingleDefendSettle(new Attack(mAtk: CurLv, kw : "poison"), null);
             CurLv -= 1;
             Activated?.Invoke();
         }
@@ -158,7 +158,7 @@ namespace Game
         {
             if (f2 == null || !f2.IsAlive) return attack;
             
-            f2.Suffer(new Attack(pAtk: CurLv));
+            f2.SingleDefendSettle(new Attack(pAtk: CurLv), null);
             CurLv -= 1;
             Activated?.Invoke();
             return attack;
@@ -170,6 +170,16 @@ namespace Game
             attack.MAtk += CurLv;
             CurLv -= 1;
             Activated?.Invoke();
+            return attack;
+        }
+
+
+        [Effect("buffer", Timing.OnDefendSettle, priority = 1000)]
+        private Attack Buffer(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.PDmg = 0;
+            attack.PDmg = 0;
+            attack.CDmg = 0;
             return attack;
         }
 

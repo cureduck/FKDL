@@ -65,8 +65,8 @@ namespace UI
                 IdText.SetTerm(Id);
                 
                 BottleIcon.gameObject.SetActive(true);
-                
-                BottleIcon.sprite = SpriteManager.Instance.PotionBottleIcon[data.Bp.Rank];
+
+                BottleIcon.sprite = data.Bp.Icon;// SpriteManager.Instance.PotionBottleIcon[data.Bp.Rank];
                 
                 LvText.text = data.Count.ToString();
             }
@@ -77,6 +77,10 @@ namespace UI
         {
             //Debug.Log("!!!!");
             GameManager.Instance.PlayerData.UsePotion(index);
+            if (data.Count <= 0) 
+            {
+                OnPointExit();
+            }
         }
 
         public void OnPointEnter() 

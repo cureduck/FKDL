@@ -90,7 +90,14 @@ namespace Managers
         {
             GameManager.Instance.PlayerData.Gain(100);
         }
-        
+
+        public void ResetStatus()
+        {
+            Player.Heal(BattleStatus.HP(Player.Status.MaxHp));
+            Player.Heal(BattleStatus.Mp(Player.Status.MaxMp));
+        }
+
+        private static PlayerData Player => GameDataManager.Instance.PlayerData;
         
         public void Add1Atk()
         {

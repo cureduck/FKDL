@@ -117,8 +117,7 @@ namespace Game
             Attack? enemyAttack;
             
             if (!IsAlive)
-            {
-                Destroyed();
+            { 
                 enemyAttack = null;
             }
             else
@@ -127,6 +126,11 @@ namespace Game
             }
             base.OnReact();
             InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
+
+            if (!IsAlive)
+            {
+                Destroyed();
+            }
             
             GameManager.Instance.PlayerData.Engaging = false;
             DelayUpdate();

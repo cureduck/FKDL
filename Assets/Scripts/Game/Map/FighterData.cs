@@ -46,11 +46,12 @@ namespace Game
 
         private Attack Defend(Attack attack, FighterData enemy)
         {
+            attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
+
             attack.PDmg = math.max(0, (int)(attack.PAtk * attack.Multi) - Status.PDef);
             attack.MDmg = math.max(0, (int)(attack.MAtk * attack.Multi) - Status.MDef);
             attack.CDmg = (int) (attack.CAtk * attack.Multi);
             
-            attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
             /*Status.CurHp -= attack.SumDmg;
 
             Status.CurHp = math.max(0, Status.CurHp);*/
@@ -75,7 +76,7 @@ namespace Game
         }
         
 
-        public void Suffer(Attack attack)
+        private void Suffer(Attack attack)
         {
             Status.CurHp -= attack.SumDmg;
 
@@ -116,10 +117,10 @@ namespace Game
             {
                 tmp = CheckChain<Attack>(Timing.OnStrike, new object[] {tmp, this, target, i});
                 tmp = target.Defend(tmp, this);
-                Settle(tmp, Enemy);
+                //Settle(tmp, Enemy);
                 attack.Include(tmp);
                 
-                if (!Enemy.IsAlive)
+                if (Enemy.CurHp <= attack.SumDmg)
                 {
                     Kill(attack, Enemy);
                     break;
@@ -144,12 +145,21 @@ namespace Game
         /// <param name="attack"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public Attack DefendSettle(Attack attack, FighterData target)
+        private Attack DefendSettle(Attack attack, FighterData target)
         {
             var atk = CheckChain<Attack>(Timing.OnDefendSettle, new object[] {attack, this, target});
             Suffer(atk);
             return atk;
         }
+
+
+        public Attack SingleDefendSettle(Attack attack, FighterData target)
+        {
+            var atk = Defend(attack, target);
+            atk = DefendSettle(atk, target);
+            return atk;
+        }
+        
         
         public void Purify(BuffData buff)
         {
@@ -278,7 +288,7 @@ namespace Game
 
         }
 
-        /// <summary>
+        /*/// <summary>
         /// 进攻时的触发条件
         /// </summary>
         /// <param name="r"></param>
@@ -292,7 +302,7 @@ namespace Game
             //CoolDown();
             Buffs.RemoveZeroStackBuff();
             return rr;
-        }
+        }*/
 
 
         public Attack Kill(Attack r, FighterData enemy)
@@ -621,19 +631,6 @@ namespace Game
 
         }
         
-
-
-        public void CastAimingSkill(int index, FighterData enemy)
-        {
-            
-        }
-
-
-        private void SingleStrike(Attack attack, FighterData enemy)
-        {
-            
-        }
-        
         
         
         
@@ -659,9 +656,7 @@ namespace Game
                 CastNonAimingSkill(skill);
                 
                 CoolDownSettle(skill);
-                //skill.SetCooldown(skill.Bp.Cooldown);
-                //skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
-                
+
                 DelayUpdate();
                 return null;
             }

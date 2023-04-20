@@ -373,15 +373,7 @@ namespace Game
             Player.TryTakeOffer(new Offer(p), out _);
             //SetCooldown();
         }
-        
-        [Effect("YWLZ_ALC", Timing.OnSetCoolDown, priority = -100)]
-        private SkillData YWLZ_ALC(SkillData skill, FighterData fighter)
-        {
-            skill.InitCoolDown -= CurLv;
-            skill.BonusCooldown(CurLv);
-            return skill;
-        }
-        
+
 
         [Effect("JSLC_ALC", Timing.SkillEffect)]
         private void MetalTrans(FighterData fighter)
@@ -460,7 +452,7 @@ namespace Game
             var v = (int) Bp.Param1 + (int) Bp.Param2 * CurLv;
             if (GameManager.Instance.InBattle)
             {
-                player.Enemy.Suffer(new Attack(cAtk: v));
+                player.Enemy.SingleDefendSettle(new Attack(cAtk: v), null);
             }
             else
             {
@@ -472,6 +464,8 @@ namespace Game
         [Effect("DZXY_ALC", Timing.OnDefendSettle)]
         private Attack PoisonBlood(Attack attack, FighterData fighter, FighterData enemy)
         {
+            if (enemy == null) return attack;
+            
             if (attack.SumDmg > 0)
             {
                 Activated?.Invoke();

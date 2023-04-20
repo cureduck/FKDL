@@ -53,16 +53,17 @@ namespace UI
             targetButton.onClick.AddListener(OnClick);
         }
 
-        private void OnEnable()
-        {
-            UpdateData();
-        }
+        //private void OnEnable()
+        //{
+        //    UpdateData();
+        //}
 
 
 
         public void SetData(Offer offer, System.Action onClick)
         {
             this.Offer = offer;
+            //Debug.Log(offer.Kind);
             this.onClick = onClick;
             UpdateData();
         }
@@ -79,7 +80,7 @@ namespace UI
             {
                 CostLabel.text = Cost.ToString();
             }
-            
+            Debug.Log(Offer.Kind);
             switch (Offer.Kind)
             {
                 case Offer.OfferKind.Potion:
@@ -134,7 +135,7 @@ namespace UI
                 case Offer.OfferKind.NeedOnGetCheck:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException($"未知类型：{Offer.Kind}");
             }
         }
     }

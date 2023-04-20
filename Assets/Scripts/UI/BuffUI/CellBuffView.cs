@@ -38,7 +38,7 @@ public class CellBuffView : MonoBehaviour
     {
         if (buffData != null)
         {
-            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = "状态", title = buffData.Id, screenPosition = transform.position });
+            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = $"{buffData.Id}_desc", param =buffData.CurLv.ToString(), title = buffData.Id, screenPosition = transform.position });
         }
     }
 
