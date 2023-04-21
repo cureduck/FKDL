@@ -2,14 +2,19 @@
 
 namespace Managers
 {
-    public class Arena
+    public static class Arena
     {
-        public readonly PlayerData PlayerClone;
-        public readonly EnemySaveData EnemyClone;
-        public Attack? PlayerAttack;
-        public Attack? EnemyAttack;
+        private static PlayerData PlayerClone;
+        private static EnemySaveData EnemyClone;
 
-        public Arena(PlayerData player, EnemySaveData enemy)
+
+        public static FightPredictResult ArrangeFight(PlayerData player, EnemySaveData enemy, SkillData playerUsingSkill)
+        {
+            BuildArena(player, enemy);
+            return Simulate(playerUsingSkill);
+        }
+        
+        private static void BuildArena(PlayerData player, EnemySaveData enemy)
         {
             PlayerClone = (PlayerData)player.Clone();
             EnemyClone = (EnemySaveData)enemy.Clone();
@@ -19,20 +24,42 @@ namespace Managers
             EnemyClone.Cloned = true;
         }
 
-        public void Simulate(SkillData skill)
+        private static FightPredictResult Simulate(SkillData skill)
         {
-            var sk = (SkillData)skill.Clone();
-            PlayerAttack = PlayerClone.ManageAttackRound(sk);
-            if (EnemyClone.IsAlive) EnemyAttack = EnemyClone.PlanAttackRound();
-        }
+            var sk = PlayerClone.Skills.Find((data => data.Id == skill.Id));
+            
+            var PlayerAttack = PlayerClone.ManageAttackRound(sk);
 
-        public override string ToString()
-        { 
-            if (EnemyAttack != null) 
-                return $"PD:{PlayerAttack.Value}*{PlayerAttack.Value.Multi}*{PlayerAttack.Value.Combo} \n" +
-                       $" ED: {EnemyAttack.Value}*{EnemyAttack.Value.Multi}*{EnemyAttack.Value.Combo}";
-            else
-                return $"Player Dmg :{PlayerAttack.Value} Enemy Dmg: -";
+
+            var EnemyAttack = (EnemyClone.IsAlive) ? EnemyClone.PlanAttackRound() : null;
+            
+            return new FightPredictResult()
+            {
+                Player = PlayerClone,
+                Enemy = EnemyClone,
+                PlayerAttack = PlayerAttack,
+                EnemyAttack = EnemyAttack
+            };
         }
+        
+        public struct FightPredictResult
+        {
+            public PlayerData Player;
+            public EnemySaveData Enemy;
+            
+            public Attack? PlayerAttack;
+            public Attack? EnemyAttack;
+        }
+        
+
+
+            /*public override string ToString()
+            { 
+                if (EnemyAttack != null) 
+                    return $"PD:{PlayerAttack.Value}*{PlayerAttack.Value.Multi}*{PlayerAttack.Value.Combo} \n" +
+                           $" ED: {EnemyAttack.Value}*{EnemyAttack.Value.Multi}*{EnemyAttack.Value.Combo}";
+                else
+                    return $"Player Dmg :{PlayerAttack.Value} Enemy Dmg: -";
+            }*/
     }
 }

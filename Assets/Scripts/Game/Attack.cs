@@ -90,7 +90,7 @@ namespace Game
 
         public override string ToString()
         {
-            return $"({PAtk}|{MAtk}|{CAtk}),({PDmg}|{MDmg}|{CDmg})";
+            return $"({PAtk}|{MAtk}|{CAtk}) *{Multi} *{Combo} : ({PDmg}|{MDmg}|{CDmg})";
         }
     }
 }

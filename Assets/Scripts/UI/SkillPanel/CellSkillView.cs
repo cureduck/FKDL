@@ -312,8 +312,7 @@ public class CellSkillView : MonoBehaviour
         WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args { screenPosition = showDetailPoint.position, skillData = skillData });
         if (GameManager.Instance.InBattle && Data.Bp.BattleOnly)
         {
-            var arena = new Arena(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data);
-            arena.Simulate(Data);
+            var arena = Arena.ArrangeFight(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data, Data);
             WindowManager.Instance.FightPredictPanel.Open(arena);
         }
     }

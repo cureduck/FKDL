@@ -206,8 +206,7 @@ namespace Game
                     }
                     if (Skills[i].IsEmpty)
                     {
-                        Skills[i].Id = id;
-                        Skills[i].CurLv = 1;
+                        Skills[i].Load(sk);
                         //Equip(Skills[i]);
                         OnGet(Skills[i]);
                         DelayUpdate();

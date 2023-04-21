@@ -111,7 +111,7 @@ namespace Game
         {
             var playerAttack = ((PlayerData)Enemy).ManageAttackRound(skill);
 
-            if (!IsAlive) PlanAttackRound(); 
+            if (IsAlive) PlanAttackRound(); 
             
             base.OnReact();
             //InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});

@@ -25,6 +25,16 @@ namespace Game
 
         public event Action<FighterData> OnLvUp;
         public event Action<FighterData> OnUnEquip;
+
+
+        public void Load(Skill skill, int lv = 1)
+        {
+            CurLv = lv;
+            Id = skill.Id;
+            skill.Cooldown = 0;
+            Sealed = skill.BattleOnly;
+            Counter = 0;
+        }
         
         
         

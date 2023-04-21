@@ -117,10 +117,13 @@ namespace Game
         public Attack OperateAttack(FighterData target, Attack attack)
         {
             //当前连击段数
-            int i = 0;
             var tmp = attack;
-            while (attack.Combo > 0)
+
+            var j = 0;
+            
+            for (int i = 0; i < attack.Combo; i++)
             {
+                j += 1;
                 tmp = CheckChain<Attack>(Timing.OnStrike, new object[] {tmp, this, target, i});
                 tmp = target.Defend(tmp, this);
                 //Settle(tmp, Enemy);
@@ -131,10 +134,10 @@ namespace Game
                     Kill(attack, Enemy);
                     break;
                 }
-
-                i += 1;
             }
-            
+
+            attack.Combo = j;
+
             tmp = CheckChain<Attack>(Timing.OnAttackSettle, new object[] {attack, this, target});
             tmp = target.DefendSettle(tmp, this);
 

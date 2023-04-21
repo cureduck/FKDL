@@ -14,11 +14,22 @@ namespace Managers
 
         private void LateUpdate()
         {
-            foreach (var updateable in List)
+            try
             {
-                updateable.BroadCastUpdated();
+                foreach (var updateable in List)
+                {
+                    updateable.BroadCastUpdated();
+                }
             }
-            List.Clear();
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                List.Clear();
+            }
         }
 
         public HashSet<IUpdateable> List;
