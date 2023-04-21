@@ -303,12 +303,19 @@ public class CellSkillView : MonoBehaviour
     private void OnPointExit()
     {
         WindowManager.Instance.skillInfoPanel.Close();
-        
+        WindowManager.Instance.FightPredictPanel.Close();
+
     }
 
     private void OnPointEnter()
     {
         WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args { screenPosition = showDetailPoint.position, skillData = skillData });
+        if (GameManager.Instance.InBattle && Data.Bp.BattleOnly)
+        {
+            var arena = new Arena(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data);
+            arena.Simulate(Data);
+            WindowManager.Instance.FightPredictPanel.Open(arena);
+        }
     }
     #endregion
 

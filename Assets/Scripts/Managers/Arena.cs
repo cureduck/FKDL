@@ -19,10 +19,20 @@ namespace Managers
             EnemyClone.Cloned = true;
         }
 
-        public void Simulate()
+        public void Simulate(SkillData skill)
         {
-            PlayerAttack = PlayerClone.ManageAttackRound();
+            var sk = (SkillData)skill.Clone();
+            PlayerAttack = PlayerClone.ManageAttackRound(sk);
             if (EnemyClone.IsAlive) EnemyAttack = EnemyClone.PlanAttackRound();
+        }
+
+        public override string ToString()
+        { 
+            if (EnemyAttack != null) 
+                return $"PD:{PlayerAttack.Value}*{PlayerAttack.Value.Multi}*{PlayerAttack.Value.Combo} \n" +
+                       $" ED: {EnemyAttack.Value}*{EnemyAttack.Value.Multi}*{EnemyAttack.Value.Combo}";
+            else
+                return $"Player Dmg :{PlayerAttack.Value} Enemy Dmg: -";
         }
     }
 }

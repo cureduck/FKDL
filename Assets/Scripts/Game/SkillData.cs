@@ -554,7 +554,7 @@ namespace Game
         [Effect("HQ_MAG", Timing.OnAttack, priority = -100)]
         private Attack FireBall(Attack attack, FighterData fighter, FighterData enemy)
         {
-            return new Attack(0, fighter.Status.MAtk, 0, Bp.Param1, 1, "HQ_MAG");
+            return new Attack(0, fighter.Status.MAtk, 0, Usual, 1, "HQ_MAG");
         }
 
 
