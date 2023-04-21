@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class MapData : IUpdateable
+    public class MapData : IUpdateable, ICloneable
     {
         public Placement Placement;
         public SquareState SquareState = SquareState.UnRevealed;
@@ -121,6 +121,19 @@ namespace Game
         protected virtual void InformReactResult(Args obj)
         {
             ReactResultInfo?.Invoke(obj);
+        }
+
+        public object Clone()
+        {
+            var f = JsonConvert.SerializeObject(this, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+            
+            return JsonConvert.DeserializeObject(f, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
         }
     }
 

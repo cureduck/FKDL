@@ -358,7 +358,6 @@ namespace Game
         #endregion*/
 
         private bool InBattle => GameManager.Instance.InBattle;
-        private PlayerData Player => GameManager.Instance.PlayerData;
         private SecondaryData SData => GameDataManager.Instance.SecondaryData;
         
         [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
@@ -370,7 +369,7 @@ namespace Game
         private void BrewPotion(FighterData fighter)
         {
             var p = PotionManager.Instance.RollT(Rank.Normal).First();
-            Player.TryTakeOffer(new Offer(p), out _);
+            ((PlayerData)fighter).TryTakeOffer(new Offer(p), out _);
             //SetCooldown();
         }
 
@@ -466,10 +465,11 @@ namespace Game
         {
             if (enemy == null) return attack;
             
-            if (attack.SumDmg > 0)
+            if (attack.PDmg > 0)
             {
+                var v = math.min(attack.PDmg, fighter.Status.CurHp);
                 Activated?.Invoke();
-                fighter.ApplyBuff(new BuffData("poison",  (int)(CurLv * Bp.Param1* attack.PDmg)), enemy);
+                fighter.ApplyBuff(new BuffData("poison",  (int)(CurLv * Bp.Param1* v)), enemy);
             }
 
             return attack;
@@ -707,12 +707,136 @@ namespace Game
             attack.PAtk -= count;
             return attack;
         }
-
-
         
+        
+        [Effect("RDTP_ASS", Timing.OnAttack, priority = -100)]
+        private Attack RDTP_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            return new Attack(fighter.Status.PAtk, multi: Bp.Param1);
+        }
+        
+        [Effect("RDTP_ASS", Timing.OnStrike, alwaysActive = true)]
+        private Attack RDTP_ASS2(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            BonusCooldown(1);
+            return attack;
+        }
+        
+        [Effect("CD_ASS", Timing.OnStrike)]
+        private Attack CD_ASS2(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.ApplyBuff(new BuffData("poison", (int)Bp.Param1 * CurLv), enemy);
+            return attack;
+        }
+        
+        [Effect("XJ_ASS", Timing.OnAttack, priority = -100)]
+        private Attack XJ_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            var multi = ((PlayerData) fighter).Engaging ? Bp.Param1 * CurLv + Bp.Param1 : Bp.Param1;
+
+            return new Attack(fighter.Status.PAtk, multi: multi);
+        }
+        
+        [Effect("CJBY_ASS", Timing.OnAttack, priority = -100)]
+        private Attack CJBY_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            var multi = Bp.Param1 + Bp.Param1 * CurLv;
+
+            return new Attack(fighter.Status.PAtk, multi: multi);
+        }
+        
+                
+        [Effect("CJBY_ASS", Timing.OnKill, priority = 100)]
+        private Attack CJBY2_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            var overKill = attack.PDmg + attack.MDmg + attack.CDmg - enemy.Status.CurHp;
+            if (overKill > 0)
+            {
+                fighter.Gain(overKill);
+                Activated?.Invoke();
+            }
+            return attack;
+        }
+        
+        [Effect("DMJJ_ASS", Timing.OnAttack, priority = -100)]
+        private Attack DMJJ2_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+
+            return new Attack(fighter.Status.PAtk, combo: (int) Usual);
+        }
+        
+        
+        
+        
+        [Effect("DMJJ_ASS", Timing.OnKill, priority = 100)]
+        private Attack CMJJ_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            Counter += 1;
+            if (Counter >= 7)
+            {
+                Counter = 0;
+                CurLv += 1;
+            }
+            Activated?.Invoke();
+            return attack;
+        }
+        
+
+        [Effect("ST_ASS", Timing.OnAttack, priority = -100)]
+        private Attack ST_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (((PlayerData)fighter).Engaging)
+            {
+                var g = enemy.Status.Gold * (Bp.Param1 + Bp.Param2 * CurLv);
+                fighter.Gain((int)g);
+                enemy.Gain(-(int)g);
+            }
+            return attack;
+        }
+        
+        
+        
+        [Effect("SQRH_ASS", Timing.OnCost, priority = -100)]
+        private CostInfo QSRH_ASS(CostInfo cost, FighterData player, string kw)
+        {
+            if (cost.CostType == CostType.Gold)
+            {
+                cost.Value -= (int)(CurLv * Bp.Param1);
+                Activated?.Invoke();
+            }
+            return cost;
+        }
+        
+        [Effect("TL_ASS", Timing.OnGain, priority = 100)]
+        private int TL_ASS(int coin, FighterData fighter, string kw)
+        {
+            fighter.ApplySelfBuff(new BuffData("pplus", (int)Usual));
+            Activated?.Invoke();
+            return coin;
+        }
+        
+        [Effect("GHXS_ASS", Timing.OnKill, priority = 100)]
+        private Attack GHXS_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.Gain((int)Usual);
+            Activated?.Invoke();
+            return attack;
+        }
+        
+        [Effect("YN_ASS", Timing.OnAttack, priority = -10000)]
+        private Attack YN_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (SData.CurGameRandom.NextDouble() < Usual)
+            {
+                ((PlayerData)fighter).Engaging = true;
+            }
+            return attack;
+        }
         
         
         #endregion
+
+        private float Usual => Bp.Param1 + Bp.Param2 * CurLv;
 
     }
 }

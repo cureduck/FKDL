@@ -49,8 +49,11 @@ public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandl
         if (!haveInit) return;
         if (!enableDrag) return;
         beginDrag?.Invoke(data);
+        clickSpaceTime = 0;
         //Debug.Log(dragParent.name);
+        Vector2 curPosition = transform.position;
         transform.SetParent(dragParent, false);
+        transform.position = curPosition;
         transform.GetComponent<Image>().raycastTarget = false;
         OnBeginDragEvent();
     }
@@ -58,7 +61,13 @@ public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandl
     public void OnDrag(PointerEventData eventData)
     {
         if (!enableDrag) return;
-        transform.position = Input.mousePosition;//(Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        clickSpaceTime += Time.deltaTime;
+        if (clickSpaceTime >= 0.2f)
+        {
+            transform.position = Input.mousePosition;
+
+        }
+        //(Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     void Update() 
@@ -114,7 +123,7 @@ public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandl
     {
         isPointDown = false;
         if (!haveInit) return;
-        if (clickSpaceTime <= 0.1f)
+        if (clickSpaceTime <= 0.2f)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {

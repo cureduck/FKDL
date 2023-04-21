@@ -25,18 +25,15 @@ namespace Game
         public bool Engaging;
         public bool DrawBack;
         public Dictionary<Rank, int> Keys;
-        public Dictionary<Rank, int> skillPoint 
-        {
-            get 
-            {
-                return GameDataManager.Instance.SecondaryData.SkillPoint;
-            }
-        }
+        public Dictionary<Rank, int> skillPoint => GameDataManager.Instance.SecondaryData.SkillPoint;
 
         public string[] profInfo;
 
-        [JsonIgnore] public override FighterData Enemy => (EnemySaveData) GameManager.Instance.Focus.Data;
+        [JsonIgnore] public override FighterData Enemy => enemy ?? (EnemySaveData) GameManager.Instance.Focus.Data;
 
+        [JsonIgnore] public FighterData enemy;
+        
+        
         public void March(string destination)
         {
             Debug.Log($"destination {destination}");

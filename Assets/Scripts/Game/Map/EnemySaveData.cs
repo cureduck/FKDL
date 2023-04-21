@@ -14,8 +14,9 @@ namespace Game
         public string Id;
 
 
-        [JsonIgnore] public override FighterData Enemy => GameManager.Instance.PlayerData;
-        
+        [JsonIgnore] public override FighterData Enemy => enemy ?? GameManager.Instance.PlayerData;
+
+        [JsonIgnore] public FighterData enemy;
         public EnemySaveData(string id) : base()
         {
             Id = id;
@@ -46,7 +47,7 @@ namespace Game
         {
             Player.DrawBack = true;
             ManageAttackRound();
-            Player.DrawBack = false;
+            ((PlayerData)Enemy).DrawBack = false;
         }
 
 
@@ -93,11 +94,6 @@ namespace Game
         public override void OnReact()
         {
             OnReact(null);
-            WindowManager.Instance.Display(this);
-            
-            Debug.Log(this);
-            Debug.Log(Player);
-            
         }
 
         public override void OnLeave()
@@ -113,34 +109,26 @@ namespace Game
 
         public void OnReact(SkillData skill)
         {
-            var playerAttack = GameManager.Instance.PlayerData.ManageAttackRound(skill);
-            Attack? enemyAttack;
+            var playerAttack = ((PlayerData)Enemy).ManageAttackRound(skill);
+
+            if (!IsAlive) PlanAttackRound(); 
             
-            if (!IsAlive)
-            { 
-                enemyAttack = null;
-            }
-            else
-            {
-                enemyAttack = PlanAttackRound();
-            }
             base.OnReact();
-            InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
+            //InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
 
             if (!IsAlive)
             {
                 Destroyed();
             }
             
-            GameManager.Instance.PlayerData.Engaging = false;
+            ((PlayerData)Enemy).Engaging = false;
             DelayUpdate();
         }
 
         protected override void Destroyed()
         {
-            GameManager.Instance.PlayerData.Gain(Gold, "trophy");
+            Enemy.Gain(Gold, "trophy");
             
-            UI.EnemyPanel.Instance.gameObject.SetActive(false);
             base.Destroyed();
         }
 

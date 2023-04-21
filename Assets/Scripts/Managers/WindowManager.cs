@@ -16,6 +16,7 @@ namespace Managers
         public GameObject CheatWindow;
         public EnemyPanel EnemyPanel;
         public ConfirmPanel confirmPanel;
+        public FightPredictPanel FightPredictPanel;
         
 
         public SkillInfoPanel skillInfoPanel;

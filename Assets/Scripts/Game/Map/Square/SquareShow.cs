@@ -10,8 +10,14 @@ namespace Game
         
         private void OnSquareDestroy()
         {
+            if (Data is EnemySaveData)
+            {
+                UI.EnemyPanel.Instance.gameObject.SetActive(false);
+            }
+            
             if ((Data is EnemySaveData ee)&&(ee.Bp.Rank == Rank.Rare))
             {
+                
                 WindowManager.Instance.CrystalPanel.Open(new CrystalPanel.Args()
                 {
                     crystal = CrystalManager.Instance.Lib["boss"],
@@ -69,6 +75,7 @@ namespace Game
 
         private void OnReactEnemy(EnemySaveData d)
         {
+            WindowManager.Instance.Display(d);
 
             EnemyBp enemyBp = d.Bp;
             if (enemyBp != null && enemyBp.Rank >= Rank.Rare)
@@ -98,6 +105,39 @@ namespace Game
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+
+        private void HandleEnemyArgs(EnemyArgs args0)
+        {
+            GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
+            curEffectObject.transform.position = Icon.transform.position;
+            AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
+            Attack result = args0.PlayerAttack.GetValueOrDefault();
+            //GameObject temp = ObjectPoolManager.Instance.SpawnDamageSignEffect(10, 0);
+            float range = 0.5f;
+            //temp.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
+            //Debug.Log(result);
+            if (result.PDmg > 0) 
+            {
+                GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.PDmg, 0);
+                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
+            }
+
+            if (result.MDmg > 0)
+            {
+                GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.MDmg, 1);
+                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
+            }
+
+            if (result.CDmg > 0)
+            {
+                GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.CDmg, 2);
+                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
+            }
+        }
+        
+        
+        
         
         
         public void HandleReactResultArgs(Args args)
@@ -105,32 +145,7 @@ namespace Game
             switch (args)
             {
                 case EnemyArgs args0:
-                    GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
-                    curEffectObject.transform.position = Icon.transform.position;
-                    AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
-                    Attack result = args0.PlayerAttack.GetValueOrDefault();
-                    //GameObject temp = ObjectPoolManager.Instance.SpawnDamageSignEffect(10, 0);
-                    float range = 0.5f;
-                    //temp.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
-                    //Debug.Log(result);
-                    if (result.PDmg > 0) 
-                    {
-                        GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.PDmg, 0);
-                        cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
-                    }
-
-                    if (result.MDmg > 0)
-                    {
-                        GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.MDmg, 1);
-                        cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
-                    }
-
-                    if (result.CDmg > 0)
-                    {
-                        GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.CDmg, 2);
-                        cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
-                    }
-
+                    HandleEnemyArgs(args0);
                     break;
                 case CasinoArgs args1:
                     PlaySoundEffect(args1.Win? "casino_win" : "casino_lose");

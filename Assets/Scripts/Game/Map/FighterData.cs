@@ -31,7 +31,8 @@ namespace Game
         [ShowInInspector] public BuffAgent Buffs;
 
         public abstract FighterData Enemy { get; }
-
+        [JsonIgnore] public bool Cloned = false;
+        
         [JsonIgnore] public int CurHp => Status.CurHp;
         
         public int Shield;
@@ -41,7 +42,7 @@ namespace Game
             return new Attack(Status.PAtk, costInfo : costInfo); //{Skill = skill};
         }
 
-        [JsonIgnore] public bool IsPlayer => this == GameManager.Instance.PlayerData;
+        [JsonIgnore] public bool IsPlayer => this is PlayerData;
         [JsonIgnore] public bool IsAlive => Status.CurHp > 0;
 
         private Attack Defend(Attack attack, FighterData enemy)
@@ -51,6 +52,11 @@ namespace Game
             attack.PDmg = math.max(0, (int)(attack.PAtk * attack.Multi) - Status.PDef);
             attack.MDmg = math.max(0, (int)(attack.MAtk * attack.Multi) - Status.MDef);
             attack.CDmg = (int) (attack.CAtk * attack.Multi);
+
+            if (!IsPlayer && !Cloned)
+            {
+                InformReactResult(new EnemyArgs{PlayerAttack = attack});
+            }
             
             /*Status.CurHp -= attack.SumDmg;
 
