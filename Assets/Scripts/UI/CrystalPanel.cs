@@ -9,14 +9,9 @@ using CH.ObjectPool;
 
 namespace UI
 {
-    public class CrystalPanel : BasePanel<CrystalPanel.Args>
+    public class CrystalPanel : BasePanel<(PlayerData player, Crystal crystal)>
     {
-        public class Args
-        {
-            public PlayerData playerData;
-            public Crystal crystal;
-        }
-        
+
         [SerializeField]
         private Localize describe;
         [SerializeField]
@@ -41,7 +36,7 @@ namespace UI
 
         private void OnSet(CellCrystalOptionView cellCrystalOptionView, Crystal.Option data) 
         {
-            cellCrystalOptionView.SetData(Data.playerData, Data.crystal.Id, data, CellOptionClick);
+            cellCrystalOptionView.SetData(Data.player, Data.crystal.Id, data, CellOptionClick);
         }
 
         private void CellOptionClick(PlayerData playerData, Crystal.Option option) 

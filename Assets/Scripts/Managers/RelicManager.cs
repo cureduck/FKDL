@@ -25,9 +25,14 @@ namespace Managers
         {
             bool usedUp = bool.TryParse(line["usedup"], out var uu) && uu;
             bool useCounter = bool.TryParse(line["usecounter"], out var us) && us;
+            float param = float.TryParse(line["param"], out var up)? up : 0f;
 
-            
-            return new Relic((Rank) int.Parse(line["rank"]),line["id"].ToLower(), usedUp, useCounter);
+            return new Relic((Rank) int.Parse(line["rank"]),line["id"].ToLower(), param, usedUp, useCounter);
+        }
+
+        protected override Relic CreateTest(string id, MethodInfo method, EffectAttribute attr)
+        {
+            return new Relic(Rank.Normal, id, 1f, true, true);
         }
 
         protected override IEnumerable<Relic> GetCandidates(Rank rank)

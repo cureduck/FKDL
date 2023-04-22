@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using Managers;
+using Tools;
+using Random = UnityEngine.Random;
 
 namespace Game
 {
@@ -26,6 +29,12 @@ namespace Game
         {
             
         }
+
+        public IEnumerable<SkillData> ActiveSkills()
+        {
+            return this.Where((data => (data != null && !data.IsEmpty && data.Bp != null)));
+        }
+        
 
         public void AddSkillSlot(int count)
         {

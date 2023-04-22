@@ -26,5 +26,10 @@ namespace Managers
                 Param1 = float.Parse(line["P1"]),
             };
         }
+
+        protected override Potion CreateTest(string id, MethodInfo method, EffectAttribute attr)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

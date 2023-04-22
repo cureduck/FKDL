@@ -23,5 +23,10 @@ namespace Managers
             var buff = new Buff(id, Rank.Normal, stackable, icon, buffType, oppositeId);
             return buff;
         }
+
+        protected override Buff CreateTest(string id, MethodInfo method, EffectAttribute attr)
+        {
+            return new Buff(id, Rank.Normal, true, null, BuffType.Positive, null);
+        }
     }
 }

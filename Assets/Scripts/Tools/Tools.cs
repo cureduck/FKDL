@@ -19,12 +19,20 @@ namespace Tools
             return s;
         }
         
-        public static T ChooseRandom<T>(IList<T> list, Random random)
+        public static T ChooseRandom<T>(this IList<T> list, Random random) where T : class
         {
-            return ChooseRandom<T>(1, list, random)[0];
+            var L = ChooseRandom<T>(1, list, random);
+            if (L.Length > 0)
+            {
+                return L[0];
+            }
+            else
+            {
+                return null;
+            }
         }
-        
-        
+
+
         public static T RandomElementByWeight<T>(this IEnumerable<T> sequence, Func<T, float> weightSelector, Random random) {
             float totalWeight = sequence.Sum(weightSelector);
             // The weight we are after...

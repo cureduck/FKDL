@@ -44,5 +44,13 @@ namespace Managers
             if (attr.alwaysActive) v.AlwaysActiveTiming.Add(attr.timing); 
             base.Bind(v, method, attr);
         }
+
+
+#if UNITY_EDITOR
+        protected override Skill CreateTest(string id, MethodInfo method, EffectAttribute attr)
+        {
+            return new Skill(Rank.Normal, id);
+        }
+#endif
     }
 }

@@ -105,6 +105,9 @@ namespace Managers
         {
             v.Fs[attr.timing] = method;
         }
+
+
+        protected abstract T1 CreateTest(string id, MethodInfo method, EffectAttribute attr);
         
         
         private void FuncMatch()
@@ -123,6 +126,8 @@ namespace Managers
                     else
                     {
 #if UNITY_EDITOR
+                        Lib[attr.id] = CreateTest(attr.id, method, attr);
+                        Debug.LogWarning($"test {typeof(T1).Name} {attr.id} Loaded");
                         /*var t = new T1 { Id = attr.id};
                         t.Fs[attr.timing] = method;
                         Lib[attr.id.ToLower()] = t;*/

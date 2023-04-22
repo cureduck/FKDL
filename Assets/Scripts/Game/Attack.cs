@@ -83,7 +83,6 @@ namespace Game
             this.PDmg += subAttack.PDmg;
             this.MDmg += subAttack.MDmg;
             this.CDmg += subAttack.CDmg;
-            this.Combo -= 1;
         }
         
         

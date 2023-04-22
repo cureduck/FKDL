@@ -18,11 +18,11 @@ namespace Game
             if ((Data is EnemySaveData ee)&&(ee.Bp.Rank == Rank.Rare))
             {
                 
-                WindowManager.Instance.CrystalPanel.Open(new CrystalPanel.Args()
-                {
-                    crystal = CrystalManager.Instance.Lib["boss"],
-                    playerData = GameManager.Instance.PlayerData
-                });
+                WindowManager.Instance.CrystalPanel.Open(
+                (
+                    GameManager.Instance.PlayerData,
+                    CrystalManager.Instance.Lib["boss"]
+                ));
             }
             
             try
@@ -63,10 +63,9 @@ namespace Game
                     AudioPlayer.Instance.Play(AudioPlayer.AudioCrystal);
 
                     var panel = WindowManager.Instance.CrystalPanel;
-                    WindowManager.Instance.CrystalPanel.Open(new CrystalPanel.Args
-                    {
-                        crystal = CrystalManager.Instance.Lib[crystalPanel.Id], playerData = GameManager.Instance.PlayerData
-                    });
+                    WindowManager.Instance.CrystalPanel.Open(
+                        (GameManager.Instance.PlayerData, CrystalManager.Instance.Lib[crystalPanel.Id])
+                    );
                     panel.gameObject.SetActive(true);
                     
                     break;;

@@ -396,6 +396,9 @@ namespace Game
                             }
                             break;
                         case "jump":
+                            var jid = cmd.Split(':')[1].ToLower();
+                            var cc = CrystalManager.Instance.Lib[jid];
+                            WindowManager.Instance.CrystalPanel.Open((this, cc));
                             break;
                         case "potion":
                             var es = cmd.Split(':');

@@ -513,6 +513,7 @@ namespace Game
             foreach (var sk in tmp)
             {
                 origin = sk.Affect<T>(timing, param);
+                param[0] = origin;
             }
             return origin;
         }
@@ -656,6 +657,7 @@ namespace Game
 
             if (!IsAlive)
             {
+                CoolDownSettle(null);
                 return null;
             }
             

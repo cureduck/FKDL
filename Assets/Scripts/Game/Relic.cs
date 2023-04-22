@@ -10,9 +10,11 @@ namespace Game
     {
         public bool UsedUp;
         public bool UseCounter;
+        public float Param1;
 
-        public Relic(Rank rank, string id, bool usedUp, bool useCounter) : base(rank, id)
+        public Relic(Rank rank, string id, float param, bool usedUp, bool useCounter) : base(rank, id)
         {
+            Param1 = param;
             UsedUp = usedUp;
             UseCounter = useCounter;
         }
