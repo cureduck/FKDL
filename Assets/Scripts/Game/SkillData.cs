@@ -532,7 +532,7 @@ namespace Game
         [Effect("JLYJ_ALC", Timing.OnUsePotion)]
         private PotionData RefiningElixir(PotionData potion, FighterData fighter)
         {
-            if (Random.Range(0, 1f) < SData.LuckyChance * Bp.Param1)
+            if (Random.Range(0, 1f) < ((PlayerData)fighter).LuckyChance * Bp.Param1)
             {
                 ((PlayerData) fighter).TryTakePotion(potion.Id, out _);
                 Activated?.Invoke();

@@ -33,12 +33,14 @@ namespace Managers
         protected override IEnumerable<Relic> GetCandidates(Rank rank)
         {
             var banList = GetBanList();
-            return base.GetCandidates(rank).Where(relic => !banList.Contains(relic.Id));
+            var chosen = base.GetCandidates(rank).Where(relic => !banList.Contains(relic.Id)).ToArray();
+            banList.AddRange(chosen.Select(relic => relic.Id));
+            return chosen;
         }
 
-        private IEnumerable<string> GetBanList()
+        private List<string> GetBanList()
         {
-            throw new NotImplementedException();
+            return GameDataManager.Instance.SecondaryData.DiscoveredRelics;
         }
     }
 }

@@ -27,11 +27,10 @@ namespace Game
         public Random RelicRandom;
         public Random PotionRandom;
 
-        public List<string> DiscoveredRelics;
+        public readonly List<string> DiscoveredRelics;
 
-        public float LuckyChance;
-        public float UnluckyChance;
 
+        [JsonConstructor]
         public SecondaryData()
         {
             SkillPoint = new Dictionary<Rank, int>
@@ -40,10 +39,7 @@ namespace Game
                 [Rank.Uncommon] = 0,
                 [Rank.Rare] = 0
             };
-
-            LuckyChance = .5f;
-            UnluckyChance = .2f;
-
+            
             DiscoveredRelics = new List<string>();
         }
 

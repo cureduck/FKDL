@@ -1,4 +1,5 @@
-﻿using Game;
+﻿using System.Collections.Generic;
+using Game;
 
 namespace Managers
 {
@@ -6,7 +7,7 @@ namespace Managers
     {
         private static PlayerData PlayerClone;
         private static EnemySaveData EnemyClone;
-
+        
 
         public static FightPredictResult ArrangeFight(PlayerData player, EnemySaveData enemy, SkillData playerUsingSkill)
         {
@@ -41,7 +42,7 @@ namespace Managers
                 EnemyAttack = EnemyAttack
             };
         }
-        
+
         public struct FightPredictResult
         {
             public PlayerData Player;

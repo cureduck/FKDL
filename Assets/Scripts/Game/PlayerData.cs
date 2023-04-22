@@ -20,8 +20,10 @@ namespace Game
         public string Id;
         public PotionData[] Potions;
         public RelicAgent Relics;
-        
 
+
+        public float LuckyChance;
+        
         public bool Engaging;
         public bool DrawBack;
         public Dictionary<Rank, int> Keys;
@@ -306,7 +308,7 @@ namespace Game
         }
         
         
-        
+        [Button]
         public void Execute(string cmds)
         {
             foreach (var cmd in cmds.Replace(" ","").Split('|'))
@@ -332,6 +334,19 @@ namespace Game
                             GameManager.Instance.RollForSkill(r);
                             break;
                         case "relic":
+                            var esr = cmd.Split(':');
+                            var idr = esr[1];
+                            if (idr.EndsWith("/random"))
+                            {
+                                var rr = (Rank) int.Parse(idr[0].ToString());
+                                idr = RelicManager.Instance.RollT(rr)[0].Id;
+                                TryTakeRelic(idr, out _);
+                            }
+                            else
+                            {
+                                var rr = (Rank) int.Parse(idr[0].ToString());
+                                GameManager.Instance.RollForRelic(rr);
+                            }
                             break;
                         case "attr":
                             var type = cmd.Split(':')[1].ToLower();
@@ -385,6 +400,11 @@ namespace Game
                         case "potion":
                             var es = cmd.Split(':');
                             var id = es[1];
+                            if (id.EndsWith("/random"))
+                            {
+                                var rr = (Rank) int.Parse(id[0].ToString());
+                                id = PotionManager.Instance.RollT(rr)[0].Id;
+                            }
                             var c = es.Length > 1 ? int.Parse(es[2]) : 1;
                             for (int i = 0; i < c; i++)
                             {

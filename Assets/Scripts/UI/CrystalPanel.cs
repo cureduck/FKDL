@@ -1,4 +1,5 @@
-﻿using I2.Loc;
+﻿using System;
+using I2.Loc;
 using Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace UI
             public PlayerData playerData;
             public Crystal crystal;
         }
-
+        
         [SerializeField]
         private Localize describe;
         [SerializeField]

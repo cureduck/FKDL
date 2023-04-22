@@ -91,14 +91,23 @@ namespace Managers
         
         public void RollForSkill(Rank rank)
         {
-            var skills = SkillManager.Instance.RollT(rank, 3);
+            var skills = SkillManager.Instance.GenerateT(rank, PlayerData.LuckyChance, 3);
 
             var offers = skills.Select((s => new Offer(s)));
             
             WindowManager.Instance.OffersWindow.Load(offers);
         }
         
+        public void RollForRelic(Rank rank)
+        {
+            var skills = RelicManager.Instance.GenerateT(rank, PlayerData.LuckyChance, 3);
 
+            var offers = skills.Select((s => new Offer(s)));
+            
+            WindowManager.Instance.OffersWindow.Load(offers);
+        }
+        
+        
 
         [Button]
         public void LoadFromSave()

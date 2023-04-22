@@ -127,6 +127,8 @@ namespace UI
                     Id.SetTerm(Offer.Cost.ActualValue.ToString());
                     break;
                 case Offer.OfferKind.Relic:
+                    Id.SetTerm(Offer.Id);
+                    Description?.SetTerm($"{Offer.Id}_desc");
                     break;
                 case Offer.OfferKind.Key:
                     break;

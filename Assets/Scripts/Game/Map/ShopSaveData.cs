@@ -41,12 +41,12 @@ namespace Game
         [Button]
         private ShopGoods GenerateGoods()
         {
-            var skillGoods = SkillManager.Instance.GenerateT(Rank.Normal, SecondaryData.LuckyChance, SkillNum)
+            var skillGoods = SkillManager.Instance.GenerateT(Rank.Normal, Player.LuckyChance, SkillNum)
                 .Select((good => 
                     new Offer(good, GetPrice(good))))
                 .ToArray();
             
-            var potionGoods = PotionManager.Instance.GenerateT(Rank.Normal, SecondaryData.LuckyChance, PotionNum)
+            var potionGoods = PotionManager.Instance.GenerateT(Rank.Normal, Player.LuckyChance, PotionNum)
                 .Select((good => new Offer(good, GetPrice(good))))
                 .ToArray();
             

@@ -31,7 +31,7 @@ namespace Game
             if (Player.CurHp >= Cost)
             {
                 Player.Cost(new CostInfo(_cost[Rank], CostType.Mp));
-                if (SecondaryData.CurGameRandom.NextDouble() < SecondaryData.LuckyChance)
+                if (SecondaryData.CurGameRandom.NextDouble() < Player.LuckyChance)
                 {
                     
                     var skills = SkillManager.Instance.RollT(Rank, 3);
