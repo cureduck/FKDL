@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Game
 {
@@ -84,8 +85,14 @@ namespace Game
             this.MDmg += subAttack.MDmg;
             this.CDmg += subAttack.CDmg;
         }
-        
-        
+
+        public void DeConstruct(out int PDmg, out int MDmg, out int CDmg, out int SDmg)
+        {
+            PDmg = this.PDmg;
+            MDmg = this.MDmg;
+            CDmg = this.CDmg;
+            SDmg = this.SumDmg;
+        }
 
         public override string ToString()
         {

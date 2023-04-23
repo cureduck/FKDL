@@ -836,10 +836,15 @@ namespace Game
         [Effect("YN_ASS", Timing.OnAttack, priority = -10000)]
         private Attack YN_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
-            if (SData.CurGameRandom.NextDouble() < Usual)
+            Counter += 1;
+            if (Counter >= Bp.Param1 - CurLv && !((PlayerData)fighter).Engaging)
             {
-                ((PlayerData)fighter).Engaging = true;
+                Counter = 0;
+                ((PlayerData) fighter).Engaging = true;
+                Debug.Log("YN!");
+                Activated?.Invoke();
             }
+            
             return attack;
         }
         

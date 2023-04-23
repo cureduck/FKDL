@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using Cysharp.Threading.Tasks;
 using Game;
+using I2.Loc;
 using Sirenix.OdinInspector;
 using Tools;
 using UnityEngine;
@@ -33,6 +35,16 @@ namespace Managers
             get => GameDataManager.Instance.SecondaryData;
             private set => GameDataManager.Instance.SecondaryData = value;
         }
+
+
+        public void GetLocalization()
+        {
+            var f = File.ReadAllText("Assets/PythonScripts/relics_loc.csv");
+            LocalizationManager.Sources[0].Import_CSV("", f);
+            f = File.ReadAllText("Assets/PythonScripts/skills_loc.csv");
+            LocalizationManager.Sources[0].Import_CSV("", f);
+        }
+        
         
         public Square Prefab;
 
@@ -61,6 +73,7 @@ namespace Managers
         
         private void Start()
         {
+            GetLocalization();
             _pool = new ObjectPool<Square>(CreateSquare);
 
             if (Application.isPlaying)

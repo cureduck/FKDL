@@ -40,4 +40,20 @@ namespace Tools
         }
         
     }
+
+
+    public static class DictionaryExtend
+    {
+        public static TValue RandomGet<TKey, TValue>(this Dictionary<TKey, TValue> dict, Random random)
+        {
+            return dict.Values.ChooseRandom(random);
+        }
+
+        public static int RankLevels<TKey, TValue>(this Dictionary<TKey, TValue> dict) where TValue : IRank
+        {
+            return dict.Values.GroupBy((rank => rank.Rank)).Count();
+        }
+        
+    }
+    
 }

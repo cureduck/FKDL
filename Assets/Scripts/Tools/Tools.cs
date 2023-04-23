@@ -31,6 +31,13 @@ namespace Tools
                 return null;
             }
         }
+        
+        public static T ChooseRandom<T>(this IEnumerable<T> list, Random random)
+        {
+            var index = random.Next(0, list.Count());
+            return list.ElementAt(index);
+        }
+
 
 
         public static T RandomElementByWeight<T>(this IEnumerable<T> sequence, Func<T, float> weightSelector, Random random) {
