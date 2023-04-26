@@ -726,14 +726,14 @@ namespace Game
         }
         
         [Effect("RDTP_ASS", Timing.OnStrike, alwaysActive = true)]
-        private Attack RDTP_ASS2(Attack attack, FighterData fighter, FighterData enemy)
+        private Attack RDTP_ASS2(Attack attack, FighterData fighter, FighterData enemy, int time)
         {
             BonusCooldown(1);
             return attack;
         }
         
         [Effect("CD_ASS", Timing.OnStrike)]
-        private Attack CD_ASS2(Attack attack, FighterData fighter, FighterData enemy)
+        private Attack CD_ASS2(Attack attack, FighterData fighter, FighterData enemy, int time)
         {
             fighter.ApplyBuff(new BuffData("poison", (int)Bp.Param1 * CurLv), enemy);
             return attack;
@@ -846,6 +846,19 @@ namespace Game
             }
             
             return attack;
+        }
+        
+        
+        [Effect("test1_com", Timing.OnAttack, priority = -10000)]
+        private Attack test1_com(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            return new Attack(pAtk : fighter.Status.PAtk, combo: 3);
+        }
+        
+        [Effect("test2_com", Timing.OnAttack, priority = -10000)]
+        private Attack test2_com(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            return new Attack(pAtk : fighter.Status.PAtk, mAtk: fighter.Status.MAtk, cAtk: 10, combo: 3);
         }
         
         

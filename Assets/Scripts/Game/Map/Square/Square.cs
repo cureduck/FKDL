@@ -62,7 +62,11 @@ namespace Game
 
         public void Reload(MapData mapData)
         {
+            _sequence.Kill();
+            _breath.Kill();
+            Mask.gameObject.SetActive(true);
             gameObject.SetActive(true);
+            Id.gameObject.SetActive(true);
             UnbindCurrent();
             Data = mapData;
             SetSize(Data.Placement);
@@ -478,7 +482,7 @@ namespace Game
             return Icon.sprite.name;
         }
 
-        private void UnbindCurrent()
+        public void UnbindCurrent()
         {
             if (Data != null)
             {

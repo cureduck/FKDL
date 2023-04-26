@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Game;
 
 namespace Managers
@@ -27,7 +28,12 @@ namespace Managers
 
         private static FightPredictResult Simulate(SkillData skill)
         {
-            var sk = PlayerClone.Skills.Find((data => data.Id == skill.Id));
+            SkillData sk = null;
+            if (skill != null) 
+            {
+                sk = PlayerClone.Skills.FirstOrDefault((data => data.Id == skill.Id));
+            }
+
             
             var PlayerAttack = PlayerClone.ManageAttackRound(sk);
 

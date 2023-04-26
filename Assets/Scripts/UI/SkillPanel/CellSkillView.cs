@@ -303,17 +303,29 @@ public class CellSkillView : MonoBehaviour
     private void OnPointExit()
     {
         WindowManager.Instance.skillInfoPanel.Close();
-        WindowManager.Instance.FightPredictPanel.Close();
+        //WindowManager.Instance.FightPredictPanel.Close();
+        if (GameManager.Instance.InBattle && Data.Bp.BattleOnly)
+        {
+            //var arena = Arena.ArrangeFight(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data, Data);
+            WindowManager.Instance.EnemyPanel.SetPlayerUseSkill(null);
+        }
 
     }
 
     private void OnPointEnter()
     {
         WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args { screenPosition = showDetailPoint.position, skillData = skillData });
+
+        //被动技能不会显示对应的效果
+        if (!Data.Bp.Positive) 
+        {
+            return;
+        }
         if (GameManager.Instance.InBattle && Data.Bp.BattleOnly)
         {
-            var arena = Arena.ArrangeFight(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data, Data);
-            WindowManager.Instance.FightPredictPanel.Open(arena);
+            //var arena = Arena.ArrangeFight(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data, Data);
+            WindowManager.Instance.EnemyPanel.SetPlayerUseSkill(Data);
+            Debug.Log(Data);
         }
     }
     #endregion

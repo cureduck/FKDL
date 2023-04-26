@@ -12,7 +12,7 @@ namespace Game
         {
             if (Data is EnemySaveData)
             {
-                UI.EnemyPanel.Instance.gameObject.SetActive(false);
+                WindowManager.Instance.EnemyPanel.Close();
             }
             
             if ((Data is EnemySaveData ee)&&(ee.Bp.Rank == Rank.Rare))
@@ -74,7 +74,7 @@ namespace Game
 
         private void OnReactEnemy(EnemySaveData d)
         {
-            WindowManager.Instance.Display(d);
+            WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args { targetEnemy = d, playerData = GameManager.Instance.PlayerData });
 
             EnemyBp enemyBp = d.Bp;
             if (enemyBp != null && enemyBp.Rank >= Rank.Rare)

@@ -47,7 +47,10 @@ namespace Game
         
         protected void DelayUpdate()
         {
-            DelayBroadCastManager.Instance.Add(this);
+            if (!(this is FighterData f && f.Cloned))
+            {
+                DelayBroadCastManager.Instance.Add(this);
+            }
         }
 
         public void BroadCastUpdated()

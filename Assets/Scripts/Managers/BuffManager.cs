@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Csv;
 using Game;
+using Tools;
 using UI;
 using UnityEngine;
 
@@ -23,6 +25,12 @@ namespace Managers
             var buff = new Buff(id, Rank.Normal, stackable, icon, buffType, oppositeId);
             return buff;
         }
+
+        public string GetRandomBuff(BuffType buffType)
+        {
+            return Lib.Values.Where((buff => buff.BuffType == buffType)).ChooseRandom(Lib.Random).Id;
+        }
+        
 
         protected override Buff CreateTest(string id, MethodInfo method, EffectAttribute attr)
         {

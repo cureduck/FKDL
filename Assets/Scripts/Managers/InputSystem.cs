@@ -148,7 +148,7 @@ namespace Managers
                                 Vector3 curPosition = sq.transform.position;
                                 curPosition.x = sq.Icon.transform.position.x;
                                 WindowManager.Instance.EnemyPanel.transform.position = curPosition;
-                                WindowManager.Instance.EnemyPanel.Load(es);
+                                WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args { targetEnemy = es, playerData = GameManager.Instance.PlayerData });
                             }
                             
                             if (previous != null) previous.UpdateFace();

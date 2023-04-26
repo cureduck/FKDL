@@ -45,7 +45,7 @@ namespace Managers
     
     public abstract class XMLDataManager <T1, T2> : Singleton<XMLDataManager<T1, T2>> ,IProvider<T1> where T1 : CsvData
     {
-        [ShowInInspector] private CustomDictionary<T1> Lib;
+        [ShowInInspector] protected CustomDictionary<T1> Lib;
 
         protected abstract string CsvPath { get; }
 

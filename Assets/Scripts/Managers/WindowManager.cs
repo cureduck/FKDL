@@ -14,7 +14,7 @@ namespace Managers
         public CrystalPanel CrystalPanel;
         public GameObject MenuWindow;
         public GameObject CheatWindow;
-        public EnemyPanel EnemyPanel;
+        public EnemyInfoPanel EnemyPanel;
         public ConfirmPanel confirmPanel;
         public FightPredictPanel FightPredictPanel;
         
@@ -39,9 +39,5 @@ namespace Managers
             simpleInfoItemPanel?.Init();
         }
 
-        public void Display(EnemySaveData data)
-        {
-            EnemyPanel.Load(data);
-        }
     }
 }

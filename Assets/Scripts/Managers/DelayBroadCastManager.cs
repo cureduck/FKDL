@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game;
 using UI;
 
 namespace Managers
@@ -36,10 +37,7 @@ namespace Managers
 
         public void Add(IUpdateable updateable)
         {
-            if (!List.Contains(updateable))
-            {
-                List.Add(updateable);
-            }
+            List.Add(updateable);
         }
     }
 }

@@ -20,9 +20,9 @@ namespace Game
 
             var cost = CostInfo.MpCost(Cost);
             
-            if (GameManager.Instance.PlayerData.CanAfford(cost, out _))
+            if (Player.CanAfford(cost, out _))
             {
-                GameManager.Instance.PlayerData.Cost(cost, "rock");
+                Player.Cost(cost, "rock");
                 InformReactResult(new RockArgs(){CanReact = true});
                 Destroyed();
             }

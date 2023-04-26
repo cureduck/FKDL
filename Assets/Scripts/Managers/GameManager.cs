@@ -40,9 +40,9 @@ namespace Managers
         public void GetLocalization()
         {
             var f = File.ReadAllText("Assets/PythonScripts/relics_loc.csv");
-            LocalizationManager.Sources[0].Import_CSV("", f);
+            LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.AddNewTerms);
             f = File.ReadAllText("Assets/PythonScripts/skills_loc.csv");
-            LocalizationManager.Sources[0].Import_CSV("", f);
+            LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.AddNewTerms);
         }
         
         
@@ -180,6 +180,7 @@ namespace Managers
             foreach (var square in squares)
             {
                 square.gameObject.SetActive(false);
+                square.UnbindCurrent();
                 _pool.Return(square);
             }
 

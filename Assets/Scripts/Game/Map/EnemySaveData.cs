@@ -88,7 +88,7 @@ namespace Game
         public override void OnFocus()
         {
             base.OnFocus();
-            WindowManager.Instance.Display(this);
+            WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args { targetEnemy = this, playerData = GameManager.Instance.PlayerData });
         }
 
         public override void OnReact()

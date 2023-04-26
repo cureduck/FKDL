@@ -69,6 +69,7 @@ namespace Game
             CrystalManager.Instance.Lib.Random = CurGameRandom;
             SkillManager.Instance.SetRandom(CurCardRandom);
             PotionManager.Instance.SetRandom(PotionRandom);
+            BuffManager.Instance.SetRandom(CurGameRandom);
             
             SkillPoint = new Dictionary<Rank, int>
             {
