@@ -22,5 +22,12 @@ namespace Game
             GameManager.Instance.PlayerData.Gain(Count);
             Destroyed();
         }
+
+        public override SquareInfo GetSquareInfo()
+        {
+            var msg = base.GetSquareInfo();
+            msg.P1 = Count;
+            return msg;
+        }
     }
 }

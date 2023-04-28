@@ -149,6 +149,12 @@ public class CellSkillView : MonoBehaviour
             passtiveBG.SetActive(curSkill.Positive);
             unPasstiveBG.SetActive(!curSkill.Positive);
 
+            //被动技能且基础冷却为0不会触发特效
+            if (!Data.Bp.Positive&& Data.Bp.Cooldown<=0)
+            {
+                coldDown_mask.fillAmount = 0;
+            }
+
             if (curSkill.Icon != null)
             {
                 icon.sprite = curSkill.Icon;
@@ -208,7 +214,15 @@ public class CellSkillView : MonoBehaviour
             PlayerData player = playerData as PlayerData;
             if (player != null)
             {
-                levelUpObject.SetActive(player.skillPoint[curSkill.Rank] > 0);
+                if (skillData.CurLv >= curSkill.MaxLv)
+                {
+                    levelUpObject.SetActive(false);
+                }
+                else 
+                {
+                    levelUpObject.SetActive(player.skillPoint[curSkill.Rank] > 0);
+                }
+
             }
             else
             {
@@ -227,7 +241,7 @@ public class CellSkillView : MonoBehaviour
 
         Skill curSkill = skillData.Bp;
 
-
+        //if (skillData.CooldownLeft > 0) return;
         /*//Debug.Log(skillData.Cooldown);
         if (skillData.Cooldown > 0) return;
         if (!curSkill.Positive) return;
@@ -270,11 +284,15 @@ public class CellSkillView : MonoBehaviour
                 curSelectSkill = null;
                 //return;
             }
-
-            if (playerData.CanCast(skillData, out _))
+            Info cantCostInfo;
+            if (playerData.CanCast(skillData, out cantCostInfo))
             {
                 coldDown_mask.fillAmount = 1;
                 playerData.UseSkill(skillData);
+            }
+            else 
+            {
+                WindowManager.Instance.warningInfoPanel.Open(cantCostInfo!=null? cantCostInfo.ToString():"未知警告信息");
             }
         }
 

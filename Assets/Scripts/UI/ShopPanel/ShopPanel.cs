@@ -8,6 +8,7 @@ using CH.ObjectPool;
 using UI;
 using System;
 using UnityEngine.UI;
+using TMPro;
 
 namespace UI
 {
@@ -38,7 +39,11 @@ namespace UI
         [SerializeField]
         private Button levelUp_btn;
         [SerializeField]
+        private TMP_Text levelUpCost_txt;
+        [SerializeField]
         private Button reflash_btn;
+        [SerializeField]
+        private TMP_Text reflashCost_txt;
 
         private UIViewObjectPool<CellGoodView, Args> skillListObjectPool;
         private UIViewObjectPool<CellGoodView, Args> potionListObjectPool;
@@ -84,6 +89,23 @@ namespace UI
                 args[i] = new Args { offer = Data.Goods.KeyList[i], curHaveGold = GameManager.Instance.PlayerData.Gold,index = i, onClick = OnCellGoodsClick };
             }
             keyListObjectPool.SetDatas(args, CellSet, keyListView);
+            PlayerData playerData = GameManager.Instance.PlayerData;
+            if (Data.UpGradeCost.Value > playerData.Gold)
+            {
+                levelUpCost_txt.text = $"<color=red>{Data.UpGradeCost.Value}</color>";
+            }
+            else 
+            {
+                levelUpCost_txt.text = $"<color=yellow>{Data.UpGradeCost.Value}</color>";
+            }
+            if (Data.RefreshCost.Value > playerData.Gold)
+            {
+                reflashCost_txt.text = $"<color=red>{Data.RefreshCost.Value}</color>";
+            }
+            else 
+            {
+                reflashCost_txt.text = $"<color=yellow>{Data.RefreshCost.Value}</color>";
+            }
 
 
         }

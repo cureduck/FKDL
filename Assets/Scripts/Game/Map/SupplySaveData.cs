@@ -14,28 +14,31 @@ namespace Game
             Rank = _rank;
         }
 
+        private int value
+        {
+            get
+            {
+                switch (Rank)
+                {
+                    case Rank.Normal:
+                        return 10;
+                    case Rank.Uncommon:
+                        return 20;
+                    case Rank.Rare:
+                        return 30;
+                    case Rank.Ultra:
+                        break;
+                    default:
+                        return 0;
+                }
+                return 0;
+            }
+        }
+        
         public override void OnReact()
         {
             base.OnReact();
 
-            int value = 0;
-            switch (Rank)
-            {
-                case Rank.Normal:
-                    value = 10;
-                    break;
-                case Rank.Uncommon:
-                    value = 20;
-                    break;
-                case Rank.Rare:
-                    value = 30;
-                    break;
-                case Rank.Ultra:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            
             switch (Type)
             {
                 case SupplyType.Spring:
@@ -50,6 +53,31 @@ namespace Game
             
             Destroyed();
         }
+
+        public override SquareInfo GetSquareInfo()
+        {
+            switch (Type)
+            {
+                case SupplyType.Spring:
+                    return new SquareInfo()
+                    {
+                        Name = "spring",
+                        Desc = "spring_desc",
+                        P1 = value
+                    };
+                case SupplyType.Grassland:
+                    return new SquareInfo()
+                    {
+                        Name = "grassland",
+                        Desc = "grassland_desc",
+                        P1 = value
+                    };
+                case SupplyType.Camp:
+                    return null;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
     public enum SupplyType
     {
@@ -57,4 +85,6 @@ namespace Game
         Grassland,
         Camp
     }
+    
+    
 }

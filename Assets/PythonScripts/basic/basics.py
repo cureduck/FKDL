@@ -1,8 +1,8 @@
-import json
+from __future__ import annotations
+
 from abc import abstractmethod
 from enum import *
-from struct import Struct
-from typing import Sequence, NoReturn, Any
+from typing import Sequence, Any, NoReturn, Union, Optional
 
 
 @unique
@@ -20,6 +20,7 @@ class MaxIn:
 @unique
 class Timing(Enum):
     OnSetCd = 0
+    OnAttack = 1
 
 
 class BattleStatus:
@@ -35,9 +36,12 @@ class BattleStatus:
         self.coin = coin
 
 
+Location = (int, int, int, int)
+
+
 class MapData:
-    def __init__(self, coord: (int, int), _state):
-        self.coord = coord
+    def __init__(self, location: Location, _state):
+        self.location = tuple(location)
         self._state = _state
 
     @property
@@ -54,11 +58,26 @@ class MapData:
     def destroy(self):
         pass
 
-    def react(self):
-        raise NotImplementedError
+    @abstractmethod
+    def react(self, player):
+        raise NotImplementedError()
 
-    def __reveal_around__(self):
-        pass
+    def reveal_around(self, m: Sequence[MapData]):
+        for sq in m:
+            if sq._state == 0 and sq.next_to(self.location):
+                sq._state = 1
+
+    def next_to(self, p2: Location) -> bool:
+        x1, y1, w1, h1 = self.location
+        x2, y2, w2, h2 = p2
+        p3 = (
+            max(x1, x2),
+            max(y1, y2),
+            min(x1 + w1, x2 + w2) - max(x1, x2),
+            min(y1 + h1, y2 + h2) - max(y1, y2),
+        )
+        x3, y3, w3, h3 = p3
+        return not (h3 < 0 or w3 < 0) and (not ((h3 == 0) and (w3 == 0)))
 
 
 class Rank(Enum):
@@ -72,17 +91,14 @@ class RankMaxIn(MaxIn):
     品阶组件
     """
 
-    @classmethod
-    @abstractmethod
-    def rank(cls) -> Rank:
-        pass
+    rank = Rank(0)
 
 
 class Attack:
     __slots__ = ("patk", "matk", "catk", "pdmg", "mdmg", "cdmg", "multi", "combo", "id", "kw")
 
-    def __init__(self, patk: int, matk: int, catk: int, pdmg: int, cdmg: int, mdmg: int, multi: float = 1,
-                 combo: int = 1, id: str = None, kw: str = None):
+    def __init__(self, patk: int = 0, matk: int = 0, catk: int = 0, pdmg: int = 0, cdmg: int = 0, mdmg: int = 0,
+                 multi: float = 1, combo: int = 1, id: str = None, kw: str = None):
         self.patk = patk
         self.matk = matk
         self.catk = catk
@@ -96,7 +112,7 @@ class Attack:
 
 
 class Factor:
-    def affect(self, timing: Timing, **kw) -> bool:
+    def affect(self, timing: Timing, **kw: Union[Attack, Player, Enemy, Skill]) -> bool:
         """
         技能、遗物、buff
         :param timing: 时机
@@ -104,6 +120,14 @@ class Factor:
         :return:
         """
         raise NotImplementedError(self)
+
+    @classmethod
+    def priority(cls, timing: Timing) -> Optional[int]:
+        """
+        :param timing 时机
+        :return: 返回值为数值即为优先级，若为None则为不影响，默认返回0
+        """
+        return 0
 
 
 class SkillMetaclass(type):
@@ -119,12 +143,25 @@ class SkillMetaclass(type):
         return type.__new__(cls, name, bases, attrs)
 
 
-class Skill(RankMaxIn, Factor, metaclass=SkillMetaclass):
-    @abstractmethod
-    def rank(self) -> Rank:
-        pass
+@unique
+class Prof(Enum):
+    Common = 0,
+    Assassin = 1,
+    Alchemist = 2,
+    Mage = 3
 
-    def __init__(self, cur_lv: int = 1, **kw: [str, Any]):
+
+class ProfMaxIn(MaxIn):
+    prof = Prof.Common
+
+
+class Skill(RankMaxIn, ProfMaxIn, Factor, metaclass=SkillMetaclass):
+    activated = True
+
+    def upgrade(self):
+        self.cur_lv += 1
+
+    def __init__(self, cur_lv: int = 1, **kw):
         super().__init__()
         self.cur_lv = cur_lv
         for k, v in self.init.items():
@@ -134,8 +171,11 @@ class Skill(RankMaxIn, Factor, metaclass=SkillMetaclass):
 
 
 class SkillAgent(list[Skill, None]):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *members):
+        super().__init__(members)
+
+    def upgrade_random(self):
+        raise NotImplementedError()
 
 
 class Buff(Factor):
@@ -144,7 +184,8 @@ class Buff(Factor):
 
 
 class BuffAgent(list[Buff]):
-    pass
+    def __init__(self, *members):
+        super().__init__(members)
 
 
 class FightMaxIn:
@@ -158,18 +199,21 @@ class FightMaxIn:
     def alive(self) -> bool:
         return self.status.curhp > 0
 
-    def heal(self, value: int, kw: str):
+    def heal(self, value: int, kw: str = None) -> NoReturn:
         pass
 
     @abstractmethod
-    def get_factors(self) -> Sequence[Sequence[Factor]]:
+    def get_factors(self) -> Sequence[Factor]:
         pass
 
     def modify(self, timing: Timing, **kw):
-        factors = self.get_factors()
-        for fs in factors:
-            for f in fs:
-                f.affect(timing, **kw)
+        factors = filter(lambda x: x.priority is not None, self.get_factors())
+        s = sorted(
+            factors,
+            key=lambda x: x.priority
+        )
+        for fs in s:
+            fs.affect(timing, **kw)
 
 
 class CounterMaxIn(MaxIn):
@@ -186,14 +230,7 @@ class CooldownMaxIn(MaxIn):
         self.cd_init = cd_init
         self.cd_left = cd_left
 
-    @classmethod
-    @abstractmethod
-    def cd(cls) -> int:
-        pass
-
-    def set_cd(self, factors: Sequence[Factor]):
-        for factor in factors:
-            factor.affect(timing=Timing.OnSetCd, skill=self)
+    cd = 7
 
 
 class PassiveSkill(Skill):
@@ -217,22 +254,12 @@ class ActiveSkill(Skill):
 
 class AimingSKill(ActiveSkill):
 
-    @classmethod
-    @abstractmethod
-    def rank(cls) -> Rank:
-        pass
-
     @abstractmethod
     def cast(self, caster: FightMaxIn, target: (FightMaxIn, None)) -> (Attack, None):
         pass
 
 
 class NonAimingSKill(ActiveSkill):
-
-    @classmethod
-    @abstractmethod
-    def rank(cls) -> Rank:
-        pass
 
     @abstractmethod
     def cast(self, caster: FightMaxIn, target: (FightMaxIn, None)) -> (Attack, None):
@@ -241,8 +268,10 @@ class NonAimingSKill(ActiveSkill):
 
 class Player(FightMaxIn):
 
-    def get_factors(self) -> Sequence[Sequence[Factor]]:
-        return self.skills, self.buffs
+    def get_factors(self) -> Sequence[Factor]:
+        l: list[Factor] = self.skills.copy()
+        l.extend(self.buffs)
+        return l
 
     skip_attr = ("cloned",)
 
@@ -252,8 +281,13 @@ class Player(FightMaxIn):
 
 class Enemy(MapData, FightMaxIn):
 
-    def get_factors(self) -> Sequence[Sequence[Factor]]:
-        return self.skills, self.buffs
+    def react(self, player):
+        pass
+
+    def get_factors(self) -> Sequence[Factor]:
+        l: list[Factor] = self.skills.copy()
+        l.extend(self.buffs)
+        return l
 
     skip_attr = ("cloned",)
 
@@ -273,22 +307,3 @@ def translator(ch, en, ch_desc="", en_desc=""):
         return cls
 
     return wrapper
-
-
-@translator("sdf", "sdf")
-class Test1Skill(AimingSKill, CounterMaxIn, CooldownMaxIn):
-
-    @classmethod
-    def rank(cls) -> Rank:
-        return Rank(0)
-
-    def cast(self, caster: FightMaxIn, target: (FightMaxIn, None)) -> (Attack, None):
-        pass
-
-    def affect(self, timing, **kw: [str, (Attack, Enemy, Player)]) -> bool:
-        (kw["attack"]).patk += 1
-        return True
-
-    @classmethod
-    def cd(cls) -> int:
-        return 7

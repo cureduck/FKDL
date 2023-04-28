@@ -310,7 +310,7 @@ namespace Game
         
         public void SetContent(string id, string text, Sprite icon = null)
         {
-            name = $"{id}, {Place}";
+            name = $"{id}, {Data.Placement}";
             Id.SetTerm(id);
             Bonus.text = text;
             Icon.sprite = icon;

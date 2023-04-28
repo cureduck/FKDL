@@ -117,6 +117,18 @@ namespace Game
             }
         }
 
+        [Button]
+        public virtual SquareInfo GetSquareInfo()
+        {
+            var declaringType = GetType();
+            var name = declaringType.Name.Replace("SaveData", "").ToLower();
+            return new SquareInfo()
+            {
+                Name = name,
+                Desc = name + "_desc"
+            };
+        }
+
 
 
 
@@ -163,4 +175,12 @@ namespace Game
         Done = 0b1000,
         Revealed = Focus | UnFocus
     }
+
+    public class SquareInfo
+    {
+        public string Name;
+        public string Desc;
+        public float P1;
+    }
+    
 }

@@ -247,7 +247,7 @@ namespace Game
         public bool CanCast(SkillData skill, out Info info)
         {
             skill.CanCast(out var basicInfo, IsPlayer);
-            info = CheckChain<Info>(Timing.OnHandleSkillInfo, new object[] {basicInfo, skill, this});
+            info = CheckChain<Info>(Timing.OnHandleSkillInfo, new object[] {basicInfo, skill, this}) ?? new SuccessInfo();
             return  (info is SuccessInfo|| info == null)&& CanAfford(GetSkillCost(skill), out info);
         }
         

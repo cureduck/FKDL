@@ -46,11 +46,9 @@ namespace Managers
         }
 
 
-#if UNITY_EDITOR
         protected override Skill CreateTest(string id, MethodInfo method, EffectAttribute attr)
         {
             return new Skill(Rank.Normal, id);
         }
-#endif
     }
 }

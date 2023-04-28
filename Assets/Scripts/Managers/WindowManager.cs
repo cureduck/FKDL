@@ -17,6 +17,7 @@ namespace Managers
         public EnemyInfoPanel EnemyPanel;
         public ConfirmPanel confirmPanel;
         public FightPredictPanel FightPredictPanel;
+        public WarningInfoDebugPanel warningInfoPanel;
         
 
         public SkillInfoPanel skillInfoPanel;

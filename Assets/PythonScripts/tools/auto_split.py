@@ -1,6 +1,4 @@
 import csv
-import os
-import sys
 
 
 def auto_split(source_path, data_path, loc_path):
@@ -50,5 +48,5 @@ def write_loc(reader, f, save_path):
         f.close()
 
 
-auto_split(r"../../../StreamingAssets/SkillsAll.csv", r"../../../Assets/StreamingAssets/Skills.csv", "skills_loc.csv")
-auto_split(r"../../../StreamingAssets/RelicsAll.csv", r"../../../Assets/StreamingAssets/Relics.csv", "relics_loc.csv")
+auto_split(r"../../StreamingAssets/SkillsAll.csv", r"../../StreamingAssets/Skills.csv", "skills_loc.csv")
+auto_split(r"../../StreamingAssets/RelicsAll.csv", r"../../StreamingAssets/Relics.csv", "relics_loc.csv")

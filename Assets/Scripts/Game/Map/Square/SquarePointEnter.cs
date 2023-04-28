@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Game;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
+using Managers;
 
 public class SquarePointEnter : MonoBehaviour
 {
-    private static SquarePointEnter curClick;
+    //private static SquarePointEnter curClick;
     [SerializeField]
     private Light2D targetLight;
     [SerializeField]
@@ -15,6 +17,8 @@ public class SquarePointEnter : MonoBehaviour
     private const float changeSpeed = .7f;
     [SerializeField]
     private GameObject targetMask;
+    [SerializeField]
+    private Square square;
     //private float curTargetIntensity = 0;
 
     private Tween anim;
@@ -31,6 +35,13 @@ public class SquarePointEnter : MonoBehaviour
             //curTargetIntensity = targetIntensity;
             anim.Kill();
             anim = DOTween.To(Getter, Setter, targetIntensity, changeSpeed);
+
+            if (square.Data.SquareState == SquareState.UnFocus|| square.Data.SquareState == SquareState.Focus) 
+            {
+                SquareInfo squareInfo = square.Data.GetSquareInfo();
+                WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { title = squareInfo.Name, describe = squareInfo.Desc, screenPosition = Camera.main.WorldToScreenPoint(transform.position) });
+            }
+
         }
 
     }
@@ -54,7 +65,12 @@ public class SquarePointEnter : MonoBehaviour
     private void OnMouseExit()
     {
         if (targetMask.activeInHierarchy) return;
-        
+
+        if (square.Data.SquareState == SquareState.UnFocus || square.Data.SquareState == SquareState.Focus)
+        {
+            WindowManager.Instance.simpleInfoItemPanel.Close();
+        }
+
         anim.Kill();
         anim = DOTween.To(Getter, Setter, 0, changeSpeed / 1.5f)
             .OnComplete(() => Setter(0f));

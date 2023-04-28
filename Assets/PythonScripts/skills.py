@@ -1,14 +1,52 @@
+import json
+
 from basic import *
+from typing import Optional
 
 
-class Skill2(PassiveSkill, CounterMaxIn, CooldownMaxIn):
-    @classmethod
-    def cd(cls) -> int:
-        return 7
+@translator(ch="测试被动技能", en="test passive skill")
+class TestSkill(PassiveSkill, CounterMaxIn, CooldownMaxIn):
+    cd = 5
+    rank = Rank(1)
+    prof = Prof.Mage
 
-    def affect(self, timing: Timing, **kw) -> bool:
+    def affect(self, timing: Timing, **kw: Union[Attack, Player, Enemy]) -> bool:
+        if timing != Timing.OnAttack:
+            return False
+        if self.counter < 0:
+            self.counter += 1
+        else:
+            (kw["Attack"]).patk += 1
+            self.counter = 0
         return True
 
     @classmethod
-    def rank(cls) -> Rank:
-        return Rank(1)
+    def priority(cls, timing: Timing) -> Optional[bool]:
+        pass
+
+
+player = Player(BattleStatus(), SkillAgent(TestSkill()), BuffAgent())
+
+atk = Attack()
+player.modify(timing=Timing.OnAttack, Attack=atk)
+
+print(atk)
+floor = Floor(
+    SupplyMapData((1, 2, 1, 1), 0),
+    SupplyMapData((1, 1, 1, 1), 0),
+    SupplyMapData((1, 1, 3, 1), 1),
+    SupplyMapData((1, 1, 1, 4), 2),
+)
+
+m = Map(("tt.__str__()", floor))
+
+s = json.dumps(obj2dict(m), indent="    ")
+print(s)
+
+mm = json.loads(s)
+
+s = SupplyMapData((1, 1, 1, 1), 0)
+s.reveal_around(floor)
+
+ss = (dict2obj(obj2dict(m)))
+print(obj2dict(ss))

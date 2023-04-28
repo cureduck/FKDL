@@ -16,7 +16,6 @@ using Random = System.Random;
 
 namespace Managers
 {
-    [ExecuteAlways]
     public class GameManager : Singleton<GameManager>
     {
         public PlayerData PlayerData
@@ -39,10 +38,18 @@ namespace Managers
 
         public void GetLocalization()
         {
-            var f = File.ReadAllText("Assets/PythonScripts/relics_loc.csv");
-            LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.AddNewTerms);
-            f = File.ReadAllText("Assets/PythonScripts/skills_loc.csv");
-            LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.AddNewTerms);
+            try
+            {
+                var f = File.ReadAllText("Assets/PythonScripts/tools/relics_loc.csv");
+                LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.AddNewTerms);
+                f = File.ReadAllText("Assets/PythonScripts/tools/skills_loc.csv");
+                LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.AddNewTerms);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
         }
         
         
@@ -179,8 +186,8 @@ namespace Managers
         {
             foreach (var square in squares)
             {
-                square.gameObject.SetActive(false);
                 square.UnbindCurrent();
+                square.gameObject.SetActive(false);
                 _pool.Return(square);
             }
 
