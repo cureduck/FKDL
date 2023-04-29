@@ -105,7 +105,7 @@ namespace Game
         {
             foreach (var square in GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares)
             {
-                if (square.SquareState!= SquareState.UnRevealed)
+                if (square.SquareState != SquareState.UnRevealed)
                 {
                     continue;
                 }
@@ -160,6 +160,14 @@ namespace Game
         public int Width;
         public int Height;
 
+        public Placement(int x, int y, int width, int height)
+        {
+            this.x = x;
+            this.y = y;
+            this.Width = width;
+            this.Height = height;
+        }
+        
         public override string ToString()
         {
             return $"({x},{y}), ({x+Width},{y+Height})";

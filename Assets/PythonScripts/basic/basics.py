@@ -59,7 +59,7 @@ class MapData:
         pass
 
     @abstractmethod
-    def react(self, player):
+    def react(self, player: Player):
         raise NotImplementedError()
 
     def reveal_around(self, m: Sequence[MapData]):
@@ -189,7 +189,7 @@ class BuffAgent(list[Buff]):
 
 
 class FightMaxIn:
-    def __init__(self, status, skills: SkillAgent, buffs: BuffAgent, cloned: bool = False):
+    def __init__(self, status: BattleStatus, skills: SkillAgent, buffs: BuffAgent, cloned: bool = False):
         self.status = status
         self.cloned = cloned
         self.skills = skills
@@ -197,7 +197,7 @@ class FightMaxIn:
 
     @property
     def alive(self) -> bool:
-        return self.status.curhp > 0
+        return self.status.cur_hp > 0
 
     def heal(self, value: int, kw: str = None) -> NoReturn:
         pass

@@ -9,15 +9,15 @@ namespace Managers
 {
     public class SceneSwitchManager : Singleton<SceneSwitchManager>
     {
+        private void Start()
+        {
+            DontDestroyOnLoad(this);
+        }
+
         /// <summary>
         /// TRUE就是新游戏，FALSE就是加载游戏
         /// </summary>
         public bool NewGame;
-
-
-        public void SwitchScene(string id)
-        {
-            SceneManager.LoadScene(id);
-        }
+        
     }
 }

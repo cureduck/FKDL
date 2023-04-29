@@ -38,15 +38,30 @@ namespace Game
                     return ManageAttackRound(skill);
                 }
             }
+            
+            DeathCheck();
 
             return ManageAttackRound();
         }
+
+
+        private void DeathCheck()
+        {
+            if (!IsAlive && SquareState != SquareState.Done)
+            {
+                Destroyed();
+            }
+        }
+        
 
 
         private void Chase()
         {
             Player.DrawBack = true;
             ManageAttackRound();
+            
+            DeathCheck();
+            
             ((PlayerData)Enemy).DrawBack = false;
         }
 
@@ -116,10 +131,7 @@ namespace Game
             base.OnReact();
             //InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
 
-            if (!IsAlive)
-            {
-                Destroyed();
-            }
+            DeathCheck();
             
             ((PlayerData)Enemy).Engaging = false;
             DelayUpdate();

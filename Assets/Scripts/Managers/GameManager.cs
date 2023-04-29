@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using Cysharp.Threading.Tasks;
+using EasyTransition;
 using Game;
 using I2.Loc;
 using Sirenix.OdinInspector;
@@ -177,6 +178,7 @@ namespace Managers
         
         private void LoadMap()
         {
+            GameManager.Instance.Focus = null;
             LoadFloor(Map.Floors[Map.CurrentFloor]);
         }
 

@@ -6,6 +6,7 @@ using UI;
 using I2.Loc;
 using Managers;
 using System;
+using EasyTransition;
 
 public class ChooseProfMainPanel : MonoBehaviour
 {
@@ -144,7 +145,7 @@ public class ChooseProfMainPanel : MonoBehaviour
     {
         GameDataManager.Instance.SecondaryData = new Game.SecondaryData();
         GameDataManager.Instance.SecondaryData.Prof = profDatas;
-        SceneSwitchManager.Instance.SwitchScene("MainScene");
+        FindObjectOfType<TransitionManager>().LoadScene("MainScene", "DiagonalRectangleGrid", .2f);
     }
 
 }

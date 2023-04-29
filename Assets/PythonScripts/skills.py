@@ -21,8 +21,37 @@ class TestSkill(PassiveSkill, CounterMaxIn, CooldownMaxIn):
         return True
 
     @classmethod
-    def priority(cls, timing: Timing) -> Optional[bool]:
-        pass
+    def priority(cls, timing: Timing) -> Optional[int]:
+        if timing != Timing.OnAttack:
+            return None
+        else:
+            return 1
+
+
+@translator(ch="测试被动技能", en="test passive skill")
+class Test2Skill(AimingSKill, CounterMaxIn):
+    def cast(self, caster: FightMaxIn, target: (FightMaxIn, None)) -> (Attack, None):
+        return Attack(patk=caster.status.p_atk, multi=2)
+
+    rank = Rank(1)
+    prof = Prof.Mage
+
+    def affect(self, timing: Timing, **kw: Union[Attack, Player, Enemy]) -> bool:
+        if timing != Timing.OnAttack:
+            return False
+        if self.counter < 0:
+            self.counter += 1
+        else:
+            (kw["Attack"]).patk += 1
+            self.counter = 0
+        return True
+
+    @classmethod
+    def priority(cls, timing: Timing) -> Optional[int]:
+        if timing != Timing.OnAttack:
+            return None
+        else:
+            return 1
 
 
 player = Player(BattleStatus(), SkillAgent(TestSkill()), BuffAgent())

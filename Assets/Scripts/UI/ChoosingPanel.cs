@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EasyTransition;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -106,7 +107,8 @@ namespace Managers
 
         public void GoAhead()
         {
-            SceneSwitchManager.Instance.SwitchScene("MainScene");
+            SceneSwitchManager.Instance.NewGame = true;
+            FindObjectOfType<TransitionManager>().LoadScene("MainScene", "DiagonalRectangleGrid", .2f);
         }
         
     }
