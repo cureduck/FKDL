@@ -10,6 +10,7 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
     public class Args 
     {
         public Vector2 screenPosition;
+        public Transform worldTrans;
         public string title;
         public string describe;
         public string param;
@@ -24,9 +25,25 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
     [SerializeField]
     private LocalizationParamsManager _paramsManager;
 
+    private Camera mainCamera;
+
+
+    private void Start()
+    {
+        mainCamera = Camera.main;
+    }
+
     public override void Init()
     {
         notBeyoundTheScreen.Init(transform.parent.GetComponent<Canvas>());
+    }
+
+    private void Update()
+    {
+        if (Data.worldTrans != null)
+        {
+            transform.position = mainCamera.WorldToScreenPoint(Data.worldTrans.transform.position);
+        }
     }
 
     protected override void UpdateUI()

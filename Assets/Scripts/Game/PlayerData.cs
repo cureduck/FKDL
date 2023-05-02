@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using EasyTransition;
 using Game;
 using Managers;
 using Newtonsoft.Json;
@@ -480,6 +481,18 @@ namespace Game
         public override string ToString()
         {
             return "Player :" + base.ToString();
+        }
+
+
+        protected override void Destroyed()
+        {
+            base.Destroyed();
+            if (File.Exists(Paths._savePath))
+            {
+                File.Delete(Paths._savePath);
+            }
+            
+            GameObject.FindObjectOfType<TransitionManager>().LoadScene("StartScene", "DiagonalRectangleGrid", .2f);
         }
     }
 }

@@ -658,6 +658,7 @@ namespace Game
             if (!IsAlive)
             {
                 CoolDownSettle(null);
+                Destroyed();
                 return null;
             }
             

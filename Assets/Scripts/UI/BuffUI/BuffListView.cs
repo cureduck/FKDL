@@ -13,6 +13,8 @@ public class BuffListView : MonoBehaviour
     [SerializeField]
     private CellBuffView cellBuffView;
     private UIViewObjectPool<CellBuffView, BuffData> objectPoolData;
+    [SerializeField]
+    private bool isWorldObject = false;
 
     BuffAgent buffDatas;
     public void Init()
@@ -32,7 +34,7 @@ public class BuffListView : MonoBehaviour
 
     private void OnCellBuffSet(CellBuffView arg1, BuffData arg2)
     {
-        arg1.SetData(arg2);
+        arg1.SetData(arg2, isWorldObject);
     }
 
 

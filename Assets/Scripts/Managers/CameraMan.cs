@@ -3,13 +3,16 @@ using System.Collections;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
+using Game;
 
 namespace Managers
 {
     public class CameraMan : Singleton<CameraMan>
     {
         private Camera _camera;
-
+        [SerializeField]
+        private Volume volume;
         public Vector2 Target
         {
             get => _target;
@@ -49,7 +52,15 @@ namespace Managers
 
         private void Update()
         {
+            if (GameManager.Instance) 
+            {
+                PlayerData playerData = GameManager.Instance.PlayerData;
+                if (playerData != null) 
+                {
+                    volume.weight = 1 - playerData.Status.CurHp / (float)playerData.Status.MaxHp;
+                }
 
+            }
 
         }
 
@@ -67,5 +78,11 @@ namespace Managers
             }
             
         }
+
+        public void SetVignetteInstensity(float targetWeight) 
+        {
+            volume.weight = targetWeight;
+        }
+
     }
 }

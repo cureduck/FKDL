@@ -60,11 +60,21 @@ namespace Game
 
         public void Init()
         {
+#if UNITY_EDITOR
             CurGameRandom = new Random(InitGameSeed);
             CurCardRandom = new Random(InitCardSeed);
             RelicRandom = new Random(InitRelicSeed);
             PotionRandom = new Random(PotionSeed);
-            
+#endif
+
+#if !UNITY_EDITOR
+            CurGameRandom = new Random((int)Time.time);
+            CurCardRandom = new Random((int)Time.time);
+            RelicRandom = new Random((int)Time.time);
+            PotionRandom = new Random((int)Time.time);
+
+#endif
+
             RelicManager.Instance.SetRandom(RelicRandom);
             CrystalManager.Instance.Lib.Random = CurGameRandom;
             SkillManager.Instance.SetRandom(CurCardRandom);

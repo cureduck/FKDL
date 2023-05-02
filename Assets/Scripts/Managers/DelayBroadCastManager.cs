@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Game;
 using UI;
 
@@ -17,9 +18,10 @@ namespace Managers
         {
             try
             {
-                foreach (var updateable in List)
+                while (List.Any())
                 {
-                    updateable.BroadCastUpdated();
+                    List.First().BroadCastUpdated();
+                    List.Remove(List.First());
                 }
             }
             catch (Exception e)

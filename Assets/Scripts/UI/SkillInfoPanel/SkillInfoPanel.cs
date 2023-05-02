@@ -13,6 +13,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
     {
         public Vector2 screenPosition;
         public SkillData skillData;
+        public Transform worldTrans;
     }
 
     public class Args02 : Args
@@ -41,12 +42,20 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
     [SerializeField]
     private Localize positiveInfo;
 
-
+    private Camera mainCamera;
     private void Start()
     {
+        mainCamera = Camera.main;
         DescParamsManager = describe.GetComponent<LocalizationParamsManager>();
     }
 
+    private void Update()
+    {
+        if (Data.worldTrans != null) 
+        {
+            transform.position = mainCamera.WorldToScreenPoint(Data.worldTrans.transform.position);
+        }
+    }
 
     protected override void UpdateUI()
     {

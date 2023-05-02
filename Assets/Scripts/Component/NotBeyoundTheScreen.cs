@@ -34,7 +34,7 @@ public class NotBeyoundTheScreen : MonoBehaviour
         }
     }
 
-    void Update()
+    void LateUpdate()
     {
         if (canvas)
         {

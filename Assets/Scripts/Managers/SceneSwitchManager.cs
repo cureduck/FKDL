@@ -14,6 +14,12 @@ namespace Managers
             DontDestroyOnLoad(this);
         }
 
+
+        public void SetNewGame(bool b)
+        {
+            NewGame = b;
+        }
+        
         /// <summary>
         /// TRUE就是新游戏，FALSE就是加载游戏
         /// </summary>

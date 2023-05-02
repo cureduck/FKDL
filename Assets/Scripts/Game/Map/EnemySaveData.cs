@@ -124,9 +124,16 @@ namespace Game
 
         public void OnReact(SkillData skill)
         {
-            var playerAttack = ((PlayerData)Enemy).ManageAttackRound(skill);
+            OnReact(skill, out _, out _);
+        }
 
-            if (IsAlive) PlanAttackRound(); 
+
+        public void OnReact(SkillData skill, out Attack? attack1, out Attack? attack2)
+        {
+            attack1 = ((PlayerData)Enemy).ManageAttackRound(skill);
+            
+            attack2 = IsAlive ? PlanAttackRound() : null;
+            
             
             base.OnReact();
             //InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
@@ -136,6 +143,7 @@ namespace Game
             ((PlayerData)Enemy).Engaging = false;
             DelayUpdate();
         }
+        
 
         protected override void Destroyed()
         {

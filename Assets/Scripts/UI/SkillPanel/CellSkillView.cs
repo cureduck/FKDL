@@ -19,6 +19,10 @@ public class CellSkillView : MonoBehaviour
     private Transform showDetailPoint;
     [SerializeField]
     private PointEnterAndExit pointEvent;
+    [SerializeField]
+    private ObjectColliderPointEnterAndExit objectPointEnterAndExit;
+    [SerializeField]
+    private bool isWorldObject = false;
     [Header("拖拽与交互组件")]
     [SerializeField]
     private CellUIDragView cellUIDragView;
@@ -91,8 +95,19 @@ public class CellSkillView : MonoBehaviour
     void Start()
     {
         cellUIDragView.onLeftClick.AddListener(SelectCurSkill);
-        pointEvent.onPointEnter.AddListener(OnPointEnter);
-        pointEvent.onPointExit.AddListener(OnPointExit);
+        if (pointEvent) 
+        {
+            pointEvent.onPointEnter.AddListener(OnPointEnter);
+            pointEvent.onPointExit.AddListener(OnPointExit);
+        }
+
+        if (objectPointEnterAndExit) 
+        {
+            objectPointEnterAndExit.onPointEnter.AddListener(OnPointEnter);
+            objectPointEnterAndExit.onPointExit.AddListener(OnPointExit);
+        }
+
+
         levelUp_btn.onClick.AddListener(UpgradeSkill);
 
         heightlightView.SetActive(false);
@@ -332,10 +347,19 @@ public class CellSkillView : MonoBehaviour
 
     private void OnPointEnter()
     {
-        WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args { screenPosition = showDetailPoint.position, skillData = skillData });
+        if (isWorldObject)
+        {
+            Debug.Log(Camera.main.WorldToScreenPoint(transform.position));
+            WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args { worldTrans = transform, skillData = skillData });
 
+
+        }
+        else 
+        {
+            WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args { screenPosition = showDetailPoint.position, skillData = skillData });
+        }
         //被动技能不会显示对应的效果
-        if (!Data.Bp.Positive) 
+        if (!Data.Bp.Positive)
         {
             return;
         }
@@ -345,6 +369,7 @@ public class CellSkillView : MonoBehaviour
             WindowManager.Instance.EnemyPanel.SetPlayerUseSkill(Data);
             Debug.Log(Data);
         }
+
     }
     #endregion
 

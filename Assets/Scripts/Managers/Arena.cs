@@ -33,12 +33,10 @@ namespace Managers
             {
                 sk = PlayerClone.Skills.FirstOrDefault((data => data.Id == skill.Id));
             }
-
             
-            var PlayerAttack = PlayerClone.ManageAttackRound(sk);
-
-
-            var EnemyAttack = (EnemyClone.IsAlive) ? EnemyClone.PlanAttackRound() : null;
+            
+            EnemyClone.OnReact(skill, out var PlayerAttack, out var EnemyAttack);
+            
             
             return new FightPredictResult()
             {

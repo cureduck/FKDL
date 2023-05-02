@@ -13,16 +13,28 @@ public class CellBuffView : MonoBehaviour
     private Text level_txt;
     [SerializeField]
     private Image icon_img;
+    [Header("鼠标交互")]
     [SerializeField]
     private PointEnterAndExit pointEnterAndExit;
+    [SerializeField]
+    private ObjectColliderPointEnterAndExit objectPointEnterAndExit;
 
     [SerializeField] private Image OutLine;
-
+    private bool isWorldObject = false;
     private BuffData buffData;
     private void Start()
     {
-        pointEnterAndExit.onPointEnter.AddListener(OnPointEnter);
-        pointEnterAndExit.onPointExit.AddListener(OnPointExit);
+        if (pointEnterAndExit) 
+        {
+            pointEnterAndExit.onPointEnter.AddListener(OnPointEnter);
+            pointEnterAndExit.onPointExit.AddListener(OnPointExit);
+        }
+
+        if (objectPointEnterAndExit)
+        {
+            objectPointEnterAndExit.onPointEnter.AddListener(OnPointEnter);
+            objectPointEnterAndExit.onPointExit.AddListener(OnPointExit);
+        }
     }
 
     private void OnPointExit()
@@ -38,13 +50,23 @@ public class CellBuffView : MonoBehaviour
     {
         if (buffData != null)
         {
-            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = $"{buffData.Id}_desc", param =buffData.CurLv.ToString(), title = buffData.Id, screenPosition = transform.position });
+            if (isWorldObject)
+            {
+                WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = $"{buffData.Id}_desc", param = buffData.CurLv.ToString(), title = buffData.Id, worldTrans = transform });
+            }
+            else 
+            {
+                WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = $"{buffData.Id}_desc", param = buffData.CurLv.ToString(), title = buffData.Id, screenPosition = transform.position });
+            }
+
+           
         }
     }
 
-    public void SetData(BuffData buffData)
+    public void SetData(BuffData buffData,bool isWorldObject)
     {
         this.buffData = buffData;
+        this.isWorldObject = isWorldObject;
 
         level_txt.gameObject.SetActive(buffData.CurLv > 1);
         level_txt.text = buffData.CurLv.ToString();

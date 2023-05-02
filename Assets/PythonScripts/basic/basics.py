@@ -112,7 +112,7 @@ class Attack:
 
 
 class Factor:
-    def affect(self, timing: Timing, **kw: Union[Attack, Player, Enemy, Skill]) -> bool:
+    def affect(self, timing: Timing, **kw: Union[Attack, Player, Enemy, _Skill]) -> bool:
         """
         技能、遗物、buff
         :param timing: 时机
@@ -130,7 +130,7 @@ class Factor:
         return 0
 
 
-class SkillMetaclass(type):
+class _SkillMetaclass(type):
     def __new__(cls, name, bases, attrs):
         if "init" in attrs:
             pass
@@ -155,7 +155,7 @@ class ProfMaxIn(MaxIn):
     prof = Prof.Common
 
 
-class Skill(RankMaxIn, ProfMaxIn, Factor, metaclass=SkillMetaclass):
+class _Skill(RankMaxIn, ProfMaxIn, Factor, metaclass=_SkillMetaclass):
     activated = True
 
     def upgrade(self):
@@ -170,7 +170,7 @@ class Skill(RankMaxIn, ProfMaxIn, Factor, metaclass=SkillMetaclass):
             setattr(self, k, v)
 
 
-class SkillAgent(list[Skill, None]):
+class SkillAgent(list[_Skill, None]):
     def __init__(self, *members):
         super().__init__(members)
 
@@ -233,14 +233,14 @@ class CooldownMaxIn(MaxIn):
     cd = 7
 
 
-class PassiveSkill(Skill):
+class PassiveSkill(_Skill):
 
     @classmethod
     def rank(cls) -> Rank:
         pass
 
 
-class ActiveSkill(Skill):
+class _ActiveSkill(_Skill):
     @abstractmethod
     def cast(self, caster: FightMaxIn, target: (FightMaxIn, None)) -> (Attack, None):
         """
@@ -252,14 +252,14 @@ class ActiveSkill(Skill):
         pass
 
 
-class AimingSKill(ActiveSkill):
+class AimingSKill(_ActiveSkill):
 
     @abstractmethod
     def cast(self, caster: FightMaxIn, target: (FightMaxIn, None)) -> (Attack, None):
         pass
 
 
-class NonAimingSKill(ActiveSkill):
+class NonAimingSKill(_ActiveSkill):
 
     @abstractmethod
     def cast(self, caster: FightMaxIn, target: (FightMaxIn, None)) -> (Attack, None):

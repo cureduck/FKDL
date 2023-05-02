@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
-
+using UI;
 namespace Managers
 {
     public class DebugManager : Singleton<DebugManager>
@@ -102,11 +102,13 @@ namespace Managers
         public void Add1Atk()
         {
             GameManager.Instance.PlayerData.Strengthen(new BattleStatus{PAtk = 1});
+            PlayerMainPanel.Instance.PlayGetCharacterPointEffect(0);
         }
         
         public void Add1Def()
         {
             GameManager.Instance.PlayerData.Strengthen(new BattleStatus{PDef = 1});
+            PlayerMainPanel.Instance.PlayGetCharacterPointEffect(2);
         }
         
     }

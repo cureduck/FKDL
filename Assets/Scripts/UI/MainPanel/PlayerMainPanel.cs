@@ -2,6 +2,7 @@
 using Managers;
 using TMPro;
 using UnityEngine;
+using DG.Tweening;
 
 namespace UI
 {
@@ -13,6 +14,14 @@ namespace UI
         private CareerInformationView profInformationView;
         [SerializeField]
         private PlayerRelicListView relicListView;
+        [SerializeField]
+        private TMP_TextAnimation paStateViewTransform;
+        [SerializeField]
+        private TMP_TextAnimation pdStateViewTransform;
+        [SerializeField]
+        private TMP_TextAnimation maStateViewTransform;
+        [SerializeField]
+        private TMP_TextAnimation mdStateViewTransform;
         private void Start()
         {
             GameManager.Instance.GameLoaded += () =>
@@ -49,6 +58,42 @@ namespace UI
             {
                 GoldPanel.PlayGetKeyEffect(screenPosiion, offer.Rank);
             }
+
+        }
+
+        /// <summary>
+        /// 获得对应的属性点提升
+        /// </summary>
+        /// <param name="type">0表示物攻，1表示魔攻，2表示物防，3表示魔防</param>
+        /// <param name="screenPosiion"></param>
+        public void PlayGetCharacterPointEffect(int type) 
+        {
+            TMP_TextAnimation targetTrans;
+            if (type == 0)
+            {
+                targetTrans = paStateViewTransform;
+            }
+            else if (type == 1) 
+            {
+                targetTrans = maStateViewTransform;
+
+            }
+            else if (type == 2)
+            {
+                targetTrans = pdStateViewTransform;
+            }
+            else if (type == 3)
+            {
+                targetTrans = mdStateViewTransform;
+            }
+            else 
+            {
+                return;
+            }
+
+            targetTrans.SetTempColor(Color.yellow);
+            targetTrans.SetTempFontSize(2);
+
 
         }
 
