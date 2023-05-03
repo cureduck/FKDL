@@ -162,7 +162,7 @@ namespace Managers
         /// <param name="rank"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public T1[] RollT(Rank rank, int count = 1)
+        public virtual T1[] RollT(Rank rank, int count = 1)
         {
             if (count == 0)
             {
@@ -193,7 +193,7 @@ namespace Managers
         /// <param name="count"></param>
         /// <returns></returns>
         [Button]
-        public T1[] GenerateT(Rank rank, float luckyChance, int count = 1)
+        public virtual T1[] GenerateT(Rank rank, float luckyChance, int count = 1)
         {
             IEnumerable<T1> s = new LinkedList<T1>();
             var slotLeft = count;

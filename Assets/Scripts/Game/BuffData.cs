@@ -232,5 +232,15 @@ namespace Game
             return MemberwiseClone();
         }
 
+        public static BuffData Leakage(int stack = 1)
+        {
+            return new BuffData("Leakage", stack);
+        }
+
+        public static BuffData PPlus(int stack = 1)
+        {
+            return new BuffData("PPlus", stack);
+        }
+
     }
 }

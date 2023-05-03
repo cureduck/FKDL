@@ -127,7 +127,7 @@ class Factor:
         :param timing 时机
         :return: 返回值为数值即为优先级，若为None则为不影响，默认返回0
         """
-        return 0
+        return None
 
 
 class _SkillMetaclass(type):

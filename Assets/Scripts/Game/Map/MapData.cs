@@ -14,7 +14,7 @@ namespace Game
         public SquareState SquareState = SquareState.UnRevealed;
 
         [JsonIgnore] protected PlayerData Player => GameManager.Instance.PlayerData;
-        [JsonIgnore] protected SecondaryData SecondaryData => GameDataManager.Instance.SecondaryData;
+        [JsonIgnore] protected SecondaryData SData => GameDataManager.Instance.SecondaryData;
         
         public event Action<Args> ReactResultInfo;
         

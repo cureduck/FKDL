@@ -1,4 +1,5 @@
-﻿using Managers;
+﻿using System.Collections.Generic;
+using Managers;
 
 namespace Game
 {
@@ -21,13 +22,21 @@ namespace Game
     {
         public FailureInfo(FailureReason reason, bool autoBroadCast = true)
         {
+            Reason = new List<FailureReason>(){reason};//{reason};
+            if (autoBroadCast)
+            {
+                BroadCastInfo();
+            }
+        }        
+        public FailureInfo(List<FailureReason> reason, bool autoBroadCast = true)
+        {
             Reason = reason;
             if (autoBroadCast)
             {
                 BroadCastInfo();
             }
         }
-        public FailureReason Reason { get; }
+        public List<FailureReason> Reason { get; }
 
         public sealed override void BroadCastInfo()
         {

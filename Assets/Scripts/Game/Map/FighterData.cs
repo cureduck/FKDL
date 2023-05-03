@@ -432,7 +432,7 @@ namespace Game
 
         public void RandomStrengthen(int v = 1)
         {
-            var r = SecondaryData.CurGameRandom.Next(0, 6);// Random.Range(0, 6);
+            var r = SData.CurGameRandom.Next(0, 6);// Random.Range(0, 6);
             switch (r)
             {
                 case 0:
@@ -718,7 +718,7 @@ namespace Game
                     continue;
                 }
                 
-                if ((Skills[i].Bp.Positive)&&(Skills[i].CooldownLeft > 0))
+                if ((Skills[i].CooldownLeft > 0))
                 {
                     Skills[i].CooldownLeft -= x;
                     if (Skills[i].CooldownLeft < 0)

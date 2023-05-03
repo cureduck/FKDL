@@ -35,7 +35,7 @@ namespace Managers
             }
             
             
-            EnemyClone.OnReact(skill, out var PlayerAttack, out var EnemyAttack);
+            EnemyClone.OnReact(sk, out var PlayerAttack, out var EnemyAttack);
             
             
             return new FightPredictResult()

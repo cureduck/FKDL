@@ -38,6 +38,8 @@ namespace Managers
                 //Description = line[10]
             };
         }
+        
+        
 
         protected override void Bind(Skill v, MethodInfo method, EffectAttribute attr)
         {
@@ -45,10 +47,40 @@ namespace Managers
             base.Bind(v, method, attr);
         }
 
+        public override Skill[] RollT(Rank rank, int count = 1)
+        {
+            var s = base.RollT(rank, count);
+            foreach (var ss in s)
+            {
+                Available.Add(ss.Id);
+            }
+
+            return s;
+        }
+
+#if UNITY_EDITOR
+        
+
+        public List<string> Available = new List<string>();
+
+        public override Skill[] GenerateT(Rank rank, float luckyChance, int count = 1)
+        {
+            var skills = base.GenerateT(rank, luckyChance, count);
+            foreach (var ss in skills)
+            {
+                Available.Add(ss.Id);
+            }
+
+            return skills;
+        }
 
         protected override Skill CreateTest(string id, MethodInfo method, EffectAttribute attr)
         {
             return new Skill(Rank.Normal, id);
         }
+        
+#endif
+        
+        
     }
 }

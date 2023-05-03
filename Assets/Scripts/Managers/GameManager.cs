@@ -42,9 +42,9 @@ namespace Managers
             try
             {
                 var f = File.ReadAllText("Assets/PythonScripts/tools/relics_loc.csv");
-                LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.AddNewTerms);
+                LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
                 f = File.ReadAllText("Assets/PythonScripts/tools/skills_loc.csv");
-                LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.AddNewTerms);
+                LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
             }
             catch (Exception e)
             {
@@ -164,6 +164,9 @@ namespace Managers
             GameLoaded?.Invoke();
             //GameManager.Instance.PlayerData.Gain(10000);
             //GC.Collect();
+#if UNITY_EDITOR
+            Debug.Log(((SkillManager)SkillManager.Instance).Available.Count);
+#endif
         }
         
         [Button]
@@ -178,6 +181,7 @@ namespace Managers
         
         private void LoadMap()
         {
+            
             GameManager.Instance.Focus = null;
             LoadFloor(Map.Floors[Map.CurrentFloor]);
         }

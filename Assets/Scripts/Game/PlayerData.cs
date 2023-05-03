@@ -251,9 +251,9 @@ namespace Game
 
             for (var i = skillData.Bp.Rank; i < Rank.God; i++)
             {
-                if (SecondaryData.SkillPoint[i] > 0)
+                if (SData.SkillPoint[i] > 0)
                 {
-                    SecondaryData.SkillPoint[i] -= 1;
+                    SData.SkillPoint[i] -= 1;
                     break;
                 }
             }
@@ -472,10 +472,19 @@ namespace Game
         {
             var f = JsonConvert.SerializeObject(this, new JsonSerializerSettings
             {
-                TypeNameHandling = TypeNameHandling.All
+                TypeNameHandling = TypeNameHandling.All,
+                Formatting = Formatting.Indented
             });
             File.WriteAllText(path, f);
         }
+
+
+        [Button]
+        private void SaveToInit()
+        {
+            Save(Paths._initPath);
+        }
+        
 
 
         public override string ToString()

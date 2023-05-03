@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Managers;
@@ -31,7 +32,7 @@ namespace Game
         {
             CurLv = lv;
             Id = skill.Id;
-            skill.Cooldown = 0;
+            CooldownLeft = 0;
             Sealed = skill.BattleOnly;
             Counter = 0;
         }
@@ -72,25 +73,32 @@ namespace Game
         
         public bool CanCast(out Info info, bool autoBroadcast)
         {
+            var reasons = new List<FailureReason>();
             if (!Bp.Positive)
             {
-                info = new FailureInfo(FailureReason.SkillPassive, autoBroadcast);
-                return false;
+                reasons.Add(FailureReason.SkillPassive);
             }
 
             if ((Bp.BattleOnly) && (!GameManager.Instance.InBattle))
             {
-                info = new FailureInfo(FailureReason.NoTarget, autoBroadcast);
-                return false;
+                reasons.Add(FailureReason.NoTarget);
             }
 
             if (CooldownLeft > 0)
             {
-                info = new FailureInfo(FailureReason.SkillNotReady, autoBroadcast);
+                reasons.Add(FailureReason.SkillNotReady);
+            }
+
+            if (reasons.Count == 0)
+            {
+                info = new SuccessInfo();
+                return true;
+            }
+            else
+            {
+                info = new FailureInfo(reasons, autoBroadcast);
                 return false;
             }
-            info = new SuccessInfo();
-            return true;
         }
 
 
@@ -597,6 +605,40 @@ namespace Game
             };
         }
         
+        
+        [Effect("ANBF_MAG", Timing.OnAttack, priority = 100)]
+        private Attack ANBF_MAG(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (attack.PAtk == 0)
+            {
+                attack.Multi += Bp.Param1 * CurLv;
+            }
+
+            return attack;
+        }
+        
+
+        [Effect("BF_MAG", Timing.OnHandleSkillInfo)]
+        private Info BF_MAG(Info info, SkillData skill, PlayerData player)
+        {
+            if (info is FailureInfo failure && failure.Reason.Contains(FailureReason.SkillNotReady))
+            {
+                player.CounterCharge(-BattleStatus.HP((int)(Bp.Param1 - Bp.Param2 * CurLv)*skill.CooldownLeft));
+                failure.Reason.Remove(FailureReason.SkillNotReady);
+                if (failure.Reason.Count == 0)
+                {
+                    return new SuccessInfo();
+                }
+                else
+                {
+                    return failure;
+                }
+            }
+
+            return info;
+        }
+        
+        
         [Effect("YSS_MAG", Timing.OnAttack, priority = -100)]
         private Attack Meteor(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -670,6 +712,10 @@ namespace Game
         [Effect("ADLF_MAG", Timing.OnAttack)]
         private Attack ADLF_MAG(Attack attack, FighterData fighter, FighterData enemy)
         {
+            if (CooldownLeft > 0)
+            {
+                return attack;
+            }
             if (attack.Combo > 1)
             {
                 attack.Combo += 1;
@@ -678,6 +724,15 @@ namespace Game
             }
             return attack;
         }
+        
+        [Effect("ADLF_MAG", Timing.OnSetCoolDown)]
+        private SkillData ADLF_CD(SkillData skill, FighterData player)
+        {
+            skill.InitCoolDown -= CurLv;
+            skill.BonusCooldown(CurLv);
+            return skill;
+        }
+        
 
 
         [Effect("LJZL_MAG", Timing.OnAttackSettle)]
@@ -698,6 +753,14 @@ namespace Game
             player.ApplySelfBuff(new BuffData("divinity", 1));
             player.ApplySelfBuff(new BuffData("leakage", 3));
             player.ApplySelfBuff(new BuffData("vigor", 1));
+        }
+
+        [Effect("YLK_MAG", Timing.OnSetCoolDown)]
+        private SkillData YLK_CD(SkillData skill, FighterData player)
+        {
+            skill.InitCoolDown -= CurLv;
+            skill.BonusCooldown(CurLv);
+            return skill;
         }
         
 
@@ -847,8 +910,18 @@ namespace Game
             
             return attack;
         }
-        
-        
+
+        [Effect("SYS_ASS", Timing.OnAttack, priority = -10000)]
+        private Attack SYS_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            attack = new Attack(pAtk: (int) (enemy.CurHp * Usual));
+
+            return attack;
+        }
+
+
+
+
         [Effect("test1_com", Timing.OnAttack, priority = -10000)]
         private Attack test1_com(Attack attack, FighterData fighter, FighterData enemy)
         {

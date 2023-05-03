@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Managers;
 using Sirenix.OdinInspector;
 using UI;
@@ -79,11 +80,70 @@ namespace Game
 
         private int GetPrice(CsvData good)
         {
-            return 10;
+            int basePrice;
+            switch (good)
+            {
+                case Potion potion:
+                    basePrice = 10;
+                    break;
+                case Relic relic:
+                    basePrice = 30;
+                    break;
+                case Skill skill:
+                    basePrice = 20;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(good));
+            }
+
+            float multi = 5f;
+            
+            switch (good.Rank)
+            {
+                case Rank.Normal:
+                    multi = 1;
+                    break;
+                case Rank.Uncommon:
+                    multi = 2;
+                    break;
+                case Rank.Rare:
+                    multi = 3;
+                    break;
+                case Rank.Ultra:
+                    break;
+                case Rank.Prof:
+                    break;
+                case Rank.God:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var r = 0.8f + .4f * SData.CurGameRandom.NextDouble();
+            
+            return (int)(basePrice * multi *r);
         }
 
         private int GetKeyPrice(Rank rank)
         {
+            switch (rank)
+            {
+                case Rank.Normal:
+                    return 10;
+                    break;
+                case Rank.Uncommon:
+                    break;
+                case Rank.Rare:
+                    break;
+                case Rank.Ultra:
+                    break;
+                case Rank.Prof:
+                    break;
+                case Rank.God:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(rank), rank, null);
+            }
             return 10;
         }
 
