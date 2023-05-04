@@ -733,6 +733,21 @@ namespace Game
             return skill;
         }
         
+        [Effect("ANHJ_MAG", Timing.OnDefendSettle, priority = -1)]
+        private Attack ANHJ(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            var leftMp = fighter.Status.CurMp;
+            var maxCost = (int)(attack.SumDmg / 2 / Usual);
+            var cost = math.min(maxCost, leftMp);
+            fighter.Status.CurMp -= (int)cost;
+
+            var absorb = (int)(cost * Usual);
+
+            attack.PDmg = attack.PDmg - absorb;
+
+            return attack;
+        }
+        
 
 
         [Effect("LJZL_MAG", Timing.OnAttackSettle)]

@@ -47,6 +47,18 @@ namespace Managers
             base.Bind(v, method, attr);
         }
 
+        
+
+        protected override Skill CreateTest(string id, MethodInfo method, EffectAttribute attr)
+        {
+            return new Skill(Rank.Normal, id);
+        }
+        
+#if UNITY_EDITOR
+        
+
+        public List<string> Available = new List<string>();
+
         public override Skill[] RollT(Rank rank, int count = 1)
         {
             var s = base.RollT(rank, count);
@@ -54,15 +66,10 @@ namespace Managers
             {
                 Available.Add(ss.Id);
             }
-
             return s;
         }
-
-#if UNITY_EDITOR
         
-
-        public List<string> Available = new List<string>();
-
+        
         public override Skill[] GenerateT(Rank rank, float luckyChance, int count = 1)
         {
             var skills = base.GenerateT(rank, luckyChance, count);
@@ -72,11 +79,6 @@ namespace Managers
             }
 
             return skills;
-        }
-
-        protected override Skill CreateTest(string id, MethodInfo method, EffectAttribute attr)
-        {
-            return new Skill(Rank.Normal, id);
         }
         
 #endif

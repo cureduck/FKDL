@@ -40,12 +40,12 @@ namespace Game
 
         public sealed override void BroadCastInfo()
         {
-            HelpInfoManager.Instance.SetTerm(Reason.ToString());
+            HelpInfoManager.Instance.SetTerm(Reason[0].ToString());
         }
 
         public override string ToString()
         {
-            return Reason.ToString();
+            return Reason[0].ToString();
         }
     }
 
