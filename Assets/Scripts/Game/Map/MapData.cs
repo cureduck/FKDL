@@ -2,6 +2,7 @@
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Stateless;
 using UI;
 using Unity.Mathematics;
 using UnityEngine;
@@ -17,6 +18,32 @@ namespace Game
         [JsonIgnore] protected SecondaryData SData => GameDataManager.Instance.SecondaryData;
         
         public event Action<Args> ReactResultInfo;
+        
+        /*
+        [ShowInInspector, JsonIgnore]
+        private StateMachine<SquareState, SquareChangeTrigger> sm;
+
+
+        public MapData()
+        {
+            sm = new StateMachine<SquareState, SquareChangeTrigger>(
+                (() => SquareState),
+                s => SquareState = s
+                );
+
+            sm.Configure(SquareState.UnRevealed)
+                .Permit(SquareChangeTrigger.UnFocus, SquareState.UnFocus)
+                .Permit(SquareChangeTrigger.Focus, SquareState.Focus);
+
+            sm.Configure(SquareState.UnFocus)
+                .Permit(SquareChangeTrigger.Focus, SquareState.Focus);
+            
+            sm.Configure(SquareState.Done)
+                .Permit()
+        }
+        */
+        
+        
         
         /// <summary>
         /// 新游戏时调用
@@ -183,6 +210,15 @@ namespace Game
         Done = 0b1000,
         Revealed = Focus | UnFocus
     }
+
+    public enum SquareChangeTrigger
+    {
+        UnReveal,
+        Focus,
+        UnFocus,
+        Done
+    }
+    
 
     public class SquareInfo
     {

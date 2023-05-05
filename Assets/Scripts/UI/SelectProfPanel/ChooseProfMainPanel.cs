@@ -114,7 +114,7 @@ public class ChooseProfMainPanel : MonoBehaviour
                 }
             }
         }
-
+        AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
         UpdateView();
         //Debug.Log($"{cellChooseProfView}:{index}被点击");
     }
@@ -138,6 +138,7 @@ public class ChooseProfMainPanel : MonoBehaviour
             profDatas[i] = string.Empty;
         }
         curSelectViewIndex.Clear();
+        AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
         UpdateView();
     }
 
@@ -146,6 +147,7 @@ public class ChooseProfMainPanel : MonoBehaviour
         GameDataManager.Instance.SecondaryData = new Game.SecondaryData();
         GameDataManager.Instance.SecondaryData.Prof = profDatas;
         FindObjectOfType<TransitionManager>().LoadScene("MainScene", "DiagonalRectangleGrid", .2f);
+        AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
     }
 
 }

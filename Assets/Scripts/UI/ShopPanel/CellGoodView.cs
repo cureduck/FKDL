@@ -11,6 +11,11 @@ using System;
 public class CellGoodView : MonoBehaviour
 {
     [SerializeField]
+    private Color posstiveColor;
+    [SerializeField]
+    private Color unPosstiveColor;
+
+    [SerializeField]
     private Image itemIcon;
     [SerializeField]
     private TMP_Text price_txt;
@@ -52,12 +57,21 @@ public class CellGoodView : MonoBehaviour
         discountSign.gameObject.SetActive(false);
 
         soldOutSign.gameObject.SetActive(offer.isSold);
-
+        itemIcon.color = Color.white;
         if (offer.Kind == Offer.OfferKind.Skill)
         {
             Skill skill;
             SkillManager.Instance.TryGetById(offer.Id, out skill);
             itemIcon.sprite = skill.Icon;
+            if (skill.Positive)
+            {
+                itemIcon.color = posstiveColor;
+            }
+            else
+            {
+                itemIcon.color = unPosstiveColor;
+            }
+
 
             itemName_txt.SetTerm(skill.Id);
         }

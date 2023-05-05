@@ -67,8 +67,10 @@ namespace Game
                         (GameManager.Instance.PlayerData, CrystalManager.Instance.Lib[crystalPanel.Id])
                     );
                     panel.gameObject.SetActive(true);
+                    break;
+                case DoorSaveData doorSaveData:
                     
-                    break;;
+                    break;
             }
         }
 

@@ -382,11 +382,13 @@ namespace Game
         private const float UpTime = .4f;
 
         private Tween _breath;
-        public Light2D _breathLight;
-        
+        [SerializeField] private Light2D _breathLight;
+        [SerializeField] private Light2D _pointerOverLight;
         
         private void OnFocus()
         {
+            if (Data.SquareState == SquareState.Done) return;
+
             _sequence.Kill();
             _sequence = DOTween.Sequence();
             
@@ -432,6 +434,8 @@ namespace Game
 
         private void OnReveal()
         {
+            if (Data.SquareState == SquareState.Done) return;
+
             Bonus.gameObject.SetActive(true);
             
             _sequence.Kill();
@@ -464,7 +468,11 @@ namespace Game
                         ()=> _breathLight.intensity,
                         (value => _breathLight.intensity = value),
                         0, UpTime))
-                .OnComplete(() => { _breathLight.intensity = 0; });
+                .OnComplete(() =>
+                {
+                    _breathLight.intensity = 0;
+                    _pointerOverLight.intensity = 0;
+                });
         }
         
 

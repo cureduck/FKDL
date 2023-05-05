@@ -18,7 +18,7 @@ namespace Managers
         public ConfirmPanel confirmPanel;
         public FightPredictPanel FightPredictPanel;
         public WarningInfoDebugPanel warningInfoPanel;
-        
+        public SettingPanel settingPanel;
 
         public SkillInfoPanel skillInfoPanel;
         public SimpleInfoItemPanel simpleInfoItemPanel;
@@ -28,6 +28,11 @@ namespace Managers
         protected override void Awake()
         {
             base.Awake();
+
+        }
+
+        private void Start()
+        {
             confirmPanel?.gameObject.SetActive(false);
             if (dragViewParent != null)
             {
@@ -38,6 +43,7 @@ namespace Managers
             ShopPanel?.Init();
             EnemyPanel?.Init();
             simpleInfoItemPanel?.Init();
+            settingPanel?.Init();
         }
 
     }

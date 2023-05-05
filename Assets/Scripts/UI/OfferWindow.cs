@@ -73,6 +73,7 @@ namespace UI
         {
             animationGroup.SelectTarget(-1);
             StartCoroutine(CloseWindowIE());
+            AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
         }
 
         private IEnumerator CloseWindowIE() 

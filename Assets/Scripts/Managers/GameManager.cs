@@ -41,9 +41,9 @@ namespace Managers
         {
             try
             {
-                var f = File.ReadAllText("Assets/PythonScripts/tools/relics_loc.csv");
+                var f = File.ReadAllText("Assets/PythonScripts/relics_loc.csv");
                 LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
-                f = File.ReadAllText("Assets/PythonScripts/tools/skills_loc.csv");
+                f = File.ReadAllText("Assets/PythonScripts/skills_loc.csv");
                 LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
             }
             catch (Exception e)

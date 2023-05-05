@@ -39,7 +39,7 @@ public class SquarePointEnter : MonoBehaviour
             if (square.Data.SquareState == SquareState.UnFocus|| square.Data.SquareState == SquareState.Focus) 
             {
                 SquareInfo squareInfo = square.Data.GetSquareInfo();
-                WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { title = squareInfo.Name, describe = squareInfo.Desc, screenPosition = Camera.main.WorldToScreenPoint(transform.position) });
+                WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { title = squareInfo.Name, describe = squareInfo.Desc, worldTrans = transform });
             }
 
         }

@@ -409,7 +409,7 @@ namespace Game
                                 var rr = (Rank) int.Parse(id[0].ToString());
                                 id = PotionManager.Instance.RollT(rr)[0].Id;
                             }
-                            var c = es.Length > 1 ? int.Parse(es[2]) : 1;
+                            var c = es.Length > 2 ? int.Parse(es[2]) : 1;
                             for (int i = 0; i < c; i++)
                             {
                                 TryTakePotion(id, out _);
@@ -422,6 +422,7 @@ namespace Game
                 catch (Exception e)
                 {
                     Debug.LogError($"{cmd} execute error");
+                    Debug.LogError(e);
                 }
                 
             }

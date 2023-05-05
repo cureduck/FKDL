@@ -481,6 +481,7 @@ namespace Game
         
         
         /// <summary>
+        /// 参与者在执行参与事项的时候，会查询所有可能的影响因素：技能、buff、遗物，挑选出其中会影响的，按照Priority，优先级排好序，依次作用于结果
         /// 方法参数查看触发时机注释，必须匹配
         /// </summary>
         /// <param name="timing">触发时机</param>

@@ -704,8 +704,11 @@ namespace Game
         private Attack FaLiBaoZou(Attack attack, FighterData fighter, FighterData enemy)
         {
             var num = attack.CostInfo.ActualValue;
-            attack.MAtk += num;
-            Activated?.Invoke();
+            if (num != 0)
+            {
+                attack.MAtk += num;
+                Activated?.Invoke();
+            }
             return attack;
         }
 
@@ -737,13 +740,19 @@ namespace Game
         private Attack ANHJ(Attack attack, FighterData fighter, FighterData enemy)
         {
             var leftMp = fighter.Status.CurMp;
-            var maxCost = (int)(attack.SumDmg / 2 / Usual);
-            var cost = math.min(maxCost, leftMp);
-            fighter.Status.CurMp -= (int)cost;
 
-            var absorb = (int)(cost * Usual);
+            if (leftMp > 0 && attack.PDmg > 0)
+            {
+                Activated?.Invoke();
 
-            attack.PDmg = attack.PDmg - absorb;
+                var maxAbsorb = math.max(fighter.Status.CurMp * Usual, attack.PDmg);
+                
+                fighter.Cost(new CostInfo((int)(maxAbsorb/Usual), CostType.Mp));
+                
+                attack.PDmg -= (int)maxAbsorb;
+            }
+            
+
 
             return attack;
         }

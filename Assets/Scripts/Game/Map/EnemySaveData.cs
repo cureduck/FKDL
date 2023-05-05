@@ -117,7 +117,9 @@ namespace Game
             base.OnLeave();
             if (IsAlive)
             {
+                DeathCheck();
                 Chase();
+                DeathCheck();
             }
             else
             {

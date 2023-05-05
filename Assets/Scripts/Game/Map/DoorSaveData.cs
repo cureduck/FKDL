@@ -20,9 +20,9 @@ namespace Game
             base.OnReact();
             try
             {
-                if (GameManager.Instance.PlayerData.Keys[Rank] > 0)
+                if (Player.Keys[Rank] > 0)
                 {
-                    GameManager.Instance.PlayerData.Keys[Rank] -= 1;
+                    Player.Keys[Rank] -= 1;
                     InformReactResult(new DoorArgs(){CanReact = true});
                     Destroyed();
                 }
@@ -30,9 +30,9 @@ namespace Game
                 {
                     var cost = CostInfo.HpCost(3);
                     
-                    GameManager.Instance.PlayerData.Cost(cost, "door");
+                    Player.Cost(cost, "door");
 
-                    if (Random.Range(0f, 1f) < .3f)
+                    if (SData.CurGameRandom.NextDouble() < .5f)
                     {
                         InformReactResult(new DoorArgs(){CanReact = true});
                         Destroyed();

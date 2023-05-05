@@ -16,7 +16,7 @@ namespace Managers
         public const string AudioCrystal = "Audio_Crystal";
         public const string AudioClearRock = "Audio_Clear_Rock";
         public const string AudioGainCoin = "Audio_Gain_Coin";
-
+        public const string AuidoUIButtonClick = "Auido_UI_ButtonClick";
         [SerializeField]
         private CellAudioPrefab cellAudioPrefab;
         private ObjectPool objectPool;
@@ -29,16 +29,13 @@ namespace Managers
         public LerpMoveAudio bossBgm;
         public AudioSource SoundEffect;
 
-        public Slider SESlider;
-        public Slider BGMSlider;
-        
         
         public Dictionary<string, AudioClip> AudioClips;
 
         [ShowInInspector] private LinkedList<AudioClip> SEQueue;
-        
-        
-        private GameSettings Settings => SettingManager.Instance.GameSettings;
+
+
+        public GameSettings Settings;
 
         private void Start()
         {
@@ -56,8 +53,6 @@ namespace Managers
                 bossBgm.SetData(bossBGMs[UnityEngine.Random.Range(0, bossBGMs.Length)]);
             }
 
-            SESlider.value = Settings.SEVolume;
-            BGMSlider.value = Settings.BgmVolume;
 
             AudioClip[] audioClips = Resources.LoadAll<AudioClip>("Audio");
             for (int i = 0; i < audioClips.Length; i++)
@@ -120,11 +115,20 @@ namespace Managers
         {
             AudioClip curClip;
 
-            if(AudioClips.TryGetValue(id, out curClip))
+            try
             {
-                GameObject cur = objectPool.CreatInstance(new CellAudioPrefab.Args { audioClip = curClip, volume = SESlider.value });
-                cur.AddComponent<InvokeTrigger>().Set(curClip.length + 0.5f, () => objectPool.UnSpawnInstance(cur));
+                if(AudioClips.TryGetValue(id, out curClip))
+                {
+                    GameObject cur = objectPool.CreatInstance(new CellAudioPrefab.Args { audioClip = curClip, volume = Settings.SEVolume });
+                    cur.AddComponent<InvokeTrigger>().Set(curClip.length + 0.5f, () => objectPool.UnSpawnInstance(cur));
+                }
             }
+            catch (Exception e)
+            {
+                Debug.LogError($"{id} played error");
+                Debug.LogError(e);
+            }
+
         }
 
         [Button]
