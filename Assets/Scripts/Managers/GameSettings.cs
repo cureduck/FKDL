@@ -45,6 +45,7 @@ namespace Managers
                     CameraMan.Instance.Target = GameManager.Instance.Focus.transform.position;
                 }
                 WindowManager.Instance.EnemyPanel.transform.rotation = Camera.main.transform.rotation;
+                WindowManager.Instance.SquareInfoPanel.transform.rotation = Camera.main.transform.rotation;
                 _degree = value;
             }
         }

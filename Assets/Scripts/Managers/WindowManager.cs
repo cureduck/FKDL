@@ -20,6 +20,7 @@ namespace Managers
         public WarningInfoDebugPanel warningInfoPanel;
         public SettingPanel settingPanel;
 
+        public SquareInfoPanel SquareInfoPanel;
         public SkillInfoPanel skillInfoPanel;
         public SimpleInfoItemPanel simpleInfoItemPanel;
 

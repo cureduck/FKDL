@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Random = System.Random;
 
 namespace Tools
@@ -56,6 +58,22 @@ namespace Tools
             }
             return default(T);
         }
+        
+        
+        /// <summary>
+        /// 计算默认<>号内的数学表达式
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="pair">标识计算段落的左右标识符，默认为<></param>
+        /// <returns></returns>
+        public static string Calculate(this string s, (char left, char right) pair = default)
+        {
+            if (pair == default) pair = ('<', '>');
+            var pattern = $"{pair.left}.{{1,}}{pair.right}";
+            var match = Regex.Match(s, pattern);
+            var ca = Regex.Replace(match.Value, "[<>]", "");
+            object result = new DataTable().Compute(ca, "");
+            return Regex.Replace(s, pattern, result.ToString());
+        }
     }
 }
-

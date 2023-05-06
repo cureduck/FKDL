@@ -6,6 +6,7 @@ using UnityEngine;
 using Game;
 using I2.Loc;
 using TMPro;
+using Tools;
 
 public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 {
@@ -117,6 +118,9 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
             describe.SetTerm($"{curSkilInfo.Id}_desc");
             DescParamsManager.SetParameterValue("P1", curSkilInfo.Param1.ToString());
             DescParamsManager.SetParameterValue("P2", curSkilInfo.Param2.ToString());
+            DescParamsManager.SetParameterValue("CurLv", Data.skillData.CurLv.ToString());
+            describe.GetComponent<TMP_Text>().text = describe.GetComponent<TMP_Text>().text.Calculate();
+            
             colddownInfo.SetTerm("CooldownInfo");
             ColdDownParamsManager.SetParameterValue("VALUE", curSkilInfo.Cooldown.ToString());
 

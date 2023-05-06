@@ -30,8 +30,7 @@ def write_data(reader, f, save_path):
 
 
 def line_converter(line):
-    return line.replace("P1", "<color=yellow>{[P1]}</color>").replace("P2", "<color=yellow>{[P2]}</color>").replace(
-        "Lv", "<color=yellow>Lv</color>")
+    return line.replace("P1", "{[P1]}").replace("P2", "{[P2]}").replace("CurLv", "{[CurLv]}")
 
 
 def write_loc(reader, f, save_path):

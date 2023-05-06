@@ -202,6 +202,7 @@ namespace Game
     }
     
     
+    [Flags]
     public enum SquareState
     {
         UnRevealed = 0b0001,
