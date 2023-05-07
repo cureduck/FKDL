@@ -137,7 +137,7 @@ namespace Managers
             {
                 PlayerData = PlayerData.LoadFromSave();
                 SecondaryData = SecondaryData.LoadFromSave();
-                SecondaryData.Init();
+                SecondaryData.LoadFromSave();
                 Map = Map.LoadFromSave();
                 PlayerData.BroadCastUpdated();
                 LoadMap();

@@ -26,7 +26,7 @@ namespace Game
         public override SquareInfo GetSquareInfo()
         {
             var msg = base.GetSquareInfo();
-            msg.P1 = Count;
+            msg.P1 = Count.ToString();
             return msg;
         }
     }

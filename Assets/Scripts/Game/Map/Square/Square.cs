@@ -299,6 +299,7 @@ namespace Game
             Id.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f +.6f, -0.01f);
             Bonus.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f - .6f, -0.01f);
             Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f, 0);
+            Icon.transform.localScale = new Vector3(1f, 1f, 0);
 
             
             
@@ -313,6 +314,10 @@ namespace Game
             name = $"{id}, {Data.Placement}";
             Id.SetTerm(id);
             Bonus.text = text;
+            if (!text.IsNullOrWhitespace())
+            {
+                Bonus.GetComponent<Localize>().SetTerm(text.ToLower());
+            }
             Icon.sprite = icon;
 
             if (icon != null)

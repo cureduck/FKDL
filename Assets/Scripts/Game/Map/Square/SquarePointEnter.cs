@@ -34,7 +34,9 @@ namespace Game
             if (((data.SquareState & SquareState.Revealed) != 0)&& !(data is EnemySaveData))
             {
                 WindowManager.Instance.SquareInfoPanel.Open(data.GetSquareInfo());
-                WindowManager.Instance.SquareInfoPanel.transform.position = transform.position;
+                var v = transform.position;
+                v.x += (float)data.Placement.Width / 2;
+                WindowManager.Instance.SquareInfoPanel.transform.position = v;
             }
             else
             {

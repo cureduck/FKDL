@@ -5,27 +5,42 @@ using UnityEngine;
 
 namespace Managers
 {
-    public class Singleton <T> : SerializedMonoBehaviour where T: Singleton<T>
+    public abstract class Singleton<T> : SerializedMonoBehaviour where T : Singleton<T>
     {
-        public static T Instance { get; private set; }
+        private static T instance;
+
+        public static T Instance
+        {
+            get
+            {
+                if(instance == null)
+                {
+                    // 查找是否已有本类型的实例
+                    instance = FindObjectOfType<T>();
+
+                    // 如果没有，则创建新实例并添加到场景中
+                    if(instance == null)
+                    {
+                        GameObject obj = new GameObject();
+                        instance = obj.AddComponent<T>();
+                        obj.name = typeof(T).ToString();
+                    }
+                }
+
+                return instance;
+            }
+        }
 
         protected virtual void Awake()
         {
-            if (Instance != null)
+            // 确保单例只有一个实例
+            if(instance != null && instance != this)
             {
                 Destroy(gameObject);
             }
             else
             {
-                Instance = (T) this;
-            }
-        }
-
-        protected void OnDestroy()
-        {
-            if (Instance == this)
-            {
-                Instance = null;
+                instance = (T)this;
             }
         }
     }

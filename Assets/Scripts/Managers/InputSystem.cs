@@ -56,7 +56,7 @@ namespace Managers
                 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Camera.main.transform.position -= (Vector3)delta;*/
                 
-                Camera.main.transform.position -= (Vector3)delta * DragRate;
+                Camera.main.transform.position -= (Vector3)delta * DragRate * Camera.main.fieldOfView;
                 BG.transform.position -= (Vector3)delta * DragRate * 0.05f;
             }
             

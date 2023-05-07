@@ -68,5 +68,12 @@ namespace Game
                 });
             }
         }
+
+        public override SquareInfo GetSquareInfo()
+        {
+            var info = base.GetSquareInfo();
+            info.P1 = _cost[_rank].ToString();
+            return info;
+        }
     }
 }

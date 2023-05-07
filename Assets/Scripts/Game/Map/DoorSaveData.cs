@@ -7,7 +7,9 @@ namespace Game
     public class DoorSaveData : MapData
     {
         public Rank Rank;
-
+        
+        private const int HpCost = 3;
+        
         public DoorSaveData(Rank rank)
         {
             Rank = rank;
@@ -28,7 +30,7 @@ namespace Game
                 }
                 else
                 {
-                    var cost = CostInfo.HpCost(3);
+                    var cost = CostInfo.HpCost(HpCost);
                     
                     Player.Cost(cost, "door");
 
@@ -48,7 +50,14 @@ namespace Game
                 Destroyed();
                 throw new Exception();
             }
+        }
 
+
+        public override SquareInfo GetSquareInfo()
+        {
+            var info = base.GetSquareInfo();
+            info.P1 = HpCost.ToString();
+            return info;
         }
     }
 }

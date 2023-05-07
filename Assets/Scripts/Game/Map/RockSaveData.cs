@@ -35,5 +35,12 @@ namespace Game
                 });
             }
         }
+
+        public override SquareInfo GetSquareInfo()
+        {
+            var info = base.GetSquareInfo();
+            info.P1 = Cost.ToString();
+            return info;
+        }
     }
 }

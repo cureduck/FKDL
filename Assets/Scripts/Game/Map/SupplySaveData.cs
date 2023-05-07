@@ -63,14 +63,14 @@ namespace Game
                     {
                         Name = "spring",
                         Desc = "spring_desc",
-                        P1 = value
+                        P1 = value.ToString()
                     };
                 case SupplyType.Grassland:
                     return new SquareInfo()
                     {
                         Name = "grassland",
                         Desc = "grassland_desc",
-                        P1 = value
+                        P1 = value.ToString()
                     };
                 case SupplyType.Camp:
                     return null;

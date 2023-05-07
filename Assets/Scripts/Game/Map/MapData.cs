@@ -152,7 +152,7 @@ namespace Game
             return new SquareInfo()
             {
                 Name = name,
-                Desc = name + "_desc"
+                Desc = $"{name}_desc"
             };
         }
 
@@ -225,7 +225,8 @@ namespace Game
     {
         public string Name;
         public string Desc;
-        public float P1;
+        public string P1;
+        public string P2;
     }
     
 }

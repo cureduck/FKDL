@@ -29,5 +29,12 @@ namespace Game
             base.OnReact();
             Destroyed();
         }
+
+        public override SquareInfo GetSquareInfo()
+        {
+            var info = base.GetSquareInfo();
+            info.P1 = Rank.ToString().ToLower();
+            return info;
+        }
     }
 }

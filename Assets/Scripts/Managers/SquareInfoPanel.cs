@@ -17,8 +17,11 @@ namespace Managers
         {
             Id.SetTerm(Data.Name);
             Desc.SetTerm(Data.Desc);
+
+            //var term = LocalizationManager.GetTranslation(Data.P1);
             
-            Desc.GetComponent<LocalizationParamsManager>().SetParameterValue("P1", Data.P1.ToString(CultureInfo.InvariantCulture));
+            Desc.GetComponent<LocalizationParamsManager>().SetParameterValue("P1", Data.P1);
+            Desc.GetComponent<LocalizationParamsManager>().SetParameterValue("P2", Data.P2);
         }
 
 
