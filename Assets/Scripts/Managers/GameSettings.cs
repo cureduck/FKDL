@@ -1,8 +1,6 @@
 ﻿using System;
-using I2.Loc;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Managers
@@ -18,6 +16,11 @@ namespace Managers
 
 
         private GameObject _bg;
+
+        private float _degree;
+
+
+        private float _fov;
 
         public GameObject BG
         {
@@ -54,8 +57,6 @@ namespace Managers
             }
         }
 
-        private float _degree;
-
 
         [JsonIgnore, ShowInInspector]
         public float FOV
@@ -69,10 +70,7 @@ namespace Managers
             }
         }
 
-
-        private float _fov;
-
-        #region 语言
+        /*#region 语言
 
         private string _languageType;
 
@@ -94,7 +92,7 @@ namespace Managers
             }
         }
 
-        #endregion
+        #endregion*/
 
         #region 分辨率
 

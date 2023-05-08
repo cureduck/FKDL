@@ -1,11 +1,6 @@
-﻿using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
-using Game;
+﻿using Game;
 using Sirenix.OdinInspector;
 using TMPro;
-using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 using UI;
 
 namespace Managers
@@ -16,6 +11,8 @@ namespace Managers
         public TMP_InputField BuffDebugInput;
         public TMP_InputField RelicDebugInput;
         public TMP_InputField SKillDebugInput;
+
+        private static PlayerData Player => GameDataManager.Instance.PlayerData;
 
         [Button]
         public void Apply(string id, int lv)
@@ -96,8 +93,6 @@ namespace Managers
             Player.Heal(BattleStatus.HP(Player.Status.MaxHp));
             Player.Heal(BattleStatus.Mp(Player.Status.MaxMp));
         }
-
-        private static PlayerData Player => GameDataManager.Instance.PlayerData;
 
         public void Add1Atk()
         {

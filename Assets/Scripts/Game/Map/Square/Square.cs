@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
 using I2.Loc;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
-using Unity.Mathematics;
+using Tools;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering.Universal;
-using UnityEngine.UI;
 
 namespace Game
 {
@@ -195,13 +187,13 @@ namespace Game
                     switch (d9.Type)
                     {
                         case SupplyType.Spring:
-                            SetContent("spring", d9.Rank.ToString(), icon: lib["spring"]);
+                            SetContent("spring", d9.Rank.ToString(RankDescType.DaZhongXiao), icon: lib["spring"]);
                             break;
                         case SupplyType.Grassland:
-                            SetContent("grassland", d9.Rank.ToString(), icon: lib["grassland"]);
+                            SetContent("grassland", d9.Rank.ToString(RankDescType.DaZhongXiao), icon: lib["grassland"]);
                             break;
                         case SupplyType.Camp:
-                            SetContent("camp", d9.Rank.ToString(), icon: lib["camp"]);
+                            SetContent("camp", d9.Rank.ToString(RankDescType.DaZhongXiao), icon: lib["camp"]);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -209,13 +201,13 @@ namespace Game
 
                     break;
                 case ShopSaveData d10:
-                    SetContent("shop", "", icon: lib["shop"]);
+                    SetContent("shop", " ", icon: lib["shop"]);
                     break;
                 case StairsSaveData d11:
                     SetContent("stairs", d11.Destination, icon: lib["stairs"]);
                     break;
                 case StartSaveData d12:
-                    SetContent("play", "");
+                    SetContent("play", " ");
                     CameraMan.Instance.Target = transform.position;
                     break;
                 case TravellerSaveData d13:

@@ -9,4 +9,10 @@
         Prof,
         God
     }
+
+    public enum RankDescType
+    {
+        DaZhongXiao,
+        HaoHuai,
+    }
 }

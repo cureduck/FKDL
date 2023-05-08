@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -14,15 +13,44 @@ namespace Game
 {
     public class SkillData : BpData<Skill>, IEffectContainer, ICloneable
     {
-        public int CurLv;
+        public int CooldownLeft;
 
         public int Counter;
+        public int CurLv;
 
         public int InitCoolDown;
-        public int CooldownLeft;
         public bool Sealed = false;
 
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
+
+
+        [JsonIgnore] public override Skill Bp => SkillManager.Instance.GetById(Id.ToLower());
+
+        public static SkillData Empty => new SkillData();
+        private float Usual => Bp.Param1 + Bp.Param2 * CurLv;
+
+        private bool InBattle => GameManager.Instance.InBattle;
+        private SecondaryData SData => GameDataManager.Instance.SecondaryData;
+
+        [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
+
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+
+        public override bool MayAffect(Timing timing, out int priority)
+        {
+            if (Sealed && !Bp.AlwaysActiveTiming.Contains(timing))
+            {
+                priority = 0;
+                return false;
+            }
+
+            return base.MayAffect(timing, out priority);
+        }
 
         public event Action<FighterData> OnLvUp;
         public event Action<FighterData> OnUnEquip;
@@ -50,7 +78,10 @@ namespace Game
             OnLvUp?.Invoke(fighter);
         }
 
-
+        /// <summary>
+        /// 设置冷却时间
+        /// </summary>
+        /// <param name="cd"></param>
         public void SetCooldown(int cd = default)
         {
             CooldownLeft = cd;
@@ -58,18 +89,16 @@ namespace Game
             InitCoolDown = CooldownLeft;
         }
 
-
+        /// <summary>
+        /// 冷却时间减少
+        /// </summary>
+        /// <param name="cd"></param>
         public void BonusCooldown(int cd)
         {
             CooldownLeft -= cd;
             CooldownLeft = CooldownLeft < 0 ? 0 : CooldownLeft;
         }
 
-
-        //public void SetCoolDown(int bonus = 0)
-        //{
-        //    Cooldown = math.max(0, Bp.Cooldown - bonus);
-        //}
 
         public bool CanCast(out Info info, bool autoBroadcast)
         {
@@ -101,280 +130,12 @@ namespace Game
             }
         }
 
-
-        [JsonIgnore] public override Skill Bp => SkillManager.Instance.GetById(Id.ToLower());
-
         [ShowInInspector] public event Action Activated;
-
-
-        public override bool MayAffect(Timing timing, out int priority)
-        {
-            if (Sealed && !Bp.AlwaysActiveTiming.Contains(timing))
-            {
-                priority = 0;
-                return false;
-            }
-
-            return base.MayAffect(timing, out priority);
-        }
-
-        public static SkillData Empty => new SkillData();
-
-
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
 
         public override string ToString()
         {
             return Id;
         }
-
-
-        /*#region 具体技能
-
-        [Effect("furious", Timing.OnAttack)]
-        public Attack Furious(Attack attack, FighterData fighter, FighterData enemy)
-        {
-            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
-            Activate?.Invoke();
-            return attack;
-        }
-
-
-        [Effect("feast", Timing.OnKill)]
-        public Attack Feast(Attack result, FighterData fighter, FighterData enemy)
-        {
-            fighter.Recover( new BattleStatus(){CurHp = (int)(CurLv*Bp.Param1)}, enemy);
-            Activate?.Invoke();
-            return result;
-        }
-
-        [Effect("burst", Timing.OnEquip)]
-        public void BurstEquip(FighterData fighter)
-        {
-            fighter.Strengthen(new BattleStatus{PAtk = CurLv});
-        }
-        
-        [Effect("burst", Timing.OnLvUp)]
-        public void BurstLvUp(FighterData fighter)
-        {
-            fighter.Strengthen(new BattleStatus{PAtk = 1});
-        }
-
-        [Effect("burst", Timing.OnUnEquip)]
-        public void BurstUnEquip(FighterData fighter)
-        {
-            fighter.Status.PAtk -= (int)Bp.Param1 * CurLv;
-        }
-
-        
-
-        [Effect("BarBlood", Timing.OnStrengthen)]
-        public BattleStatus BarBlood(BattleStatus modify, FighterData fighter)
-        {
-            if (Random.value < CurLv * .4f)
-            {
-                fighter.Strengthen(new BattleStatus{PAtk = 1});
-                Activate?.Invoke();
-            }
-            return modify;
-        }
-
-        [Effect("Execution", Timing.OnKill)]
-        public Attack Execution(Attack result, FighterData holder, FighterData enemy)
-        {
-            var overDamage = -enemy.Status.CurHp;
-            holder.Gain(overDamage);
-            Activate?.Invoke();
-            return result;
-        }
-        
-        
-        [Effect("Genius", Timing.OnAttack)]
-        public Attack Genius(Attack attack, FighterData fighter, FighterData enemy)
-        {
-            if ((enemy.Status.PAtk > fighter.Status.PAtk)&&(Random.Range(0,1f) < .2f))
-            {
-                fighter.Strengthen(new BattleStatus(){PAtk = 1});
-                Activate?.Invoke();
-            }
-            return attack;
-        }
-
-
-        [Effect("thief", Timing.OnAttack)]
-        public Attack Thief(Attack attack, FighterData fighter, FighterData enemy)
-        {
-            int gold = (int)(enemy.Gold * Bp.Param1 * CurLv);
-            fighter.Gain(gold);
-            enemy.Gain(-gold);
-            Activate?.Invoke();
-            return attack;
-        }
-
-
-
-        [Effect("Enlightenment", Timing.OnEquip)]
-        public void EnlightenmentEquip(FighterData fighter)
-        {
-            var v = (int)Bp.Param1;
-            fighter.Strengthen(new BattleStatus()
-            {
-                MaxHp = v,
-                MaxMp = v,
-                MAtk = v,
-                PAtk = v,
-                MDef = v,
-                PDef = v
-            });
-            Activate?.Invoke();
-        }
-        
-        [Effect("Enlightenment", Timing.OnUnEquip)]
-        public void EnlightenmentUnEquip(FighterData fighter)
-        {
-            var v = -(int)Bp.Param2;
-            fighter.Strengthen(new BattleStatus()
-            {
-                MaxHp = v,
-                MaxMp = v,
-                MAtk = v,
-                PAtk = v,
-                MDef = v,
-                PDef = v
-            });
-        }
-        
-        [Effect("Enlightenment", Timing.OnLvUp)]
-        public void EnlightenmentLvUp(FighterData fighter)
-        {
-            var v = (int)Bp.Param2 *2;
-            fighter.Strengthen(new BattleStatus()
-            {
-                MaxHp = v,
-                MaxMp = v,
-                MAtk = v,
-                PAtk = v,
-                MDef = v,
-                PDef = v
-            });
-            Activate?.Invoke();
-        }
-        
-        [Effect("Enlightenment", Timing.OnMarch)]
-        public void EnlightenmentMarch(FighterData fighter)
-        {
-            var v = -(int)Bp.Param2;
-            fighter.Strengthen(new BattleStatus()
-            {
-                MaxHp = v,
-                MaxMp = v,
-                MAtk = v,
-                PAtk = v,
-                MDef = v,
-                PDef = v
-            });
-            Activate?.Invoke();
-        }
-        
-        
-
-        [Effect("poison blood", Timing.OnSettle)]
-        public Attack PoisonAttack(Attack result, FighterData fighter, FighterData enemy)
-        {
-            if (result.SumDmg > 0)
-            {
-                Activate?.Invoke();
-                enemy.Defend(new Attack() {MAtk = result.SumDmg}, fighter);
-            }
-
-            return result;
-        }
-
-
-        [Effect("bloodlust", Timing.OnHeal)]
-        public BattleStatus BloodlustHeal(BattleStatus modifier, FighterData fighterData)
-        {
-            Activate?.Invoke();
-            return modifier * 0.5f;
-        }
-        
-        
-        [Effect("bloodlust", Timing.OnRecover)]
-        public BattleStatus bloodlustRecover(BattleStatus modifier, FighterData fighter, FighterData enemy)
-        {
-            Activate?.Invoke();
-            return modifier * 2f;
-        }
-        
-        [Effect("strong", Timing.OnAttack)]
-        public Attack Strong(Attack attack, FighterData fighter, FighterData enemy)
-        {
-            Activate?.Invoke();
-            attack.PAtk += (int)(fighter.Status.CurHp * Bp.Param1);
-            return attack;
-        }
-
-
-        [Effect("subjugate", Timing.OnDefend)]
-        public Attack Subjugate(Attack attack, FighterData fighter, FighterData enemy)
-        {
-            var diff = fighter.Status.PAtk - attack.PAtk;
-            if (diff > 0)
-            {
-                Activate?.Invoke();
-                attack.PAtk -= (int)(diff * Bp.Param1 * CurLv);
-            }
-
-            return attack;
-        }
-
-        [Effect("well-Laid Plans", Timing.OnHeal)]
-        public BattleStatus WellLaid(BattleStatus modify, FighterData fighter)
-        {
-            var diff = modify.CurHp - fighter.LossHp;
-
-            if (diff > 0)
-            {
-                modify.CurHp -= diff;
-                Activate?.Invoke();
-                diff = (int)(diff * CurLv * Bp.Param1);
-                fighter.Strengthen(new BattleStatus{MaxHp = diff});
-            }
-            
-            
-            return modify;
-        }
-
-
-        [Effect("Anger", Timing.SkillEffect)]
-        public void Anger(FighterData fighter)
-        {
-            fighter.AppliedBuff(new BuffData
-            {
-                CurLv = CurLv,
-                Id = "Anger"
-            });
-        }
-
-
-        [Effect("One", Timing.SkillEffect)]
-        public void One(FighterData fighter, FighterData enemy)
-        {
-            var atk = fighter.ForgeAttack(enemy);
-            
-        }
-        
-        
-        #endregion*/
-        private float Usual => Bp.Param1 + Bp.Param2 * CurLv;
-
-        private bool InBattle => GameManager.Instance.InBattle;
-        private SecondaryData SData => GameDataManager.Instance.SecondaryData;
-
-        [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
 
         #region 正式技能
 
@@ -889,6 +650,13 @@ namespace Game
         }
 
 
+        /// <summary>
+        /// 购买技能金币消耗减少P1*Lv
+        /// </summary>
+        /// <param name="cost"></param>
+        /// <param name="player"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
         [Effect("SQRH_ASS", Timing.OnCost, priority = -100)]
         private CostInfo QSRH_ASS(CostInfo cost, FighterData player, string kw)
         {
@@ -901,6 +669,13 @@ namespace Game
             return cost;
         }
 
+        /// <summary>
+        /// 获得金币时：获得P1*Lv层物增
+        /// </summary>
+        /// <param name="coin"></param>
+        /// <param name="fighter"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
         [Effect("TL_ASS", Timing.OnGain, priority = 100)]
         private int TL_ASS(int coin, FighterData fighter, string kw)
         {
@@ -909,6 +684,13 @@ namespace Game
             return coin;
         }
 
+        /// <summary>
+        /// 斩杀时：获得<P1*CurLv>(P1*Lv)额外金币
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
         [Effect("GHXS_ASS", Timing.OnKill, priority = 100)]
         private Attack GHXS_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -917,6 +699,13 @@ namespace Game
             return attack;
         }
 
+        /// <summary>
+        /// 攻击时：有<P1+P2*CurLv>(P1+P2*Lv)的概率当成交锋
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
         [Effect("YN_ASS", Timing.OnAttack, priority = -10000)]
         private Attack YN_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -947,7 +736,20 @@ namespace Game
             return attack;
         }
 
-        #endregion
 
+        [Effect("XX_MON", Timing.OnAttackSettle, priority = 2)]
+        private Attack XX_MON(Attack attack, FighterData player, FighterData enemy)
+        {
+            player.Recover(BattleStatus.HP(attack.PDmg), enemy);
+            return attack;
+        }
+
+        [Effect("LX_MON", Timing.OnAttack, priority = -10000)]
+        private Attack LX_MON(Attack attack, FighterData attacker, FighterData enemy)
+        {
+            return new Attack(attacker.Status.PAtk, attacker.Status.MAtk, multi: 2f, kw: "LX_MON");
+        }
+
+        #endregion
     }
 }

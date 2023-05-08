@@ -1,18 +1,19 @@
 ﻿using System;
 using System.IO;
 using Game;
-using UnityEditor;
 using UnityEngine;
 
 namespace Managers
 {
     public class Profile : SaveData
     {
-        public string[] Unlocks;
         public int Progress;
+        public string[] Unlocks;
+
+        private static string _path => Path.Combine(Application.persistentDataPath, "Profile.asset");
 
 
-        public static Profile NewProfile()
+        private static Profile NewProfile()
         {
             return new Profile()
             {
@@ -20,8 +21,6 @@ namespace Managers
                 Progress = 0
             };
         }
-
-        private static string _path => Path.Combine(Application.persistentDataPath, "Profile.asset");
 
         public static Profile GetOrCreate()
         {

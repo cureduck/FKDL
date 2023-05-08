@@ -1,21 +1,13 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using Game;
+﻿using Game;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using Sirenix.OdinInspector;
 using UnityEngine.Experimental.Rendering.Universal;
-
 
 namespace Managers
 {
     public class InputSystem : Singleton<InputSystem>
     {
-        private PlayerData P => GameManager.Instance.PlayerData;
-
-        public GameObject BG;
-
         public enum Mode
         {
             SelectPotionMode,
@@ -23,12 +15,38 @@ namespace Managers
             NormalMode
         }
 
+        public GameObject BG;
+
         public Mode InputMode;
 
         public Vector2 pos;
 
+        public float DragRate;
+
+
+        /*
+        private MapData RaycastGetMapData()
+        {
+            var worldPos = Camera.main.ScreenToWorldPoint(pos);
+            var hit = Physics2D.Raycast(worldPos, Vector2.zero);
+            if (hit.transform != null)
+            {
+                var t = hit.transform.GetComponent<Square>().Data;
+                return t;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        */
+
+
+        public Light2D light2D;
+
         [ShowInInspector] private Vector2 delta;
         private Vector2 prePos;
+        private PlayerData P => GameManager.Instance.PlayerData;
 
         private void Update()
         {
@@ -59,8 +77,6 @@ namespace Managers
                 BG.transform.position -= (Vector3)delta * DragRate * 0.05f;
             }
         }
-
-        public float DragRate;
 
 
         private bool LeftClicked()
@@ -169,27 +185,6 @@ namespace Managers
                 }
             }
         }
-
-
-        /*
-        private MapData RaycastGetMapData()
-        {
-            var worldPos = Camera.main.ScreenToWorldPoint(pos);
-            var hit = Physics2D.Raycast(worldPos, Vector2.zero);
-            if (hit.transform != null)
-            {
-                var t = hit.transform.GetComponent<Square>().Data;
-                return t;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        */
-
-
-        public Light2D light2D;
 
         private void Scroll()
         {

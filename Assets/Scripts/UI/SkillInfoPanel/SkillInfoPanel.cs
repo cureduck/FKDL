@@ -1,27 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Game;
+using I2.Loc;
+using Tools;
 using UI;
 using UnityEngine;
-using Game;
-using I2.Loc;
-using TMPro;
-using Tools;
 
 public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 {
-    public class Args
-    {
-        public Vector2 screenPosition;
-        public SkillData skillData;
-        public Transform worldTrans;
-    }
-
-    public class Args02 : Args
-    {
-        public Skill skill;
-    }
-
     [SerializeField] private Localize skillName;
     [SerializeField] private Localize costInfo;
     [SerializeField] private LocalizationParamsManager CostParamsManager;
@@ -111,10 +95,13 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
             }
 
             describe.SetTerm($"{curSkilInfo.Id}_desc");
-            DescParamsManager.SetParameterValue("P1", curSkilInfo.Param1.ToString());
-            DescParamsManager.SetParameterValue("P2", curSkilInfo.Param2.ToString());
-            DescParamsManager.SetParameterValue("CurLv", Data.skillData.CurLv.ToString());
-            describe.GetComponent<TMP_Text>().text = describe.GetComponent<TMP_Text>().text.Calculate();
+            describe.SetLocalizeParam(
+                new[] { "P1", "P2", "CurLv" },
+                new[]
+                {
+                    curSkilInfo.Param1.ToString(), curSkilInfo.Param2.ToString(), Data.skillData.CurLv.ToString()
+                });
+            describe.RemoveBetween();
 
             colddownInfo.SetTerm("CooldownInfo");
             ColdDownParamsManager.SetParameterValue("VALUE", curSkilInfo.Cooldown.ToString());
@@ -129,5 +116,17 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 
             positiveInfo.SetTerm(curSkilInfo.Positive ? "positive" : "passive");
         }
+    }
+
+    public class Args
+    {
+        public Vector2 screenPosition;
+        public SkillData skillData;
+        public Transform worldTrans;
+    }
+
+    public class Args02 : Args
+    {
+        public Skill skill;
     }
 }

@@ -1,24 +1,29 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using Cysharp.Threading.Tasks;
-using EasyTransition;
 using Game;
 using I2.Loc;
 using Sirenix.OdinInspector;
 using Tools;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Random = System.Random;
 
 namespace Managers
 {
     public class GameManager : Singleton<GameManager>
     {
+        public Square Prefab;
+
+        public Transform MapGo;
+
+        public Square Focus;
+
+        private ObjectPool<Square> _pool;
+
+        public Dictionary<string, Color> SquareColors;
+
+        private List<Square> squares = new List<Square>();
+
         public PlayerData PlayerData
         {
             get => GameDataManager.Instance.PlayerData;
@@ -37,47 +42,7 @@ namespace Managers
             private set => GameDataManager.Instance.SecondaryData = value;
         }
 
-
-        public void GetLocalization()
-        {
-            try
-            {
-                var f = File.ReadAllText("Assets/PythonScripts/relics_loc.csv");
-                LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
-                f = File.ReadAllText("Assets/PythonScripts/skills_loc.csv");
-                LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-
-        public Square Prefab;
-
-        public Transform MapGo;
-
-        public Square Focus;
-
         public bool InBattle => (Focus?.Data is EnemySaveData e) && (e.IsAlive);
-
-        public Dictionary<string, Color> SquareColors;
-
-        public event Action GameLoaded;
-        public event Action<Square> FocusChanged;
-
-        public void BroadcastSquareChanged(Square square)
-        {
-            FocusChanged?.Invoke(square);
-        }
-
-        private Square CreateSquare()
-        {
-            return Instantiate(Prefab, MapGo);
-        }
-
-        private ObjectPool<Square> _pool;
 
         private void Start()
         {
@@ -95,6 +60,42 @@ namespace Managers
                     LoadFromSave();
                 }
             }
+        }
+
+
+        public void GetLocalization()
+        {
+            var localizationFilePath = "Assets/Localization";
+            try
+            {
+                var localizationFiles = Directory.GetFiles(localizationFilePath);
+                foreach (var fileName in localizationFiles)
+                {
+                    if (fileName.EndsWith(".csv"))
+                    {
+                        var f = File.ReadAllText(fileName);
+                        f = f.Replace("\r\n", "\n");
+                        LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public event Action GameLoaded;
+        public event Action<Square> FocusChanged;
+
+        public void BroadcastSquareChanged(Square square)
+        {
+            FocusChanged?.Invoke(square);
+        }
+
+        private Square CreateSquare()
+        {
+            return Instantiate(Prefab, MapGo);
         }
 
         public void RollForSkill(int rank)
@@ -183,8 +184,6 @@ namespace Managers
             GameManager.Instance.Focus = null;
             LoadFloor(Map.Floors[Map.CurrentFloor]);
         }
-
-        private List<Square> squares = new List<Square>();
 
         public void LoadFloor(Map.Floor floor)
         {

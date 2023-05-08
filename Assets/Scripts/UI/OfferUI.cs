@@ -4,8 +4,8 @@ using I2.Loc;
 using Managers;
 using Sirenix.OdinInspector;
 using TMPro;
+using Tools;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI
@@ -62,6 +62,11 @@ namespace UI
         {
             this.Offer = offer;
             //Debug.Log(offer.Kind);
+            if (offer.Kind == Offer.OfferKind.Skill)
+            {
+                Icon.sprite = SkillManager.Instance.GetById(offer.Id).Icon;
+            }
+
             this.onClick = onClick;
             UpdateData();
         }
@@ -97,11 +102,15 @@ namespace UI
                     //Debug.Log(skill.Description);
                     Prof?.SetTerm(skill.Pool);
                     Description?.SetTerm($"{skill.Id}_desc");
-                    Description.GetComponent<LocalizationParamsManager>()
-                        .SetParameterValue("P1", skill.Param1.ToString());
-                    Description.GetComponent<LocalizationParamsManager>()
-                        .SetParameterValue("P2", skill.Param2.ToString());
-                    MaxLvParam?.SetParameterValue("P", skill.MaxLv.ToString());
+                    Description.SetLocalizeParam(
+                        new string[] { "P1", "P2" },
+                        new string[]
+                        {
+                            skill.Param1.ToString(),
+                            skill.Param2.ToString()
+                        });
+                    Description.Calculate();
+
 
                     if (RankStar != null)
                     {

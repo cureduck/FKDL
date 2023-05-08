@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Random = System.Random;
+using Game;
+using I2.Loc;
+using TMPro;
 
 namespace Tools
 {
@@ -74,11 +75,87 @@ namespace Tools
         public static string Calculate(this string s, (char left, char right) pair = default)
         {
             if (pair == default) pair = ('<', '>');
-            var pattern = $"{pair.left}.{{1,}}{pair.right}";
+            var pattern = $"{pair.left}.+?{pair.right}";
             var match = Regex.Match(s, pattern);
             var ca = Regex.Replace(match.Value, "[<>]", "");
             object result = new DataTable().Compute(ca, "");
             return Regex.Replace(s, pattern, result.ToString());
+        }
+
+
+        /// <summary>
+        /// 移除默认<>号内的数学表达式
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="pair"></param>
+        /// <returns></returns>
+        public static string RemoveBetween(this string s, (char left, char right) pair = default)
+        {
+            if (pair == default) pair = ('<', '>');
+            var pattern = $"{pair.left}.+?{pair.right}";
+            return Regex.Replace(s, pattern, "");
+        }
+
+
+        public static void SetLocalizeParam(this Localize localize, IEnumerable<string> param,
+            IEnumerable<string> values)
+        {
+            foreach (var (s1, s2) in param.Zip(values, (s1, s2) => (s1, s2)))
+            {
+                localize.GetComponent<LocalizationParamsManager>().SetParameterValue(s1, s2);
+            }
+        }
+
+        public static void SetLocalizeParam(this Localize localize, IDictionary<string, string> dictionary)
+        {
+            foreach (var pair in dictionary)
+            {
+                localize.GetComponent<LocalizationParamsManager>().SetParameterValue(pair.Key, pair.Value);
+            }
+        }
+
+        public static void Calculate(this Localize localize)
+        {
+            localize.GetComponent<TMP_Text>().text = localize.GetComponent<TMP_Text>().text.Calculate();
+        }
+
+        public static void RemoveBetween(this Localize localize, (char left, char right) pair = default)
+        {
+            if (pair == default) pair = ('<', '>');
+            localize.GetComponent<TMP_Text>().text = localize.GetComponent<TMP_Text>().text.RemoveBetween(pair);
+        }
+
+        public static string ToString(this Rank @rank, RankDescType desc = RankDescType.HaoHuai)
+        {
+            switch (desc)
+            {
+                case RankDescType.DaZhongXiao:
+                    switch (rank)
+                    {
+                        case Rank.Normal:
+                            return "small";
+                        case Rank.Uncommon:
+                            return "medium";
+                        case Rank.Rare:
+                            return "large";
+                        case Rank.Ultra:
+                            break;
+                        case Rank.Prof:
+                            break;
+                        case Rank.God:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(rank), rank, null);
+                    }
+
+                    break;
+                case RankDescType.HaoHuai:
+                    return rank.ToString();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(desc), desc, null);
+            }
+
+            return null;
         }
     }
 }

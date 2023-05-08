@@ -1,5 +1,4 @@
-﻿using I2.Loc;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Managers
@@ -17,14 +16,13 @@ namespace Managers
 
     public class SettingManager : Singleton<SettingManager>
     {
+        private const float maxDegree = -35;
         //public static readonly Resolution[] CurCanUseResolution = Screen.resolutions;
 
         //private SettingData settingData;
 
         public GameSettings GameSettings;
         public Slider DegreeSlider;
-
-        private const float maxDegree = -35;
 
         protected override void Awake()
         {
@@ -44,11 +42,11 @@ namespace Managers
         //    SetBGM(settingData.BGMSize);
         //}
 
-        public void SetLanguage(string languageTypeIndex)
-        {
-            //settingData.languageType = languageTypeIndex;
-            GameSettings.LanguageType = languageTypeIndex;
-        }
+        // public void SetLanguage(string languageTypeIndex)
+        // {
+        //     //settingData.languageType = languageTypeIndex;
+        //     GameSettings.LanguageType = languageTypeIndex;
+        // }
 
         public void SetResolutionSize(Vector2Int targetResolution)
         {

@@ -36,7 +36,7 @@ def line_converter(line):
 def write_loc(reader, f, save_path):
     conv = line_converter
     with open(save_path, "w", newline="") as F:
-        writer = csv.DictWriter(F, ["Key", "Type", "Desc", "Chinese", "English"])
+        writer = csv.DictWriter(F, ["Key", "Type", "Desc", "Chinese", "English"], lineterminator='\n')
         writer.writeheader()
         for row in reader:
             writer.writerow(dict(Key=row["id"].lower(), Type="", Desc="", Chinese=conv(row["chinese"]),
@@ -47,5 +47,9 @@ def write_loc(reader, f, save_path):
         f.close()
 
 
-auto_split(r"../../StreamingAssets/SkillsAll.csv", r"../../StreamingAssets/Skills.csv", "../skills_loc.csv")
-auto_split(r"../../StreamingAssets/RelicsAll.csv", r"../../StreamingAssets/Relics.csv", "../relics_loc.csv")
+auto_split(r"../../StreamingAssets/SkillsAll.csv", r"../../StreamingAssets/Skills.csv", r"../../Localization"
+                                                                                        r"/Skills_loc.csv")
+auto_split(r"../../StreamingAssets/RelicsAll.csv", r"../../StreamingAssets/Relics.csv", r"../../Localization"
+                                                                                        r"/relics_loc.csv")
+auto_split(r"../../StreamingAssets/CrystalAll.csv", r"../../StreamingAssets/Crystal.csv", r"../../Localization"
+                                                                                          r"/crystal_loc.csv")

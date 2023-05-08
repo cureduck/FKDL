@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Managers;
+﻿using Managers;
 using Newtonsoft.Json;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 namespace Game
 {
     public class EnemySaveData : FighterData
     {
-        public string Id;
-
-
-        [JsonIgnore] public override FighterData Enemy => enemy ?? GameManager.Instance.PlayerData;
-
         [JsonIgnore] public FighterData enemy;
+        public string Id;
 
         public EnemySaveData(string id) : base()
         {
@@ -26,6 +17,24 @@ namespace Game
             Skills = new SkillData[Bp.Skills.Length];
             Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
             */
+        }
+
+
+        [JsonIgnore] public override FighterData Enemy => enemy ?? GameManager.Instance.PlayerData;
+
+
+        [JsonIgnore]
+        public EnemyBp Bp
+        {
+            get
+            {
+                if (!EnemyManager.Instance.EnemyBps.ContainsKey(Id))
+                {
+                    Debug.LogWarning(Id + " not found");
+                }
+
+                return EnemyManager.Instance.EnemyBps[Id];
+            }
         }
 
 
@@ -49,7 +58,7 @@ namespace Game
         {
             if (!IsAlive && SquareState != SquareState.Done)
             {
-                Destroyed();
+                Killed();
             }
         }
 
@@ -120,10 +129,6 @@ namespace Game
                 Chase();
                 DeathCheck();
             }
-            else
-            {
-                Destroyed();
-            }
         }
 
 
@@ -150,26 +155,11 @@ namespace Game
         }
 
 
-        protected override void Destroyed()
+        private void Killed()
         {
             Enemy.Gain(Gold, "trophy");
 
             base.Destroyed();
-        }
-
-
-        [JsonIgnore]
-        public EnemyBp Bp
-        {
-            get
-            {
-                if (!EnemyManager.Instance.EnemyBps.ContainsKey(Id))
-                {
-                    Debug.LogWarning(Id + " not found");
-                }
-
-                return EnemyManager.Instance.EnemyBps[Id];
-            }
         }
 
         public override string ToString()

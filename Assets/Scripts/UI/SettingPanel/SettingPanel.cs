@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Managers;
+using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
-using UI;
-using Managers;
-using TMPro;
-using I2.Loc;
 
 public class SettingPanel : BasePanel<GameSettings>
 {
     [SerializeField] private GameSettings gameSettings;
     [SerializeField] private Slider bgmSizeSilder;
+
     [SerializeField] private Slider soundEffectSizeSilder;
-    [SerializeField] private TMP_Dropdown languageSelecter;
+
+    //[SerializeField] private TMP_Dropdown languageSelecter;
     [SerializeField] private TMP_Dropdown resoltionSelecter;
     [SerializeField] private Toggle isFullScreenSelecter;
     [SerializeField] private Slider viewAngleSelecter;
@@ -30,25 +29,25 @@ public class SettingPanel : BasePanel<GameSettings>
 
     public override void Init()
     {
-        LanguageSliderInit();
+        //LanguageSliderInit();
 
         bgmSizeSilder.value = gameSettings.BgmVolume;
         soundEffectSizeSilder.value = gameSettings.SEVolume;
         viewAngleSelecter.value = gameSettings.Degree;
         bool haveFound = false;
-        for (int i = 0; i < languageSelecter.options.Count; i++)
-        {
-            if (languageSelecter.options[i].text == gameSettings.LanguageType)
-            {
-                languageSelecter.value = i;
-                break;
-            }
-        }
-
-        if (!haveFound)
-        {
-            languageSelecter.value = 0;
-        }
+        // for (int i = 0; i < languageSelecter.options.Count; i++)
+        // {
+        //     if (languageSelecter.options[i].text == gameSettings.LanguageType)
+        //     {
+        //         languageSelecter.value = i;
+        //         break;
+        //     }
+        // }
+        //
+        // if (!haveFound)
+        // {
+        //     languageSelecter.value = 0;
+        // }
 
 
         for (int i = 0; i < resoltionSelecter.options.Count; i++)
@@ -78,23 +77,23 @@ public class SettingPanel : BasePanel<GameSettings>
     }
 
 
-    private void LanguageSliderInit()
-    {
-        var dropdown = languageSelecter;
-        if (dropdown == null)
-            return;
-
-        var currentLanguage = LocalizationManager.CurrentLanguage;
-        if (LocalizationManager.Sources.Count == 0) LocalizationManager.UpdateSources();
-        var languages = LocalizationManager.GetAllLanguages();
-
-        // Fill the dropdown elements
-        dropdown.ClearOptions();
-        dropdown.AddOptions(languages);
-
-        dropdown.value = languages.IndexOf(currentLanguage);
-        dropdown.onValueChanged.AddListener(LanguageSelectOnValueChanged);
-    }
+    // private void LanguageSliderInit()
+    // {
+    //     var dropdown = languageSelecter;
+    //     if (dropdown == null)
+    //         return;
+    //
+    //     var currentLanguage = LocalizationManager.CurrentLanguage;
+    //     if (LocalizationManager.Sources.Count == 0) LocalizationManager.UpdateSources();
+    //     var languages = LocalizationManager.GetAllLanguages();
+    //
+    //     // Fill the dropdown elements
+    //     dropdown.ClearOptions();
+    //     dropdown.AddOptions(languages);
+    //
+    //     dropdown.value = languages.IndexOf(currentLanguage);
+    //     dropdown.onValueChanged.AddListener(LanguageSelectOnValueChanged);
+    // }
 
     private void BGMSilderValueChange(float value)
     {
@@ -115,18 +114,18 @@ public class SettingPanel : BasePanel<GameSettings>
     }
 
 
-    private void LanguageSelectOnValueChanged(int index)
-    {
-        var dropdown = languageSelecter;
-        if (index < 0)
-        {
-            index = 0;
-            dropdown.value = index;
-        }
-
-        gameSettings.LanguageType = dropdown.options[index].text;
-        //LocalizationManager.CurrentLanguage = dropdown.options[index].text;
-    }
+    // private void LanguageSelectOnValueChanged(int index)
+    // {
+    //     var dropdown = languageSelecter;
+    //     if (index < 0)
+    //     {
+    //         index = 0;
+    //         dropdown.value = index;
+    //     }
+    //
+    //     //gameSettings.LanguageType = dropdown.options[index].text;
+    //     //LocalizationManager.CurrentLanguage = dropdown.options[index].text;
+    // }
 
     private void ResoltionSelecterOnValueChange(int index)
     {
