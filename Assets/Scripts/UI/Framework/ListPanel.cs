@@ -40,7 +40,7 @@ namespace UI
                 cell.UnBind();
                 _pool.Return(cell);
             }
-            
+
             foreach (var d in datas)
             {
                 var tmp = Cells.Find((view => view.Data == d));
@@ -59,7 +59,5 @@ namespace UI
                 }
             }
         }
-        
-        
     }
 }

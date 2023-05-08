@@ -16,12 +16,13 @@ namespace Managers
         {
             return new Profile()
             {
-                Unlocks = new string[]{"MAG", "ALC", "ASS"},
+                Unlocks = new string[] { "MAG", "ALC", "ASS" },
                 Progress = 0
             };
         }
-        
+
         private static string _path => Path.Combine(Application.persistentDataPath, "Profile.asset");
+
         public static Profile GetOrCreate()
         {
             Profile so;

@@ -15,7 +15,7 @@ namespace Managers
     public class FloorManager : Singleton<FloorManager>
     {
         private static string FloorPath => Path.Combine(Application.streamingAssetsPath, "Floors");
-        
+
         [Button]
         public Map CreateRandomMap()
         {
@@ -25,31 +25,33 @@ namespace Managers
             {
                 var files = Directory.GetFiles(s).ToList().FindAll((s1 => s1.EndsWith(".json"))).ToArray();
 
-                var chosen = GameDataManager.Instance.SecondaryData.CurGameRandom.Next(0, files.Length -1);
+                var chosen = GameDataManager.Instance.SecondaryData.CurGameRandom.Next(0, files.Length - 1);
 
                 Debug.Log($"Loading {s} {chosen}");
-                
+
                 var f = File.ReadAllText(files[chosen]);
-                Floors[Path.GetFileName(s)] = JsonConvert.DeserializeObject<Map.Floor>(f, settings: new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                });
+                Floors[Path.GetFileName(s)] = JsonConvert.DeserializeObject<Map.Floor>(f,
+                    settings: new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.All
+                    });
             }
+
             return new Map
             {
                 Floors = Floors,
                 CurrentFloor = "1"
             };
         }
-        
-        
+
+
         [Button]
         public void LoadAllFloors()
         {
             foreach (var s in Directory.GetDirectories(FloorPath))
             {
                 var files = Directory.GetFiles(s).ToList().FindAll((s1 => s1.EndsWith(".json"))).ToArray();
-                
+
                 foreach (var file in files)
                 {
                     try
@@ -64,7 +66,6 @@ namespace Managers
                     {
                         Debug.Log($"Loading {file} failed");
                     }
-
                 }
             }
         }
@@ -83,16 +84,14 @@ namespace Managers
             {
                 Directory.CreateDirectory(Path.Combine(FloorPath, floor.FloorName));
             }
-            
+
             var count = Directory.GetFiles(Path.Combine(FloorPath, floor.FloorName))
                 .Count(n => n.EndsWith(".json"));
-            
-            File.WriteAllText(Path.Combine(FloorPath, floor.FloorName, count+".json") , f);
-        }
-        
-        
 
-        
+            File.WriteAllText(Path.Combine(FloorPath, floor.FloorName, count + ".json"), f);
+        }
+
+
         [Button]
         public Map.Floor SaveCurrentFloor(string floorName)
         {
@@ -108,6 +107,5 @@ namespace Managers
 
             return f;
         }
-
     }
 }

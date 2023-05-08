@@ -6,15 +6,10 @@ using TMPro;
 [RequireComponent(typeof(TMP_Text))]
 public class TMP_TextAnimation : MonoBehaviour
 {
-    [SerializeField]
-    private TMP_Text tmp_Text;
-    [SerializeField]
-    private Color targetColor;
-    [SerializeField]
-    private float targetTansSize;
-    [SerializeField]
-    private float transSpeed = 1;
-
+    [SerializeField] private TMP_Text tmp_Text;
+    [SerializeField] private Color targetColor;
+    [SerializeField] private float targetTansSize;
+    [SerializeField] private float transSpeed = 1;
 
 
     // Update is called once per frame
@@ -23,7 +18,8 @@ public class TMP_TextAnimation : MonoBehaviour
         if (tmp_Text.text != null)
         {
             tmp_Text.color = Color.Lerp(tmp_Text.color, targetColor, transSpeed * Time.deltaTime);
-            tmp_Text.transform.localScale = Vector3.Lerp(tmp_Text.transform.localScale, targetTansSize * Vector3.one, transSpeed * Time.deltaTime);
+            tmp_Text.transform.localScale = Vector3.Lerp(tmp_Text.transform.localScale, targetTansSize * Vector3.one,
+                transSpeed * Time.deltaTime);
         }
     }
 
@@ -32,9 +28,8 @@ public class TMP_TextAnimation : MonoBehaviour
         tmp_Text.color = color;
     }
 
-    public void SetTempFontSize(float localScale) 
+    public void SetTempFontSize(float localScale)
     {
         tmp_Text.transform.localScale = localScale * Vector3.one;
     }
-
 }

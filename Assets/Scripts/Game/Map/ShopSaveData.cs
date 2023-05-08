@@ -12,11 +12,11 @@ namespace Game
         public Offer[] PotionList;
         public Offer[] KeyList;
     }
-    
+
     public class ShopSaveData : MapData
     {
         public ShopGoods Goods;
-        
+
         public CostInfo RefreshCost { get; }
 
         public override void Init()
@@ -38,19 +38,19 @@ namespace Game
         private const int SkillNum = 3;
         private const int PotionNum = 3;
         private const int KeyNum = 3;
-        
+
         [Button]
         private ShopGoods GenerateGoods()
         {
             var skillGoods = SkillManager.Instance.GenerateT(Rank.Normal, Player.LuckyChance, SkillNum)
-                .Select((good => 
+                .Select((good =>
                     new Offer(good, GetPrice(good))))
                 .ToArray();
-            
+
             var potionGoods = PotionManager.Instance.GenerateT(Rank.Normal, Player.LuckyChance, PotionNum)
                 .Select((good => new Offer(good, GetPrice(good))))
                 .ToArray();
-            
+
             var keyGoods = new Offer[3]
             {
                 new Offer(Rank.Normal, GetKeyPrice(Rank.Normal)),
@@ -58,7 +58,7 @@ namespace Game
                 new Offer(Rank.Rare, GetKeyPrice(Rank.Rare)),
             };
 
-            var goods = new ShopGoods {SkillList = skillGoods, PotionList = potionGoods, KeyList = keyGoods};
+            var goods = new ShopGoods { SkillList = skillGoods, PotionList = potionGoods, KeyList = keyGoods };
             return goods;
         }
 
@@ -69,10 +69,8 @@ namespace Game
 
 
         public CostInfo UpGradeCost => new CostInfo(100);
-        
-        
-        
-        
+
+
         private int GetPrice(Offer.OfferKind kind, Rank rank)
         {
             return 10;
@@ -97,7 +95,7 @@ namespace Game
             }
 
             float multi = 5f;
-            
+
             switch (good.Rank)
             {
                 case Rank.Normal:
@@ -120,8 +118,8 @@ namespace Game
             }
 
             var r = 0.8f + .4f * SData.CurGameRandom.NextDouble();
-            
-            return (int)(basePrice * multi *r);
+
+            return (int)(basePrice * multi * r);
         }
 
         private int GetKeyPrice(Rank rank)
@@ -144,8 +142,8 @@ namespace Game
                 default:
                     throw new ArgumentOutOfRangeException(nameof(rank), rank, null);
             }
+
             return 10;
         }
-
     }
 }

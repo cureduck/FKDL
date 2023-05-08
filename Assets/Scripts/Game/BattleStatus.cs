@@ -18,7 +18,6 @@ namespace Game
         public int Gold;
 
 
-
         public BattleStatus LvUp(int lv)
         {
             if (MaxHp > 0) MaxHp += lv;
@@ -29,7 +28,7 @@ namespace Game
             if (PDef > 0) PDef += lv;
             return this;
         }
-        
+
 
         public static BattleStatus operator +(BattleStatus s1, BattleStatus s2)
         {
@@ -44,10 +43,9 @@ namespace Game
                 MDef = s1.MDef + s2.MDef,
                 PDef = s1.PDef + s2.PDef,
                 Gold = s1.Gold + s2.Gold
-
             };
         }
-        
+
         public static BattleStatus operator +(BattleStatus s1, CostInfo s2)
         {
             switch (s2.CostType)
@@ -64,9 +62,10 @@ namespace Game
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             return s1;
         }
-        
+
         public static BattleStatus operator -(BattleStatus s1, CostInfo s2)
         {
             switch (s2.CostType)
@@ -83,11 +82,11 @@ namespace Game
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             return s1;
         }
-        
-        
-        
+
+
         public static BattleStatus operator -(BattleStatus s1)
         {
             return new BattleStatus
@@ -118,20 +117,20 @@ namespace Game
                 PDef = s1.PDef - s2.PDef
             };
         }
-        
-                
+
+
         public static BattleStatus operator *(BattleStatus s1, float v)
         {
             return new BattleStatus
             {
-                MaxHp = (int)(s1.MaxHp*v),
-                CurHp = (int)(s1.CurHp*v),
-                MaxMp = (int)(s1.MaxMp*v),
-                CurMp = (int)(s1.CurMp*v),
-                MAtk = (int)(s1.MAtk*v),
-                PAtk = (int)(s1.PAtk*v),
-                MDef = (int)(s1.MDef*v),
-                PDef = (int)(s1.PDef*v)
+                MaxHp = (int)(s1.MaxHp * v),
+                CurHp = (int)(s1.CurHp * v),
+                MaxMp = (int)(s1.MaxMp * v),
+                CurMp = (int)(s1.CurMp * v),
+                MAtk = (int)(s1.MAtk * v),
+                PAtk = (int)(s1.PAtk * v),
+                MDef = (int)(s1.MDef * v),
+                PDef = (int)(s1.PDef * v)
             };
         }
 
@@ -165,8 +164,6 @@ namespace Game
         }
 
 
-        
-        
         /// <summary>
         /// 自动将输入转为负值
         /// </summary>

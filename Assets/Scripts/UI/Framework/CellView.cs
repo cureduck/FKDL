@@ -10,7 +10,7 @@ namespace UI
     {
         event Action Activated;
     }
-    
+
     public interface ISimpleDataHolder
     {
         string Id { get; }
@@ -23,9 +23,9 @@ namespace UI
     public abstract class CellView<T> : MonoBehaviour, ISimpleDataHolder
     {
         public T Data;
-        
+
         public abstract void UpdateUI();
-        
+
         public void Bind()
         {
             if (Data is IActivated d)
@@ -41,16 +41,15 @@ namespace UI
                 d.Activated -= OnActivated;
             }
         }
-        
+
         /// <summary>
         /// 效果触发时播放的动画
         /// </summary>
         protected virtual void OnActivated()
         {
-            
         }
-        
-        
+
+
         /// <summary>
         /// 可以用来做消失动画
         /// </summary>
@@ -61,7 +60,7 @@ namespace UI
                 GetComponent<SpriteRenderer>().DOFade(0f, 1f)
                     .OnComplete((() => Destroy(gameObject)));
             }
-            
+
             Destroy(gameObject);
         }
 

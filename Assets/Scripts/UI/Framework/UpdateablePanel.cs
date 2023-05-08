@@ -11,6 +11,7 @@ namespace UI
             {
                 RemoveListener();
             }
+
             base.SetData(d);
             AddListener();
             UpdateUI();
@@ -26,7 +27,7 @@ namespace UI
 
         private void AddListener()
         {
-            if (Data != null) 
+            if (Data != null)
             {
                 Data.OnUpdated += UpdateUI;
                 Data.OnDestroy += RemoveListener;
@@ -41,8 +42,5 @@ namespace UI
                 Data.OnDestroy -= RemoveListener;
             }
         }
-
-        
-
     }
 }

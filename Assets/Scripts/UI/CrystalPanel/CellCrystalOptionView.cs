@@ -8,16 +8,11 @@ using I2.Loc;
 
 public class CellCrystalOptionView : MonoBehaviour
 {
-    [SerializeField]
-    private Localize optionDescribe;
-    [SerializeField]
-    private TMP_Text optionDescribe_txt;
-    [SerializeField]
-    private CanvasGroup optionDescribe_alpha;
-    [SerializeField]
-    private Button button;
-    [SerializeField]
-    private CanvasGroup outLineObject;
+    [SerializeField] private Localize optionDescribe;
+    [SerializeField] private TMP_Text optionDescribe_txt;
+    [SerializeField] private CanvasGroup optionDescribe_alpha;
+    [SerializeField] private Button button;
+    [SerializeField] private CanvasGroup outLineObject;
 
 
     private System.Action<PlayerData, Crystal.Option> onOptionClick;
@@ -45,41 +40,40 @@ public class CellCrystalOptionView : MonoBehaviour
         outLineObject.alpha = 0;
     }
 
-    public void SetData(PlayerData playerData,string craystalID,Crystal.Option option,System.Action<PlayerData,Crystal.Option> onOptionClick) 
+    public void SetData(PlayerData playerData, string craystalID, Crystal.Option option,
+        System.Action<PlayerData, Crystal.Option> onOptionClick)
     {
         this.onOptionClick = onOptionClick;
         this.playerData = playerData;
         this.option = option;
 
         optionDescribe.SetTerm($"{craystalID}_{option.Line}");
-        if (playerData.CanAfford(option.CostInfo,out var info))
+        if (playerData.CanAfford(option.CostInfo, out var info))
         {
             button.interactable = true;
             optionDescribe_alpha.alpha = 1;
         }
-        else 
+        else
         {
-            
             button.interactable = false;
             optionDescribe_alpha.alpha = 0.5f;
-            
+
             optionDescribe_txt.text += $"(<color=yellow>{LocalizationManager.GetTranslation(info.ToString())}</color>)";
         }
     }
 
-    private void OnClick() 
+    private void OnClick()
     {
         onOptionClick?.Invoke(playerData, option);
     }
 
 
-
-    public void PointEnter() 
+    public void PointEnter()
     {
         targetOutLineAlpha = 1;
     }
 
-    public void PointExit() 
+    public void PointExit()
     {
         targetOutLineAlpha = 0;
     }

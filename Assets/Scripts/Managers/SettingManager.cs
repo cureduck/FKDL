@@ -23,9 +23,9 @@ namespace Managers
 
         public GameSettings GameSettings;
         public Slider DegreeSlider;
-        
+
         private const float maxDegree = -35;
-        
+
         protected override void Awake()
         {
             base.Awake();
@@ -44,21 +44,20 @@ namespace Managers
         //    SetBGM(settingData.BGMSize);
         //}
 
-        public void SetLanguage(string languageTypeIndex) 
+        public void SetLanguage(string languageTypeIndex)
         {
             //settingData.languageType = languageTypeIndex;
             GameSettings.LanguageType = languageTypeIndex;
         }
 
-        public void SetResolutionSize(Vector2Int targetResolution) 
+        public void SetResolutionSize(Vector2Int targetResolution)
         {
             //settingData.resolutionSize = targetResolution;
             GameSettings.ScreenSize = targetResolution;
         }
 
 
-
-        public void SetIsFullScreen(bool isFullScreen) 
+        public void SetIsFullScreen(bool isFullScreen)
         {
             //settingData.isFullScreen = isFullScreen;
             //Screen.SetResolution(settingData.resolutionSize.x, settingData.resolutionSize.y, isFullScreen);

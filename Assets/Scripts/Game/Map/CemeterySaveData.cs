@@ -8,13 +8,13 @@ namespace Game
     public class CemeterySaveData : MapData
     {
         public const int MaxTimes = 3;
-        
+
         public int TimesLeft;
         public Rank Rank;
         public int Cost;
 
         private readonly Dictionary<Rank, int> _cost = new Dictionary<Rank, int>
-            {{Rank.Normal, 3}, {Rank.Uncommon, 6}, {Rank.Rare, 9}, {Rank.Ultra, 12}};
+            { { Rank.Normal, 3 }, { Rank.Uncommon, 6 }, { Rank.Rare, 9 }, { Rank.Ultra, 12 } };
 
         public override void Init()
         {
@@ -33,11 +33,9 @@ namespace Game
                 Player.Cost(new CostInfo(_cost[Rank], CostType.Mp));
                 if (SData.CurGameRandom.NextDouble() < Player.LuckyChance)
                 {
-                    
                     var skills = SkillManager.Instance.RollT(Rank, 3);
-                    var offers = skills.
-                        Select((s => new Offer(s)));
-                    
+                    var offers = skills.Select((s => new Offer(s)));
+
                     InformReactResult(new CasinoArgs()
                     {
                         CanReact = true,
@@ -48,14 +46,15 @@ namespace Game
                 }
                 else
                 {
-                    InformReactResult(new CasinoArgs(){CanReact = true, Win = false});
+                    InformReactResult(new CasinoArgs() { CanReact = true, Win = false });
                 }
-                
+
                 TimesLeft -= 1;
                 if (TimesLeft <= 0)
                 {
                     Destroyed();
                 }
+
                 DelayUpdate();
             }
             else

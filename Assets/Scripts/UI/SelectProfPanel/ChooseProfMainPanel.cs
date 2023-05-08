@@ -12,36 +12,25 @@ public class ChooseProfMainPanel : MonoBehaviour
 {
     private const string ChooseProfTitle = "UI_Icon_ChooseProf_";
 
-    [SerializeField]
-    private ChooseProfListView profListView;
-    [Header("当前职业信息")]
-    [SerializeField]
-    private GameObject chooseProfInfoView;
-    [SerializeField]
-    private Localize profTitle_txt;
-    [SerializeField]
-    private Image chooseProfInfoIcon_img;
-    [SerializeField]
-    private Localize profDescribe_txt;
-    [Header("当前已经选择职业")]
-    [SerializeField]
-    private CellProfView mainProf;
-    [SerializeField]
-    private CellProfView secondProf01;
-    [SerializeField]
-    private CellProfView secondProf02;
-    [Header("按钮")]
-    [SerializeField]
-    private Button resetChoose_btn;
-    [SerializeField]
-    private Button startGame_btn;
+    [SerializeField] private ChooseProfListView profListView;
+    [Header("当前职业信息")] [SerializeField] private GameObject chooseProfInfoView;
+    [SerializeField] private Localize profTitle_txt;
+    [SerializeField] private Image chooseProfInfoIcon_img;
+    [SerializeField] private Localize profDescribe_txt;
+    [Header("当前已经选择职业")] [SerializeField] private CellProfView mainProf;
+    [SerializeField] private CellProfView secondProf01;
+    [SerializeField] private CellProfView secondProf02;
+    [Header("按钮")] [SerializeField] private Button resetChoose_btn;
+    [SerializeField] private Button startGame_btn;
 
     private string[] curCanSelectProfs;
 
     private string[] profDatas;
 
     #region 内部自用
+
     private List<int> curSelectViewIndex;
+
     #endregion
 
     public void Init()
@@ -70,7 +59,6 @@ public class ChooseProfMainPanel : MonoBehaviour
         secondProf02.SetData(profDatas[2]);
 
         startGame_btn.interactable = curSelectViewIndex.Count >= 3;
-
     }
 
     private void CellPointExit(CellChooseProfView arg1, string arg2)
@@ -82,7 +70,8 @@ public class ChooseProfMainPanel : MonoBehaviour
     {
         chooseProfInfoView.gameObject.SetActive(true);
         profTitle_txt.SetTerm(arg2);
-        chooseProfInfoIcon_img.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.ChooseProf, $"{ChooseProfTitle}{arg2}");
+        chooseProfInfoIcon_img.sprite =
+            SpriteManager.Instance.GetIcon(SpriteManager.IconType.ChooseProf, $"{ChooseProfTitle}{arg2}");
         profDescribe_txt.SetTerm($"{arg2}职业介绍");
     }
 
@@ -114,6 +103,7 @@ public class ChooseProfMainPanel : MonoBehaviour
                 }
             }
         }
+
         AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
         UpdateView();
         //Debug.Log($"{cellChooseProfView}:{index}被点击");
@@ -128,6 +118,7 @@ public class ChooseProfMainPanel : MonoBehaviour
                 return i;
             }
         }
+
         return -1;
     }
 
@@ -137,17 +128,17 @@ public class ChooseProfMainPanel : MonoBehaviour
         {
             profDatas[i] = string.Empty;
         }
+
         curSelectViewIndex.Clear();
         AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
         UpdateView();
     }
 
-    private void StartGame() 
+    private void StartGame()
     {
         GameDataManager.Instance.SecondaryData = new Game.SecondaryData();
         GameDataManager.Instance.SecondaryData.Prof = profDatas;
         FindObjectOfType<TransitionManager>().LoadScene("MainScene", "DiagonalRectangleGrid", .2f);
         AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
     }
-
 }

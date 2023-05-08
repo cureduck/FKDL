@@ -13,16 +13,16 @@ namespace Game
         [JsonIgnore] public static string _savePath => Application.persistentDataPath + "/MapData.json";
 
         public string CurrentFloor;
-        
+
         public Dictionary<string, Floor> Floors;
-        
-        
+
+
         public class Floor
         {
             public LinkedList<MapData> Squares;
             public string FloorName;
         }
-        
+
         public void Save()
         {
             Save(_savePath);
@@ -59,8 +59,7 @@ namespace Game
                 }
             }
         }
-        
-        
+
 
         [Button]
         public static Map Load(string path)

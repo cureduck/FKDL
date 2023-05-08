@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-namespace CH.ObjectPool 
+
+namespace CH.ObjectPool
 {
     public class ObjectPool
     {
@@ -9,6 +10,7 @@ namespace CH.ObjectPool
 
         private Transform parent;
         private GameObject prefab;
+
         public ObjectPool(GameObject prefab)
         {
             if (PoolParent == null)
@@ -16,6 +18,7 @@ namespace CH.ObjectPool
                 PoolParent = new GameObject("Pools").transform;
                 objectPoolsData = new Dictionary<ObjectPool, List<GameObject>>();
             }
+
             this.prefab = prefab;
 
             //寻找有没有相同预制体的池子
@@ -28,6 +31,7 @@ namespace CH.ObjectPool
                     parent = c.Key.parent;
                 }
             }
+
             //若没有相同预制体的池子
             if (curPool == null)
             {
@@ -52,7 +56,6 @@ namespace CH.ObjectPool
         {
             List<GameObject> curPools = objectPoolsData[this];
             GameObject curInstance;
-
 
 
             if (curPools.Count > 0)
@@ -132,10 +135,8 @@ namespace CH.ObjectPool
             objectPoolsData = null;
         }
 
-        private static void Init() 
+        private static void Init()
         {
-            
         }
     }
-
 }

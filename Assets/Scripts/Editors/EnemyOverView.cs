@@ -1,5 +1,5 @@
-﻿﻿using System.Linq;
- using Game;
+﻿using System.Linq;
+using Game;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEditor;
@@ -11,7 +11,7 @@ namespace Editors
     {
         [ReadOnly] [ListDrawerSettings(Expanded = true)]
         public EnemyBp[] AllEnemies;
-        
+
 #if UNITY_EDITOR
         [Button(ButtonSizes.Medium), PropertyOrder(-1)]
         public void UpdateEnemyOverview()

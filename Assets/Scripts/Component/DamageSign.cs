@@ -7,24 +7,19 @@ using Game;
 
 public class DamageSign : MonoBehaviour, IPoolObjectSetData
 {
-    public class Args 
+    public class Args
     {
         public int value;
-        public int damageType;//0：表示物理，1表示魔法，2表示真实
+        public int damageType; //0：表示物理，1表示魔法，2表示真实
     }
 
-    [SerializeField]
-    private TMP_Text curSign;
-    [SerializeField]
-    private Color pdColor;
-    [SerializeField]
-    private Color mdColor;
-    [SerializeField]
-    private Color cdColor;
+    [SerializeField] private TMP_Text curSign;
+    [SerializeField] private Color pdColor;
+    [SerializeField] private Color mdColor;
+    [SerializeField] private Color cdColor;
 
     public void InitOnSpawn()
     {
-        
     }
 
     public void SetDataOnEnable(object data)
@@ -43,9 +38,9 @@ public class DamageSign : MonoBehaviour, IPoolObjectSetData
                 targetColor = cdColor;
                 break;
         }
+
         curSign.color = targetColor;
 
         curSign.text = $"{args.value}";
-
     }
 }

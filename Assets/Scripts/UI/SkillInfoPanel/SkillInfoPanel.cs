@@ -22,28 +22,22 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
         public Skill skill;
     }
 
-    [SerializeField]
-    private Localize skillName;
-    [SerializeField]
-    private Localize costInfo;
+    [SerializeField] private Localize skillName;
+    [SerializeField] private Localize costInfo;
     [SerializeField] private LocalizationParamsManager CostParamsManager;
-    [SerializeField]
-    private Localize colddownInfo;
+    [SerializeField] private Localize colddownInfo;
     [SerializeField] private LocalizationParamsManager ColdDownParamsManager;
-    [SerializeField]
-    private Localize describe;
+    [SerializeField] private Localize describe;
     [SerializeField] private LocalizationParamsManager DescParamsManager;
-    [SerializeField]
-    private Localize maxLevel;
+    [SerializeField] private Localize maxLevel;
     [SerializeField] private LocalizationParamsManager MaxParamsManager;
-    [SerializeField]
-    private Localize curBelongProf;
+    [SerializeField] private Localize curBelongProf;
     [SerializeField] private LocalizationParamsManager CurBelongProfManager;
 
-    [SerializeField]
-    private Localize positiveInfo;
+    [SerializeField] private Localize positiveInfo;
 
     private Camera mainCamera;
+
     private void Start()
     {
         mainCamera = Camera.main;
@@ -52,7 +46,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 
     private void Update()
     {
-        if (Data.worldTrans != null) 
+        if (Data.worldTrans != null)
         {
             transform.position = mainCamera.WorldToScreenPoint(Data.worldTrans.transform.position);
         }
@@ -88,7 +82,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
             //maxLevel.text = $"最大等级{curSkilInfo.MaxLv}";
             //positiveInfo.SetTerm(curSkilInfo.Positive ? "positive" : "passive");
         }
-        else 
+        else
         {
             Skill curSkilInfo = Data.skillData.Bp;
 
@@ -99,7 +93,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                 {
                     costInfo.SetTerm("HPCostInfo");
                 }
-                else if (curSkilInfo.CostInfo.CostType == CostType.Gold) 
+                else if (curSkilInfo.CostInfo.CostType == CostType.Gold)
                 {
                     costInfo.SetTerm("GoldCostInfo");
                 }
@@ -107,6 +101,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                 {
                     costInfo.SetTerm("MPCostInfo");
                 }
+
                 CostParamsManager.SetParameterValue("VALUE", curSkilInfo.CostInfo.Value.ToString());
             }
             else
@@ -120,7 +115,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
             DescParamsManager.SetParameterValue("P2", curSkilInfo.Param2.ToString());
             DescParamsManager.SetParameterValue("CurLv", Data.skillData.CurLv.ToString());
             describe.GetComponent<TMP_Text>().text = describe.GetComponent<TMP_Text>().text.Calculate();
-            
+
             colddownInfo.SetTerm("CooldownInfo");
             ColdDownParamsManager.SetParameterValue("VALUE", curSkilInfo.Cooldown.ToString());
 
@@ -135,6 +130,4 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
             positiveInfo.SetTerm(curSkilInfo.Positive ? "positive" : "passive");
         }
     }
-
-
 }

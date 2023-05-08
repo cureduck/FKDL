@@ -25,7 +25,7 @@ namespace Game
     {
         [ShowInInspector] public MapData Data;
 
-        
+
 #if UNITY_EDITOR
 
         [JsonIgnore, ShowInInspector]
@@ -39,17 +39,17 @@ namespace Game
             }
         }
 #endif
-        
-        
+
+
         private void Start()
         {
             SetSize(Data.Placement);
-            
+
 
             //Data.RevealAround += RevealAround;
-            
+
             Data.Load();
-            
+
             UpdateFace();
         }
 
@@ -74,7 +74,7 @@ namespace Game
             UpdateFace();
             _breathLight.intensity = 0;
         }
-        
+
 
         public void UpdateFace()
         {
@@ -131,20 +131,20 @@ namespace Game
                         OnDone();
                         //_animator.SetTrigger("Done");
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-            
+
 
             var lib = SpriteManager.Instance.BuffIcons;
-            
+
             switch (Data)
             {
                 case EnemySaveData d0:
                     var icon = "";
-                    
+
                     if (SpriteManager.Instance.BuffIcons.TryGetValue(d0.Id, out _))
                     {
                         icon = d0.Id;
@@ -164,8 +164,8 @@ namespace Game
                                 break;
                         }
                     }
-                    
-                    SetContent(d0.Id.ToLower(), d0.Status.CurHp +"/" + d0.Bp.Status.MaxHp, lib[icon]);
+
+                    SetContent(d0.Id.ToLower(), d0.Status.CurHp + "/" + d0.Bp.Status.MaxHp, lib[icon]);
                     break;
                 case CasinoSaveData d1:
                     SetContent("casino", d1.TimesLeft + "/" + CasinoSaveData.MaxTimes, lib["casino"]);
@@ -189,7 +189,7 @@ namespace Game
                     SetContent("crystal", "", icon: lib["crystal"]);
                     break;
                 case ObsidianSaveData d8:
-                    SetContent("obsidian","");
+                    SetContent("obsidian", "");
                     break;
                 case SupplySaveData d9:
                     switch (d9.Type)
@@ -206,6 +206,7 @@ namespace Game
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
+
                     break;
                 case ShopSaveData d10:
                     SetContent("shop", "", icon: lib["shop"]);
@@ -230,25 +231,21 @@ namespace Game
         }
 
 
-
-
-
-
-
         #region base
+
         public SpriteRenderer Bg;
         public SpriteRenderer OutLine;
         public SpriteRenderer Mask;
-        
+
         private const float Spacing = .02f;
-        
+
         public SpriteRenderer Icon;
         public Localize Id;
         public TMP_Text Bonus;
 
         public SpriteRenderer OutLine1;
         public SpriteRenderer OutLine2;
-        
+
 
         //private Animator _animator;
 
@@ -261,54 +258,59 @@ namespace Game
 
         private void SetSize(Placement d)
         {
-            transform.position = new Vector3(d.x + Spacing/2, -d.y + Spacing/2, 0);
+            transform.position = new Vector3(d.x + Spacing / 2, -d.y + Spacing / 2, 0);
             //transform.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
-            
-            Bg.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
-            Bg1.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
-            Bg2.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
-            OutLine1.transform.localScale = new Vector3(1/(d.Width - Spacing), 1/(d.Height -Spacing), 0);
-            OutLine2.transform.localScale = new Vector3(1/(d.Width - Spacing), 1/(d.Height -Spacing), 0);
+
+            Bg.transform.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
+            Bg1.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
+            Bg2.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
+            OutLine1.transform.localScale = new Vector3(1 / (d.Width - Spacing), 1 / (d.Height - Spacing), 0);
+            OutLine2.transform.localScale = new Vector3(1 / (d.Width - Spacing), 1 / (d.Height - Spacing), 0);
             OutLine1.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
             OutLine2.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
 
 
-            Mask.transform.localScale = new Vector3(d.Width - Spacing, d.Height -Spacing, 0);
-            
+            Mask.transform.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
+
             OutLine.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
-            
-            
-            
-            
-            if ((d.Height == 1)||(d.Width == 1))
+
+
+            if ((d.Height == 1) || (d.Width == 1))
             {
-                Id.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f +.3f, -0.01f);
-                Bonus.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f - .2f, -0.01f);
+                Id.GetComponent<RectTransform>().localPosition =
+                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f + .3f, -0.01f);
+                Bonus.GetComponent<RectTransform>().localPosition =
+                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f - .2f, -0.01f);
                 //Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f, 0);
                 return;
             }
-            if ((d.Height >= 3)&&(d.Width >= 3))
+
+            if ((d.Height >= 3) && (d.Width >= 3))
             {
-                Id.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f +.8f, -0.01f);
-                Bonus.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f - .8f, -0.01f);
-                Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f, 0);
+                Id.GetComponent<RectTransform>().localPosition =
+                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f + .8f, -0.01f);
+                Bonus.GetComponent<RectTransform>().localPosition =
+                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f - .8f, -0.01f);
+                Icon.GetComponent<RectTransform>().localPosition =
+                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f, 0);
                 Icon.transform.localScale = new Vector3(1.3f, 1.3f, 0);
                 return;
             }
-            
-            Id.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f +.6f, -0.01f);
-            Bonus.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f - .6f, -0.01f);
-            Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f, 0);
+
+            Id.GetComponent<RectTransform>().localPosition =
+                new Vector3((d.Width - Spacing) / 2, -d.Height / 2f + .6f, -0.01f);
+            Bonus.GetComponent<RectTransform>().localPosition =
+                new Vector3((d.Width - Spacing) / 2, -d.Height / 2f - .6f, -0.01f);
+            Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width - Spacing) / 2, -d.Height / 2f, 0);
             Icon.transform.localScale = new Vector3(1f, 1f, 0);
 
-            
-            
+
             //Global.sizeDelta = new Vector2(d.Width - Spacing, d.Height - Spacing);
         }
 
 
         public Light2D[] Light2D;
-        
+
         public void SetContent(string id, string text, Sprite icon = null)
         {
             name = $"{id}, {Data.Placement}";
@@ -318,6 +320,7 @@ namespace Game
             {
                 Bonus.GetComponent<Localize>().SetTerm(text.ToLower());
             }
+
             Icon.sprite = icon;
 
             if (icon != null)
@@ -348,17 +351,15 @@ namespace Game
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }
-                        
+
                         for (int i = 0; i < Light2D.Length; i++)
                         {
                             Light2D[i].color = color;
                         }
                     }
-                    
                 }
             }
         }
-        
 
 
         [Button]
@@ -368,14 +369,15 @@ namespace Game
             OnFocus();
             //_animator.SetTrigger("Focus");
         }
-        
-        
+
+
         public virtual void UnFocus()
         {
             if (Data.SquareState == SquareState.Done)
             {
                 return;
             }
+
             Data.SquareState = SquareState.UnFocus;
             OnReveal();
             //_animator.SetTrigger("UnFocus");
@@ -389,14 +391,14 @@ namespace Game
         private Tween _breath;
         [SerializeField] private Light2D _breathLight;
         [SerializeField] private Light2D _pointerOverLight;
-        
+
         private void OnFocus()
         {
             if (Data.SquareState == SquareState.Done) return;
 
             _sequence.Kill();
             _sequence = DOTween.Sequence();
-            
+
             Bonus.gameObject.SetActive(true);
             Mask.gameObject.SetActive(false);
 
@@ -418,15 +420,16 @@ namespace Game
                 .Insert(0, Bg2.transform.DOLocalMoveZ(0, UpTime))
                 .Insert(DownTime, Bg1.transform.DOLocalMoveZ(.15f, UpTime))
                 .Insert(DownTime, Bg2.transform.DOLocalMoveZ(.3f, UpTime))
-                .OnComplete((() => {
+                .OnComplete((() =>
+                {
                     if (Data.SquareState == SquareState.Done)
                     {
                         OnDone();
                     }
                 }));
         }
-        
-        
+
+
         private void OnUnReveal()
         {
             _breath.Kill();
@@ -442,7 +445,7 @@ namespace Game
             if (Data.SquareState == SquareState.Done) return;
 
             Bonus.gameObject.SetActive(true);
-            
+
             _sequence.Kill();
             _sequence = DOTween.Sequence();
             _sequence.Append(transform.DOMoveZ(0f, .2f))
@@ -451,26 +454,25 @@ namespace Game
                 .Insert(0f, Mask.GetComponent<SpriteRenderer>().DOFade(0, .3f))
                 .OnComplete(() => Mask.gameObject.SetActive(false));
         }
-        
-        
-        
+
+
         private void OnDone()
         {
             _sequence.Kill();
             _sequence = DOTween.Sequence();
             _breath.Kill();
-            
+
             Mask.gameObject.SetActive(true);
             Bonus.gameObject.SetActive(false);
             Id.gameObject.SetActive(false);
-            
+
             _sequence.Append(transform.DOMoveZ(0f, .4f))
                 .Insert(0f, Bg1.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Bg2.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Mask.GetComponent<SpriteRenderer>().DOFade(.7f, UpTime))
-                .Insert(0f, 
+                .Insert(0f,
                     DOTween.To(
-                        ()=> _breathLight.intensity,
+                        () => _breathLight.intensity,
                         (value => _breathLight.intensity = value),
                         0, UpTime))
                 .OnComplete(() =>
@@ -479,11 +481,6 @@ namespace Game
                     _pointerOverLight.intensity = 0;
                 });
         }
-        
-
-
-
-
 
 
         public Transform Bg1;
@@ -504,12 +501,13 @@ namespace Game
                 Data.ReactResultInfo -= HandleReactResultArgs;
             }
         }
-        
+
 
         private void OnDestroy()
         {
             UnbindCurrent();
         }
+
         #endregion
     }
 }

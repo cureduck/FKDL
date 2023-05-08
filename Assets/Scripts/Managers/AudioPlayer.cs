@@ -17,19 +17,16 @@ namespace Managers
         public const string AudioClearRock = "Audio_Clear_Rock";
         public const string AudioGainCoin = "Audio_Gain_Coin";
         public const string AuidoUIButtonClick = "Auido_UI_ButtonClick";
-        [SerializeField]
-        private CellAudioPrefab cellAudioPrefab;
+        [SerializeField] private CellAudioPrefab cellAudioPrefab;
         private ObjectPool objectPool;
-        [SerializeField]
-        private AudioClip[] normalBGMs;
-        [SerializeField]
-        private AudioClip[] bossBGMs;
+        [SerializeField] private AudioClip[] normalBGMs;
+        [SerializeField] private AudioClip[] bossBGMs;
 
         public LerpMoveAudio Bgm;
         public LerpMoveAudio bossBgm;
         public AudioSource SoundEffect;
 
-        
+
         public Dictionary<string, AudioClip> AudioClips;
 
         [ShowInInspector] private LinkedList<AudioClip> SEQueue;
@@ -48,7 +45,8 @@ namespace Managers
             {
                 Bgm.SetData(normalBGMs[UnityEngine.Random.Range(0, normalBGMs.Length)]);
             }
-            if (bossBGMs.Length > 0) 
+
+            if (bossBGMs.Length > 0)
             {
                 bossBgm.SetData(bossBGMs[UnityEngine.Random.Range(0, bossBGMs.Length)]);
             }
@@ -59,12 +57,13 @@ namespace Managers
             {
                 AudioClips.Add(audioClips[i].name, audioClips[i]);
             }
+
             SwitchBossOrNormalBGM(true);
         }
 
         //[ContextMenu("!!")]
         [Button]
-        public void SwitchBossOrNormalBGM(bool toNormal) 
+        public void SwitchBossOrNormalBGM(bool toNormal)
         {
             Bgm.isOn = toNormal;
             bossBgm.isOn = !toNormal;
@@ -75,7 +74,7 @@ namespace Managers
             Settings.SEVolume = f;
             SoundEffect.volume = Settings.SEMute ? 0 : Settings.SEVolume;
         }
-        
+
         public void SetBGMVolume(float f)
         {
             Settings.BgmVolume = f;
@@ -100,6 +99,7 @@ namespace Managers
                     {
                         yield break;
                     }
+
                     var head = SEQueue.First.Value;
                     SEQueue.RemoveFirst();
                     SoundEffect.clip = head;
@@ -108,8 +108,8 @@ namespace Managers
                 }
             }
         }
-        
-        
+
+
         [Button]
         public void Play(string id)
         {
@@ -117,9 +117,10 @@ namespace Managers
 
             try
             {
-                if(AudioClips.TryGetValue(id, out curClip))
+                if (AudioClips.TryGetValue(id, out curClip))
                 {
-                    GameObject cur = objectPool.CreatInstance(new CellAudioPrefab.Args { audioClip = curClip, volume = Settings.SEVolume });
+                    GameObject cur = objectPool.CreatInstance(new CellAudioPrefab.Args
+                        { audioClip = curClip, volume = Settings.SEVolume });
                     cur.AddComponent<InvokeTrigger>().Set(curClip.length + 0.5f, () => objectPool.UnSpawnInstance(cur));
                 }
             }
@@ -128,13 +129,12 @@ namespace Managers
                 Debug.LogError($"{id} played error");
                 Debug.LogError(e);
             }
-
         }
 
         [Button]
         public void PlaySoundEffect(string id, int times = 1)
         {
-            if(AudioClips.TryGetValue(id, out var audioClip))
+            if (AudioClips.TryGetValue(id, out var audioClip))
             {
                 for (int i = 0; i < times; i++)
                 {

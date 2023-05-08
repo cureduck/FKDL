@@ -1,4 +1,4 @@
-﻿﻿using Game;
+﻿using Game;
 using Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -10,9 +10,8 @@ namespace UI
     /// </summary>
     public abstract class FighterUIPanel : MonoBehaviour
     {
-        [ShowInInspector]
-        protected FighterData _master;
-        
+        [ShowInInspector] protected FighterData _master;
+
         /// <summary>
         /// 调用一次UpdateData，并监听OnUpdate事件
         /// </summary>
@@ -20,12 +19,14 @@ namespace UI
         public virtual void SetMaster(FighterData master)
         {
             if (master == _master) return;
-            
+
             _master = master;
             UpdateData();
             master.OnUpdated += UpdateData;
         }
 
-        protected virtual void UpdateData(){}
+        protected virtual void UpdateData()
+        {
+        }
     }
 }

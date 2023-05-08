@@ -21,7 +21,7 @@ namespace Game
         public int InitCoolDown;
         public int CooldownLeft;
         public bool Sealed = false;
-        
+
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
 
         public event Action<FighterData> OnLvUp;
@@ -36,20 +36,20 @@ namespace Game
             Sealed = skill.BattleOnly;
             Counter = 0;
         }
-        
-        
-        
+
+
         public void LvUp(FighterData fighter, int lv = 1)
         {
             CurLv += lv;
 
             if (Bp.Fs.TryGetValue(Timing.OnLvUp, out var method))
             {
-                method.Invoke(this, new object[]{fighter});
+                method.Invoke(this, new object[] { fighter });
             }
+
             OnLvUp?.Invoke(fighter);
         }
-        
+
 
         public void SetCooldown(int cd = default)
         {
@@ -70,7 +70,7 @@ namespace Game
         //{
         //    Cooldown = math.max(0, Bp.Cooldown - bonus);
         //}
-        
+
         public bool CanCast(out Info info, bool autoBroadcast)
         {
             var reasons = new List<FailureReason>();
@@ -102,16 +102,11 @@ namespace Game
         }
 
 
-        
-        
-        
-        
-
         [JsonIgnore] public override Skill Bp => SkillManager.Instance.GetById(Id.ToLower());
 
         [ShowInInspector] public event Action Activated;
-        
-        
+
+
         public override bool MayAffect(Timing timing, out int priority)
         {
             if (Sealed && !Bp.AlwaysActiveTiming.Contains(timing))
@@ -124,8 +119,8 @@ namespace Game
         }
 
         public static SkillData Empty => new SkillData();
-        
-        
+
+
         public object Clone()
         {
             return MemberwiseClone();
@@ -374,15 +369,15 @@ namespace Game
         
         
         #endregion*/
+        private float Usual => Bp.Param1 + Bp.Param2 * CurLv;
 
         private bool InBattle => GameManager.Instance.InBattle;
         private SecondaryData SData => GameDataManager.Instance.SecondaryData;
-        
+
         [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
 
         #region 正式技能
 
-        
         [Effect("YWLZ_ALC", Timing.SkillEffect)]
         private void BrewPotion(FighterData fighter)
         {
@@ -397,31 +392,30 @@ namespace Game
         {
             if (InBattle)
             {
-                var b = fighter.ApplyBuff(new BuffData("pminus", (int) Bp.Param1));
+                var b = fighter.ApplyBuff(new BuffData("pminus", (int)Bp.Param1));
                 fighter.Enemy.AppliedBuff(b);
             }
             else
             {
-                fighter.ApplySelfBuff(new BuffData("pplus", (int) Bp.Param1));
+                fighter.ApplySelfBuff(new BuffData("pplus", (int)Bp.Param1));
             }
-
         }
-        
-        
+
+
         [Effect("XRLC_ALC", Timing.SkillEffect)]
         private void FleshTrans(FighterData fighter)
         {
             if (InBattle)
             {
-                fighter.Enemy.Strengthen(new BattleStatus(){MaxHp = (int)(fighter.Enemy.Status.MaxHp * Bp.Param1)});
+                fighter.Enemy.Strengthen(new BattleStatus() { MaxHp = (int)(fighter.Enemy.Status.MaxHp * Bp.Param1) });
             }
             else
             {
-                fighter.Heal(new BattleStatus{CurHp = (int)Bp.Param1 * fighter.Status.MaxHp});
+                fighter.Heal(new BattleStatus { CurHp = (int)Bp.Param1 * fighter.Status.MaxHp });
             }
         }
-        
-        
+
+
         [Effect("TYTQ_ALC", Timing.OnKill)]
         private Attack HumorialExtraction(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -430,16 +424,16 @@ namespace Game
             Activated?.Invoke();
             return attack;
         }
-        
-        
+
+
         [Effect("JPX_ALC", Timing.OnAttack)]
         private Attack Anatomy(Attack attack, FighterData fighter, FighterData enemy)
         {
-            fighter.Recover(new BattleStatus{CurHp = CurLv}, enemy);
+            fighter.Recover(new BattleStatus { CurHp = CurLv }, enemy);
             Activated?.Invoke();
             return attack;
         }
-        
+
         [Effect("NYX_ALC", Timing.OnCounterCharge)]
         private BattleStatus DrugResistance(BattleStatus status, FighterData fighter, string kw)
         {
@@ -448,7 +442,6 @@ namespace Game
             Activated?.Invoke();
             return status;
         }
-
 
 
         [Effect("DYX_ALC", Timing.OnApply)]
@@ -461,12 +454,12 @@ namespace Game
 
             return buff;
         }
-        
-        
+
+
         [Effect("XYLC_ALC", Timing.SkillEffect)]
         private void XYLC_ALC(FighterData player)
         {
-            var v = (int) Bp.Param1 + (int) Bp.Param2 * CurLv;
+            var v = (int)Bp.Param1 + (int)Bp.Param2 * CurLv;
             if (GameManager.Instance.InBattle)
             {
                 player.Enemy.SingleDefendSettle(new Attack(cAtk: v), null);
@@ -476,23 +469,23 @@ namespace Game
                 player.Heal(BattleStatus.HP(v));
             }
         }
-        
-        
+
+
         [Effect("DZXY_ALC", Timing.OnDefendSettle)]
         private Attack PoisonBlood(Attack attack, FighterData fighter, FighterData enemy)
         {
             if (enemy == null) return attack;
-            
+
             if (attack.PDmg > 0)
             {
                 var v = math.min(attack.PDmg, fighter.Status.CurHp);
                 Activated?.Invoke();
-                fighter.ApplyBuff(new BuffData("poison",  (int)(CurLv * Bp.Param1* v)), enemy);
+                fighter.ApplyBuff(new BuffData("poison", (int)(CurLv * Bp.Param1 * v)), enemy);
             }
 
             return attack;
         }
-        
+
         [Effect("ZH_ALC", Timing.OnDefendSettle)]
         private Attack SelfDestructive(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -505,17 +498,18 @@ namespace Game
                     Activated?.Invoke();
                 }
             }
+
             return attack;
         }
-        
+
         [Effect("MY_ALC", Timing.OnUsePotion)]
         private PotionData MagicAddiction(PotionData potion, FighterData fighter)
         {
-            fighter.Heal(new BattleStatus{CurHp = CurLv, CurMp = CurLv});
+            fighter.Heal(new BattleStatus { CurHp = CurLv, CurMp = CurLv });
             Activated?.Invoke();
             return potion;
         }
-        
+
         [Effect("ZN_ALC", Timing.OnCounterCharge)]
         private BattleStatus SelfAbuse(BattleStatus status, FighterData fighter, string kw)
         {
@@ -523,8 +517,8 @@ namespace Game
             Activated?.Invoke();
             return status;
         }
-        
-        
+
+
         [Effect("BSTY_ALC", Timing.OnStrengthen)]
         private BattleStatus NDE(BattleStatus modify, FighterData fighter)
         {
@@ -534,6 +528,7 @@ namespace Game
                 modify = modify.LvUp(1);
                 Activated?.Invoke();
             }
+
             return modify;
         }
 
@@ -542,13 +537,13 @@ namespace Game
         {
             if (Random.Range(0, 1f) < ((PlayerData)fighter).LuckyChance * Bp.Param1)
             {
-                ((PlayerData) fighter).TryTakePotion(potion.Id, out _);
+                ((PlayerData)fighter).TryTakePotion(potion.Id, out _);
                 Activated?.Invoke();
             }
 
             return potion;
         }
-        
+
         [Effect("TNFB_ALC", Timing.OnUsePotion, alwaysActive = true)]
         private PotionData TNFB_ALC(PotionData potion, FighterData fighter)
         {
@@ -557,16 +552,15 @@ namespace Game
                 BonusCooldown(1);
                 Activated?.Invoke();
             }
+
             return potion;
         }
-        
+
         [Effect("TNFB_ALC", Timing.SkillEffect)]
         private void TNFB_ALC2(FighterData fighter)
         {
             fighter.Heal(BattleStatus.HP(10));
-        }    
-        
-        
+        }
 
 
         [Effect("HQ_MAG", Timing.OnAttack, priority = -100)]
@@ -584,6 +578,7 @@ namespace Game
             {
                 multi += 2;
             }
+
             return new Attack
             {
                 MAtk = fighter.Status.MAtk,
@@ -592,7 +587,7 @@ namespace Game
                 Kw = "ZZFD_MAG",
             };
         }
-        
+
         [Effect("ASFD_MAG", Timing.OnAttack, priority = -100)]
         private Attack ArcaneMissile(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -604,8 +599,8 @@ namespace Game
                 Kw = "ASFD_MAG"
             };
         }
-        
-        
+
+
         [Effect("ANBF_MAG", Timing.OnAttack, priority = 100)]
         private Attack ANBF_MAG(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -616,14 +611,14 @@ namespace Game
 
             return attack;
         }
-        
+
 
         [Effect("BF_MAG", Timing.OnHandleSkillInfo)]
         private Info BF_MAG(Info info, SkillData skill, PlayerData player)
         {
             if (info is FailureInfo failure && failure.Reason.Contains(FailureReason.SkillNotReady))
             {
-                player.CounterCharge(-BattleStatus.HP((int)(Bp.Param1 - Bp.Param2 * CurLv)*skill.CooldownLeft));
+                player.CounterCharge(-BattleStatus.HP((int)(Bp.Param1 - Bp.Param2 * CurLv) * skill.CooldownLeft));
                 failure.Reason.Remove(FailureReason.SkillNotReady);
                 if (failure.Reason.Count == 0)
                 {
@@ -637,8 +632,8 @@ namespace Game
 
             return info;
         }
-        
-        
+
+
         [Effect("YSS_MAG", Timing.OnAttack, priority = -100)]
         private Attack Meteor(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -656,7 +651,7 @@ namespace Game
         {
             player.CoolDown(1);
         }
-        
+
         [Effect("MDX_MAG", Timing.OnStrengthen)]
         private BattleStatus MDX_MAG(BattleStatus modify, FighterData player)
         {
@@ -668,8 +663,7 @@ namespace Game
 
             return modify;
         }
-        
-        
+
 
         [Effect("JZ_MAG", Timing.BeforeAttack)]
         private void Arrogance(PlayerData player, FighterData enemy)
@@ -678,28 +672,29 @@ namespace Game
             {
                 ((PlayerData)player).ApplySelfBuff(new BuffData("Mplus", CurLv));
             }
+
             Activated?.Invoke();
         }
-        
-        
+
+
         [Effect("MS_MAG", Timing.OnKill)]
         private Attack MieShi(Attack attack, FighterData player, FighterData enemy)
         {
-            player.Strengthen(new BattleStatus{MaxMp = (int)Bp.Param1});
+            player.Strengthen(new BattleStatus { MaxMp = (int)Bp.Param1 });
             Activated?.Invoke();
             return attack;
         }
-        
+
 
         [Effect("YTZQ_MAG", Timing.OnAttack)]
         private Attack EtherBody(Attack attack, FighterData fighter, FighterData enemy)
         {
-            var num = (int) ((fighter.Status.MaxMp - fighter.Status.CurHp) / Bp.Param1) * Bp.Param2;
+            var num = (int)((fighter.Status.MaxMp - fighter.Status.CurHp) / Bp.Param1) * Bp.Param2;
             attack.MAtk += (int)num;
             Activated?.Invoke();
             return attack;
         }
-        
+
         [Effect("FLBZ_MAG", Timing.OnAttack)]
         private Attack FaLiBaoZou(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -709,6 +704,7 @@ namespace Game
                 attack.MAtk += num;
                 Activated?.Invoke();
             }
+
             return attack;
         }
 
@@ -719,15 +715,17 @@ namespace Game
             {
                 return attack;
             }
+
             if (attack.Combo > 1)
             {
                 attack.Combo += 1;
                 SetCooldown(Bp.Cooldown);
                 Activated?.Invoke();
             }
+
             return attack;
         }
-        
+
         [Effect("ADLF_MAG", Timing.OnSetCoolDown)]
         private SkillData ADLF_CD(SkillData skill, FighterData player)
         {
@@ -735,7 +733,7 @@ namespace Game
             skill.BonusCooldown(CurLv);
             return skill;
         }
-        
+
         [Effect("ANHJ_MAG", Timing.OnDefendSettle, priority = -1)]
         private Attack ANHJ(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -746,17 +744,15 @@ namespace Game
                 Activated?.Invoke();
 
                 var maxAbsorb = math.max(fighter.Status.CurMp * Usual, attack.PDmg);
-                
-                fighter.Cost(new CostInfo((int)(maxAbsorb/Usual), CostType.Mp));
-                
+
+                fighter.Cost(new CostInfo((int)(maxAbsorb / Usual), CostType.Mp));
+
                 attack.PDmg -= (int)maxAbsorb;
             }
-            
 
 
             return attack;
         }
-        
 
 
         [Effect("LJZL_MAG", Timing.OnAttackSettle)]
@@ -786,7 +782,7 @@ namespace Game
             skill.BonusCooldown(CurLv);
             return skill;
         }
-        
+
 
         [Effect("ZHYJ_ALC", Timing.OnDefend)]
         private Attack ZHYJ_ALC(Attack attack, FighterData fighter, FighterData enemy)
@@ -795,45 +791,46 @@ namespace Game
             {
                 return attack;
             }
-            
+
             var count = enemy.Buffs.Sum((data => data.Bp.BuffType == BuffType.Negative ? data.CurLv : 0));
             if (count > 0)
             {
                 Activated?.Invoke();
             }
+
             attack.PAtk -= count;
             return attack;
         }
-        
-        
+
+
         [Effect("RDTP_ASS", Timing.OnAttack, priority = -100)]
         private Attack RDTP_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
             return new Attack(fighter.Status.PAtk, multi: Bp.Param1);
         }
-        
+
         [Effect("RDTP_ASS", Timing.OnStrike, alwaysActive = true)]
         private Attack RDTP_ASS2(Attack attack, FighterData fighter, FighterData enemy, int time)
         {
             BonusCooldown(1);
             return attack;
         }
-        
+
         [Effect("CD_ASS", Timing.OnStrike)]
         private Attack CD_ASS2(Attack attack, FighterData fighter, FighterData enemy, int time)
         {
             fighter.ApplyBuff(new BuffData("poison", (int)Bp.Param1 * CurLv), enemy);
             return attack;
         }
-        
+
         [Effect("XJ_ASS", Timing.OnAttack, priority = -100)]
         private Attack XJ_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
-            var multi = ((PlayerData) fighter).Engaging ? Bp.Param1 * CurLv + Bp.Param1 : Bp.Param1;
+            var multi = ((PlayerData)fighter).Engaging ? Bp.Param1 * CurLv + Bp.Param1 : Bp.Param1;
 
             return new Attack(fighter.Status.PAtk, multi: multi);
         }
-        
+
         [Effect("CJBY_ASS", Timing.OnAttack, priority = -100)]
         private Attack CJBY_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -841,8 +838,8 @@ namespace Game
 
             return new Attack(fighter.Status.PAtk, multi: multi);
         }
-        
-                
+
+
         [Effect("CJBY_ASS", Timing.OnKill, priority = 100)]
         private Attack CJBY2_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -852,19 +849,17 @@ namespace Game
                 fighter.Gain(overKill);
                 Activated?.Invoke();
             }
+
             return attack;
         }
-        
+
         [Effect("DMJJ_ASS", Timing.OnAttack, priority = -100)]
         private Attack DMJJ2_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
-
-            return new Attack(fighter.Status.PAtk, combo: (int) Usual);
+            return new Attack(fighter.Status.PAtk, combo: (int)Usual);
         }
-        
-        
-        
-        
+
+
         [Effect("DMJJ_ASS", Timing.OnKill, priority = 100)]
         private Attack CMJJ_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -874,10 +869,11 @@ namespace Game
                 Counter = 0;
                 CurLv += 1;
             }
+
             Activated?.Invoke();
             return attack;
         }
-        
+
 
         [Effect("ST_ASS", Timing.OnAttack, priority = -100)]
         private Attack ST_ASS(Attack attack, FighterData fighter, FighterData enemy)
@@ -888,11 +884,11 @@ namespace Game
                 fighter.Gain((int)g);
                 enemy.Gain(-(int)g);
             }
+
             return attack;
         }
-        
-        
-        
+
+
         [Effect("SQRH_ASS", Timing.OnCost, priority = -100)]
         private CostInfo QSRH_ASS(CostInfo cost, FighterData player, string kw)
         {
@@ -901,9 +897,10 @@ namespace Game
                 cost.Value -= (int)(CurLv * Bp.Param1);
                 Activated?.Invoke();
             }
+
             return cost;
         }
-        
+
         [Effect("TL_ASS", Timing.OnGain, priority = 100)]
         private int TL_ASS(int coin, FighterData fighter, string kw)
         {
@@ -911,7 +908,7 @@ namespace Game
             Activated?.Invoke();
             return coin;
         }
-        
+
         [Effect("GHXS_ASS", Timing.OnKill, priority = 100)]
         private Attack GHXS_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -919,7 +916,7 @@ namespace Game
             Activated?.Invoke();
             return attack;
         }
-        
+
         [Effect("YN_ASS", Timing.OnAttack, priority = -10000)]
         private Attack YN_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
@@ -927,41 +924,30 @@ namespace Game
             if (Counter >= Bp.Param1 - CurLv && !((PlayerData)fighter).Engaging)
             {
                 Counter = 0;
-                ((PlayerData) fighter).Engaging = true;
+                ((PlayerData)fighter).Engaging = true;
                 Debug.Log("YN!");
                 Activated?.Invoke();
             }
-            
+
             return attack;
         }
 
+        /// <summary>
+        /// 造成敌人当前生命<P1+P2*CurLv>(P1+P2*Lv)的物理伤害
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
         [Effect("SYS_ASS", Timing.OnAttack, priority = -10000)]
         private Attack SYS_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
-            attack = new Attack(pAtk: (int) (enemy.CurHp * Usual));
+            attack = new Attack(pAtk: (int)(enemy.CurHp * Usual));
 
             return attack;
         }
 
-
-
-
-        [Effect("test1_com", Timing.OnAttack, priority = -10000)]
-        private Attack test1_com(Attack attack, FighterData fighter, FighterData enemy)
-        {
-            return new Attack(pAtk : fighter.Status.PAtk, combo: 3);
-        }
-        
-        [Effect("test2_com", Timing.OnAttack, priority = -10000)]
-        private Attack test2_com(Attack attack, FighterData fighter, FighterData enemy)
-        {
-            return new Attack(pAtk : fighter.Status.PAtk, mAtk: fighter.Status.MAtk, cAtk: 10, combo: 3);
-        }
-        
-        
         #endregion
-
-        private float Usual => Bp.Param1 + Bp.Param2 * CurLv;
 
     }
 }

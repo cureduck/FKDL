@@ -9,7 +9,7 @@ namespace Game
         public override void Init()
         {
             base.Init();
-            BuffId = ((BuffManager) BuffManager.Instance).GetRandomBuff(BuffType.Bless);
+            BuffId = ((BuffManager)BuffManager.Instance).GetRandomBuff(BuffType.Bless);
         }
 
         public override void OnReact()

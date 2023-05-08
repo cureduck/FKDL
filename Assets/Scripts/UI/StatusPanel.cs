@@ -34,11 +34,11 @@ namespace UI
 
             if (showName)
             {
-                Mp.text = $"魔力 <color=#01F5A9>{_master.Status.CurMp}</color>/{ _master.Status.MaxMp}";
+                Mp.text = $"魔力 <color=#01F5A9>{_master.Status.CurMp}</color>/{_master.Status.MaxMp}";
             }
             else
             {
-                Mp.text = $"<color=#01F5A9>{_master.Status.CurMp}</color>/{ _master.Status.MaxMp}";
+                Mp.text = $"<color=#01F5A9>{_master.Status.CurMp}</color>/{_master.Status.MaxMp}";
             }
 
 
@@ -46,6 +46,7 @@ namespace UI
             {
                 _targetHpPercent = (float)_master.Status.CurHp / _master.Status.MaxHp;
             }
+
             if (MpBar != null)
             {
                 _targetMpPercent = (float)_master.Status.CurMp / _master.Status.MaxMp;
@@ -71,7 +72,7 @@ namespace UI
 
             if (showName)
             {
-                PD.text = $"物防 { _master.Status.PDef}";
+                PD.text = $"物防 {_master.Status.PDef}";
             }
             else
             {
@@ -82,12 +83,10 @@ namespace UI
             {
                 MD.text = $"魔防 {_master.Status.MDef}";
             }
-            else 
+            else
             {
                 MD.text = _master.Status.MDef.ToString();
             }
-
-
         }
 
 
@@ -97,6 +96,7 @@ namespace UI
             {
                 HpBar.value += (_targetHpPercent - HpBar.value) / 30f;
             }
+
             if (MpBar != null)
             {
                 MpBar.value += (_targetMpPercent - MpBar.value) / 30f;

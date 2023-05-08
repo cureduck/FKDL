@@ -7,8 +7,7 @@ namespace UI
 {
     public class PlayerInfoPanel : UpdateablePanel<PlayerData>
     {
-        [SerializeField]
-        private SkillListView listView;
+        [SerializeField] private SkillListView listView;
 
 
         protected void Start()
@@ -27,10 +26,9 @@ namespace UI
 
                 Data.OnUpdated += UpdateUI;
                 Data.SkillPointChanged += SkillPointChanged;
-                
+
                 Test();
             };
-
         }
 
         private void SkillPointChanged()
@@ -40,7 +38,7 @@ namespace UI
         }
 
 
-        private void Test() 
+        private void Test()
         {
             //Data = new PlayerData();
             SkillData skillData = new SkillData { CooldownLeft = 0, Id = "DZXY_ALC".ToLower(), CurLv = 1 };
@@ -53,8 +51,10 @@ namespace UI
                 {
                     break;
                 }
+
                 Data.Skills.Add(null);
             }
+
             Data.Skills[0] = skillData;
             Data.Skills[1] = null;
             Data.Skills[2] = skillData02;
@@ -66,7 +66,7 @@ namespace UI
         protected override void UpdateUI()
         {
             //Debug.Log(Data);
-            if (Data != null) 
+            if (Data != null)
             {
                 listView.SetData(Data, Data.Skills.ToArray());
             }

@@ -7,15 +7,15 @@ using UnityEngine;
 
 namespace Managers
 {
-
     public class CsvData : IRank
     {
         [JsonIgnore, ShowInInspector] public Sprite Icon { get; }
-        
+
         protected CsvData(Rank rank, string id, Sprite icon) : this(rank, id)
         {
             Icon = icon;
-        }        
+        }
+
         protected CsvData(Rank rank, string id) : this(rank)
         {
             Id = id;

@@ -22,28 +22,17 @@ namespace UI
             public System.Action<CellGoodView, Offer, int> onClick;
         }
 
-        [SerializeField]
-        private CellGoodView relicView;
-        [SerializeField]
-        private CellGoodView skillAndPotionPrefab;
-        [SerializeField]
-        private CellGoodView keyPrefab;
-        [SerializeField]
-        private Transform skillListView;
-        [SerializeField]
-        private Transform potionListView;
-        [SerializeField]
-        private Transform keyListView;
-        [SerializeField]
-        private Button sellPoition_btn;
-        [SerializeField]
-        private Button levelUp_btn;
-        [SerializeField]
-        private TMP_Text levelUpCost_txt;
-        [SerializeField]
-        private Button reflash_btn;
-        [SerializeField]
-        private TMP_Text reflashCost_txt;
+        [SerializeField] private CellGoodView relicView;
+        [SerializeField] private CellGoodView skillAndPotionPrefab;
+        [SerializeField] private CellGoodView keyPrefab;
+        [SerializeField] private Transform skillListView;
+        [SerializeField] private Transform potionListView;
+        [SerializeField] private Transform keyListView;
+        [SerializeField] private Button sellPoition_btn;
+        [SerializeField] private Button levelUp_btn;
+        [SerializeField] private TMP_Text levelUpCost_txt;
+        [SerializeField] private Button reflash_btn;
+        [SerializeField] private TMP_Text reflashCost_txt;
 
         private UIViewObjectPool<CellGoodView, Args> skillListObjectPool;
         private UIViewObjectPool<CellGoodView, Args> potionListObjectPool;
@@ -58,7 +47,6 @@ namespace UI
             sellPoition_btn.onClick.AddListener(SellPotionClick);
             levelUp_btn.onClick.AddListener(LevelUpClick);
             reflash_btn.onClick.AddListener(ReflashClick);
-
         }
 
         protected override void UpdateUI()
@@ -71,43 +59,57 @@ namespace UI
             Args[] args = new Args[Data.Goods.SkillList.Length];
             for (int i = 0; i < args.Length; i++)
             {
-                args[i] = new Args { offer = Data.Goods.SkillList[i], curHaveGold = GameManager.Instance.PlayerData.Gold, index = i, onClick = OnCellGoodsClick };
+                args[i] = new Args
+                {
+                    offer = Data.Goods.SkillList[i], curHaveGold = GameManager.Instance.PlayerData.Gold, index = i,
+                    onClick = OnCellGoodsClick
+                };
             }
+
             Debug.Log(args.Length);
             skillListObjectPool.SetDatas(args, CellSet, skillListView);
 
             args = new Args[Data.Goods.PotionList.Length];
             for (int i = 0; i < args.Length; i++)
             {
-                args[i] = new Args { offer = Data.Goods.PotionList[i], curHaveGold = GameManager.Instance.PlayerData.Gold,index = i, onClick = OnCellGoodsClick };
+                args[i] = new Args
+                {
+                    offer = Data.Goods.PotionList[i], curHaveGold = GameManager.Instance.PlayerData.Gold, index = i,
+                    onClick = OnCellGoodsClick
+                };
             }
+
             potionListObjectPool.SetDatas(args, CellSet, potionListView);
 
             args = new Args[Data.Goods.KeyList.Length];
             for (int i = 0; i < args.Length; i++)
             {
-                args[i] = new Args { offer = Data.Goods.KeyList[i], curHaveGold = GameManager.Instance.PlayerData.Gold,index = i, onClick = OnCellGoodsClick };
+                args[i] = new Args
+                {
+                    offer = Data.Goods.KeyList[i], curHaveGold = GameManager.Instance.PlayerData.Gold, index = i,
+                    onClick = OnCellGoodsClick
+                };
             }
+
             keyListObjectPool.SetDatas(args, CellSet, keyListView);
             PlayerData playerData = GameManager.Instance.PlayerData;
             if (Data.UpGradeCost.Value > playerData.Gold)
             {
                 levelUpCost_txt.text = $"<color=red>{Data.UpGradeCost.Value}</color>";
             }
-            else 
+            else
             {
                 levelUpCost_txt.text = $"<color=yellow>{Data.UpGradeCost.Value}</color>";
             }
+
             if (Data.RefreshCost.Value > playerData.Gold)
             {
                 reflashCost_txt.text = $"<color=red>{Data.RefreshCost.Value}</color>";
             }
-            else 
+            else
             {
                 reflashCost_txt.text = $"<color=yellow>{Data.RefreshCost.Value}</color>";
             }
-
-
         }
 
 
@@ -116,9 +118,8 @@ namespace UI
             arg1.SetData(arg2.index, arg2.curHaveGold, arg2.offer, arg2.onClick);
         }
 
-        private void OnCellGoodsClick(CellGoodView cellGoodView, Offer offer,int index) 
+        private void OnCellGoodsClick(CellGoodView cellGoodView, Offer offer, int index)
         {
-
             //FailureInfo会在创建的时候就自动播报，不用在这里再播报一次
             Info info;
             //会有资源不够的info返回
@@ -135,15 +136,15 @@ namespace UI
                     {
                         Data.Goods.PotionList[index].isSold = true;
                     }
-                    else if (offer.Kind == Offer.OfferKind.Key) 
+                    else if (offer.Kind == Offer.OfferKind.Key)
                     {
                         Data.Goods.KeyList[index].isSold = true;
                     }
+
                     PlayerMainPanel.Instance.PlayGetItemEffect(offer, cellGoodView.transform.position);
                     UpdateUI();
-
                 }
-                else 
+                else
                 {
                     info.BroadCastInfo();
                 }
@@ -152,7 +153,7 @@ namespace UI
             {
                 info.BroadCastInfo();
             }
-            
+
             /*if (playerData.Gold < offer.Cost.ActualValue)
             {
                 Debug.LogWarning("金币不足");
@@ -167,26 +168,23 @@ namespace UI
                 }
 
             }*/
-
-
         }
 
-        private void SellPotionClick() 
+        private void SellPotionClick()
         {
             Debug.LogError("出售药水按钮被点击");
         }
 
-        private void LevelUpClick() 
+        private void LevelUpClick()
         {
             Debug.LogError("升级按钮被点击");
         }
 
-        private void ReflashClick() 
+        private void ReflashClick()
         {
             Data.Refresh();
             UpdateUI();
             //Debug.LogError("刷新按钮被点击");
         }
-
     }
 }

@@ -19,9 +19,9 @@ namespace Game
         public float Multi;
         public int Combo;
         public CostInfo CostInfo;
-        
+
         public bool Death;
-        
+
         /*public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1,string id = "", CostInfo costInfo = default)
         {
             Combo = combo;
@@ -38,9 +38,10 @@ namespace Game
 
             Death = false;
         }*/
-        
-        
-        public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1, string kw ="", CostInfo costInfo = default)
+
+
+        public Attack(int pAtk = 0, int mAtk = 0, int cAtk = 0, float multi = 1f, int combo = 1, string kw = "",
+            CostInfo costInfo = default)
         {
             Combo = combo;
             Multi = multi;
@@ -56,7 +57,6 @@ namespace Game
 
             Death = false;
         }
-        
 
 
         [JsonIgnore] public int SumDmg => PDmg + MDmg + CDmg;

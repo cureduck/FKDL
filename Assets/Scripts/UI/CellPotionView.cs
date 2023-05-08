@@ -23,12 +23,10 @@ namespace UI
         public Image BottleIcon;
         public Image PotionIcon;
 
-        [SerializeField]
-        private PointEnterAndExit pointEvent;
-        [SerializeField]
-        private GameObject curSelectSign;
+        [SerializeField] private PointEnterAndExit pointEvent;
+        [SerializeField] private GameObject curSelectSign;
 
-        public void Start() 
+        public void Start()
         {
             curSelectSign.SetActive(true);
             pointEvent.onPointEnter.AddListener(OnPointEnter);
@@ -50,7 +48,7 @@ namespace UI
 
         private void Load()
         {
-            if ((GameManager.Instance.PlayerData == null)||(Id.IsNullOrWhitespace()))
+            if ((GameManager.Instance.PlayerData == null) || (Id.IsNullOrWhitespace()))
             {
                 IdText.SetTerm("empty");
                 GetComponent<Button>().interactable = false;
@@ -63,11 +61,11 @@ namespace UI
                 LvText.gameObject.SetActive(true);
                 GetComponent<Button>().interactable = true;
                 IdText.SetTerm(Id);
-                
+
                 BottleIcon.gameObject.SetActive(true);
 
-                BottleIcon.sprite = data.Bp.Icon;// SpriteManager.Instance.PotionBottleIcon[data.Bp.Rank];
-                
+                BottleIcon.sprite = data.Bp.Icon; // SpriteManager.Instance.PotionBottleIcon[data.Bp.Rank];
+
                 LvText.text = data.Count.ToString();
             }
         }
@@ -77,13 +75,13 @@ namespace UI
         {
             //Debug.Log("!!!!");
             GameManager.Instance.PlayerData.UsePotion(index);
-            if (data.Count <= 0) 
+            if (data.Count <= 0)
             {
                 OnPointExit();
             }
         }
 
-        public void OnPointEnter() 
+        public void OnPointEnter()
         {
             //Debug.Log("Enter!");
             //return;
@@ -92,8 +90,10 @@ namespace UI
             {
                 curSelectSign.SetActive(true);
             }
+
             Potion potion = PotionManager.Instance.GetById(data.Id);
-            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = potion.Des, screenPosition = transform.position, title = data.Id });
+            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
+                { describe = potion.Des, screenPosition = transform.position, title = data.Id });
         }
 
 
@@ -106,8 +106,8 @@ namespace UI
             {
                 curSelectSign.SetActive(false);
             }
+
             WindowManager.Instance.simpleInfoItemPanel.Close();
         }
-
     }
 }

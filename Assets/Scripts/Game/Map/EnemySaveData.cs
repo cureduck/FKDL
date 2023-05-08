@@ -17,6 +17,7 @@ namespace Game
         [JsonIgnore] public override FighterData Enemy => enemy ?? GameManager.Instance.PlayerData;
 
         [JsonIgnore] public FighterData enemy;
+
         public EnemySaveData(string id) : base()
         {
             Id = id;
@@ -25,7 +26,6 @@ namespace Game
             Skills = new SkillData[Bp.Skills.Length];
             Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
             */
-
         }
 
 
@@ -38,7 +38,7 @@ namespace Game
                     return ManageAttackRound(skill);
                 }
             }
-            
+
             DeathCheck();
 
             return ManageAttackRound();
@@ -52,16 +52,15 @@ namespace Game
                 Destroyed();
             }
         }
-        
 
 
         private void Chase()
         {
             Player.DrawBack = true;
             ManageAttackRound();
-            
+
             DeathCheck();
-            
+
             ((PlayerData)Enemy).DrawBack = false;
         }
 
@@ -74,15 +73,14 @@ namespace Game
 
             Skills = new SkillAgent(Bp.Skills);
             //Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
-            
-            
-            
+
+
             Buffs = new BuffAgent();
             foreach (var buff in Bp.Buffs)
             {
                 Buffs.Add(buff);
             }
-            
+
             foreach (var sk in Skills)
             {
                 OnGet(sk);
@@ -103,7 +101,8 @@ namespace Game
         public override void OnFocus()
         {
             base.OnFocus();
-            WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args { targetEnemy = this, playerData = GameManager.Instance.PlayerData });
+            WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args
+                { targetEnemy = this, playerData = GameManager.Instance.PlayerData });
         }
 
         public override void OnReact()
@@ -137,24 +136,24 @@ namespace Game
         public void OnReact(SkillData skill, out Attack? attack1, out Attack? attack2)
         {
             attack1 = ((PlayerData)Enemy).ManageAttackRound(skill);
-            
+
             attack2 = IsAlive ? PlanAttackRound() : null;
-            
-            
+
+
             base.OnReact();
             //InformReactResult(new EnemyArgs() {PlayerAttack = playerAttack, EnemyAttack = enemyAttack});
 
             DeathCheck();
-            
+
             ((PlayerData)Enemy).Engaging = false;
             DelayUpdate();
         }
-        
+
 
         protected override void Destroyed()
         {
             Enemy.Gain(Gold, "trophy");
-            
+
             base.Destroyed();
         }
 
@@ -166,11 +165,11 @@ namespace Game
             {
                 if (!EnemyManager.Instance.EnemyBps.ContainsKey(Id))
                 {
-                    Debug.LogWarning(Id +" not found");
+                    Debug.LogWarning(Id + " not found");
                 }
+
                 return EnemyManager.Instance.EnemyBps[Id];
             }
-            
         }
 
         public override string ToString()

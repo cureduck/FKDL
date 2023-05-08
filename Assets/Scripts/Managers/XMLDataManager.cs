@@ -21,7 +21,7 @@ namespace Managers
     public interface IProvider<out T> where T : CsvData
     {
         T GetById(string id);
-        
+
         /// <summary>
         /// 根据最低生成等级rank，有luckyChance概率生成更高一级物品，
         /// 有luckyChance/2概率生成再高一级，依次类推。
@@ -41,9 +41,9 @@ namespace Managers
         /// <returns></returns>
         T[] RollT(Rank rank, int count);
     }
-    
-    
-    public abstract class XMLDataManager <T1, T2> : Singleton<XMLDataManager<T1, T2>> ,IProvider<T1> where T1 : CsvData
+
+
+    public abstract class XMLDataManager<T1, T2> : Singleton<XMLDataManager<T1, T2>>, IProvider<T1> where T1 : CsvData
     {
         [ShowInInspector] protected CustomDictionary<T1> Lib;
 
@@ -60,15 +60,16 @@ namespace Managers
             SpriteManager.Instance.BuffIcons.TryGetValue(id, out var icon);
             return icon;
         }
-        
+
         protected virtual void Load()
         {
             Lib = new CustomDictionary<T1>();
 
             var csv = File.ReadAllText(CsvPath, Encoding.UTF8);
-            
-            Debug.Log($"-----------------------------------------{typeof(T1).Name} 加载中-----------------------------------------------");
-            
+
+            Debug.Log(
+                $"-----------------------------------------{typeof(T1).Name} 加载中-----------------------------------------------");
+
             foreach (var line in CsvReader.ReadFromText(csv))
             {
                 try
@@ -86,20 +87,23 @@ namespace Managers
                     Debug.LogError($"{line} read error");
                 }
             }
+
             FuncMatch();
             FuncMatchCheck();
-            Debug.Log($"-----------------------------------------{typeof(T1).Name} 加载完毕-----------------------------------------------");
+            Debug.Log(
+                $"-----------------------------------------{typeof(T1).Name} 加载完毕-----------------------------------------------");
         }
-        
-        
+
+
         /// <summary>
         /// 如果是数据行则加载，如果是翻译行则跳过
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
-        [CanBeNull] protected abstract T1 Line2T(ICsvLine line);
+        [CanBeNull]
+        protected abstract T1 Line2T(ICsvLine line);
 
-        private const BindingFlags Flag = (BindingFlags.NonPublic)|(BindingFlags.Instance);
+        private const BindingFlags Flag = (BindingFlags.NonPublic) | (BindingFlags.Instance);
 
         protected virtual void Bind(T1 v, MethodInfo method, EffectAttribute attr)
         {
@@ -108,8 +112,8 @@ namespace Managers
 
 
         protected abstract T1 CreateTest(string id, MethodInfo method, EffectAttribute attr);
-        
-        
+
+
         private void FuncMatch()
         {
             foreach (var method in typeof(T2).GetMethods(Flag))
@@ -117,8 +121,7 @@ namespace Managers
                 var attr = method.GetCustomAttribute<EffectAttribute>();
                 if (attr != null)
                 {
-                    
-                    if (Lib.TryGetValue(attr.id.ToLower(), out  var v))
+                    if (Lib.TryGetValue(attr.id.ToLower(), out var v))
                     {
                         Bind(v, method, attr);
                         //v.Fs[attr.timing] = method;
@@ -137,17 +140,15 @@ namespace Managers
             }
         }
 
-        
+
         [CanBeNull]
         public T1 GetById(string id)
         {
-            
             if (id == null) return null;
-            
+
             Lib.TryGetValue(id, out var v);
             return v;
         }
-        
 
 
         protected virtual IEnumerable<T1> GetCandidates(Rank rank)
@@ -155,7 +156,7 @@ namespace Managers
             return Lib.Values.Where((data => data.Rank == rank));
         }
 
-        
+
         /// <summary>
         /// 注意如果所需数目太大超过所有可能选项，则只会产生所有可能选项，即达不到输入数目
         /// </summary>
@@ -168,7 +169,7 @@ namespace Managers
             {
                 return new T1[0];
             }
-            
+
             var candidates = GetCandidates(rank);
             if (candidates.Count() <= count)
             {
@@ -181,10 +182,10 @@ namespace Managers
                     .Take(count).ToArray();
             }
         }
-        
-        
+
+
         private const float LuckPassRate = .5f;
-        
+
         /// <summary>
         /// 随机卡牌过程如下，首先尝试生成最高级卡牌，再依次向下尝试生成
         /// </summary>
@@ -198,11 +199,11 @@ namespace Managers
             IEnumerable<T1> s = new LinkedList<T1>();
             var slotLeft = count;
             var random = Lib.Random;
-            for (var i = Lib.RankLevels -2; i >= (int)rank; i--)
+            for (var i = Lib.RankLevels - 2; i >= (int)rank; i--)
             {
                 var rand = random.NextDouble();
                 var p = luckyChance * Math.Pow(LuckPassRate, i - (int)rank);
-                
+
                 //二项分布
                 var bin = new MathNet.Numerics.Distributions.Binomial(p, slotLeft, random);
                 var k = 0;
@@ -212,9 +213,9 @@ namespace Managers
                     k += 1;
                 }
 
-                var chosen = RollT((Rank) i+1, k);
+                var chosen = RollT((Rank)i + 1, k);
                 s = s.Concat(chosen);
-                
+
                 slotLeft -= k;
                 if (slotLeft == 0) break;
             }
@@ -223,7 +224,7 @@ namespace Managers
 
             return s.ToArray();
         }
-        
+
         public bool ContainsKey(string id)
         {
             return Lib.ContainsKey(id);
@@ -241,6 +242,7 @@ namespace Managers
                 v = null;
                 return false;
             }
+
             return Lib.TryGetValue(id, out v);
         }
 

@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CellUIDragReceive : MonoBehaviour {
+public class CellUIDragReceive : MonoBehaviour
+{
+    public void DragOnThis(CellUIDragView sender)
+    {
+        OnDragOnThis(sender);
+    }
 
-	public void DragOnThis(CellUIDragView sender) 
-	{
-		OnDragOnThis(sender);
-	}
-
-	protected virtual void OnDragOnThis(CellUIDragView sender) 
-	{
-		
-	}
-
+    protected virtual void OnDragOnThis(CellUIDragView sender)
+    {
+    }
 }

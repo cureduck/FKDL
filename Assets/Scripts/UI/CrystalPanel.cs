@@ -11,13 +11,9 @@ namespace UI
 {
     public class CrystalPanel : BasePanel<(PlayerData player, Crystal crystal)>
     {
-
-        [SerializeField]
-        private Localize describe;
-        [SerializeField]
-        private CellCrystalOptionView crystalOptionPrefab;
-        [SerializeField]
-        private Transform OptionList;
+        [SerializeField] private Localize describe;
+        [SerializeField] private CellCrystalOptionView crystalOptionPrefab;
+        [SerializeField] private Transform OptionList;
 
         private UIViewObjectPool<CellCrystalOptionView, Crystal.Option> objectPools;
 
@@ -34,12 +30,12 @@ namespace UI
             transform.SetAsLastSibling();
         }
 
-        private void OnSet(CellCrystalOptionView cellCrystalOptionView, Crystal.Option data) 
+        private void OnSet(CellCrystalOptionView cellCrystalOptionView, Crystal.Option data)
         {
             cellCrystalOptionView.SetData(Data.player, Data.crystal.Id, data, CellOptionClick);
         }
 
-        private void CellOptionClick(PlayerData playerData, Crystal.Option option) 
+        private void CellOptionClick(PlayerData playerData, Crystal.Option option)
         {
             playerData.Execute(option.Effect);
             Close();
@@ -47,7 +43,6 @@ namespace UI
 
         protected override void UpdateUI()
         {
-            
         }
     }
 }

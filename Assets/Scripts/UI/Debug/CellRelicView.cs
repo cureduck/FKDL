@@ -10,7 +10,7 @@ namespace UI
     {
         public TMP_Text Stack;
         public Image Icon;
-        
+
         public override void UpdateUI()
         {
             if (Data?.Bp == null) return;
@@ -19,6 +19,7 @@ namespace UI
             {
                 Stack.text = Data.Counter.ToString();
             }
+
             Icon.sprite = Data?.Bp?.Icon;
         }
 

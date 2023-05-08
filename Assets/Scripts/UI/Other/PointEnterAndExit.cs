@@ -1,4 +1,5 @@
 ﻿#region 模块信息
+
 /***
  *    Title: "XFrameWork" PointEnterAndExit.cs
  *           主题：       
@@ -9,6 +10,7 @@
  *    Version:  1.0版本
  *    Modify Recoder: 
  */
+
 #endregion
 
 using System.Collections;
@@ -18,7 +20,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class PointEnterAndExit : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerDownHandler,IPointerUpHandler,IPointerClickHandler
+public class PointEnterAndExit : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
+    IPointerUpHandler, IPointerClickHandler
 {
     public UnityEvent onPointEnter;
     public UnityEvent onPointExit;
@@ -35,11 +38,11 @@ public class PointEnterAndExit : MonoBehaviour,IPointerEnterHandler,IPointerExit
         {
             if (curButton.interactable == true)
             {
-                if (eventData.button == PointerEventData.InputButton.Left) 
+                if (eventData.button == PointerEventData.InputButton.Left)
                 {
                     onPointLeftClick.Invoke();
                 }
-                else if(eventData.button == PointerEventData.InputButton.Right) 
+                else if (eventData.button == PointerEventData.InputButton.Right)
                 {
                     onPointRightClick.Invoke();
                 }
@@ -71,9 +74,6 @@ public class PointEnterAndExit : MonoBehaviour,IPointerEnterHandler,IPointerExit
         {
             onPointLeftDown.Invoke();
         }
-
-
-
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -89,7 +89,6 @@ public class PointEnterAndExit : MonoBehaviour,IPointerEnterHandler,IPointerExit
         {
             onPointEnter.Invoke();
         }
-        
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -105,7 +104,6 @@ public class PointEnterAndExit : MonoBehaviour,IPointerEnterHandler,IPointerExit
         {
             onPointExit.Invoke();
         }
-
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -121,6 +119,5 @@ public class PointEnterAndExit : MonoBehaviour,IPointerEnterHandler,IPointerExit
         {
             onPointLeftUp.Invoke();
         }
-        
     }
 }

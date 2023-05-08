@@ -5,9 +5,10 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandler,IBeginDragHandler,IEndDragHandler,IDragHandler
+public class CellUIDragView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IEndDragHandler,
+    IDragHandler
 {
-	public Transform dragParent;
+    public Transform dragParent;
     public UnityEvent onLeftClick;
     public UnityEvent onRightClick;
 
@@ -24,7 +25,7 @@ public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandl
 
     private bool isPointDown;
 
-    public virtual void Init(object data) 
+    public virtual void Init(object data)
     {
         enabled = true;
         originParent = transform.parent;
@@ -33,12 +34,12 @@ public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandl
         //Debug.Log("初始化完毕！");
     }
 
-    public T GetData<T>() 
+    public T GetData<T>()
     {
         return (T)data;
     }
 
-    public void SetData(object data) 
+    public void SetData(object data)
     {
         this.data = data;
     }
@@ -65,14 +66,13 @@ public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandl
         if (clickSpaceTime >= 0.2f)
         {
             transform.position = Input.mousePosition;
-
         }
         //(Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
-    void Update() 
+    void Update()
     {
-        if (isPointDown) 
+        if (isPointDown)
         {
             clickSpaceTime += Time.deltaTime;
         }
@@ -86,7 +86,7 @@ public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandl
         endDrag?.Invoke(data);
         GameObject target = eventData.pointerCurrentRaycast.gameObject;
         CellUIDragReceive cellUIDragReceive = null;
-        if (target != null) 
+        if (target != null)
         {
             Transform cur = target.transform;
             while (cur != null)
@@ -96,6 +96,7 @@ public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandl
                 {
                     break;
                 }
+
                 cur = cur.parent;
                 //Debug.Log(cur);
             }
@@ -137,20 +138,15 @@ public class CellUIDragView : MonoBehaviour,IPointerDownHandler, IPointerUpHandl
         }
     }
 
-    protected virtual void OnBeginDragEvent() 
+    protected virtual void OnBeginDragEvent()
     {
-        
     }
 
     /// <summary>
     /// 当拖拽完成后（数据已经被修改后的操作），这个函数一般用于刷新面板，只会在拖拽到Recive的接收器情况触发
     /// </summary>
     /// <param name="cellUIDragReceive"></param>
-    protected virtual void OnPointUpEvent(CellUIDragReceive cellUIDragReceive) 
+    protected virtual void OnPointUpEvent(CellUIDragReceive cellUIDragReceive)
     {
-        
-
-
-
     }
 }

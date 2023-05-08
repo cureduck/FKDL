@@ -7,10 +7,8 @@ namespace UI
 {
     public class PotionGroupView : FighterUIPanel
     {
-        [SerializeField]
-        private CellPotionView prefab;
-        [SerializeField]
-        private Transform listParent;
+        [SerializeField] private CellPotionView prefab;
+        [SerializeField] private Transform listParent;
 
         //public int MinLen => math.min(((PlayerData) _master).Potions.Length, SkillItems.Length);
 
@@ -24,12 +22,12 @@ namespace UI
         //{
         //    ((PlayerData) _master).UsePotion(index);
         //}
-        
+
         protected override void UpdateData()
         {
             //Debug.LogWarning("gengx!");
             PlayerData playerData = _master as PlayerData;
-            if (playerData != null) 
+            if (playerData != null)
             {
                 for (int i = 0; i < playerData.Potions.Length; i++)
                 {
@@ -41,11 +39,12 @@ namespace UI
                         cellPotionView.transform.localScale = Vector3.one;
                         //cellPotionView.Init();
                     }
-                    else 
+                    else
                     {
                         cellPotionView = listParent.GetChild(i).GetComponent<CellPotionView>();
                         cellPotionView.gameObject.SetActive(true);
                     }
+
                     cellPotionView.SetData(i, playerData.Potions[i]);
                 }
 
@@ -53,7 +52,6 @@ namespace UI
                 {
                     listParent.GetChild(i).gameObject.SetActive(false);
                 }
-
             }
         }
     }

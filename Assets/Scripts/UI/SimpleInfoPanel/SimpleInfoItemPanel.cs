@@ -6,8 +6,7 @@ using I2.Loc;
 
 public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
 {
-
-    public class Args 
+    public class Args
     {
         public Vector2 screenPosition;
         public Transform worldTrans;
@@ -16,14 +15,10 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
         public string param;
     }
 
-    [SerializeField]
-    private Localize title_txt;
-    [SerializeField]
-    private Localize describe_txt;
-    [SerializeField]
-    private NotBeyoundTheScreen notBeyoundTheScreen;
-    [SerializeField]
-    private LocalizationParamsManager _paramsManager;
+    [SerializeField] private Localize title_txt;
+    [SerializeField] private Localize describe_txt;
+    [SerializeField] private NotBeyoundTheScreen notBeyoundTheScreen;
+    [SerializeField] private LocalizationParamsManager _paramsManager;
 
     private Camera mainCamera;
 
@@ -54,6 +49,4 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
         notBeyoundTheScreen.PanelFollowQuadrant(Data.screenPosition);
         transform.position = Data.screenPosition;
     }
-
-
 }

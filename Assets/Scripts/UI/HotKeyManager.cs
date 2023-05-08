@@ -8,8 +8,8 @@ namespace UI
     public class HotKeyManager : Singleton<HotKeyManager>
     {
         public string[] SkillHotKeys;
-        
-        
+
+
         protected override void Awake()
         {
             base.Awake();
@@ -19,19 +19,20 @@ namespace UI
                 SkillHotKeys[i] = i.ToString();
             }
         }
-        
-        
-        
+
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F1))
             {
-                WindowManager.Instance.MenuWindow.SetActive(value:!WindowManager.Instance.MenuWindow.activeInHierarchy);
+                WindowManager.Instance.MenuWindow.SetActive(value: !WindowManager.Instance.MenuWindow
+                    .activeInHierarchy);
             }
-            
+
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                WindowManager.Instance.CheatWindow.SetActive(value:!WindowManager.Instance.CheatWindow.activeInHierarchy);
+                WindowManager.Instance.CheatWindow.SetActive(value: !WindowManager.Instance.CheatWindow
+                    .activeInHierarchy);
             }
 
             for (int i = 0; i < 10; i++)

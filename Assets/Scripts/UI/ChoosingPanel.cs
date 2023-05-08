@@ -12,7 +12,7 @@ namespace Managers
     {
         public Image MainImage;
         public Image[] Images;
-        
+
         [ShowInInspector] public Dictionary<string, Sprite> Icons;
 
         public List<Toggle> ToggleList;
@@ -21,7 +21,7 @@ namespace Managers
         public const int RoleCount = 3;
 
         public Button GoAheadBtn;
-        
+
         private void Start()
         {
             foreach (var toggle in ToggleList)
@@ -37,9 +37,9 @@ namespace Managers
                                 toggle.isOn = false;
                                 return;
                             }
-                            
+
                             SelectedList.Add(toggle);
-                            
+
                             if (SelectedList.Count == RoleCount)
                             {
                                 foreach (var toggle1 in ToggleList)
@@ -63,12 +63,12 @@ namespace Managers
 
                             GoAheadBtn.interactable = false;
                         }
+
                         SetMainImage(toggle.name);
                     });
-                
             }
         }
-        
+
         [Button]
         public void SetMainImage(string id)
         {
@@ -76,7 +76,6 @@ namespace Managers
             MainImage.sprite = Icons[id];
             SetChosenProf();
         }
-
 
 
         private void SetChosenProf()
@@ -100,7 +99,7 @@ namespace Managers
             {
                 toggle.isOn = false;
             }
-            
+
             SetChosenProf();
         }
 
@@ -110,6 +109,5 @@ namespace Managers
             SceneSwitchManager.Instance.NewGame = true;
             FindObjectOfType<TransitionManager>().LoadScene("MainScene", "DiagonalRectangleGrid", .2f);
         }
-        
     }
 }

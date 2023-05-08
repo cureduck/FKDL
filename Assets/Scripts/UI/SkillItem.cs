@@ -16,11 +16,11 @@ namespace UI
         public Localize IdText;
         public TMP_Text LvText;
         public TMP_Text CdText;
-        
+
         public GameObject DescriptionPanel;
         public Localize Description;
         public LocalizationParamsManager ParamsManager;
-        
+
         public void Load(SkillData data)
         {
             Debug.LogWarning("该逻辑已被隐藏");
@@ -78,11 +78,10 @@ namespace UI
                     }
                     CdText.gameObject.SetActive(false);
                 }*/
-            
         }
 
         //private Dictionary<string, Skill> Lib => SkillManager.Instance.Lib;
-        
+
         [Button]
         public void Activated()
         {

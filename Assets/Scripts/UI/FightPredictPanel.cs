@@ -11,14 +11,13 @@ namespace UI
 
         public Image PlayerDeathIcon;
         public Image EnemyDeathIcon;
-        
-        
+
 
         protected override void UpdateUI()
         {
             EnemyDmgPred.text = Data.Enemy.IsAlive ? Data.EnemyAttack.ToString() : "-";
             PlayerDmgPred.text = Data.PlayerAttack.ToString();
-            
+
             PlayerDeathIcon.gameObject.SetActive(!Data.Player.IsAlive);
             EnemyDeathIcon.gameObject.SetActive(!Data.Enemy.IsAlive);
         }

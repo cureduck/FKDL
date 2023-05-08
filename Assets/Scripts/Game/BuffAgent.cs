@@ -10,11 +10,11 @@ namespace Game
     {
         public event Action<BuffData> BuffAdded;
         public event Action<BuffData> BuffRemoved;
-        
-        
+
+
         public BuffAgent() : base()
         {
-            foreach (var  buff in this)
+            foreach (var buff in this)
             {
                 buff.Removed += () => { Remove(buff); };
             }
@@ -24,8 +24,8 @@ namespace Game
         {
             base.Add(data);
         }
-        
-        
+
+
         public new void Add(BuffData data)
         {
             var d = (BuffData)data.Clone();
@@ -51,6 +51,7 @@ namespace Game
                     }
                 }
             }
+
             RemoveZeroStackBuff();
         }
 

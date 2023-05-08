@@ -14,7 +14,7 @@ namespace Game
         public Dictionary<Rank, int> SkillPoint;
 
         public int RemoveSkillPoint;
-        
+
         public string[] Prof;
 
         public int InitGameSeed;
@@ -39,7 +39,7 @@ namespace Game
                 [Rank.Uncommon] = 0,
                 [Rank.Rare] = 0
             };
-            
+
             DiscoveredRelics = new List<string>();
         }
 
@@ -47,12 +47,12 @@ namespace Game
         {
             Save(_savePath);
         }
-        
+
         public static SecondaryData LoadFromInit()
         {
             return null;
         }
-        
+
         public static SecondaryData LoadFromSave()
         {
             return Load(_savePath);
@@ -81,7 +81,7 @@ namespace Game
             SkillManager.Instance.SetRandom(CurCardRandom);
             PotionManager.Instance.SetRandom(PotionRandom);
             BuffManager.Instance.SetRandom(CurGameRandom);
-            
+
             SkillPoint = new Dictionary<Rank, int>
             {
                 [Rank.Normal] = 0,
@@ -89,7 +89,7 @@ namespace Game
                 [Rank.Rare] = 0
             };
         }
-        
+
         public static SecondaryData Load(string path)
         {
             return Load<SecondaryData>(path);

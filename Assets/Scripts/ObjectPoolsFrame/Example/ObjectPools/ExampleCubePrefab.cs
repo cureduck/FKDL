@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CH.ObjectPool;
-public class ExampleCubePrefab : MonoBehaviour,IPoolObjectSetData
+
+public class ExampleCubePrefab : MonoBehaviour, IPoolObjectSetData
 {
     public void InitOnSpawn()
     {
@@ -13,6 +14,4 @@ public class ExampleCubePrefab : MonoBehaviour,IPoolObjectSetData
     {
         Debug.Log("激活当前<color=yellow>方块</color>预制体，并传入参数：" + data);
     }
-
-
 }

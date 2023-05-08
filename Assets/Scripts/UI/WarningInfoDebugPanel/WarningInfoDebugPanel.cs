@@ -6,10 +6,8 @@ using I2.Loc;
 
 public class WarningInfoDebugPanel : BasePanel<string>
 {
-    [SerializeField]
-    private GameObject targetObject;
-    [SerializeField]
-    private Localize warningInfo;
+    [SerializeField] private GameObject targetObject;
+    [SerializeField] private Localize warningInfo;
 
     private void Start()
     {
@@ -26,6 +24,5 @@ public class WarningInfoDebugPanel : BasePanel<string>
 
     protected override void UpdateUI()
     {
-        
     }
 }

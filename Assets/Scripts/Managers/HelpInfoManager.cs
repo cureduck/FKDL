@@ -10,7 +10,7 @@ namespace Managers
         public Localize Helper;
 
         private Tween dt;
-        
+
         public void SetTerm(string term)
         {
             Helper.gameObject.SetActive(true);

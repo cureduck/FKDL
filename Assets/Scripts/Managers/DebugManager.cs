@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UI;
+
 namespace Managers
 {
     public class DebugManager : Singleton<DebugManager>
@@ -15,7 +16,7 @@ namespace Managers
         public TMP_InputField BuffDebugInput;
         public TMP_InputField RelicDebugInput;
         public TMP_InputField SKillDebugInput;
-        
+
         [Button]
         public void Apply(string id, int lv)
         {
@@ -53,8 +54,8 @@ namespace Managers
         {
             AddRelic(RelicDebugInput.text);
         }
-        
-        
+
+
         public void AddSkill(string id)
         {
             if (SkillManager.Instance.TryGetById(id, out var skill))
@@ -67,15 +68,14 @@ namespace Managers
         {
             AddSkill(SKillDebugInput.text);
         }
-        
-        
+
+
         [Button]
         public void AddBuff()
         {
             AddBuff(BuffDebugInput.text);
         }
 
-        
 
         public void AddPotion()
         {
@@ -98,18 +98,17 @@ namespace Managers
         }
 
         private static PlayerData Player => GameDataManager.Instance.PlayerData;
-        
+
         public void Add1Atk()
         {
-            GameManager.Instance.PlayerData.Strengthen(new BattleStatus{PAtk = 1});
+            GameManager.Instance.PlayerData.Strengthen(new BattleStatus { PAtk = 1 });
             PlayerMainPanel.Instance.PlayGetCharacterPointEffect(0);
         }
-        
+
         public void Add1Def()
         {
-            GameManager.Instance.PlayerData.Strengthen(new BattleStatus{PDef = 1});
+            GameManager.Instance.PlayerData.Strengthen(new BattleStatus { PDef = 1 });
             PlayerMainPanel.Instance.PlayGetCharacterPointEffect(2);
         }
-        
     }
 }

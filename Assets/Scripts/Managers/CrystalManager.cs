@@ -40,8 +40,8 @@ namespace Managers
 
         private void HandleLine(ICsvLine line)
         {
-            var id = line["id"];//.ToLower().Replace(" ", "");
-            var rank = (Rank) int.Parse(line["rank"]);
+            var id = line["id"]; //.ToLower().Replace(" ", "");
+            var rank = (Rank)int.Parse(line["rank"]);
             var isTitle = line["type"].Equals("title");
 
             if (isTitle)
@@ -50,7 +50,7 @@ namespace Managers
                 {
                     Id = id,
                     Title = id,
-                    OptionLimit = int.TryParse(line["limit"], out var limit)? limit : 999
+                    OptionLimit = int.TryParse(line["limit"], out var limit) ? limit : 999
                 };
             }
             else
@@ -79,12 +79,11 @@ namespace Managers
                     effects,
                     suf,
                     new CostInfo(int.TryParse(line["cost"], out var o) ? o : 0, costType),
-                    int.TryParse(line["priority"], out var p)? p : 0,
-                    int.TryParse(line["weight"], out var w)? w: 1
+                    int.TryParse(line["priority"], out var p) ? p : 0,
+                    int.TryParse(line["weight"], out var w) ? w : 1
                 );
 
                 Lib[tit].Options.Add(opt);
-
             }
         }
     }

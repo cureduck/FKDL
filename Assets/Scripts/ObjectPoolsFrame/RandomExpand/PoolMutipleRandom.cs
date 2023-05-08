@@ -4,17 +4,18 @@ using UnityEngine;
 
 namespace CH.RandomExpand
 {
-    public static class  PoolMultipleRandom<T>
+    public static class PoolMultipleRandom<T>
     {
         private static List<T> tempT = new List<T>();
         private static List<T> resultT = new List<T>();
+
         /// <summary>
         /// ��һ���б���������maxgetcount��Ԫ��
         /// </summary>
         /// <param name="curList"></param>
         /// <param name="maxGetCount"></param>
         /// <returns></returns>
-        public static T[] GetTargetCountRandom(IEnumerable<T> curList,int maxGetCount) 
+        public static T[] GetTargetCountRandom(IEnumerable<T> curList, int maxGetCount)
         {
             //List<T> x = new List<T>();
             //List<T> y = new List<T>();
@@ -33,7 +34,7 @@ namespace CH.RandomExpand
                     resultT.Add(tempT[randomIndex]);
                     tempT.RemoveAt(randomIndex);
                 }
-                else 
+                else
                 {
                     break;
                 }

@@ -13,7 +13,7 @@ namespace Game
         {
             Rank = rank;
         }
-        
+
 
         public override void Init()
         {

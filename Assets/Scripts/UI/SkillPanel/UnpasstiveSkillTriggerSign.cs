@@ -4,14 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using CH.ObjectPool;
 
-public class UnpasstiveSkillTriggerSign : MonoBehaviour,IPoolObjectSetData
+public class UnpasstiveSkillTriggerSign : MonoBehaviour, IPoolObjectSetData
 {
-    [SerializeField]
-    private Image icon;
+    [SerializeField] private Image icon;
 
     public void InitOnSpawn()
     {
-       
     }
 
     public void SetDataOnEnable(object data)

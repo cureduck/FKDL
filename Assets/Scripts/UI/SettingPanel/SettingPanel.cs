@@ -9,28 +9,20 @@ using I2.Loc;
 
 public class SettingPanel : BasePanel<GameSettings>
 {
-    [SerializeField]
-    private GameSettings gameSettings;
-    [SerializeField]
-    private Slider bgmSizeSilder;
-    [SerializeField]
-    private Slider soundEffectSizeSilder;
-    [SerializeField]
-    private TMP_Dropdown languageSelecter;
-    [SerializeField]
-    private TMP_Dropdown resoltionSelecter;
-    [SerializeField]
-    private Toggle isFullScreenSelecter;
-    [SerializeField]
-    private Slider viewAngleSelecter;
+    [SerializeField] private GameSettings gameSettings;
+    [SerializeField] private Slider bgmSizeSilder;
+    [SerializeField] private Slider soundEffectSizeSilder;
+    [SerializeField] private TMP_Dropdown languageSelecter;
+    [SerializeField] private TMP_Dropdown resoltionSelecter;
+    [SerializeField] private Toggle isFullScreenSelecter;
+    [SerializeField] private Slider viewAngleSelecter;
 
-    [SerializeField]
-    private bool isInitOnStart = false;
-    [SerializeField]
-    private Button close_btn;
+    [SerializeField] private bool isInitOnStart = false;
+    [SerializeField] private Button close_btn;
+
     private void Start()
     {
-        if (isInitOnStart) 
+        if (isInitOnStart)
         {
             Init();
         }
@@ -52,6 +44,7 @@ public class SettingPanel : BasePanel<GameSettings>
                 break;
             }
         }
+
         if (!haveFound)
         {
             languageSelecter.value = 0;
@@ -66,13 +59,13 @@ public class SettingPanel : BasePanel<GameSettings>
                 break;
             }
         }
+
         if (!haveFound)
         {
             resoltionSelecter.value = 0;
         }
 
         isFullScreenSelecter.isOn = gameSettings.IsFullScreen;
-
 
 
         bgmSizeSilder.onValueChanged.AddListener(BGMSilderValueChange);
@@ -85,8 +78,7 @@ public class SettingPanel : BasePanel<GameSettings>
     }
 
 
-
-    private void LanguageSliderInit() 
+    private void LanguageSliderInit()
     {
         var dropdown = languageSelecter;
         if (dropdown == null)
@@ -104,24 +96,22 @@ public class SettingPanel : BasePanel<GameSettings>
         dropdown.onValueChanged.AddListener(LanguageSelectOnValueChanged);
     }
 
-    private void BGMSilderValueChange(float value) 
+    private void BGMSilderValueChange(float value)
     {
         gameSettings.BgmVolume = value;
-        if (AudioPlayer.Instance) 
+        if (AudioPlayer.Instance)
         {
             AudioPlayer.Instance.SetBGMVolume(value);
         }
-
     }
 
-    private void SESilderValueChange(float value) 
+    private void SESilderValueChange(float value)
     {
         gameSettings.SEVolume = value;
         if (AudioPlayer.Instance)
         {
             AudioPlayer.Instance.SetSEVolume(value);
         }
-
     }
 
 
@@ -133,11 +123,12 @@ public class SettingPanel : BasePanel<GameSettings>
             index = 0;
             dropdown.value = index;
         }
+
         gameSettings.LanguageType = dropdown.options[index].text;
         //LocalizationManager.CurrentLanguage = dropdown.options[index].text;
     }
 
-    private void ResoltionSelecterOnValueChange(int index) 
+    private void ResoltionSelecterOnValueChange(int index)
     {
         string[] temp = resoltionSelecter.options[index].text.Split('X');
         gameSettings.ScreenSize = new Vector2Int(int.Parse(temp[0]), int.Parse(temp[1]));
@@ -148,12 +139,13 @@ public class SettingPanel : BasePanel<GameSettings>
         gameSettings.IsFullScreen = isOn;
         AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
     }
+
     private void ViewAngleSelectorSliderValueChange(float angle)
     {
         gameSettings.Degree = angle * -35f;
     }
 
-    private void ClosePanelButtonClick() 
+    private void ClosePanelButtonClick()
     {
         AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
         Close();
@@ -162,6 +154,5 @@ public class SettingPanel : BasePanel<GameSettings>
 
     protected override void UpdateUI()
     {
-        
     }
 }

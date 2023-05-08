@@ -4,33 +4,30 @@ using UnityEngine;
 
 public class OffersUIStartAnimation : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject targetObject;
-    [SerializeField]
-    private Animator targetAniamtor;
-    [SerializeField]
-    private CanvasGroup canvasGroup;
+    [SerializeField] private GameObject targetObject;
+    [SerializeField] private Animator targetAniamtor;
+    [SerializeField] private CanvasGroup canvasGroup;
 
-    public void PlayStartAnimation(float delayTime) 
+    public void PlayStartAnimation(float delayTime)
     {
         targetAniamtor.Play(0);
         gameObject.SetActive(true);
         StartCoroutine(StartAnimationIE(delayTime));
     }
 
-    public void HideTarget() 
+    public void HideTarget()
     {
         targetAniamtor.SetTrigger("Close");
         canvasGroup.interactable = false;
     }
 
-    public void HightLightTarget() 
+    public void HightLightTarget()
     {
         targetAniamtor.SetTrigger("HightLight");
         canvasGroup.interactable = false;
     }
 
-    private IEnumerator StartAnimationIE(float delayTime) 
+    private IEnumerator StartAnimationIE(float delayTime)
     {
         canvasGroup.interactable = false;
         targetObject.gameObject.SetActive(false);

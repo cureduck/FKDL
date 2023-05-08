@@ -10,18 +10,13 @@ namespace UI
     {
         public PotionGroupView PotionPanel;
         public GoldPanel GoldPanel;
-        [SerializeField]
-        private CareerInformationView profInformationView;
-        [SerializeField]
-        private PlayerRelicListView relicListView;
-        [SerializeField]
-        private TMP_TextAnimation paStateViewTransform;
-        [SerializeField]
-        private TMP_TextAnimation pdStateViewTransform;
-        [SerializeField]
-        private TMP_TextAnimation maStateViewTransform;
-        [SerializeField]
-        private TMP_TextAnimation mdStateViewTransform;
+        [SerializeField] private CareerInformationView profInformationView;
+        [SerializeField] private PlayerRelicListView relicListView;
+        [SerializeField] private TMP_TextAnimation paStateViewTransform;
+        [SerializeField] private TMP_TextAnimation pdStateViewTransform;
+        [SerializeField] private TMP_TextAnimation maStateViewTransform;
+        [SerializeField] private TMP_TextAnimation mdStateViewTransform;
+
         private void Start()
         {
             GameManager.Instance.GameLoaded += () =>
@@ -29,14 +24,17 @@ namespace UI
                 Init();
                 relicListView.Init();
                 PlayerData playerData = GameManager.Instance.PlayerData;
-                if (GameDataManager.Instance.SecondaryData.Prof == null|| GameDataManager.Instance.SecondaryData.Prof.Length<3)
+                if (GameDataManager.Instance.SecondaryData.Prof == null ||
+                    GameDataManager.Instance.SecondaryData.Prof.Length < 3)
                 {
                     GameDataManager.Instance.SecondaryData.Prof = new string[3] { "CUR", "BAR", "KNI" };
                 }
+
                 for (int i = 0; i < GameDataManager.Instance.SecondaryData.Prof.Length; i++)
                 {
                     Debug.Log(GameDataManager.Instance.SecondaryData.Prof[i]);
                 }
+
                 playerData.profInfo = GameDataManager.Instance.SecondaryData.Prof;
                 //playerData.OnUpdated +=
 
@@ -48,17 +46,15 @@ namespace UI
 
                 Master = playerData;
                 Debug.Log(playerData.Buffs.Count);
-
             };
         }
 
-        public void PlayGetItemEffect(Offer offer,Vector2 screenPosiion) 
+        public void PlayGetItemEffect(Offer offer, Vector2 screenPosiion)
         {
-            if (offer.Kind == Offer.OfferKind.Key) 
+            if (offer.Kind == Offer.OfferKind.Key)
             {
                 GoldPanel.PlayGetKeyEffect(screenPosiion, offer.Rank);
             }
-
         }
 
         /// <summary>
@@ -66,17 +62,16 @@ namespace UI
         /// </summary>
         /// <param name="type">0表示物攻，1表示魔攻，2表示物防，3表示魔防</param>
         /// <param name="screenPosiion"></param>
-        public void PlayGetCharacterPointEffect(int type) 
+        public void PlayGetCharacterPointEffect(int type)
         {
             TMP_TextAnimation targetTrans;
             if (type == 0)
             {
                 targetTrans = paStateViewTransform;
             }
-            else if (type == 1) 
+            else if (type == 1)
             {
                 targetTrans = maStateViewTransform;
-
             }
             else if (type == 2)
             {
@@ -86,15 +81,13 @@ namespace UI
             {
                 targetTrans = mdStateViewTransform;
             }
-            else 
+            else
             {
                 return;
             }
 
             targetTrans.SetTempColor(Color.yellow);
             targetTrans.SetTempFontSize(2);
-
-
         }
 
 
@@ -104,6 +97,7 @@ namespace UI
             {
                 Master.OnUpdated -= UpdateView;
             }
+
             base.SetMaster(master);
             master.OnUpdated += UpdateView;
 
@@ -111,11 +105,12 @@ namespace UI
             GoldPanel.SetMaster(master);
             PotionPanel.SetMaster(master);
             PlayerData playerData = master as PlayerData;
-            if (playerData != null) 
+            if (playerData != null)
             {
                 profInformationView.SetData(playerData.profInfo);
                 relicListView.SetData(playerData.Relics);
             }
+
             UpdateView();
         }
 
@@ -130,7 +125,5 @@ namespace UI
                 relicListView.SetData(playerData.Relics);
             }
         }
-
-
     }
 }

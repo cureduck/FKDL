@@ -11,10 +11,9 @@ namespace UI
         public StatusPanel StatusPanel;
         public BuffPanel BuffPanel;
         public EnemySkillInfoView EnemySkillInfoView;
-        
+
         private void Start()
         {
-            
             GameManager.Instance.FocusChanged += OnSquareChanged;
         }
 
@@ -37,11 +36,10 @@ namespace UI
                 }
             }
         }
-        
+
 
         protected override void UpdateUI()
         {
-            
         }
     }
 }

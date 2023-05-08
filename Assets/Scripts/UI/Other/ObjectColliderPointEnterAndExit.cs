@@ -18,5 +18,4 @@ public class ObjectColliderPointEnterAndExit : MonoBehaviour
     {
         onPointExit?.Invoke();
     }
-
 }

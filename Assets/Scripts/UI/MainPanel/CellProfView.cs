@@ -9,10 +9,8 @@ public class CellProfView : MonoBehaviour
 {
     public const string Title = "UI_Icon_Prof_";
 
-    [SerializeField]
-    private Image icon_img;
-    [SerializeField]
-    private PointEnterAndExit pointEnterAndExit;
+    [SerializeField] private Image icon_img;
+    [SerializeField] private PointEnterAndExit pointEnterAndExit;
 
     private string profIndex;
 
@@ -23,25 +21,25 @@ public class CellProfView : MonoBehaviour
         pointEnterAndExit.onPointExit.AddListener(OnPointExit);
     }
 
-    public void SetData(string profIndex) 
+    public void SetData(string profIndex)
     {
         if (string.IsNullOrEmpty(profIndex))
         {
             icon_img.gameObject.SetActive(false);
         }
-        else 
+        else
         {
             this.profIndex = profIndex;
             icon_img.gameObject.SetActive(true);
             icon_img.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Prof, $"{Title}{profIndex}");
         }
-
-
     }
+
     private void OnPointEnter()
     {
         if (string.IsNullOrEmpty(profIndex)) return;
-        WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = $"{profIndex}职业描述", title = profIndex, screenPosition = transform.position });
+        WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
+            { describe = $"{profIndex}职业描述", title = profIndex, screenPosition = transform.position });
     }
 
     private void OnPointExit()

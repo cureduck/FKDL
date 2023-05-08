@@ -4,13 +4,13 @@
     {
         public enum OfferKind
         {
-            Potion   =  0b000001,
-            Skill    =  0b000010,
-            Gold     =  0b000100,
-            Relic    =  0b001000,
-            Key      =  0b010000,
+            Potion = 0b000001,
+            Skill = 0b000010,
+            Gold = 0b000100,
+            Relic = 0b001000,
+            Key = 0b010000,
             SkillSlot = 0b100000,
-            
+
             NeedOnGetCheck = Skill | Relic
         }
 
@@ -42,8 +42,8 @@
             Cost = new CostInfo(cost);
             isSold = false;
         }
-        
-        
+
+
         /// <summary>
         /// 只用来生成钥匙奖励
         /// </summary>
@@ -58,7 +58,7 @@
             isSold = false;
         }
 
-        public bool isSold;//用于标记商品是否被出售
+        public bool isSold; //用于标记商品是否被出售
         public OfferKind Kind;
         public Rank Rank;
         public string Id;

@@ -25,11 +25,10 @@ namespace Managers
         public SimpleInfoItemPanel simpleInfoItemPanel;
 
         public Transform dragViewParent;
-        
+
         protected override void Awake()
         {
             base.Awake();
-
         }
 
         private void Start()
@@ -46,6 +45,5 @@ namespace Managers
             simpleInfoItemPanel?.Init();
             settingPanel?.Init();
         }
-
     }
 }

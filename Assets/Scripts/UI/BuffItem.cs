@@ -10,12 +10,11 @@ namespace UI
 {
     public class BuffItem : MonoBehaviour
     {
-        [ShowInInspector]
-        public BuffData BuffData;
+        [ShowInInspector] public BuffData BuffData;
         public TMP_Text Lv;
         public Image Icon;
         public TMP_Text Id;
-        
+
         private void Start()
         {
             Load();
@@ -32,7 +31,6 @@ namespace UI
         {
             if (BuffData.Bp.Icon)
             {
-                
             }
         }
     }

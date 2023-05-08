@@ -8,14 +8,15 @@ namespace Managers
     {
         private static PlayerData PlayerClone;
         private static EnemySaveData EnemyClone;
-        
 
-        public static FightPredictResult ArrangeFight(PlayerData player, EnemySaveData enemy, SkillData playerUsingSkill)
+
+        public static FightPredictResult ArrangeFight(PlayerData player, EnemySaveData enemy,
+            SkillData playerUsingSkill)
         {
             BuildArena(player, enemy);
             return Simulate(playerUsingSkill);
         }
-        
+
         private static void BuildArena(PlayerData player, EnemySaveData enemy)
         {
             PlayerClone = (PlayerData)player.Clone();
@@ -29,15 +30,15 @@ namespace Managers
         private static FightPredictResult Simulate(SkillData skill)
         {
             SkillData sk = null;
-            if (skill != null) 
+            if (skill != null)
             {
                 sk = PlayerClone.Skills.FirstOrDefault((data => data.Id == skill.Id));
             }
-            
-            
+
+
             EnemyClone.OnReact(sk, out var PlayerAttack, out var EnemyAttack);
-            
-            
+
+
             return new FightPredictResult()
             {
                 Player = PlayerClone,
@@ -51,20 +52,19 @@ namespace Managers
         {
             public PlayerData Player;
             public EnemySaveData Enemy;
-            
+
             public Attack? PlayerAttack;
             public Attack? EnemyAttack;
         }
-        
 
 
-            /*public override string ToString()
-            { 
-                if (EnemyAttack != null) 
-                    return $"PD:{PlayerAttack.Value}*{PlayerAttack.Value.Multi}*{PlayerAttack.Value.Combo} \n" +
-                           $" ED: {EnemyAttack.Value}*{EnemyAttack.Value.Multi}*{EnemyAttack.Value.Combo}";
-                else
-                    return $"Player Dmg :{PlayerAttack.Value} Enemy Dmg: -";
-            }*/
+        /*public override string ToString()
+        { 
+            if (EnemyAttack != null) 
+                return $"PD:{PlayerAttack.Value}*{PlayerAttack.Value.Multi}*{PlayerAttack.Value.Combo} \n" +
+                       $" ED: {EnemyAttack.Value}*{EnemyAttack.Value.Multi}*{EnemyAttack.Value.Combo}";
+            else
+                return $"Player Dmg :{PlayerAttack.Value} Enemy Dmg: -";
+        }*/
     }
 }

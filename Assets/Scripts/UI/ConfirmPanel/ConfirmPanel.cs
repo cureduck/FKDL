@@ -7,18 +7,15 @@ using UnityEngine.UI;
 
 public class ConfirmPanel : BasePanel<ConfirmPanel.Args>
 {
-    public class Args 
+    public class Args
     {
         public System.Action curEvent;
         public string info;
     }
 
-    [SerializeField]
-    private TMP_Text info;
-    [SerializeField]
-    private Button click_btn;
-    [SerializeField]
-    private Button cancel_btn;
+    [SerializeField] private TMP_Text info;
+    [SerializeField] private Button click_btn;
+    [SerializeField] private Button cancel_btn;
 
     private void Start()
     {
@@ -33,7 +30,6 @@ public class ConfirmPanel : BasePanel<ConfirmPanel.Args>
 
     protected override void UpdateUI()
     {
-        
     }
 
     private void OnClick()
@@ -41,5 +37,4 @@ public class ConfirmPanel : BasePanel<ConfirmPanel.Args>
         Data.curEvent?.Invoke();
         Close();
     }
-
 }

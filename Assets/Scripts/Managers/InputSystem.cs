@@ -15,7 +15,7 @@ namespace Managers
         private PlayerData P => GameManager.Instance.PlayerData;
 
         public GameObject BG;
-        
+
         public enum Mode
         {
             SelectPotionMode,
@@ -24,20 +24,19 @@ namespace Managers
         }
 
         public Mode InputMode;
-        
+
         public Vector2 pos;
 
         [ShowInInspector] private Vector2 delta;
         private Vector2 prePos;
-        
+
         private void Update()
         {
-            
             Scroll();
 
             delta = (Vector2)Input.mousePosition - prePos;
             prePos = Input.mousePosition;
-            
+
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
             if (LeftClicked())
@@ -55,15 +54,13 @@ namespace Managers
                 }
                 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Camera.main.transform.position -= (Vector3)delta;*/
-                
+
                 Camera.main.transform.position -= (Vector3)delta * DragRate * Camera.main.fieldOfView;
                 BG.transform.position -= (Vector3)delta * DragRate * 0.05f;
             }
-            
         }
 
         public float DragRate;
-
 
 
         private bool LeftClicked()
@@ -85,20 +82,17 @@ namespace Managers
         }
 
 
-
         private static Vector2 GetPosition()
         {
 #if UNITY_ANDROID
-
                 return Input.GetTouch(0).position;
 #endif
-            
+
             return Input.mousePosition;
         }
 
         private void Raycast()
         {
-
             var Pos = Input.mousePosition;
 
             var ray = Camera.main.ScreenPointToRay(Pos);
@@ -110,20 +104,21 @@ namespace Managers
                 if (hit.transform != null)
                 {
                     var sq = hit.transform.GetComponentInParent<Square>();
-                    
+
                     var t = sq.Data;
 
-                    if ((t != null) && (t.SquareState != SquareState.UnRevealed) && SettingManager.Instance.GameSettings.AutoGoToFocus)
+                    if ((t != null) && (t.SquareState != SquareState.UnRevealed) &&
+                        SettingManager.Instance.GameSettings.AutoGoToFocus)
                     {
                         CameraMan.Instance.Target = sq.transform.position;
                     }
 
-                    if ((t != null)&&((t.SquareState == SquareState.Focus)||(t.SquareState == SquareState.UnFocus)))
+                    if ((t != null) && ((t.SquareState == SquareState.Focus) || (t.SquareState == SquareState.UnFocus)))
                     {
                         if (GameManager.Instance.Focus != sq)
                         {
                             GameManager.Instance.BroadcastSquareChanged(sq);
-                            
+
                             Square previous = null;
                             if (GameManager.Instance.Focus != null)
                             {
@@ -134,13 +129,14 @@ namespace Managers
                                     es.Chase();
                                 }*/
                                 GameManager.Instance.Focus.Data.OnLeave();
-                                
+
                                 GameManager.Instance.PlayerData.Engaging = true;
-                                
+
                                 previous = GameManager.Instance.Focus;
                             }
+
                             GameManager.Instance.Focus = sq;
-                            
+
                             if ((GameManager.Instance.Focus.Data is EnemySaveData es))
                             {
                                 WindowManager.Instance.EnemyPanel.gameObject.SetActive(false);
@@ -148,9 +144,10 @@ namespace Managers
                                 Vector3 curPosition = sq.transform.position;
                                 curPosition.x = sq.Icon.transform.position.x;
                                 WindowManager.Instance.EnemyPanel.transform.position = curPosition;
-                                WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args { targetEnemy = es, playerData = GameManager.Instance.PlayerData });
+                                WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args
+                                    { targetEnemy = es, playerData = GameManager.Instance.PlayerData });
                             }
-                            
+
                             if (previous != null) previous.UpdateFace();
                             sq.Focus();
 
@@ -162,15 +159,12 @@ namespace Managers
                                 sq.OnReact();
                                 t.OnReact();
                             }
-
                         }
                         else
                         {
                             sq.OnReact();
                             t.OnReact();
                         }
-
-
                     }
                 }
             }
@@ -196,20 +190,20 @@ namespace Managers
 
 
         public Light2D light2D;
-        
+
         private void Scroll()
         {
             var FOV = Camera.main.fieldOfView;
-            FOV -=  Input.mouseScrollDelta.y * 3;
+            FOV -= Input.mouseScrollDelta.y * 3;
             FOV = FOV > 80 ? 80 : FOV;
-            FOV = FOV <30 ? 30 : FOV;
+            FOV = FOV < 30 ? 30 : FOV;
 
             light2D.pointLightOuterRadius = FOV;
             SettingManager.Instance.GameSettings.FOV = FOV;
             //Camera.main.fieldOfView = FOV;
         }
-        
-        
+
+
         /// <summary>
         /// 计算射线和面的交点 
         /// 会有一定误差 ， 浮点数计算没有办法
@@ -219,7 +213,7 @@ namespace Managers
         /// <param name="Point">面上的一点</param>
         /// <param name="ret">交点</param>
         /// <returns>线和面是否相交</returns>
-        private bool IntersectionOfRayAndFace(Ray ray, Vector3 normal,Vector3 Point, out Vector3 ret)
+        private bool IntersectionOfRayAndFace(Ray ray, Vector3 normal, Vector3 Point, out Vector3 ret)
         {
             if (Vector3.Dot(ray.direction, normal) == 0)
             {
@@ -227,6 +221,7 @@ namespace Managers
                 ret = Vector3.zero;
                 return false;
             }
+
             Vector3 Forward = normal;
             Vector3 Offset = Point - ray.origin; //获取线的方向
             float DistanceZ = Vector3.Angle(Forward, Offset); //计算夹角
@@ -235,7 +230,5 @@ namespace Managers
             ret = ray.origin + ray.direction * DistanceZ; //算得射线和面的交点
             return true;
         }
-
-        
     }
 }

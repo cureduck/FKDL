@@ -1,22 +1,20 @@
-﻿﻿using System;
- using Game;
- using I2.Loc;
- using TMPro;
- using UnityEngine;
+﻿using System;
+using Game;
+using I2.Loc;
+using TMPro;
+using UnityEngine;
 
 namespace UI
 {
     public class EnemyPanel : FighterPanel<EnemyPanel>
     {
-        [SerializeField]
-        private Localize skillName;
-        [SerializeField]
-        private Localize skillDescribe;
+        [SerializeField] private Localize skillName;
+        [SerializeField] private Localize skillDescribe;
         [SerializeField] private LocalizationParamsManager DescParamsManager;
         public EnemySkillInfoView skillView;
 
         public Localize RewardInfo;
-        
+
         private void Start()
         {
             GetComponent<UnityEngine.Canvas>().worldCamera = Camera.main;
@@ -30,10 +28,11 @@ namespace UI
 
         protected override void SetMaster(FighterData master)
         {
-            if (Master != null) 
+            if (Master != null)
             {
                 Master.OnUpdated -= UpdateView;
             }
+
             base.SetMaster(master);
             if (Master != null)
             {
@@ -44,10 +43,8 @@ namespace UI
         }
 
 
-        private void UpdateView() 
+        private void UpdateView()
         {
-
-
             buffListView.SetData(Master.Buffs);
 
             RewardInfo.SetTerm("RewardInfo");
@@ -70,14 +67,10 @@ namespace UI
                 skillView.SetData(Master, skillData);
                 skillView.gameObject.SetActive(true);
             }
-
-
-
         }
 
         private void Update()
         {
-
             //RewardInfo.SetTerm("RewardInfo");
             //var t = RewardInfo.GetComponent<TMP_Text>();
             //t.text = t.text.Replace("{Gold}", Master.Status.Gold.ToString());

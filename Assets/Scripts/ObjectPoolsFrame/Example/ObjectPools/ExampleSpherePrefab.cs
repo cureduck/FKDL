@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CH.ObjectPool;
-public class ExampleSpherePrefab : MonoBehaviour,IPoolObjectSetData
+
+public class ExampleSpherePrefab : MonoBehaviour, IPoolObjectSetData
 {
     public void InitOnSpawn()
     {

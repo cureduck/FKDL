@@ -14,11 +14,9 @@ public class InvokeTrigger : MonoBehaviour
         StartCoroutine(TimerIE());
     }
 
-    private IEnumerator TimerIE() 
+    private IEnumerator TimerIE()
     {
         yield return new WaitForSeconds(lateTime);
         onTimeEvent?.Invoke();
     }
-
-
 }

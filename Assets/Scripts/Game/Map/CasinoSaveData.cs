@@ -8,13 +8,13 @@ namespace Game
     public class CasinoSaveData : MapData
     {
         public const int MaxTimes = 3;
-        
+
         public int TimesLeft;
         public Rank Rank;
         public int Cost;
 
         private readonly Dictionary<Rank, int> _cost = new Dictionary<Rank, int>
-            {{Rank.Normal, 3}, {Rank.Rare, 6}, {Rank.Uncommon, 9}, {Rank.Ultra, 12}};
+            { { Rank.Normal, 3 }, { Rank.Rare, 6 }, { Rank.Uncommon, 9 }, { Rank.Ultra, 12 } };
 
         public override void Init()
         {
@@ -31,12 +31,11 @@ namespace Game
             if (Player.Gold >= Cost)
             {
                 Player.Gain(-Cost);
-                if (Random.Range(0f, 1f)> .5f)
+                if (Random.Range(0f, 1f) > .5f)
                 {
                     var potions = PotionManager.Instance.RollT(Rank, 3);
-                    var offers = potions.
-                        Select((s => new Offer(s)));
-                    
+                    var offers = potions.Select((s => new Offer(s)));
+
                     InformReactResult(new CasinoArgs()
                     {
                         CanReact = true,
@@ -54,12 +53,13 @@ namespace Game
                         Win = false
                     });
                 }
-                
+
                 TimesLeft -= 1;
                 if (TimesLeft <= 0)
                 {
                     Destroyed();
                 }
+
                 DelayUpdate();
             }
             else

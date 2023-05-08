@@ -27,19 +27,20 @@ namespace Game
             get => Status.Gold;
             protected set => Status.Gold = value;
         }
+
         [ShowInInspector] public SkillAgent Skills;
         [ShowInInspector] public BuffAgent Buffs;
 
         public abstract FighterData Enemy { get; }
         [JsonIgnore] public bool Cloned = false;
-        
+
         [JsonIgnore] public int CurHp => Status.CurHp;
-        
+
         public int Shield;
-        
+
         private Attack InitAttack(SkillData skill = null, CostInfo costInfo = default)
         {
-            return new Attack(Status.PAtk, costInfo : costInfo); //{Skill = skill};
+            return new Attack(Status.PAtk, costInfo: costInfo); //{Skill = skill};
         }
 
         [JsonIgnore] public bool IsPlayer => this is PlayerData;
@@ -47,28 +48,28 @@ namespace Game
 
         private Attack Defend(Attack attack, FighterData enemy)
         {
-            attack = CheckChain<Attack>(Timing.OnDefend, new object[] {attack, this, enemy});
+            attack = CheckChain<Attack>(Timing.OnDefend, new object[] { attack, this, enemy });
 
             attack.PDmg = math.max(0, (int)(attack.PAtk * attack.Multi) - Status.PDef);
             attack.MDmg = math.max(0, (int)(attack.MAtk * attack.Multi) - Status.MDef);
-            attack.CDmg = (int) (attack.CAtk * attack.Multi);
+            attack.CDmg = (int)(attack.CAtk * attack.Multi);
 
             if (!IsPlayer && !Cloned)
             {
-                InformReactResult(new EnemyArgs{PlayerAttack = attack});
+                InformReactResult(new EnemyArgs { PlayerAttack = attack });
             }
-            
+
             /*Status.CurHp -= attack.SumDmg;
 
             Status.CurHp = math.max(0, Status.CurHp);*/
-            
+
             DelayUpdate();
-            
-            if ((Status.CurHp <= 0)&&(this is EnemySaveData))
+
+            if ((Status.CurHp <= 0) && (this is EnemySaveData))
             {
                 DelayUpdate();
             }
-            
+
             return attack;
         }
 
@@ -77,10 +78,10 @@ namespace Game
         {
             if (skill == null) return CostInfo.Zero;
             var cost = skill.Bp.CostInfo;
-            cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[]{cost, skill, this, test});
+            cost = CheckChain<CostInfo>(Timing.OnGetSkillCost, new object[] { cost, skill, this, test });
             return cost;
         }
-        
+
 
         private void Suffer(Attack attack)
         {
@@ -88,30 +89,28 @@ namespace Game
 
             Status.CurHp = math.max(0, Status.CurHp);
         }
-        
 
 
         public Attack ForgeAttack(FighterData target, SkillData skillData = null)
         {
             var cost = GetSkillCost(skillData, false);
-            
+
             if (skillData == null)
             {
                 var atk = InitAttack();
-                atk = CheckChain<Attack>(Timing.OnAttack, new object[] {atk, this, target});
+                atk = CheckChain<Attack>(Timing.OnAttack, new object[] { atk, this, target });
                 return atk;
             }
             else
             {
                 skillData.Sealed = false;
                 var atk = InitAttack(skillData, cost);
-                atk = CheckChain<Attack>(Timing.OnAttack, new object[] {atk, this, target});
+                atk = CheckChain<Attack>(Timing.OnAttack, new object[] { atk, this, target });
                 skillData.Sealed = true;
                 //skillData.SetCooldown();
                 return atk;
             }
         }
-
 
 
         public Attack OperateAttack(FighterData target, Attack attack)
@@ -120,15 +119,15 @@ namespace Game
             var tmp = attack;
 
             var j = 0;
-            
+
             for (int i = 0; i < attack.Combo; i++)
             {
                 j += 1;
-                tmp = CheckChain<Attack>(Timing.OnStrike, new object[] {tmp, this, target, i});
+                tmp = CheckChain<Attack>(Timing.OnStrike, new object[] { tmp, this, target, i });
                 tmp = target.Defend(tmp, this);
                 //Settle(tmp, Enemy);
                 attack.Include(tmp);
-                
+
                 if (Enemy.CurHp <= attack.SumDmg)
                 {
                     Kill(attack, Enemy);
@@ -138,16 +137,15 @@ namespace Game
 
             attack.Combo = j;
 
-            tmp = CheckChain<Attack>(Timing.OnAttackSettle, new object[] {attack, this, target});
+            tmp = CheckChain<Attack>(Timing.OnAttackSettle, new object[] { attack, this, target });
             tmp = target.DefendSettle(tmp, this);
 
-            
-            
+
             return tmp;
             //AudioPlayer.Instance.PlaySoundEffect();
         }
-        
-        
+
+
         /// <summary>
         /// 会走DefendSettle的伤害结算过程
         /// </summary>
@@ -156,7 +154,7 @@ namespace Game
         /// <returns></returns>
         private Attack DefendSettle(Attack attack, FighterData target)
         {
-            var atk = CheckChain<Attack>(Timing.OnDefendSettle, new object[] {attack, this, target});
+            var atk = CheckChain<Attack>(Timing.OnDefendSettle, new object[] { attack, this, target });
             Suffer(atk);
             return atk;
         }
@@ -168,25 +166,21 @@ namespace Game
             atk = DefendSettle(atk, target);
             return atk;
         }
-        
-        
+
+
         public void Purify(BuffData buff)
         {
-            buff = CheckChain<BuffData>(Timing.OnPurify, new object[] {buff, this});
+            buff = CheckChain<BuffData>(Timing.OnPurify, new object[] { buff, this });
             Buffs.Remove(buff);
         }
-        
-        
+
 
         private CostInfo GetActualCostInfo(CostInfo costInfo, string kw = "")
         {
-            return CheckChain<CostInfo>(Timing.OnCost, new object[] {costInfo, this, kw});
+            return CheckChain<CostInfo>(Timing.OnCost, new object[] { costInfo, this, kw });
         }
 
 
-
-        
-        
         /// <summary>
         /// 检查条件施放资源是否足够
         /// </summary>
@@ -247,13 +241,12 @@ namespace Game
         public bool CanCast(SkillData skill, out Info info)
         {
             skill.CanCast(out var basicInfo, IsPlayer);
-            info = CheckChain<Info>(Timing.OnHandleSkillInfo, new object[] {basicInfo, skill, this}) ?? new SuccessInfo();
-            return  (info is SuccessInfo|| info == null)&& CanAfford(GetSkillCost(skill), out info);
+            info = CheckChain<Info>(Timing.OnHandleSkillInfo, new object[] { basicInfo, skill, this }) ??
+                   new SuccessInfo();
+            return (info is SuccessInfo || info == null) && CanAfford(GetSkillCost(skill), out info);
         }
-        
-        
-        
-        
+
+
         public void UseSkill(SkillData skill)
         {
             if (GameManager.Instance.InBattle)
@@ -265,15 +258,14 @@ namespace Game
                 CastNonAimingSkill(skill);
             }
         }
-        
-        
+
+
         public bool TryUseSkill(SkillData skill, out Info info)
         {
             info = new Info();
             if (!CanCast(skill, out info)) return false;
             UseSkill(skill);
             return true;
-
         }
 
         public bool TryUseSkill(int index, out Info info)
@@ -283,18 +275,17 @@ namespace Game
             if (skill == null || skill.IsEmpty) return false;
             return TryUseSkill(skill, out info);
         }
-        
-        
-        public void SwapSkill(int index01,int index02) 
+
+
+        public void SwapSkill(int index01, int index02)
         {
-            if (index01 >= 0 && index01 < Skills.Count && index02 >= 0 && index02 < Skills.Count) 
+            if (index01 >= 0 && index01 < Skills.Count && index02 >= 0 && index02 < Skills.Count)
             {
                 var temp = Skills[index01];
                 Skills[index01] = Skills[index02];
                 Skills[index02] = temp;
                 DelayUpdate();
             }
-
         }
 
         /*/// <summary>
@@ -316,9 +307,9 @@ namespace Game
 
         public Attack Kill(Attack r, FighterData enemy)
         {
-            r = CheckChain<Attack>(Timing.OnKill, new object[] {r, this, enemy});
+            r = CheckChain<Attack>(Timing.OnKill, new object[] { r, this, enemy });
             //Debug.Log("killed");
-            
+
             return r;
         }
 
@@ -330,11 +321,12 @@ namespace Game
         /// <param name="kw"></param>
         public void Gain(int gold, string kw = null)
         {
-            var g = CheckChain<int>(Timing.OnGain, new object[] {gold, this, kw});
+            var g = CheckChain<int>(Timing.OnGain, new object[] { gold, this, kw });
             if (g > 0)
             {
                 AudioPlayer.Instance.Play(AudioPlayer.AudioGainCoin);
             }
+
             Gold += g;
             DelayUpdate();
         }
@@ -342,7 +334,7 @@ namespace Game
 
         public void Cost(CostInfo modify, string kw = null)
         {
-            modify = CheckChain<CostInfo>(Timing.OnCost, new object[] {modify, this, kw});
+            modify = CheckChain<CostInfo>(Timing.OnCost, new object[] { modify, this, kw });
             Status -= modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
@@ -352,23 +344,23 @@ namespace Game
 
         public void CounterCharge(BattleStatus modify, string kw = null)
         {
-            modify = CheckChain<BattleStatus>(Timing.OnCounterCharge, new object[] {modify, this, kw});
+            modify = CheckChain<BattleStatus>(Timing.OnCounterCharge, new object[] { modify, this, kw });
             Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
             DelayUpdate();
         }
-        
-        
+
+
         protected void OnGet(IEffectContainer c)
         {
             if (c.MayAffect(Timing.OnGet, out _))
             {
-                c.Affect(Timing.OnGet, new object[]{this});
+                c.Affect(Timing.OnGet, new object[] { this });
             }
         }
-        
-        
+
+
         /*protected void Equip(SkillData sk)
         {
             /*foreach (var pi in typeof(SkillData).GetMethods())
@@ -407,24 +399,24 @@ namespace Game
             DelayUpdate();
         }
         */
-        
-        
+
+
         protected void Load(SkillData sk)
         {
             foreach (var pi in typeof(SkillData).GetMethods())
             {
                 var msg = pi.GetCustomAttribute<EffectAttribute>();
-                if ((msg == null)||(msg.id != sk.Id)) continue;
+                if ((msg == null) || (msg.id != sk.Id)) continue;
             }
+
             DelayUpdate();
         }
-        
-        
-        
+
+
         [Button]
         public void Strengthen(BattleStatus modify)
         {
-            modify = CheckChain<BattleStatus>(Timing.OnStrengthen, new object[] {modify, this});
+            modify = CheckChain<BattleStatus>(Timing.OnStrengthen, new object[] { modify, this });
             Status += modify;
             DelayUpdate();
         }
@@ -432,35 +424,35 @@ namespace Game
 
         public void RandomStrengthen(int v = 1)
         {
-            var r = SData.CurGameRandom.Next(0, 6);// Random.Range(0, 6);
+            var r = SData.CurGameRandom.Next(0, 6); // Random.Range(0, 6);
             switch (r)
             {
                 case 0:
-                    Strengthen(new BattleStatus{MaxHp = 5 * v});
+                    Strengthen(new BattleStatus { MaxHp = 5 * v });
                     break;
                 case 1:
-                    Strengthen(new BattleStatus{MaxMp = 5 * v});
+                    Strengthen(new BattleStatus { MaxMp = 5 * v });
                     break;
                 case 2:
-                    Strengthen(new BattleStatus{PAtk = v});
+                    Strengthen(new BattleStatus { PAtk = v });
                     break;
                 case 3:
-                    Strengthen(new BattleStatus{PDef = v});
+                    Strengthen(new BattleStatus { PDef = v });
                     break;
                 case 4:
-                    Strengthen(new BattleStatus{MAtk = v});
+                    Strengthen(new BattleStatus { MAtk = v });
                     break;
                 case 5:
-                    Strengthen(new BattleStatus{MDef = v});
+                    Strengthen(new BattleStatus { MDef = v });
                     break;
             }
         }
-        
+
 
         [Button]
         public void Recover(BattleStatus modify, FighterData enemy, string kw = null)
         {
-            modify = CheckChain<BattleStatus>(Timing.OnRecover, new object[] {modify, this, enemy ,kw});
+            modify = CheckChain<BattleStatus>(Timing.OnRecover, new object[] { modify, this, enemy, kw });
             Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             DelayUpdate();
@@ -468,7 +460,7 @@ namespace Game
 
         public void Heal(BattleStatus modify, string kw = null)
         {
-            modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] {modify, this, kw});
+            modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] { modify, this, kw });
             Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
@@ -478,8 +470,8 @@ namespace Game
 
 
         [JsonIgnore] public int LossHp => Status.MaxHp - Status.CurHp;
-        
-        
+
+
         /// <summary>
         /// 参与者在执行参与事项的时候，会查询所有可能的影响因素：技能、buff、遗物，挑选出其中会影响的，按照Priority，优先级排好序，依次作用于结果
         /// 方法参数查看触发时机注释，必须匹配
@@ -490,8 +482,7 @@ namespace Game
         /// <returns></returns>
         protected T CheckChain<T>(Timing timing, object[] param)
         {
-            var tmp = Skills.
-                Where(skill => (skill != null) && !skill.IsEmpty && (skill.MayAffect(timing, out _)))
+            var tmp = Skills.Where(skill => (skill != null) && !skill.IsEmpty && (skill.MayAffect(timing, out _)))
                 .Cast<IEffectContainer>().ToList();
 
             tmp.AddRange(Buffs.Where(buff => (buff != null) && (buff.MayAffect(timing, out _))));
@@ -501,7 +492,7 @@ namespace Game
             {
                 tmp.AddRange(player.Relics.Where(relic => relic != null && relic.MayAffect(timing, out _)));
             }
-            
+
             tmp.Sort(
                 (x, y) =>
                 {
@@ -510,23 +501,24 @@ namespace Game
                     return xx - yy;
                 });
 
-            var origin = (T) param[0];
+            var origin = (T)param[0];
             foreach (var sk in tmp)
             {
                 origin = sk.Affect<T>(timing, param);
                 param[0] = origin;
             }
+
             return origin;
         }
-        
-        
+
+
         protected void CheckChain(Timing timing, object[] param)
         {
             var tmp = new List<IEffectContainer>();
-            
+
             foreach (var skill in Skills)
             {
-                if ((skill != null)&& !skill.IsEmpty &&(skill.MayAffect(timing, out _)))
+                if ((skill != null) && !skill.IsEmpty && (skill.MayAffect(timing, out _)))
                 {
                     tmp.Add(skill);
                 }
@@ -539,7 +531,7 @@ namespace Game
                     tmp.Add(buff);
                 }
             }
-            
+
             if (this is PlayerData player)
             {
                 foreach (var relic in player.Relics)
@@ -550,8 +542,8 @@ namespace Game
                     }
                 }
             }
-            
-            
+
+
             tmp.Sort(
                 (x, y) =>
                 {
@@ -559,14 +551,14 @@ namespace Game
                     y.MayAffect(timing, out var yy);
                     return xx - yy;
                 });
-            
+
             foreach (var sk in tmp)
             {
                 sk.Affect(timing, param);
             }
         }
-        
-        
+
+
         /// <summary>
         /// 用于给敌人施加buff，获取最终生成的buff
         /// </summary>
@@ -574,25 +566,25 @@ namespace Game
         /// <returns></returns>
         public BuffData ApplyBuff(BuffData buff)
         {
-            buff = CheckChain<BuffData>(Timing.OnApply, new object[] {buff, this });
+            buff = CheckChain<BuffData>(Timing.OnApply, new object[] { buff, this });
             DelayUpdate();
             return buff;
         }
-        
+
         public void ApplyBuff(BuffData buff, FighterData target)
         {
-            buff = CheckChain<BuffData>(Timing.OnApply, new object[] {buff, this });
+            buff = CheckChain<BuffData>(Timing.OnApply, new object[] { buff, this });
             target.AppliedBuff(buff);
             DelayUpdate();
         }
-        
+
         /// <summary>
         /// 用于被添加buff时，获取最终生成的buff
         /// </summary>
         /// <param name="buff"></param>
         public void AppliedBuff(BuffData buff)
         {
-            buff = CheckChain<BuffData>(Timing.OnApplied, new object[] {buff, this });
+            buff = CheckChain<BuffData>(Timing.OnApplied, new object[] { buff, this });
             Buffs.Add(buff);
             DelayUpdate();
         }
@@ -604,15 +596,14 @@ namespace Game
         [Button]
         public void ApplySelfBuff(BuffData buff)
         {
-            buff = CheckChain<BuffData>(Timing.OnApply, new object[] {buff, this });
-            buff = CheckChain<BuffData>(Timing.OnApplied, new object[] {buff, this });
+            buff = CheckChain<BuffData>(Timing.OnApply, new object[] { buff, this });
+            buff = CheckChain<BuffData>(Timing.OnApplied, new object[] { buff, this });
 
             Buffs.Add(buff);
             DelayUpdate();
-
         }
-        
-        
+
+
         [Button]
         public void CastNonAimingSkill(int index)
         {
@@ -624,11 +615,10 @@ namespace Game
 
         public void CastNonAimingSkill(SkillData skill)
         {
-            if ((skill.Bp.Positive)&&(skill.Bp.Fs.ContainsKey(Timing.SkillEffect)))
+            if ((skill.Bp.Positive) && (skill.Bp.Fs.ContainsKey(Timing.SkillEffect)))
             {
-                
-                skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[]{this});
-                
+                skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[] { this });
+
                 CoolDownSettle(skill);
                 var cost = GetSkillCost(skill, false);
                 Cost(cost);
@@ -639,13 +629,9 @@ namespace Game
                 Debug.LogError($"{skill.Id} Cast Failed");
                 throw new Exception();
             }
-
         }
-        
-        
-        
-        
-        
+
+
         /// <summary>
         /// 参数为使用的技能
         /// </summary>
@@ -653,8 +639,7 @@ namespace Game
         /// <returns></returns>
         public Attack? ManageAttackRound(SkillData skill = null)
         {
-
-            CheckChain(Timing.BeforeAttack, new object[] {this, Enemy});
+            CheckChain(Timing.BeforeAttack, new object[] { this, Enemy });
 
             if (!IsAlive)
             {
@@ -662,12 +647,12 @@ namespace Game
                 Destroyed();
                 return null;
             }
-            
-            
-            if ((skill!=null)&&(!skill.Bp.BattleOnly))
+
+
+            if ((skill != null) && (!skill.Bp.BattleOnly))
             {
                 CastNonAimingSkill(skill);
-                
+
                 CoolDownSettle(skill);
 
                 DelayUpdate();
@@ -678,9 +663,9 @@ namespace Game
                 var pa = ForgeAttack(Enemy, skill);
 
                 if (skill != null) skill.Sealed = false;
-                
+
                 pa = OperateAttack(Enemy, pa);
-                
+
                 //Settle(pa, Enemy);
                 if (skill != null) skill.Sealed = true;
                 Cost(pa.CostInfo);
@@ -697,16 +682,16 @@ namespace Game
             {
                 CoolDown();
             }
-            
+
             if (skill == null)
             {
                 return;
             }
-            
+
             skill.SetCooldown(skill.Bp.Cooldown);
-            skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] {skill, this}));
+            skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] { skill, this }));
         }
-        
+
 
         public void CoolDown(int x = 1)
         {
@@ -714,11 +699,11 @@ namespace Game
             {
                 if (Skills[i] == null) continue;
 
-                if ((Skills[i].IsEmpty)||(Skills[i].Bp == null))
+                if ((Skills[i].IsEmpty) || (Skills[i].Bp == null))
                 {
                     continue;
                 }
-                
+
                 if ((Skills[i].CooldownLeft > 0))
                 {
                     Skills[i].CooldownLeft -= x;
@@ -733,9 +718,9 @@ namespace Game
         protected void Upgrade(SkillData skillData, int lv = 1)
         {
             skillData.CurLv += lv;
-            CheckChain<SkillData>(Timing.OnLvUp, new object[] {skillData, this});
+            CheckChain<SkillData>(Timing.OnLvUp, new object[] { skillData, this });
         }
-        
+
 
         /*public void Attack(FighterData target, Attack attack)
         {
@@ -766,6 +751,5 @@ namespace Game
                 Debug.Log($"~ player");
             }*/
         }
-        
     }
 }

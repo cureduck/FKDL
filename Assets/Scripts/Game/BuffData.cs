@@ -14,7 +14,7 @@ namespace Game
     public class BuffData : BpData<Buff>, IEffectContainer, ICloneable, IActivated
     {
         [ShowInInspector] public int CurLv { get; private set; }
-        [JsonIgnore] public override Buff Bp => BuffManager.Instance.TryGetById(Id, out var buff)? buff : null;
+        [JsonIgnore] public override Buff Bp => BuffManager.Instance.TryGetById(Id, out var buff) ? buff : null;
 
 
         public void StackChange(int value)
@@ -38,7 +38,7 @@ namespace Game
                 }
             }
         }
-        
+
         [JsonConstructor]
         public BuffData(string id, int curLv)
         {
@@ -56,9 +56,9 @@ namespace Game
         {
             Removed?.Invoke();
         }
-        
+
         public event Action Activated;
-        
+
 
         public override string ToString()
         {
@@ -85,7 +85,7 @@ namespace Game
             Activated?.Invoke();
             return attack;
         }
-        
+
         [Effect("PMinus", Timing.OnAttack, priority = -4)]
         private Attack PMinus(Attack attack, FighterData f1, FighterData f2)
         {
@@ -103,23 +103,23 @@ namespace Game
             Activated?.Invoke();
             return attack;
         }
-        
-        
+
+
         [Effect("Poison", Timing.BeforeAttack, priority = -4)]
         private void Poison(FighterData f1, FighterData f2)
         {
-            f1.SingleDefendSettle(new Attack(mAtk: CurLv, kw : "poison"), null);
+            f1.SingleDefendSettle(new Attack(mAtk: CurLv, kw: "poison"), null);
             CurLv -= 1;
             Activated?.Invoke();
         }
-        
+
         [Effect("Bellow", Timing.OnAttack, priority = -4)]
         private Attack Bellow(Attack attack, FighterData f1, FighterData f2)
         {
             if (attack.PAtk > 0) attack.PAtk += CurLv;
             if (attack.MAtk > 0) attack.MAtk += CurLv;
             if (attack.CAtk > 0) attack.CAtk += CurLv;
-            
+
             CurLv = 0;
             Activated?.Invoke();
             return attack;
@@ -142,8 +142,8 @@ namespace Game
             Activated?.Invoke();
             return attack;
         }
-        
-        
+
+
         [Effect("Weaken", Timing.OnAttack, priority = -4)]
         private Attack Weaken(Attack attack, FighterData f1, FighterData f2)
         {
@@ -152,18 +152,18 @@ namespace Game
             Activated?.Invoke();
             return attack;
         }
-        
+
         [Effect("Thorn", Timing.OnDefend, priority = -4)]
         private Attack Thorn(Attack attack, FighterData f1, FighterData f2)
         {
             if (f2 == null || !f2.IsAlive) return attack;
-            
+
             f2.SingleDefendSettle(new Attack(pAtk: CurLv), null);
             CurLv -= 1;
             Activated?.Invoke();
             return attack;
         }
-        
+
         [Effect("Flaming", Timing.OnAttack, priority = -4)]
         private Attack Flaming(Attack attack, FighterData f1, FighterData f2)
         {
@@ -185,7 +185,7 @@ namespace Game
 
 
         [Effect("Clarity", Timing.OnGetSkillCost, priority = 3)]
-        private CostInfo Clarity(CostInfo cost,SkillData skill,  FighterData f1, bool test = true)
+        private CostInfo Clarity(CostInfo cost, SkillData skill, FighterData f1, bool test = true)
         {
             if (cost.ActualValue > 0)
             {
@@ -193,9 +193,10 @@ namespace Game
                 if (!test) CurLv -= 1;
                 Activated?.Invoke();
             }
+
             return cost;
         }
-        
+
         [Effect("Leakage", Timing.OnGetSkillCost, priority = -1)]
         private CostInfo Leakage(CostInfo cost, SkillData skill, FighterData f1, bool test = true)
         {
@@ -205,6 +206,7 @@ namespace Game
                 if (!test) CurLv -= 1;
                 Activated?.Invoke();
             }
+
             return cost;
         }
 
@@ -225,6 +227,7 @@ namespace Game
             Activated?.Invoke();
             return skill;
         }
+
         #endregion
 
         public object Clone()
@@ -241,6 +244,5 @@ namespace Game
         {
             return new BuffData("PPlus", stack);
         }
-
     }
 }

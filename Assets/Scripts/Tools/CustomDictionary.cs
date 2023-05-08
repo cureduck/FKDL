@@ -7,10 +7,10 @@ using Random = System.Random;
 
 namespace Tools
 {
-    public class CustomDictionary<T> : Dictionary<string, T> where T: IRank
+    public class CustomDictionary<T> : Dictionary<string, T> where T : IRank
     {
         public Random Random;
-        
+
         public int RankLevels
         {
             get
@@ -28,17 +28,16 @@ namespace Tools
         }
 
         private int _rankLevels;
-        
+
         public T[] ChooseRandom(int count = 1)
         {
             return Tools.ChooseRandom(count, Values.ToArray(), Random);
         }
-        
+
         public T[] ChooseRandom(Rank r, int count = 1)
         {
             return Tools.ChooseRandom(count, Values.ToArray().Where(rank => rank.Rank == r).ToArray(), Random);
         }
-        
     }
 
 
@@ -53,7 +52,5 @@ namespace Tools
         {
             return dict.Values.GroupBy((rank => rank.Rank)).Count();
         }
-        
     }
-    
 }

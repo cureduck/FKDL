@@ -28,8 +28,12 @@ class TestSkill(PassiveSkill, CounterMaxIn, CooldownMaxIn):
             return 1
 
 
-@translator(ch="测试被动技能", en="test passive skill")
+@translator(ch="测试主动技能", en="test passive skill")
 class Test2Skill(AimingSKill, CounterMaxIn):
+    """
+    测试主动技能，效果为计数器满时，物攻倍率+1
+    """
+
     def cast(self, caster: FightMaxIn, target: (FightMaxIn, None)) -> (Attack, None):
         return Attack(patk=caster.status.p_atk, multi=2)
 

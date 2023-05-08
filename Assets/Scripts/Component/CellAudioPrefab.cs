@@ -3,22 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using CH.ObjectPool;
 
-public class CellAudioPrefab : MonoBehaviour,IPoolObjectSetData
+public class CellAudioPrefab : MonoBehaviour, IPoolObjectSetData
 {
     public class Args
     {
         public AudioClip audioClip;
         public float volume;
-
     }
 
-    [SerializeField]
-    private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
 
 
     public void InitOnSpawn()
     {
-        
     }
 
     public void SetDataOnEnable(object data)
@@ -27,8 +24,5 @@ public class CellAudioPrefab : MonoBehaviour,IPoolObjectSetData
         audioSource.clip = args.audioClip;
         audioSource.volume = args.volume;
         audioSource.Play();
-
     }
-
-
 }

@@ -7,14 +7,12 @@ using System;
 
 public class PlayerRelicListView : MonoBehaviour
 {
-    [SerializeField]
-    private CellRelicView relicViewPrefab;
-    [SerializeField]
-    private Transform listParent;
+    [SerializeField] private CellRelicView relicViewPrefab;
+    [SerializeField] private Transform listParent;
 
     private UIViewObjectPool<CellRelicView, RelicData> objectPool;
 
-    public void Init() 
+    public void Init()
     {
         if (objectPool == null)
         {
@@ -22,7 +20,7 @@ public class PlayerRelicListView : MonoBehaviour
         }
     }
 
-    public void SetData(RelicAgent relicDatas) 
+    public void SetData(RelicAgent relicDatas)
     {
         //Debug.LogWarning(relicDatas.Count);
         //for (int i = 0; i < relicDatas.Count; i++)
@@ -38,6 +36,4 @@ public class PlayerRelicListView : MonoBehaviour
     {
         arg1.SetData(arg2);
     }
-
-
 }

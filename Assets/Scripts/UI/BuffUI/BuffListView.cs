@@ -8,22 +8,19 @@ using CH.ObjectPool;
 
 public class BuffListView : MonoBehaviour
 {
-    [SerializeField]
-    private Transform prefabParent;
-    [SerializeField]
-    private CellBuffView cellBuffView;
+    [SerializeField] private Transform prefabParent;
+    [SerializeField] private CellBuffView cellBuffView;
     private UIViewObjectPool<CellBuffView, BuffData> objectPoolData;
-    [SerializeField]
-    private bool isWorldObject = false;
+    [SerializeField] private bool isWorldObject = false;
 
     BuffAgent buffDatas;
+
     public void Init()
     {
-        if (objectPoolData == null) 
+        if (objectPoolData == null)
         {
             objectPoolData = new UIViewObjectPool<CellBuffView, BuffData>(cellBuffView, null);
         }
-
     }
 
     public void SetData(BuffAgent buffDatas)
@@ -36,7 +33,4 @@ public class BuffListView : MonoBehaviour
     {
         arg1.SetData(arg2, isWorldObject);
     }
-
-
-
 }

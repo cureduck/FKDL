@@ -13,15 +13,16 @@ namespace Game
         public BuffType BuffType;
         public bool Stackable;
         [JsonIgnore] public Buff OppositeBp => BuffManager.Instance.TryGetById(OppositeId, out var op) ? op : null;
-        
-        public Buff(string id, Rank rank, bool stackable, Sprite icon, BuffType buffType, string oppositeId) : base(rank, id, icon)
+
+        public Buff(string id, Rank rank, bool stackable, Sprite icon, BuffType buffType, string oppositeId) : base(
+            rank, id, icon)
         {
             OppositeId = oppositeId;
             BuffType = buffType;
             Stackable = stackable;
         }
     }
-    
+
     public enum BuffType
     {
         Positive,

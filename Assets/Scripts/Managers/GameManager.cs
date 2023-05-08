@@ -23,13 +23,14 @@ namespace Managers
         {
             get => GameDataManager.Instance.PlayerData;
             set => GameDataManager.Instance.PlayerData = value;
-        } 
+        }
+
         public Map Map
         {
             get => GameDataManager.Instance.Map;
             private set => GameDataManager.Instance.Map = value;
         }
-        
+
         public SecondaryData SecondaryData
         {
             get => GameDataManager.Instance.SecondaryData;
@@ -50,10 +51,9 @@ namespace Managers
             {
                 Console.WriteLine(e);
             }
-
         }
-        
-        
+
+
         public Square Prefab;
 
         public Transform MapGo;
@@ -66,7 +66,7 @@ namespace Managers
 
         public event Action GameLoaded;
         public event Action<Square> FocusChanged;
-        
+
         public void BroadcastSquareChanged(Square square)
         {
             FocusChanged?.Invoke(square);
@@ -76,9 +76,9 @@ namespace Managers
         {
             return Instantiate(Prefab, MapGo);
         }
-        
+
         private ObjectPool<Square> _pool;
-        
+
         private void Start()
         {
             GetLocalization();
@@ -96,12 +96,12 @@ namespace Managers
                 }
             }
         }
-        
+
         public void RollForSkill(int rank)
         {
             RollForSkill((Rank)rank);
         }
-        
+
         public void Attack()
         {
             if (PlayerData.Enemy != null)
@@ -109,26 +109,25 @@ namespace Managers
                 PlayerData.OnReact();
             }
         }
-        
+
         public void RollForSkill(Rank rank)
         {
             var skills = SkillManager.Instance.GenerateT(rank, PlayerData.LuckyChance, 3);
 
             var offers = skills.Select((s => new Offer(s)));
-            
+
             WindowManager.Instance.OffersWindow.Load(offers);
         }
-        
+
         public void RollForRelic(Rank rank)
         {
             var skills = RelicManager.Instance.GenerateT(rank, PlayerData.LuckyChance, 3);
 
             var offers = skills.Select((s => new Offer(s)));
-            
+
             WindowManager.Instance.OffersWindow.Load(offers);
         }
-        
-        
+
 
         [Button]
         public void LoadFromSave()
@@ -147,14 +146,14 @@ namespace Managers
                 Console.WriteLine(e);
                 throw;
             }
+
             GameLoaded?.Invoke();
             //GC.Collect();
         }
-        
+
         [Button]
         public void LoadFromInit()
         {
-
             SecondaryData.Init();
             PlayerData = PlayerData.LoadFromInit();
             PlayerData.BroadCastUpdated();
@@ -168,7 +167,7 @@ namespace Managers
             Debug.Log(((SkillManager)SkillManager.Instance).Available.Count);
 #endif
         }
-        
+
         [Button]
         public void Save()
         {
@@ -177,17 +176,16 @@ namespace Managers
             //SecondaryData.CurCardSeed = CardRand.
             SecondaryData.Save();
         }
-        
-        
+
+
         private void LoadMap()
         {
-            
             GameManager.Instance.Focus = null;
             LoadFloor(Map.Floors[Map.CurrentFloor]);
         }
 
         private List<Square> squares = new List<Square>();
-        
+
         public void LoadFloor(Map.Floor floor)
         {
             foreach (var square in squares)
@@ -202,12 +200,12 @@ namespace Managers
             {
                 _pool.Return(trans.gameObject.GetComponent<>());
             }*/
-            
+
 
             foreach (var square in floor.Squares)
             {
                 Square curObject = CreateSquare(square);
-                if (curObject != null) 
+                if (curObject != null)
                 {
                     squares.Add(curObject);
                 }
@@ -219,11 +217,11 @@ namespace Managers
         private Square CreateSquare(MapData data)
         {
             if (data == null) return null;
-            
+
             //var sq = Instantiate(Prefab, MapGo);
             var sq = _pool.Get();
             sq.Reload(data);
-            
+
             try
             {
                 sq.Data = data;

@@ -9,16 +9,15 @@ namespace Game
 {
     public class SkillAgent : List<SkillData>
     {
-
-
         public int EmptySlot => this.Count((data => data == SkillData.Empty));
-        
+
         public SkillAgent(SkillData[] bp)
         {
             if (bp.Length == 0)
             {
                 return;
             }
+
             for (int i = 0; i < bp.Length; i++)
             {
                 Add((SkillData)bp[i].Clone());
@@ -27,14 +26,13 @@ namespace Game
 
         public SkillAgent()
         {
-            
         }
 
         public IEnumerable<SkillData> ActiveSkills()
         {
             return this.Where((data => (data != null && !data.IsEmpty && data.Bp != null)));
         }
-        
+
 
         public void AddSkillSlot(int count)
         {
@@ -43,14 +41,14 @@ namespace Game
                 Add(SkillData.Empty);
             }
         }
-        
+
 
         public bool UpgradeRandomSkill(Rank rank)
         {
             var tmp = new List<SkillData>();
             foreach (var sk in this)
             {
-                if ((sk.Bp.Rank == rank)&&(sk.CurLv < sk.Bp.MaxLv))
+                if ((sk.Bp.Rank == rank) && (sk.CurLv < sk.Bp.MaxLv))
                 {
                     tmp.Add(sk);
                 }
@@ -72,7 +70,7 @@ namespace Game
         {
             return false;
         }
-        
+
         public bool MayAffect(Timing timing, out int priority)
         {
             throw new System.NotImplementedException();

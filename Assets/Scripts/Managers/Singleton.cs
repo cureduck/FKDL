@@ -13,13 +13,13 @@ namespace Managers
         {
             get
             {
-                if(instance == null)
+                if (instance == null)
                 {
                     // 查找是否已有本类型的实例
                     instance = FindObjectOfType<T>();
 
                     // 如果没有，则创建新实例并添加到场景中
-                    if(instance == null)
+                    if (instance == null)
                     {
                         GameObject obj = new GameObject();
                         instance = obj.AddComponent<T>();
@@ -34,7 +34,7 @@ namespace Managers
         protected virtual void Awake()
         {
             // 确保单例只有一个实例
-            if(instance != null && instance != this)
+            if (instance != null && instance != this)
             {
                 Destroy(gameObject);
             }

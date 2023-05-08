@@ -11,7 +11,7 @@ namespace CH.Formula
         private float x2;
         private float b;
 
-        public QuadraticFormula(float a,float x1,float x2,float b)
+        public QuadraticFormula(float a, float x1, float x2, float b)
         {
             this.a = a;
             this.x1 = x1;
@@ -19,10 +19,9 @@ namespace CH.Formula
             this.b = b;
         }
 
-        public float GetYValue(float x) 
+        public float GetYValue(float x)
         {
             return a * (x - x1) * (x - x2) + b;
         }
-
     }
 }

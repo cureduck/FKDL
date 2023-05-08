@@ -7,32 +7,29 @@ using TMPro;
 
 public class DamageHightLightView : MonoBehaviour
 {
-    [SerializeField]
-    private RectTransform pdDamage_view;
-    [SerializeField]
-    private RectTransform mdDamage_View;
-    [SerializeField]
-    private RectTransform tureDamage_view;
-    [SerializeField]
-    private RectTransform posionDamage_View;
-    [SerializeField]
-    private TMP_Text damageText;
+    [SerializeField] private RectTransform pdDamage_view;
+    [SerializeField] private RectTransform mdDamage_View;
+    [SerializeField] private RectTransform tureDamage_view;
+    [SerializeField] private RectTransform posionDamage_View;
+    [SerializeField] private TMP_Text damageText;
 
     //[SerializeField]
     //private Transform startPoint;
     //[SerializeField]
     //private Transform endPoint;
-    public void SetData(int curLeftHealth,int pDamage,int PDCount,int mDamage,int MDCount,int tDamage,int TDCount, int posionCount) 
+    public void SetData(int curLeftHealth, int pDamage, int PDCount, int mDamage, int MDCount, int tDamage, int TDCount,
+        int posionCount)
     {
         if (curLeftHealth <= 0)
         {
             gameObject.SetActive(false);
             return;
         }
-        else 
+        else
         {
             gameObject.SetActive(true);
         }
+
         //Debug.Log(curLeftHealth);
         //Debug.Log(transform.position);
         //Debug.Log(endPoint.transform.position);
@@ -69,7 +66,7 @@ public class DamageHightLightView : MonoBehaviour
         {
             curPDamageInfo = PDCount > 1 ? $"-{pDamage}X{PDCount}(物理)" : $"-{pDamage}(物理)";
         }
-        else 
+        else
         {
             curPDamageInfo = string.Empty;
         }
@@ -79,29 +76,30 @@ public class DamageHightLightView : MonoBehaviour
         {
             curMDamageInfo = MDCount > 1 ? $"-{mDamage}X{MDCount}(魔法)" : $"-{mDamage}(魔法)";
         }
-        else 
+        else
         {
             curMDamageInfo = string.Empty;
         }
+
         string curTDamageInfo;
         if (tDamage > 0)
         {
             curTDamageInfo = TDCount > 1 ? $"-{tDamage}X{TDCount}(真实)" : $"-{tDamage}(真实)";
         }
-        else 
+        else
         {
             curTDamageInfo = string.Empty;
         }
+
         string curBuffDamageInfo;
         if (posionCount > 0)
         {
-            curBuffDamageInfo =$"-{posionCount}(状态)";
+            curBuffDamageInfo = $"-{posionCount}(状态)";
         }
         else
         {
             curBuffDamageInfo = string.Empty;
         }
-
 
 
         damageText.text = $"{curPDamageInfo}{curMDamageInfo}{curTDamageInfo}{curBuffDamageInfo}";
@@ -113,5 +111,4 @@ public class DamageHightLightView : MonoBehaviour
         //string curMDamageInfo = MDCount>1?
         //damageText.text = 
     }
-
 }

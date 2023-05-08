@@ -8,7 +8,7 @@ namespace UI.BuffUI
     {
         private BuffListPanel _buffListPanel;
         public bool IsPlayerBuffUI;
-        
+
         private Square CurrentFocus;
 
         private void Start()
@@ -17,16 +17,12 @@ namespace UI.BuffUI
 
             if (IsPlayerBuffUI)
             {
-                GameManager.Instance.GameLoaded += () =>
-                {
-                    SetData(GameManager.Instance.PlayerData);
-                };
+                GameManager.Instance.GameLoaded += () => { SetData(GameManager.Instance.PlayerData); };
             }
             else
             {
                 GameManager.Instance.FocusChanged += OnSquareChanged;
             }
-
         }
 
 
@@ -45,7 +41,7 @@ namespace UI.BuffUI
                 }
             }
         }
-        
+
 
         protected override void UpdateUI()
         {

@@ -15,19 +15,19 @@ namespace Game
 
     public class SuccessInfo : Info
     {
-        
     }
 
     public class FailureInfo : Info
     {
         public FailureInfo(FailureReason reason, bool autoBroadCast = true)
         {
-            Reason = new List<FailureReason>(){reason};//{reason};
+            Reason = new List<FailureReason>() { reason }; //{reason};
             if (autoBroadCast)
             {
                 BroadCastInfo();
             }
-        }        
+        }
+
         public FailureInfo(List<FailureReason> reason, bool autoBroadCast = true)
         {
             Reason = reason;
@@ -36,6 +36,7 @@ namespace Game
                 BroadCastInfo();
             }
         }
+
         public List<FailureReason> Reason { get; }
 
         public sealed override void BroadCastInfo()
@@ -59,9 +60,8 @@ namespace Game
         SkillNotReady,
         SkillPassive,
         NoTarget,
-        
+
         PotionAlreadyFull,
         SkillSlotAlreadyFull
     }
-    
 }

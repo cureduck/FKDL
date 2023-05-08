@@ -11,12 +11,10 @@ namespace UI
     public class TestCellBuffView : CellView<BuffData>
     {
         private const string IconTitle = "UI_Icon_Buff_";
-        [SerializeField]
-        public TMP_Text level_txt;
-        [SerializeField]
-        public Image icon_img;
+        [SerializeField] public TMP_Text level_txt;
+        [SerializeField] public Image icon_img;
         public Image OutLine;
-        
+
         protected override void OnActivated()
         {
             base.OnActivated();
@@ -32,7 +30,7 @@ namespace UI
         public override string Param => Data.CurLv.ToString();
 
         private Sequence _seq;
-        
+
 
         public override void UpdateUI()
         {
@@ -40,13 +38,14 @@ namespace UI
             {
                 return;
             }
-            
+
             icon_img.gameObject.SetActive(true);
             level_txt.gameObject.SetActive(Data.Bp.Stackable);
             if (Data.Bp.Stackable)
             {
                 level_txt.text = Data.CurLv.ToString();
             }
+
             icon_img.sprite = Data?.Bp?.Icon;
             switch (Data.Bp.BuffType)
             {

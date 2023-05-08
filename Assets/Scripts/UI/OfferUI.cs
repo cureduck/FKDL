@@ -25,18 +25,17 @@ namespace UI
         public Localize Positive;
         public Localize Description;
         public LocalizationParamsManager MaxLvParam;
-        
+
         public Image Bg;
-        
+
         public Transform RankStar;
-        
+
         public TMP_Text CostLabel;
-        
+
         public int Cost;
         public bool IsGood;
-        
-        [ShowInInspector] 
-        public Offer Offer;
+
+        [ShowInInspector] public Offer Offer;
 
         private System.Action onClick;
 
@@ -59,7 +58,6 @@ namespace UI
         //}
 
 
-
         public void SetData(Offer offer, System.Action onClick)
         {
             this.Offer = offer;
@@ -69,17 +67,18 @@ namespace UI
         }
 
 
-        private void OnClick() 
+        private void OnClick()
         {
             onClick?.Invoke();
         }
 
         public void UpdateData()
         {
-            if ((Cost >= 0)&&(CostLabel != null))
+            if ((Cost >= 0) && (CostLabel != null))
             {
                 CostLabel.text = Cost.ToString();
             }
+
             Debug.Log(Offer.Kind);
             switch (Offer.Kind)
             {
@@ -89,7 +88,7 @@ namespace UI
                 case Offer.OfferKind.Skill:
                     Id.SetTerm(Offer.Id);
                     var skill = SkillManager.Instance.GetById(Offer.Id);
-                    Positive?.SetTerm(skill.Positive? "positive" : "passive");
+                    Positive?.SetTerm(skill.Positive ? "positive" : "passive");
                     if (Bg != null)
                     {
                         Bg.sprite = skill.Positive ? PositiveImage : PassiveImage;
@@ -98,15 +97,16 @@ namespace UI
                     //Debug.Log(skill.Description);
                     Prof?.SetTerm(skill.Pool);
                     Description?.SetTerm($"{skill.Id}_desc");
-                    Description.GetComponent<LocalizationParamsManager>().SetParameterValue("P1", skill.Param1.ToString());
-                    Description.GetComponent<LocalizationParamsManager>().SetParameterValue("P2", skill.Param2.ToString());
+                    Description.GetComponent<LocalizationParamsManager>()
+                        .SetParameterValue("P1", skill.Param1.ToString());
+                    Description.GetComponent<LocalizationParamsManager>()
+                        .SetParameterValue("P2", skill.Param2.ToString());
                     MaxLvParam?.SetParameterValue("P", skill.MaxLv.ToString());
 
                     if (RankStar != null)
                     {
                         foreach (Transform child in RankStar)
                         {
-                        
                             if (child.GetSiblingIndex() > ((int)skill.Rank))
                             {
                                 child.gameObject.SetActive(false);
@@ -117,11 +117,12 @@ namespace UI
                             }
                         }
                     }
-                    
+
                     if (CostLabel != null)
                     {
                         CostLabel.text = skill.CostInfo.ActualValue == 0 ? skill.CostInfo.ActualValue.ToString() : "";
                     }
+
                     break;
                 case Offer.OfferKind.Gold:
                     Id.SetTerm(Offer.Cost.ActualValue.ToString());

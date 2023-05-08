@@ -5,7 +5,7 @@ namespace Game
     public class GoldSaveData : MapData
     {
         public int Count;
-        
+
         public override void Init()
         {
             base.Init();

@@ -7,24 +7,22 @@ namespace Game
 {
     public partial class Square
     {
-        
         private void OnSquareDestroy()
         {
             if (Data is EnemySaveData)
             {
                 WindowManager.Instance.EnemyPanel.Close();
             }
-            
-            if ((Data is EnemySaveData ee)&&(ee.Bp.Rank == Rank.Rare))
+
+            if ((Data is EnemySaveData ee) && (ee.Bp.Rank == Rank.Rare))
             {
-                
                 WindowManager.Instance.CrystalPanel.Open(
-                (
-                    GameManager.Instance.PlayerData,
-                    CrystalManager.Instance.Lib["boss"]
-                ));
+                    (
+                        GameManager.Instance.PlayerData,
+                        CrystalManager.Instance.Lib["boss"]
+                    ));
             }
-            
+
             try
             {
                 UpdateFace();
@@ -36,9 +34,7 @@ namespace Game
             }
             //DestroyImmediate(gameObject);
         }
-        
-        
-        
+
 
         public void OnReact()
         {
@@ -69,14 +65,15 @@ namespace Game
                     panel.gameObject.SetActive(true);
                     break;
                 case DoorSaveData doorSaveData:
-                    
+
                     break;
             }
         }
 
         private void OnReactEnemy(EnemySaveData d)
         {
-            WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args { targetEnemy = d, playerData = GameManager.Instance.PlayerData });
+            WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args
+                { targetEnemy = d, playerData = GameManager.Instance.PlayerData });
 
             EnemyBp enemyBp = d.Bp;
             if (enemyBp != null && enemyBp.Rank >= Rank.Rare)
@@ -87,7 +84,6 @@ namespace Game
             {
                 AudioPlayer.Instance.SwitchBossOrNormalBGM(true);
             }
-
         }
 
         private void OnReactSupply(SupplySaveData supplySaveData)
@@ -118,29 +114,29 @@ namespace Game
             float range = 0.5f;
             //temp.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
             //Debug.Log(result);
-            if (result.PDmg > 0) 
+            if (result.PDmg > 0)
             {
                 GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.PDmg, 0);
-                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
+                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range),
+                    UnityEngine.Random.Range(-range, range));
             }
 
             if (result.MDmg > 0)
             {
                 GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.MDmg, 1);
-                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
+                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range),
+                    UnityEngine.Random.Range(-range, range));
             }
 
             if (result.CDmg > 0)
             {
                 GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.CDmg, 2);
-                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
+                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range),
+                    UnityEngine.Random.Range(-range, range));
             }
         }
-        
-        
-        
-        
-        
+
+
         public void HandleReactResultArgs(Args args)
         {
             switch (args)
@@ -149,19 +145,19 @@ namespace Game
                     HandleEnemyArgs(args0);
                     break;
                 case CasinoArgs args1:
-                    PlaySoundEffect(args1.Win? "casino_win" : "casino_lose");
+                    PlaySoundEffect(args1.Win ? "casino_win" : "casino_lose");
                     if (args1.Win)
                     {
                         WindowManager.Instance.OffersWindow.Open(args1.Offers);
                     }
+
                     break;
                 case DoorArgs doorArgs:
-                    PlaySoundEffect(doorArgs.CanReact? "door": "blocked");
+                    PlaySoundEffect(doorArgs.CanReact ? "door" : "blocked");
                     break;
                 case RockArgs rockArgs:
-                    PlaySoundEffect(rockArgs.CanReact? AudioPlayer.AudioClearRock : null);
+                    PlaySoundEffect(rockArgs.CanReact ? AudioPlayer.AudioClearRock : null);
                     break;
-                
             }
         }
 

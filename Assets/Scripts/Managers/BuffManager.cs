@@ -30,7 +30,7 @@ namespace Managers
         {
             return Lib.Values.Where((buff => buff.BuffType == buffType)).ChooseRandom(Lib.Random).Id;
         }
-        
+
 
         protected override Buff CreateTest(string id, MethodInfo method, EffectAttribute attr)
         {

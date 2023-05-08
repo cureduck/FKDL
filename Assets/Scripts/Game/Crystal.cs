@@ -45,19 +45,19 @@ namespace Game
                 return selected;
             }
         }
-        
-        
+
+
         public Crystal(Rank rank, int optionLimit = 999) : base(rank)
         {
             Options = new List<Option>();
             OptionLimit = optionLimit;
         }
-        
+
         public Crystal()
         {
             Options = new List<Option>();
         }
-        
+
         public class Option
         {
             public string Effect;
@@ -75,7 +75,6 @@ namespace Game
                 Priority = priority;
                 Weight = weight;
             }
-            
         }
     }
 }

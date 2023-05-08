@@ -9,22 +9,18 @@ using System;
 public class CellBuffView : MonoBehaviour
 {
     private const string IconTitle = "UI_Icon_Buff_";
-    [SerializeField]
-    private Text level_txt;
-    [SerializeField]
-    private Image icon_img;
-    [Header("鼠标交互")]
-    [SerializeField]
-    private PointEnterAndExit pointEnterAndExit;
-    [SerializeField]
-    private ObjectColliderPointEnterAndExit objectPointEnterAndExit;
+    [SerializeField] private Text level_txt;
+    [SerializeField] private Image icon_img;
+    [Header("鼠标交互")] [SerializeField] private PointEnterAndExit pointEnterAndExit;
+    [SerializeField] private ObjectColliderPointEnterAndExit objectPointEnterAndExit;
 
     [SerializeField] private Image OutLine;
     private bool isWorldObject = false;
     private BuffData buffData;
+
     private void Start()
     {
-        if (pointEnterAndExit) 
+        if (pointEnterAndExit)
         {
             pointEnterAndExit.onPointEnter.AddListener(OnPointEnter);
             pointEnterAndExit.onPointExit.AddListener(OnPointExit);
@@ -43,7 +39,6 @@ public class CellBuffView : MonoBehaviour
         {
             WindowManager.Instance.simpleInfoItemPanel.Close();
         }
-
     }
 
     private void OnPointEnter()
@@ -52,18 +47,24 @@ public class CellBuffView : MonoBehaviour
         {
             if (isWorldObject)
             {
-                WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = $"{buffData.Id}_desc", param = buffData.CurLv.ToString(), title = buffData.Id, worldTrans = transform });
+                WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
+                {
+                    describe = $"{buffData.Id}_desc", param = buffData.CurLv.ToString(), title = buffData.Id,
+                    worldTrans = transform
+                });
             }
-            else 
+            else
             {
-                WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = $"{buffData.Id}_desc", param = buffData.CurLv.ToString(), title = buffData.Id, screenPosition = transform.position });
+                WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
+                {
+                    describe = $"{buffData.Id}_desc", param = buffData.CurLv.ToString(), title = buffData.Id,
+                    screenPosition = transform.position
+                });
             }
-
-           
         }
     }
 
-    public void SetData(BuffData buffData,bool isWorldObject)
+    public void SetData(BuffData buffData, bool isWorldObject)
     {
         this.buffData = buffData;
         this.isWorldObject = isWorldObject;
@@ -91,7 +92,4 @@ public class CellBuffView : MonoBehaviour
                 throw new ArgumentOutOfRangeException();
         }
     }
-
-
-
 }

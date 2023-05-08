@@ -20,7 +20,7 @@ namespace Editors
         {
             this.allEnemies = enemies.Select(x => new EnemyWrapper(x)).ToList();
         }
-        
+
         private class EnemyWrapper
         {
             public EnemyBp EnemyData { get; }
@@ -29,11 +29,18 @@ namespace Editors
             {
                 this.EnemyData = data;
             }
-            
+
             [TableColumnWidth(50, false)]
             [ShowInInspector, PreviewField(45, ObjectFieldAlignment.Center)]
-            public Sprite Icon { get { return this.EnemyData.Icon; } set { this.EnemyData.Icon = value; EditorUtility.SetDirty(this.EnemyData); } }
-            
+            public Sprite Icon
+            {
+                get { return this.EnemyData.Icon; }
+                set
+                {
+                    this.EnemyData.Icon = value;
+                    EditorUtility.SetDirty(this.EnemyData);
+                }
+            }
         }
     }
 }

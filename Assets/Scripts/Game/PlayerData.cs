@@ -24,7 +24,7 @@ namespace Game
 
 
         public float LuckyChance;
-        
+
         public bool Engaging;
         public bool DrawBack;
         public Dictionary<Rank, int> Keys;
@@ -32,15 +32,15 @@ namespace Game
 
         public string[] profInfo;
 
-        [JsonIgnore] public override FighterData Enemy => enemy ?? (EnemySaveData) GameManager.Instance.Focus.Data;
+        [JsonIgnore] public override FighterData Enemy => enemy ?? (EnemySaveData)GameManager.Instance.Focus.Data;
 
         [JsonIgnore] public FighterData enemy;
-        
-        
+
+
         public void March(string destination)
         {
             Debug.Log($"destination {destination}");
-            CheckChain(Timing.OnMarch, new object[] {this});
+            CheckChain(Timing.OnMarch, new object[] { this });
         }
 
 
@@ -59,20 +59,21 @@ namespace Game
             {
                 if (Potions[index].Bp.Fs.TryGetValue(Timing.PotionEffect, out var f))
                 {
-                    CheckChain<PotionData>(Timing.OnUsePotion, new object[] {Potions[index], this});
-                    f?.Invoke(Potions[index], new object[] {this});
+                    CheckChain<PotionData>(Timing.OnUsePotion, new object[] { Potions[index], this });
+                    f?.Invoke(Potions[index], new object[] { this });
                     Potions[index].Count -= 1;
                     if (Potions[index].Count <= 0)
                     {
                         Potions[index].Id = "";
                     }
+
                     AudioPlayer.Instance.PlaySoundEffect("potion");
                     DelayUpdate();
                 }
             }
         }
-        
-        
+
+
         public bool TryTakeOffer(Offer offer, out Info info, string kw = "")
         {
             bool success;
@@ -98,12 +99,12 @@ namespace Game
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             if (success)
             {
                 Cost(offer.Cost, kw);
-                
-                
+
+
                 DelayUpdate();
                 return true;
             }
@@ -116,13 +117,10 @@ namespace Game
         public bool TryTakeKey(Rank rank, out Info info)
         {
             info = new SuccessInfo();
-            var outRank = CheckChain<Rank>(Timing.OnGetKey, new object[] {rank, this});
+            var outRank = CheckChain<Rank>(Timing.OnGetKey, new object[] { rank, this });
             Keys[outRank] += 1;
             return true;
         }
-        
-        
-        
 
 
         [Button]
@@ -130,8 +128,7 @@ namespace Game
         {
             Skills.Add(SkillData.Empty);
         }
-        
-        
+
 
         public bool TryTakePotion(string id, out Info msg)
         {
@@ -147,7 +144,7 @@ namespace Game
                         return true;
                     }
                 }
-                
+
                 for (int i = 0; i < Potions.Length; i++)
                 {
                     if (Potions[i].IsEmpty)
@@ -173,6 +170,7 @@ namespace Game
                 Relics.Add(relic);
                 OnGet(relic);
             }
+
             return true;
         }
 
@@ -197,7 +195,6 @@ namespace Game
                             DelayUpdate();
                             return true;
                         }
-                        
                     }
                 }
 
@@ -207,6 +204,7 @@ namespace Game
                     {
                         Skills[i] = new SkillData();
                     }
+
                     if (Skills[i].IsEmpty)
                     {
                         Skills[i].Load(sk);
@@ -217,12 +215,9 @@ namespace Game
                     }
                 }
             }
+
             return false;
         }
-
-
-
-
 
 
         public event Action SkillPointChanged;
@@ -232,8 +227,8 @@ namespace Game
         {
             SkillPointChanged?.Invoke();
         }
-        
-        
+
+
         public bool CanUpgrade(SkillData skillData, out Info info)
         {
             if (skillData.CurLv < skillData.Bp.MaxLv)
@@ -241,6 +236,7 @@ namespace Game
                 info = new SuccessInfo();
                 return true;
             }
+
             info = new FailureInfo(FailureReason.SkillAlreadyMax);
             return false;
         }
@@ -257,6 +253,7 @@ namespace Game
                     break;
                 }
             }
+
             DelayUpdate();
             SkillPointChanged?.Invoke();
         }
@@ -271,8 +268,8 @@ namespace Game
             {
                 GameDataManager.Instance.SecondaryData.SkillPoint[rank] = v;
             }
+
             SkillPointChanged?.Invoke();
-            
         }
 
 
@@ -290,7 +287,7 @@ namespace Game
             DelayUpdate();
         }
 
-        public void RemoveSkill(int index) 
+        public void RemoveSkill(int index)
         {
             if (index >= 0 && index < Skills.Count)
             {
@@ -307,14 +304,13 @@ namespace Game
         {
             return true;
         }
-        
-        
+
+
         [Button]
         public void Execute(string cmds)
         {
-            foreach (var cmd in cmds.Replace(" ","").Split('|'))
+            foreach (var cmd in cmds.Replace(" ", "").Split('|'))
             {
-
                 try
                 {
                     var prefix = cmd.Split(':')[0];
@@ -339,15 +335,16 @@ namespace Game
                             var idr = esr[1];
                             if (idr.EndsWith("/random"))
                             {
-                                var rr = (Rank) int.Parse(idr[0].ToString());
+                                var rr = (Rank)int.Parse(idr[0].ToString());
                                 idr = RelicManager.Instance.RollT(rr)[0].Id;
                                 TryTakeRelic(idr, out _);
                             }
                             else
                             {
-                                var rr = (Rank) int.Parse(idr[0].ToString());
+                                var rr = (Rank)int.Parse(idr[0].ToString());
                                 GameManager.Instance.RollForRelic(rr);
                             }
+
                             break;
                         case "attr":
                             var type = cmd.Split(':')[1].ToLower();
@@ -363,6 +360,7 @@ namespace Game
                                     {
                                         Cost(CostInfo.HpCost(count1));
                                     }
+
                                     break;
                                 case "curmp":
                                     if (count1 > 0)
@@ -373,28 +371,30 @@ namespace Game
                                     {
                                         Cost(CostInfo.MpCost(count1));
                                     }
+
                                     break;
                                 case "maxhp":
-                                    Strengthen(new BattleStatus{MaxHp = count1});
+                                    Strengthen(new BattleStatus { MaxHp = count1 });
                                     break;
                                 case "maxmp":
-                                    Strengthen(new BattleStatus{MaxHp = count1});
+                                    Strengthen(new BattleStatus { MaxHp = count1 });
                                     break;
                                 case "matk":
-                                    Strengthen(new BattleStatus{MAtk = count1});
+                                    Strengthen(new BattleStatus { MAtk = count1 });
                                     break;
                                 case "patk":
-                                    Strengthen(new BattleStatus{PAtk = count1});
+                                    Strengthen(new BattleStatus { PAtk = count1 });
                                     break;
                                 case "mdef":
-                                    Strengthen(new BattleStatus{MDef = count1});
+                                    Strengthen(new BattleStatus { MDef = count1 });
                                     break;
                                 case "pdef":
-                                    Strengthen(new BattleStatus{PDef = count1});
+                                    Strengthen(new BattleStatus { PDef = count1 });
                                     break;
                                 default:
                                     break;
                             }
+
                             break;
                         case "jump":
                             var jid = cmd.Split(':')[1].ToLower();
@@ -406,14 +406,16 @@ namespace Game
                             var id = es[1];
                             if (id.EndsWith("/random"))
                             {
-                                var rr = (Rank) int.Parse(id[0].ToString());
+                                var rr = (Rank)int.Parse(id[0].ToString());
                                 id = PotionManager.Instance.RollT(rr)[0].Id;
                             }
+
                             var c = es.Length > 2 ? int.Parse(es[2]) : 1;
                             for (int i = 0; i < c; i++)
                             {
                                 TryTakePotion(id, out _);
                             }
+
                             break;
                         default:
                             break;
@@ -424,11 +426,10 @@ namespace Game
                     Debug.LogError($"{cmd} execute error");
                     Debug.LogError(e);
                 }
-                
             }
         }
-        
-        
+
+
         public void Save()
         {
             Save(Paths._savePath);
@@ -443,14 +444,13 @@ namespace Game
         {
             return Load(Paths._savePath);
         }
-        
-        
+
+
         [Button]
         public static PlayerData Load(string path)
         {
             return Load<PlayerData>(path);
         }
-        
 
 
         private static T Load<T>(string path)
@@ -485,7 +485,6 @@ namespace Game
         {
             Save(Paths._initPath);
         }
-        
 
 
         public override string ToString()
@@ -501,7 +500,7 @@ namespace Game
             {
                 File.Delete(Paths._savePath);
             }
-            
+
             GameObject.FindObjectOfType<TransitionManager>().LoadScene("StartScene", "DiagonalRectangleGrid", .2f);
         }
     }

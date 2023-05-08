@@ -12,8 +12,7 @@ namespace Managers
         public static string RelicDataPath => Path.Combine(Application.streamingAssetsPath, "Relics.csv");
 
 
-        
-        public static string _initPath = Path.Combine( Application.streamingAssetsPath, "PlayerData.json");
-        public static string _savePath = Path.Combine( Application.persistentDataPath, "PlayerData.json");
+        public static string _initPath = Path.Combine(Application.streamingAssetsPath, "PlayerData.json");
+        public static string _savePath = Path.Combine(Application.persistentDataPath, "PlayerData.json");
     }
 }

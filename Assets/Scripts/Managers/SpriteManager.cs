@@ -7,7 +7,7 @@ namespace Managers
     [ExecuteAlways]
     public class SpriteManager : Singleton<SpriteManager>
     {
-        public enum IconType 
+        public enum IconType
         {
             ChooseProf,
             Prof,
@@ -44,6 +44,7 @@ namespace Managers
             {
                 ProfIcons.Add(icons[i].name, icons[i]);
             }
+
             iconDatas.Add(IconType.Prof, ProfIcons);
 
             //状态图标
@@ -53,6 +54,7 @@ namespace Managers
             {
                 newBuffIcons.Add(icons[i].name, icons[i]);
             }
+
             iconDatas.Add(IconType.Buff, newBuffIcons);
 
             //魔器图标
@@ -62,6 +64,7 @@ namespace Managers
             {
                 relicIcons.Add(icons[i].name, icons[i]);
             }
+
             iconDatas.Add(IconType.Relic, relicIcons);
 
             //职业选择详情图标
@@ -71,11 +74,11 @@ namespace Managers
             {
                 chooseProfIcons.Add(icons[i].name, icons[i]);
             }
-            iconDatas.Add(IconType.ChooseProf, chooseProfIcons);
 
+            iconDatas.Add(IconType.ChooseProf, chooseProfIcons);
         }
 
-        public Sprite GetIcon(IconType iconType, string stringID) 
+        public Sprite GetIcon(IconType iconType, string stringID)
         {
             Dictionary<string, Sprite> cur;
 
@@ -85,11 +88,10 @@ namespace Managers
                 cur.TryGetValue($"{stringID}", out curIcon);
                 return curIcon;
             }
-            else 
+            else
             {
                 return null;
             }
-
         }
     }
 }

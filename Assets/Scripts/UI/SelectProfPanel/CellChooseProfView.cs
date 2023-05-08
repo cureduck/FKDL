@@ -6,15 +6,12 @@ using Managers;
 
 public class CellChooseProfView : MonoBehaviour
 {
-    [SerializeField]
-    private Image icon;
-    [SerializeField]
-    private PointEnterAndExit pointEnterAndExit;
-    [SerializeField]
-    private Toggle toggle;
+    [SerializeField] private Image icon;
+    [SerializeField] private PointEnterAndExit pointEnterAndExit;
+    [SerializeField] private Toggle toggle;
 
     private string profIndex;
-    private System.Action<CellChooseProfView, string,bool> cellViewClick;
+    private System.Action<CellChooseProfView, string, bool> cellViewClick;
 
     private System.Action<CellChooseProfView, string> onPointEnter;
     private System.Action<CellChooseProfView, string> onPointExit;
@@ -26,7 +23,8 @@ public class CellChooseProfView : MonoBehaviour
         toggle.onValueChanged.AddListener(OnClick);
     }
 
-    public void SetData(string profIndex, System.Action<CellChooseProfView, string, bool> cellViewClick, System.Action<CellChooseProfView, string> onPointEnter, System.Action<CellChooseProfView, string> onPointExit) 
+    public void SetData(string profIndex, System.Action<CellChooseProfView, string, bool> cellViewClick,
+        System.Action<CellChooseProfView, string> onPointEnter, System.Action<CellChooseProfView, string> onPointExit)
     {
         this.profIndex = profIndex;
         this.cellViewClick = cellViewClick;
@@ -34,20 +32,19 @@ public class CellChooseProfView : MonoBehaviour
         this.onPointExit = onPointExit;
         toggle.interactable = true;
         icon.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Prof, $"{CellProfView.Title}{profIndex}");
-
     }
 
-    public void SetToggleInteractable(bool interactable) 
+    public void SetToggleInteractable(bool interactable)
     {
         toggle.interactable = interactable;
     }
 
-    public void SetToggleOnState(bool isOn) 
+    public void SetToggleOnState(bool isOn)
     {
         toggle.isOn = isOn;
     }
 
-    private void OnClick(bool isActive) 
+    private void OnClick(bool isActive)
     {
         cellViewClick?.Invoke(this, profIndex, isActive);
     }
@@ -65,5 +62,4 @@ public class CellChooseProfView : MonoBehaviour
         onPointExit?.Invoke(this, profIndex);
         //WindowManager.Instance.simpleInfoItemPanel.Close();
     }
-
 }

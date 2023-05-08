@@ -26,7 +26,6 @@ namespace Game
 
     public class DoorArgs : BaseArgs
     {
-        
     }
 
     public class EnemyArgs : Args
@@ -38,6 +37,5 @@ namespace Game
 
     public class RockArgs : BaseArgs
     {
-        
     }
 }

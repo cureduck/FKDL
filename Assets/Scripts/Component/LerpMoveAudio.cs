@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class LerpMoveAudio : MonoBehaviour
 {
-    [SerializeField]
-    private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
 
 
     public float targetVolume;
@@ -15,7 +14,6 @@ public class LerpMoveAudio : MonoBehaviour
     {
         this.audioSource.clip = audioClip;
         audioSource.Play();
-
     }
 
     // Update is called once per frame
@@ -25,7 +23,7 @@ public class LerpMoveAudio : MonoBehaviour
         {
             audioSource.volume = Mathf.Lerp(audioSource.volume, targetVolume, Time.deltaTime);
         }
-        else 
+        else
         {
             audioSource.volume = Mathf.Lerp(audioSource.volume, 0, Time.deltaTime);
         }

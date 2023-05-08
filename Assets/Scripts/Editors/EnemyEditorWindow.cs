@@ -1,4 +1,4 @@
-﻿﻿#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 
 using System.Linq;
 using Game;
@@ -21,16 +21,16 @@ namespace Editors
             var window = GetWindow<EnemyEditorWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
         }
-        
-        
+
+
         protected override OdinMenuTree BuildMenuTree()
         {
             var tree = new OdinMenuTree(true);
             tree.DefaultMenuStyle.IconSize = 28f;
             tree.Config.DrawSearchToolbar = true;
-            
+
             tree.Add("Add New", new CreateNewEnemy());
-            
+
             EnemyOverView.Instance.UpdateEnemyOverview();
             tree.Add("Enemies", new EnemyTable(EnemyOverView.Instance.AllEnemies));
             tree.AddAllAssetsAtPath("Enemies", "Resources/EnemyBp", typeof(EnemyBp), true);
@@ -38,8 +38,8 @@ namespace Editors
             tree.EnumerateTree().AddIcons<EnemyBp>(x => x.Icon);
             return tree;
         }
-        
-        
+
+
         public class CreateNewEnemy
         {
             public CreateNewEnemy()
@@ -47,14 +47,14 @@ namespace Editors
                 enemyData = ScriptableObject.CreateInstance<EnemyBp>();
                 enemyData.Id = "New Enemy Data";
             }
-            
+
             [InlineEditor(ObjectFieldMode = InlineEditorObjectFieldModes.Hidden)]
             public EnemyBp enemyData;
 
             [Button("Add New Enemy SO")]
             private void CreateNewData()
             {
-                AssetDatabase.CreateAsset(enemyData, "Assets/Resources/EnemyBp/" + enemyData.Id +".asset");
+                AssetDatabase.CreateAsset(enemyData, "Assets/Resources/EnemyBp/" + enemyData.Id + ".asset");
 
                 enemyData = ScriptableObject.CreateInstance<EnemyBp>();
                 enemyData.Id = "NewEnemy";
@@ -82,7 +82,7 @@ namespace Editors
                     AssetDatabase.DeleteAsset(path);
                     AssetDatabase.SaveAssets();
                 }
-                
+
                 SirenixEditorGUI.EndHorizontalToolbar();
             }
         }

@@ -9,7 +9,7 @@ namespace Game
         public float Discount;
 
         [JsonIgnore] public int ActualValue => (int)(Value * Discount);
-        
+
         /// <summary>
         /// 注意， value值
         /// </summary>
@@ -27,7 +27,7 @@ namespace Game
         {
             return new CostInfo(value, CostType.Mp);
         }
-        
+
         public static CostInfo HpCost(int value)
         {
             return new CostInfo(value, CostType.Hp);
@@ -35,7 +35,7 @@ namespace Game
 
         public static readonly CostInfo Zero = new CostInfo();
     }
-    
+
     public enum CostType
     {
         Hp,

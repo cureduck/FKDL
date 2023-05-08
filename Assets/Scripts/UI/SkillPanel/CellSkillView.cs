@@ -12,96 +12,62 @@ using Unity.Mathematics;
 public class CellSkillView : MonoBehaviour
 {
     private static CellSkillView curSelectSkill;
-    [SerializeField]
-    private Transform mainView;
-    [Header("详细显示")]
-    [SerializeField]
-    private Transform showDetailPoint;
-    [SerializeField]
-    private PointEnterAndExit pointEvent;
-    [SerializeField]
-    private ObjectColliderPointEnterAndExit objectPointEnterAndExit;
-    [SerializeField]
-    private bool isWorldObject = false;
-    [Header("拖拽与交互组件")]
-    [SerializeField]
-    private CellUIDragView cellUIDragView;
-    [SerializeField]
-    private CellSkillViewDragReceive dragReceive;
+    [SerializeField] private Transform mainView;
+    [Header("详细显示")] [SerializeField] private Transform showDetailPoint;
+    [SerializeField] private PointEnterAndExit pointEvent;
+    [SerializeField] private ObjectColliderPointEnterAndExit objectPointEnterAndExit;
+    [SerializeField] private bool isWorldObject = false;
+    [Header("拖拽与交互组件")] [SerializeField] private CellUIDragView cellUIDragView;
+    [SerializeField] private CellSkillViewDragReceive dragReceive;
+
     public int Index
     {
-        get
-        {
-            return dragReceive.index;
-        }
+        get { return dragReceive.index; }
     }
-    [Header("消耗颜色")]
-    [SerializeField]
-    private TMP_Text cost_txt;
-    [SerializeField]
-    private Color magicCost_color;
-    [SerializeField]
-    private Color healthCost_color;
-    [SerializeField]
-    private Color goldCost_color;
-    [SerializeField]
-    private Color notEnough_Color;
-    [Header("技能升级按钮")]
-    [SerializeField]
-    private GameObject levelUpObject;
-    [SerializeField]
-    private Button levelUp_btn;
-    [Header("其他组件")]
-    [SerializeField]
-    private GameObject heightlightView;
-    [SerializeField]
-    private GameObject haveSkillGroup;
-    [SerializeField]
-    private GameObject emptySkillGroup;
-    [SerializeField]
-    private GameObject passtiveBG;
-    [SerializeField]
-    private GameObject unPasstiveBG;
-    [SerializeField]
-    private Image icon;
-    [SerializeField]
-    private TextMeshProUGUI levelInfo;
-    [SerializeField]
-    private Localize skillName;
-    [SerializeField]
-    private TextMeshProUGUI coldDown_txt;
-    [SerializeField]
-    private Image coldDown_mask;
-    [SerializeField]
-    private GameObject coolDownCompleteSign;
+
+    [Header("消耗颜色")] [SerializeField] private TMP_Text cost_txt;
+    [SerializeField] private Color magicCost_color;
+    [SerializeField] private Color healthCost_color;
+    [SerializeField] private Color goldCost_color;
+    [SerializeField] private Color notEnough_Color;
+    [Header("技能升级按钮")] [SerializeField] private GameObject levelUpObject;
+    [SerializeField] private Button levelUp_btn;
+    [Header("其他组件")] [SerializeField] private GameObject heightlightView;
+    [SerializeField] private GameObject haveSkillGroup;
+    [SerializeField] private GameObject emptySkillGroup;
+    [SerializeField] private GameObject passtiveBG;
+    [SerializeField] private GameObject unPasstiveBG;
+    [SerializeField] private Image icon;
+    [SerializeField] private TextMeshProUGUI levelInfo;
+    [SerializeField] private Localize skillName;
+    [SerializeField] private TextMeshProUGUI coldDown_txt;
+    [SerializeField] private Image coldDown_mask;
+    [SerializeField] private GameObject coolDownCompleteSign;
 
     private SkillData skillData;
+
     public SkillData Data
     {
-        get
-        {
-            return skillData;
-        }
+        get { return skillData; }
     }
+
     private FighterData playerData;
 
-    [SerializeField]
-    private float targetPrecent;
-    [SerializeField]
-    private float lastPrecent;
+    [SerializeField] private float targetPrecent;
+    [SerializeField] private float lastPrecent;
 
     public bool canInteractive = true;
 
     void Start()
     {
         cellUIDragView.onLeftClick.AddListener(SelectCurSkill);
-        if (pointEvent) 
+        if (pointEvent)
         {
             pointEvent.onPointEnter.AddListener(OnPointEnter);
             pointEvent.onPointExit.AddListener(OnPointExit);
         }
 
-        if (objectPointEnterAndExit) 
+        if (objectPointEnterAndExit)
         {
             objectPointEnterAndExit.onPointEnter.AddListener(OnPointEnter);
             objectPointEnterAndExit.onPointExit.AddListener(OnPointExit);
@@ -119,15 +85,18 @@ public class CellSkillView : MonoBehaviour
     [Button]
     public void UpdateView()
     {
-        SetData(playerData, skillData, dragReceive.index, this.cellUIDragView.beginDrag, this.cellUIDragView.endDrag, dragReceive.onEndDrag);
+        SetData(playerData, skillData, dragReceive.index, this.cellUIDragView.beginDrag, this.cellUIDragView.endDrag,
+            dragReceive.onEndDrag);
     }
 
-    public void SetData(FighterData playerData, SkillData skillData, int index, System.Action<object> onStartDrag, System.Action<object> onEndDrag, System.Action<CellSkillView, CellSkillViewDragReceive> onEndDragComplete)
+    public void SetData(FighterData playerData, SkillData skillData, int index, System.Action<object> onStartDrag,
+        System.Action<object> onEndDrag, System.Action<CellSkillView, CellSkillViewDragReceive> onEndDragComplete)
     {
         if (this.skillData != null)
         {
             this.skillData.Activated -= UnpositiveSkillTrigger;
         }
+
         this.skillData = skillData;
         if (this.skillData != null)
         {
@@ -147,6 +116,7 @@ public class CellSkillView : MonoBehaviour
             emptySkillGroup.gameObject.SetActive(true);
             return;
         }
+
         //Debug.Log(skillData.Id);
         Skill curSkill = SkillManager.Instance.GetById(skillData.Id);
         //
@@ -165,7 +135,7 @@ public class CellSkillView : MonoBehaviour
             unPasstiveBG.SetActive(!curSkill.Positive);
 
             //被动技能且基础冷却为0不会触发特效
-            if (!Data.Bp.Positive&& Data.Bp.Cooldown<=0)
+            if (!Data.Bp.Positive && Data.Bp.Cooldown <= 0)
             {
                 coldDown_mask.fillAmount = 0;
             }
@@ -174,6 +144,7 @@ public class CellSkillView : MonoBehaviour
             {
                 icon.sprite = curSkill.Icon;
             }
+
             if (skillData.CurLv >= curSkill.MaxLv)
             {
                 levelInfo.text = $"<color=yellow>{skillData.CurLv}/{curSkill.MaxLv}</color>";
@@ -216,7 +187,6 @@ public class CellSkillView : MonoBehaviour
             }
             else
             {
-
                 var dt = Time.time - t0;
                 t0 = Time.time;
                 if (dt > 0) SetNextRoundSpeed(dt);
@@ -233,11 +203,10 @@ public class CellSkillView : MonoBehaviour
                 {
                     levelUpObject.SetActive(false);
                 }
-                else 
+                else
                 {
                     levelUpObject.SetActive(player.skillPoint[curSkill.Rank] > 0);
                 }
-
             }
             else
             {
@@ -246,8 +215,6 @@ public class CellSkillView : MonoBehaviour
 
             //skillData.onValueChange += SetData;
         }
-
-
     }
 
     private void SelectCurSkill()
@@ -289,7 +256,6 @@ public class CellSkillView : MonoBehaviour
         if (!curSkill.Positive)
         {
             //UnpositiveSkillTrigger();
-
         }
         else
         {
@@ -299,19 +265,18 @@ public class CellSkillView : MonoBehaviour
                 curSelectSkill = null;
                 //return;
             }
+
             Info cantCostInfo;
             if (playerData.CanCast(skillData, out cantCostInfo))
             {
                 coldDown_mask.fillAmount = 1;
                 playerData.UseSkill(skillData);
             }
-            else 
+            else
             {
-                WindowManager.Instance.warningInfoPanel.Open(cantCostInfo!=null? cantCostInfo.ToString():"未知警告信息");
+                WindowManager.Instance.warningInfoPanel.Open(cantCostInfo != null ? cantCostInfo.ToString() : "未知警告信息");
             }
         }
-
-
     }
 
     private void UpgradeSkill()
@@ -323,7 +288,7 @@ public class CellSkillView : MonoBehaviour
         }
     }
 
-    private void UnpositiveSkillTrigger() 
+    private void UnpositiveSkillTrigger()
     {
         GameObject cur = ObjectPoolManager.Instance.SpawnUnPasstiveSkillSignEffect(icon.sprite);
         cur.transform.SetParent(transform);
@@ -333,6 +298,7 @@ public class CellSkillView : MonoBehaviour
 
 
     #region 鼠标交互
+
     private void OnPointExit()
     {
         WindowManager.Instance.skillInfoPanel.Close();
@@ -342,7 +308,6 @@ public class CellSkillView : MonoBehaviour
             //var arena = Arena.ArrangeFight(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data, Data);
             WindowManager.Instance.EnemyPanel.SetPlayerUseSkill(null);
         }
-
     }
 
     private void OnPointEnter()
@@ -350,37 +315,38 @@ public class CellSkillView : MonoBehaviour
         if (isWorldObject)
         {
             Debug.Log(Camera.main.WorldToScreenPoint(transform.position));
-            WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args { worldTrans = transform, skillData = skillData });
-
-
+            WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args
+                { worldTrans = transform, skillData = skillData });
         }
-        else 
+        else
         {
-            WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args { screenPosition = showDetailPoint.position, skillData = skillData });
+            WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args
+                { screenPosition = showDetailPoint.position, skillData = skillData });
         }
+
         //被动技能不会显示对应的效果
         if (!Data.Bp.Positive)
         {
             return;
         }
+
         if (GameManager.Instance.InBattle && Data.Bp.BattleOnly)
         {
             //var arena = Arena.ArrangeFight(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data, Data);
             WindowManager.Instance.EnemyPanel.SetPlayerUseSkill(Data);
             Debug.Log(Data);
         }
-
     }
-    #endregion
 
+    #endregion
 
 
     public float Speed;
 
     private float t0;
+
     private void Update()
     {
-
         if (skillData == null || skillData.IsEmpty) return;
         //Debug.Log(skillData.IsEmpty);
         //if (canDebug) 
@@ -392,8 +358,6 @@ public class CellSkillView : MonoBehaviour
         //return;
 
 
-
-
         lastPrecent = coldDown_mask.fillAmount;
         if (coldDown_mask.fillAmount <= targetPrecent)
         {
@@ -402,7 +366,7 @@ public class CellSkillView : MonoBehaviour
         else
         {
             coldDown_mask.fillAmount -= Time.deltaTime * Speed;
-            if (coldDown_mask.fillAmount <= 0 && lastPrecent > 0) 
+            if (coldDown_mask.fillAmount <= 0 && lastPrecent > 0)
             {
                 coolDownCompleteSign.gameObject.SetActive(false);
                 coolDownCompleteSign.gameObject.SetActive(true);
@@ -412,10 +376,10 @@ public class CellSkillView : MonoBehaviour
     }
 
     private const float SpeedParam = 1.1f;
-    
+
     private void SetNextRoundSpeed(float dt)
     {
-        Speed = math.max(0.8f,  math.min( Speed * 1.2f, SpeedParam / dt));
+        Speed = math.max(0.8f, math.min(Speed * 1.2f, SpeedParam / dt));
     }
 
     public override string ToString()

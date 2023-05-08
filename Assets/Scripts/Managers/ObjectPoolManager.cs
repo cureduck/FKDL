@@ -10,12 +10,9 @@ namespace Managers
     /// </summary>
     public class ObjectPoolManager : Singleton<ObjectPoolManager>
     {
-        [SerializeField]
-        private GameObject attackEffect;
-        [SerializeField]
-        private UnpasstiveSkillTriggerSign skillTriggerSign;
-        [SerializeField]
-        private GameObject damageSignEffect;
+        [SerializeField] private GameObject attackEffect;
+        [SerializeField] private UnpasstiveSkillTriggerSign skillTriggerSign;
+        [SerializeField] private GameObject damageSignEffect;
 
         private ObjectPool attackEffectPool;
         private ObjectPool unpasstivePool;
@@ -27,9 +24,10 @@ namespace Managers
             attackEffectPool = new ObjectPool(attackEffect);
             unpasstivePool = new ObjectPool(skillTriggerSign.gameObject);
             damageSignEffectPool = new ObjectPool(damageSignEffect);
-
         }
+
         #region 攻击特效
+
         public GameObject SpawnAttackEffect()
         {
             GameObject cur = attackEffectPool.CreatInstance();
@@ -41,6 +39,7 @@ namespace Managers
         {
             attackEffectPool.UnSpawnInstance(targetObject);
         }
+
         #endregion
 
         #region 被动技能触发特效
@@ -56,12 +55,15 @@ namespace Managers
         {
             unpasstivePool.UnSpawnInstance(targetObject);
         }
+
         #endregion
 
         #region 伤害显示
-        public GameObject SpawnDamageSignEffect(int damage,int damageType)
+
+        public GameObject SpawnDamageSignEffect(int damage, int damageType)
         {
-            GameObject cur = damageSignEffectPool.CreatInstance(new DamageSign.Args { value = damage, damageType = damageType });
+            GameObject cur = damageSignEffectPool.CreatInstance(new DamageSign.Args
+                { value = damage, damageType = damageType });
             cur.AddComponent<InvokeTrigger>().Set(1.0f, () => UnSpawnDamageSignEffect(cur));
             return cur;
         }
@@ -71,9 +73,6 @@ namespace Managers
             damageSignEffectPool.UnSpawnInstance(targetObject);
         }
 
-
         #endregion
-
-
     }
 }

@@ -7,16 +7,15 @@ public class OffersUIStartAnimationGroup : MonoBehaviour
 {
     private OffersUIStartAnimation[] curGroup;
 
-    [SerializeField]
-    private float spaceTime = 0.1f;
+    [SerializeField] private float spaceTime = 0.1f;
 
-    public void Set(OffersUIStartAnimation[] offersUIStartAnimations) 
+    public void Set(OffersUIStartAnimation[] offersUIStartAnimations)
     {
         curGroup = offersUIStartAnimations;
         OnOpenAnimation();
     }
 
-    private void OnOpenAnimation() 
+    private void OnOpenAnimation()
     {
         for (int i = 0; i < curGroup.Length; i++)
         {
@@ -28,14 +27,13 @@ public class OffersUIStartAnimationGroup : MonoBehaviour
         //    curGroup[i].gameObject.SetActive(true);
         //    yield return waitForSeconds;
         //}
-
     }
 
-    public void SelectTarget(int targetIndex) 
+    public void SelectTarget(int targetIndex)
     {
         for (int i = 0; i < curGroup.Length; i++)
         {
-            if (i == targetIndex) 
+            if (i == targetIndex)
             {
                 curGroup[i].HightLightTarget();
             }
@@ -45,6 +43,4 @@ public class OffersUIStartAnimationGroup : MonoBehaviour
             }
         }
     }
-
-
 }

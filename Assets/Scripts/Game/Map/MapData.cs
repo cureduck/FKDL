@@ -16,9 +16,9 @@ namespace Game
 
         [JsonIgnore] protected PlayerData Player => GameManager.Instance.PlayerData;
         [JsonIgnore] protected SecondaryData SData => GameDataManager.Instance.SecondaryData;
-        
+
         public event Action<Args> ReactResultInfo;
-        
+
         /*
         [ShowInInspector, JsonIgnore]
         private StateMachine<SquareState, SquareChangeTrigger> sm;
@@ -42,25 +42,34 @@ namespace Game
                 .Permit()
         }
         */
-        
-        
-        
+
+
         /// <summary>
         /// 新游戏时调用
         /// </summary>
-        public virtual void Init(){}
-        
+        public virtual void Init()
+        {
+        }
+
         /// <summary>
         /// 加载游戏时调用
         /// </summary>
-        public virtual void Load(){}
-        
-        public virtual void OnFocus(){}
-        
-        public virtual void OnReact(){}
-        
-        public virtual void OnLeave(){}
-        
+        public virtual void Load()
+        {
+        }
+
+        public virtual void OnFocus()
+        {
+        }
+
+        public virtual void OnReact()
+        {
+        }
+
+        public virtual void OnLeave()
+        {
+        }
+
         public event Action OnDestroy;
         public event Action OnUpdated;
 
@@ -71,7 +80,7 @@ namespace Game
             OnDestroy?.Invoke();
         }
 
-        
+
         protected void DelayUpdate()
         {
             if (!(this is FighterData f && f.Cloned))
@@ -84,12 +93,13 @@ namespace Game
         {
             OnUpdated?.Invoke();
         }
-        
-        
+
+
         /// <summary>
         /// 面积
         /// </summary>
-        [JsonIgnore] public int Area => Placement.Height * Placement.Width;
+        [JsonIgnore]
+        public int Area => Placement.Height * Placement.Width;
 
         [JsonIgnore]
         protected Rank _rank
@@ -101,7 +111,7 @@ namespace Game
                     return Rank.Normal;
                 }
 
-                return Area>=16 ? Rank.Rare : Rank.Uncommon;
+                return Area >= 16 ? Rank.Rare : Rank.Uncommon;
             }
         }
 
@@ -110,24 +120,24 @@ namespace Game
             SquareState = SquareState.UnFocus;
             DelayUpdate();
         }
-        
+
         [Button]
         public bool NextTo(Placement p2)
         {
             var p1 = Placement;
-            
+
             var p3 = new Placement
             {
                 x = math.max(p1.x, p2.x),
                 y = math.max(p1.y, p2.y),
-                Width = math.min(p1.x+p1.Width, p2.x + p2.Width)- math.max(p1.x, p2.x),
-                Height = math.min(p1.y+p1.Height, p2.y + p2.Height)- math.max(p1.y, p2.y),
+                Width = math.min(p1.x + p1.Width, p2.x + p2.Width) - math.max(p1.x, p2.x),
+                Height = math.min(p1.y + p1.Height, p2.y + p2.Height) - math.max(p1.y, p2.y),
             };
 
-            return (!(p3.Height < 0 || p3.Width < 0)&&(!((p3.Height == 0)&&(p3.Width == 0))));
+            return (!(p3.Height < 0 || p3.Width < 0) && (!((p3.Height == 0) && (p3.Width == 0))));
         }
-        
-        
+
+
         public void RevealAround()
         {
             foreach (var square in GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares)
@@ -136,7 +146,7 @@ namespace Game
                 {
                     continue;
                 }
-                
+
                 if (NextTo(square.Placement))
                 {
                     square.Reveal();
@@ -157,9 +167,6 @@ namespace Game
         }
 
 
-
-
-
         protected virtual void InformReactResult(Args obj)
         {
             ReactResultInfo?.Invoke(obj);
@@ -171,7 +178,7 @@ namespace Game
             {
                 TypeNameHandling = TypeNameHandling.All
             });
-            
+
             return JsonConvert.DeserializeObject(f, new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All
@@ -194,14 +201,14 @@ namespace Game
             this.Width = width;
             this.Height = height;
         }
-        
+
         public override string ToString()
         {
-            return $"({x},{y}), ({x+Width},{y+Height})";
+            return $"({x},{y}), ({x + Width},{y + Height})";
         }
     }
-    
-    
+
+
     [Flags]
     public enum SquareState
     {
@@ -219,7 +226,7 @@ namespace Game
         UnFocus,
         Done
     }
-    
+
 
     public class SquareInfo
     {
@@ -228,5 +235,4 @@ namespace Game
         public string P1;
         public string P2;
     }
-    
 }

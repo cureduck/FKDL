@@ -21,22 +21,18 @@ public class ObjectPoolExample : MonoBehaviour
     }
 
 
-    private IEnumerator TextIe() 
+    private IEnumerator TextIe()
     {
         //创建一个预制体对应的对象池
         objectPool01 = new ObjectPool(curPrefab);
         yield return new WaitForSeconds(1);
         //从对象池中取出一个预制体对象
-        GameObject curSpawn01Prefab = objectPool01.CreatInstance(Vector3.zero,Quaternion.identity,null);
+        GameObject curSpawn01Prefab = objectPool01.CreatInstance(Vector3.zero, Quaternion.identity, null);
         yield return new WaitForSeconds(1);
         //回收一个预制体
         objectPool01.UnSpawnInstance(curSpawn01Prefab);
         yield return new WaitForSeconds(1);
         //再从对象池中取出一个对象池
         objectPool01.CreatInstance(Vector3.zero, Quaternion.identity, null);
-
-      
-
     }
-
 }

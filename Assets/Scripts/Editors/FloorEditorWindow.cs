@@ -18,25 +18,25 @@ namespace Editors
     {
         private static string FloorPath => Path.Combine(Application.dataPath, "Resources", "Floors");
 
-        
+
         [MenuItem("Tools/Editor/FloorEditor")]
         private static void Open()
         {
             var window = GetWindow<FloorEditorWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
         }
-        
+
         protected override OdinMenuTree BuildMenuTree()
         {
             var tree = new OdinMenuTree(true);
             tree.DefaultMenuStyle.IconSize = 28f;
             tree.Config.DrawSearchToolbar = true;
-            
+
             tree.Add("Add New", new CreateNewFloor());
-            
+
             return tree;
         }
-        
+
         public class CreateNewFloor
         {
             public CreateNewFloor()
@@ -55,7 +55,7 @@ namespace Editors
                 });
                 var count = Directory.GetFiles(Path.Combine(FloorPath, floor.FloorName))
                     .Count(name => name.EndsWith(".json"));
-                File.WriteAllText(Path.Combine(FloorPath, floor.FloorName, count+".json") , f);
+                File.WriteAllText(Path.Combine(FloorPath, floor.FloorName, count + ".json"), f);
             }
 
             [Button("Load")]

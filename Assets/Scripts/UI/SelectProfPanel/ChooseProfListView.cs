@@ -6,24 +6,24 @@ using System;
 
 public class ChooseProfListView : MonoBehaviour
 {
-    [SerializeField]
-    private CellChooseProfView profViewPrefab;
-    [SerializeField]
-    private Transform listViewParent;
+    [SerializeField] private CellChooseProfView profViewPrefab;
+    [SerializeField] private Transform listViewParent;
 
     private UIViewObjectPool<CellChooseProfView, string> uIViewObjectPool;
 
-    private System.Action<CellChooseProfView, string,bool> cellClick;
+    private System.Action<CellChooseProfView, string, bool> cellClick;
     private System.Action<CellChooseProfView, string> onPointEnter;
     private System.Action<CellChooseProfView, string> onPointExit;
 
 
-    public void Init() 
+    public void Init()
     {
         uIViewObjectPool = new UIViewObjectPool<CellChooseProfView, string>(profViewPrefab, null);
     }
 
-    public void SetData(string[] profDatas,System.Action<CellChooseProfView,string, bool> cellClick, System.Action<CellChooseProfView, string> onPointEnter, System.Action<CellChooseProfView, string> onPointExit,List<int> curHaveSelect) 
+    public void SetData(string[] profDatas, System.Action<CellChooseProfView, string, bool> cellClick,
+        System.Action<CellChooseProfView, string> onPointEnter, System.Action<CellChooseProfView, string> onPointExit,
+        List<int> curHaveSelect)
     {
         this.cellClick = cellClick;
         this.onPointEnter = onPointEnter;
@@ -44,13 +44,10 @@ public class ChooseProfListView : MonoBehaviour
         {
             uIViewObjectPool.GetCurActiveMemberByIndex(i).SetToggleOnState(curHaveSelect.Contains(i));
         }
-
     }
 
     private void OnCellViewSet(CellChooseProfView arg1, string arg2)
     {
         arg1.SetData(arg2, cellClick, onPointEnter, onPointExit);
     }
-
-
 }

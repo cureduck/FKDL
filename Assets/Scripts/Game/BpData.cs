@@ -11,8 +11,8 @@ namespace Game
     {
         public string Id;
         [JsonIgnore] public abstract TT Bp { get; }
-        
-        
+
+
         public virtual bool MayAffect(Timing timing, out int priority)
         {
             if (Bp == null)
@@ -20,7 +20,7 @@ namespace Game
                 priority = 0;
                 return false;
             }
-            
+
             if (Bp.Fs.TryGetValue(timing, out var f))
             {
                 priority = f.GetCustomAttribute<EffectAttribute>().priority;
@@ -37,7 +37,7 @@ namespace Game
         {
             try
             {
-                return (T) Bp.Fs[timing].Invoke(this, param);
+                return (T)Bp.Fs[timing].Invoke(this, param);
             }
             catch (Exception e)
             {

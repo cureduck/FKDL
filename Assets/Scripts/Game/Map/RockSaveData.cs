@@ -11,7 +11,7 @@ namespace Game
         {
             base.Init();
             var c = Placement.Height * Placement.Width;
-            Cost = Random.Range((int) c , (int) 2*c);
+            Cost = Random.Range((int)c, (int)2 * c);
         }
 
         public override void OnReact()
@@ -19,11 +19,11 @@ namespace Game
             base.OnReact();
 
             var cost = CostInfo.MpCost(Cost);
-            
+
             if (Player.CanAfford(cost, out _))
             {
                 Player.Cost(cost, "rock");
-                InformReactResult(new RockArgs(){CanReact = true});
+                InformReactResult(new RockArgs() { CanReact = true });
                 Destroyed();
             }
             else

@@ -18,6 +18,7 @@ namespace Managers
 
 
         private GameObject _bg;
+
         public GameObject BG
         {
             get
@@ -26,12 +27,14 @@ namespace Managers
                 {
                     _bg = Camera.main.transform.Find("BG").gameObject;
                 }
+
                 return _bg;
             }
         }
 
         //角度
-        [JsonIgnore, ShowInInspector] public float Degree
+        [JsonIgnore, ShowInInspector]
+        public float Degree
         {
             get => _degree;
             set
@@ -44,6 +47,7 @@ namespace Managers
                 {
                     CameraMan.Instance.Target = GameManager.Instance.Focus.transform.position;
                 }
+
                 WindowManager.Instance.EnemyPanel.transform.rotation = Camera.main.transform.rotation;
                 WindowManager.Instance.SquareInfoPanel.transform.rotation = Camera.main.transform.rotation;
                 _degree = value;
@@ -53,7 +57,8 @@ namespace Managers
         private float _degree;
 
 
-        [JsonIgnore, ShowInInspector] public float FOV
+        [JsonIgnore, ShowInInspector]
+        public float FOV
         {
             get => _fov;
             set
@@ -65,11 +70,12 @@ namespace Managers
         }
 
 
-
         private float _fov;
 
         #region 语言
+
         private string _languageType;
+
         [JsonIgnore, ShowInInspector]
         public string LanguageType
         {
@@ -91,8 +97,10 @@ namespace Managers
         #endregion
 
         #region 分辨率
+
         private int _settingScreenX;
         private int _settingScreenY;
+
         [JsonIgnore, ShowInInspector]
         public Vector2Int ScreenSize
         {
@@ -109,15 +117,15 @@ namespace Managers
                     _settingScreenY = value.y;
                     Screen.SetResolution(_settingScreenX, _settingScreenY, _isFullScreen);
                 }
-
-
             }
         }
 
         #endregion
 
         #region 全屏
+
         private bool _isFullScreen;
+
         [JsonIgnore, ShowInInspector]
         public bool IsFullScreen
         {
@@ -128,14 +136,14 @@ namespace Managers
                 {
                     return;
                 }
-                else 
+                else
                 {
                     _isFullScreen = value;
                     Screen.SetResolution(_settingScreenX, _settingScreenY, _isFullScreen);
                 }
-
             }
         }
+
         #endregion
     }
 }

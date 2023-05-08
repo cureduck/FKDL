@@ -8,15 +8,14 @@ namespace UI
     public class BuffPanel : FighterUIPanel
     {
         public BuffItem BuffItemPrefab;
-        
-        
-        
+
+
         public override void SetMaster(FighterData master)
         {
             if (master == _master) return;
-            
+
             UnbindPrevious();
-            
+
             base.SetMaster(master);
             Bind();
             LoadBuffs();
@@ -35,7 +34,7 @@ namespace UI
         private void UnbindPrevious()
         {
             if (_master == null) return;
-            
+
             _master.Buffs.BuffAdded -= AddNewBuff;
             _master.Buffs.BuffRemoved -= RemoveBuff;
         }
@@ -46,12 +45,12 @@ namespace UI
             _master.Buffs.BuffAdded += AddNewBuff;
             _master.Buffs.BuffRemoved += RemoveBuff;
         }
-        
+
         [Button]
         private void LoadBuffs()
         {
             ClearCurrentBuffItems();
-            
+
             for (int i = 0; i < _master.Buffs.Count; i++)
             {
                 CreatePrefab(_master.Buffs[i]);
@@ -80,8 +79,8 @@ namespace UI
             var go = Instantiate(BuffItemPrefab, transform);
             go.BuffData = data;
         }
-        
-        
+
+
         private void ClearCurrentBuffItems()
         {
             foreach (Transform child in transform)

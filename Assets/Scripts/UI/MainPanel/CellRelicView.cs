@@ -10,14 +10,10 @@ public class CellRelicView : MonoBehaviour
 {
     private const string Title = "UI_Icon_Relic_";
 
-    [SerializeField]
-    private Image relicIcon;
-    [SerializeField]
-    private Image activeIcon;
-    [SerializeField]
-    private Text relic_count;
-    [SerializeField]
-    private PointEnterAndExit pointEnterAndExit;
+    [SerializeField] private Image relicIcon;
+    [SerializeField] private Image activeIcon;
+    [SerializeField] private Text relic_count;
+    [SerializeField] private PointEnterAndExit pointEnterAndExit;
 
     private RelicData relicData;
 
@@ -34,23 +30,24 @@ public class CellRelicView : MonoBehaviour
         {
             WindowManager.Instance.simpleInfoItemPanel.Close();
         }
-
     }
 
     private void OnPointEnter()
     {
         if (relicData != null)
         {
-            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { describe = "这是一个遗物", title = relicData.Id, screenPosition = transform.position });
+            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
+                { describe = "这是一个遗物", title = relicData.Id, screenPosition = transform.position });
         }
     }
 
     public void SetData(RelicData relicData)
     {
-        if (this.relicData != null) 
+        if (this.relicData != null)
         {
-            this.relicData.Activated-=OnTrigger;
+            this.relicData.Activated -= OnTrigger;
         }
+
         this.relicData = relicData;
         if (this.relicData != null)
         {
@@ -64,7 +61,6 @@ public class CellRelicView : MonoBehaviour
         activeIcon.sprite = relicData.Bp.Icon;
 
         //relicIcon.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Relic, $"{Title}{relicData.Id}");
-
     }
 
     private void OnTrigger()

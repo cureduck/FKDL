@@ -8,39 +8,28 @@ using I2.Loc;
 
 public class TargetBattleView : MonoBehaviour
 {
-    [SerializeField]
-    private Localize title_txt;
-    [SerializeField]
-    private Slider healthBar;
-    [SerializeField]
-    private DamageHightLightView damageHightLightView;
-    [SerializeField]
-    private Text healthValue_txt;
-    [SerializeField]
-    private Slider magicBar;
-    [SerializeField]
-    private Text magicValue_txt;
-    [SerializeField]
-    private Localize pd_txt;
+    [SerializeField] private Localize title_txt;
+    [SerializeField] private Slider healthBar;
+    [SerializeField] private DamageHightLightView damageHightLightView;
+    [SerializeField] private Text healthValue_txt;
+    [SerializeField] private Slider magicBar;
+    [SerializeField] private Text magicValue_txt;
+    [SerializeField] private Localize pd_txt;
     [SerializeField] private LocalizationParamsManager pdParamsManager;
-    [SerializeField]
-    private Localize md_txt;
+    [SerializeField] private Localize md_txt;
     [SerializeField] private LocalizationParamsManager mdParamsManager;
-    [SerializeField]
-    private Localize pr_txt;
+    [SerializeField] private Localize pr_txt;
     [SerializeField] private LocalizationParamsManager prParamsManager;
-    [SerializeField]
-    private Localize mr_txt;
+    [SerializeField] private Localize mr_txt;
     [SerializeField] private LocalizationParamsManager mrParamsManager;
-    [SerializeField]
-    private CellSkillView curSkillView;
-    [SerializeField]
-    private BuffListView buffListView;
+    [SerializeField] private CellSkillView curSkillView;
+    [SerializeField] private BuffListView buffListView;
 
     private FighterData fighterData;
-    public void Init() 
+
+    public void Init()
     {
-        if (curSkillView) 
+        if (curSkillView)
         {
             curSkillView.canInteractive = false;
         }
@@ -48,17 +37,18 @@ public class TargetBattleView : MonoBehaviour
         buffListView.Init();
     }
 
-    public void SetData(FighterData fighterData) 
+    public void SetData(FighterData fighterData)
     {
         EnemySaveData enemySaveData = fighterData as EnemySaveData;
         if (enemySaveData != null)
         {
             title_txt.SetTerm(enemySaveData.Id);
         }
-        else 
+        else
         {
             title_txt.SetTerm("PLAYER");
         }
+
         this.fighterData = fighterData;
 
         healthBar.value = fighterData.Status.CurHp;
@@ -79,7 +69,7 @@ public class TargetBattleView : MonoBehaviour
         mr_txt.SetTerm("MR_Title");
         mrParamsManager.SetParameterValue("VALUE", fighterData.Status.MDef.ToString());
 
-        if (curSkillView) 
+        if (curSkillView)
         {
             if (fighterData is PlayerData)
             {
@@ -97,13 +87,12 @@ public class TargetBattleView : MonoBehaviour
                 }
             }
         }
-        buffListView.SetData(fighterData.Buffs);
 
+        buffListView.SetData(fighterData.Buffs);
     }
 
-    public void SetResult(int pd,int pdCount,int md,int mdCount,int td,int tdCount,int posionCount) 
+    public void SetResult(int pd, int pdCount, int md, int mdCount, int td, int tdCount, int posionCount)
     {
         damageHightLightView.SetData(fighterData.Status.CurHp, pd, pdCount, md, mdCount, td, tdCount, posionCount);
     }
-
 }

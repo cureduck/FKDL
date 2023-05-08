@@ -5,7 +5,6 @@ namespace Game
 {
     public class RelicAgent : List<RelicData>
     {
-        
         [JsonConstructor]
         public RelicAgent(RelicData[] bp)
         {
@@ -13,6 +12,7 @@ namespace Game
             {
                 return;
             }
+
             for (int i = 0; i < bp.Length; i++)
             {
                 Add(bp[i]);
@@ -21,7 +21,6 @@ namespace Game
 
         public RelicAgent()
         {
-            
         }
     }
 }

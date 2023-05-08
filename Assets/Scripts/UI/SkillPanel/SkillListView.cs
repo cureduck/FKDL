@@ -7,12 +7,9 @@ using Managers;
 
 public class SkillListView : MonoBehaviour
 {
-    [SerializeField]
-    private CellSkillView prefab;
-    [SerializeField]
-    private Transform listParent;
-    [SerializeField]
-    private CellSkillViewDragReceive deleteNode;
+    [SerializeField] private CellSkillView prefab;
+    [SerializeField] private Transform listParent;
+    [SerializeField] private CellSkillViewDragReceive deleteNode;
 
     private PlayerData playerData;
 
@@ -60,6 +57,7 @@ public class SkillListView : MonoBehaviour
                 cellSkillView = listParent.GetChild(i).GetComponent<CellSkillView>();
                 cellSkillView.gameObject.SetActive(true);
             }
+
             cellSkillView.SetData(playerData, curSkills[i], i, OnStartDrag, OnEndDrag, OnEndDragComplete);
         }
 
@@ -67,15 +65,14 @@ public class SkillListView : MonoBehaviour
         {
             listParent.GetChild(i).gameObject.SetActive(false);
         }
-
     }
 
-    private void OnStartDrag(object data) 
+    private void OnStartDrag(object data)
     {
         deleteNode.gameObject.SetActive(true);
     }
 
-    private void OnEndDrag(object data) 
+    private void OnEndDrag(object data)
     {
         deleteNode.gameObject.SetActive(false);
     }
@@ -85,7 +82,11 @@ public class SkillListView : MonoBehaviour
     {
         if (cellSkillViewDragReceive.IsDeleteNode)
         {
-            WindowManager.Instance.confirmPanel.Open(new ConfirmPanel.Args { curEvent = () => playerData.RemoveSkill(cellSkillView.Index), info = $"确定移除<color=yellow>{cellSkillView.Data.Id}</color>?" });
+            WindowManager.Instance.confirmPanel.Open(new ConfirmPanel.Args
+            {
+                curEvent = () => playerData.RemoveSkill(cellSkillView.Index),
+                info = $"确定移除<color=yellow>{cellSkillView.Data.Id}</color>?"
+            });
         }
         else
         {
@@ -93,12 +94,9 @@ public class SkillListView : MonoBehaviour
             playerData.SwapSkill(cellSkillView.Index, cellSkillViewDragReceive.index);
             //Debug.Log(cellSkillView.Index + "与" + cellSkillViewDragReceive.index + "位置技能互换");
         }
-
     }
 
-    private void UpgradeSkill() 
+    private void UpgradeSkill()
     {
-        
     }
-
 }

@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using Game;
 using TMPro;
 using Unity.Mathematics;
@@ -11,23 +11,17 @@ namespace UI
 {
     public class GoldPanel : FighterUIPanel
     {
-
         public TMP_Text GoldText;
         public TMP_Text CKey;
         public TMP_Text GoldKey;
         public TMP_Text SilverKey;
 
 
-        [SerializeField]
-        private Color rank01KeyColor;
-        [SerializeField]
-        private Color rank02KeyColor;
-        [SerializeField]
-        private Color rank03KeyColor;
-        [SerializeField]
-        private GameObject curGetKeyEffect;
-        [SerializeField]
-        private Transform effectParent;
+        [SerializeField] private Color rank01KeyColor;
+        [SerializeField] private Color rank02KeyColor;
+        [SerializeField] private Color rank03KeyColor;
+        [SerializeField] private GameObject curGetKeyEffect;
+        [SerializeField] private Transform effectParent;
         private ObjectPool keyObjectPool;
 
 
@@ -46,7 +40,7 @@ namespace UI
         {
             if (_targetGoldCount != _currentGoldCount)
             {
-                if (_pause>0)
+                if (_pause > 0)
                 {
                     _pause -= 1;
                     return;
@@ -56,7 +50,7 @@ namespace UI
                     var delta = (_targetGoldCount - _currentGoldCount) / 50;
                     delta += _targetGoldCount - _currentGoldCount > 0 ? 1 : -1;
                     _currentGoldCount += delta;
-                
+
                     GoldText.text = _currentGoldCount.ToString();
                     _pause = 10;
                 }
@@ -72,10 +66,10 @@ namespace UI
         protected override void UpdateData()
         {
             base.UpdateData();
-            _targetGoldCount = ((PlayerData) _master).Gold;
-            CKey.text = ((PlayerData) _master).Keys[Rank.Normal].ToString();
-            SilverKey.text = ((PlayerData) _master).Keys[Rank.Uncommon].ToString();
-            GoldKey.text = ((PlayerData) _master).Keys[Rank.Rare].ToString();
+            _targetGoldCount = ((PlayerData)_master).Gold;
+            CKey.text = ((PlayerData)_master).Keys[Rank.Normal].ToString();
+            SilverKey.text = ((PlayerData)_master).Keys[Rank.Uncommon].ToString();
+            GoldKey.text = ((PlayerData)_master).Keys[Rank.Rare].ToString();
         }
 
 
@@ -107,18 +101,15 @@ namespace UI
             curKey.transform.position = screenPosition;
 
             Sequence sequence = DOTween.Sequence();
-            sequence.
-                Append(curKey.transform.DOScale(Vector3.one, 0.3f)).
-                Append(curKey.transform.DOMove(endPosition, 0.5f)).
-                Append(curKey.transform.DOScale(Vector3.zero,0.3f))
+            sequence.Append(curKey.transform.DOScale(Vector3.one, 0.3f))
+                .Append(curKey.transform.DOMove(endPosition, 0.5f)).Append(curKey.transform.DOScale(Vector3.zero, 0.3f))
                 .OnComplete(() => UnSpawnKeyEffect(curKey));
             sequence.Play();
         }
 
-        private void UnSpawnKeyEffect(GameObject target) 
+        private void UnSpawnKeyEffect(GameObject target)
         {
             keyObjectPool.UnSpawnInstance(target);
         }
-
     }
 }

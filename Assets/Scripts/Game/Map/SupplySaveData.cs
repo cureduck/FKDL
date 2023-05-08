@@ -31,10 +31,11 @@ namespace Game
                     default:
                         return 0;
                 }
+
                 return 0;
             }
         }
-        
+
         public override void OnReact()
         {
             base.OnReact();
@@ -42,15 +43,15 @@ namespace Game
             switch (Type)
             {
                 case SupplyType.Spring:
-                    GameManager.Instance.PlayerData.Heal(new BattleStatus{CurMp = value}, "supply");
+                    GameManager.Instance.PlayerData.Heal(new BattleStatus { CurMp = value }, "supply");
                     break;
                 case SupplyType.Grassland:
-                    GameManager.Instance.PlayerData.Heal(new BattleStatus{CurHp = value}, "supply");
+                    GameManager.Instance.PlayerData.Heal(new BattleStatus { CurHp = value }, "supply");
                     break;
                 default:
                     break;
             }
-            
+
             Destroyed();
         }
 
@@ -79,12 +80,11 @@ namespace Game
             }
         }
     }
+
     public enum SupplyType
     {
         Spring,
         Grassland,
         Camp
     }
-    
-    
 }
