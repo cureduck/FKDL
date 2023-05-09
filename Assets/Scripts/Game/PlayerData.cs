@@ -1,52 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using EasyTransition;
-using Game;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using TMPro;
-using UI;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using Object = System.Object;
 
 namespace Game
 {
     public class PlayerData : FighterData
     {
+        public bool DrawBack;
+
+        [JsonIgnore] public FighterData enemy;
+
+        public bool Engaging;
         public string Id;
-        public PotionData[] Potions;
-        public RelicAgent Relics;
+        public Dictionary<Rank, int> Keys;
 
 
         public float LuckyChance;
-
-        public bool Engaging;
-        public bool DrawBack;
-        public Dictionary<Rank, int> Keys;
-        public Dictionary<Rank, int> skillPoint => GameDataManager.Instance.SecondaryData.SkillPoint;
+        public PotionData[] Potions;
 
         public string[] profInfo;
+        public RelicAgent Relics;
+
+
+        public PlayerData()
+        {
+            Relics = new RelicAgent();
+        }
+
+        public Dictionary<Rank, int> skillPoint => GameDataManager.Instance.SecondaryData.SkillPoint;
 
         [JsonIgnore] public override FighterData Enemy => enemy ?? (EnemySaveData)GameManager.Instance.Focus.Data;
-
-        [JsonIgnore] public FighterData enemy;
 
 
         public void March(string destination)
         {
             Debug.Log($"destination {destination}");
             CheckChain(Timing.OnMarch, new object[] { this });
-        }
-
-
-        public PlayerData()
-        {
-            Relics = new RelicAgent();
         }
 
 
@@ -127,6 +121,7 @@ namespace Game
         public void AddSkillSlot()
         {
             Skills.Add(SkillData.Empty);
+            DelayUpdate();
         }
 
 
@@ -416,6 +411,9 @@ namespace Game
                                 TryTakePotion(id, out _);
                             }
 
+                            break;
+                        case "skillslot":
+                            Player.AddSkillSlot();
                             break;
                         default:
                             break;

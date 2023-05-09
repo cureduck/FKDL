@@ -1,18 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using Managers;
-using Newtonsoft.Json;
+﻿using Managers;
 using UnityEngine;
 
 namespace Game
 {
     public class Relic : CsvData
     {
-        public bool UsedUp;
-        public bool UseCounter;
         public float Param1;
+        public bool UseCounter;
+        public bool UsedUp;
 
-        public Relic(Rank rank, string id, float param, bool usedUp, bool useCounter) : base(rank, id)
+        public Relic(Rank rank, string id, float param, bool usedUp, bool useCounter, Sprite icon) : base(rank, id,
+            icon)
         {
             Param1 = param;
             UsedUp = usedUp;

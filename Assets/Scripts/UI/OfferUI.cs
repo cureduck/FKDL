@@ -24,7 +24,7 @@ namespace UI
         public Localize Prof;
         public Localize Positive;
         public Localize Description;
-        public LocalizationParamsManager MaxLvParam;
+        public Localize MaxLv;
 
         public Image Bg;
 
@@ -77,6 +77,25 @@ namespace UI
             onClick?.Invoke();
         }
 
+        private void SetRankStar(Rank rank)
+        {
+            if (RankStar != null)
+            {
+                foreach (Transform child in RankStar)
+                {
+                    if (child.GetSiblingIndex() > ((int)rank))
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        child.gameObject.SetActive(true);
+                    }
+                }
+            }
+        }
+
+
         public void UpdateData()
         {
             if ((Cost >= 0) && (CostLabel != null))
@@ -84,15 +103,44 @@ namespace UI
                 CostLabel.text = Cost.ToString();
             }
 
-            Debug.Log(Offer.Kind);
+
+            if (MaxLv != null || Offer.Kind == Offer.OfferKind.Skill)
+            {
+                MaxLv.gameObject.SetActive(false);
+            }
+
+            if (Prof != null)
+            {
+                Prof.gameObject.SetActive(Offer.Kind == Offer.OfferKind.Skill);
+            }
+
+            if (Positive != null)
+            {
+                Positive.gameObject.SetActive(Offer.Kind == Offer.OfferKind.Skill);
+            }
+
+
             switch (Offer.Kind)
             {
                 case Offer.OfferKind.Potion:
+                    var potion = PotionManager.Instance.GetById(Offer.Id);
                     Id.SetTerm(Offer.Id);
+                    Icon.sprite = potion.Icon;
+                    SetRankStar(Offer.Rank);
+                    Description?.SetTerm($"{potion.Id}_desc");
+                    Description.SetLocalizeParam("P1", potion.Param1.ToString());
                     break;
                 case Offer.OfferKind.Skill:
                     Id.SetTerm(Offer.Id);
                     var skill = SkillManager.Instance.GetById(Offer.Id);
+
+                    if (MaxLv != null)
+                    {
+                        MaxLv.gameObject.SetActive(true);
+                        MaxLv.SetTerm("maxLv");
+                        MaxLv.SetLocalizeParam("P1", skill.MaxLv.ToString());
+                    }
+
                     Positive?.SetTerm(skill.Positive ? "positive" : "passive");
                     if (Bg != null)
                     {
@@ -109,23 +157,9 @@ namespace UI
                             skill.Param1.ToString(),
                             skill.Param2.ToString()
                         });
-                    Description.Calculate();
+                    Description.RemoveBetween();
 
-
-                    if (RankStar != null)
-                    {
-                        foreach (Transform child in RankStar)
-                        {
-                            if (child.GetSiblingIndex() > ((int)skill.Rank))
-                            {
-                                child.gameObject.SetActive(false);
-                            }
-                            else
-                            {
-                                child.gameObject.SetActive(true);
-                            }
-                        }
-                    }
+                    SetRankStar(skill.Rank);
 
                     if (CostLabel != null)
                     {
@@ -138,6 +172,7 @@ namespace UI
                     break;
                 case Offer.OfferKind.Relic:
                     Id.SetTerm(Offer.Id);
+                    Icon.sprite = RelicManager.Instance.GetById(Offer.Id).Icon;
                     Description?.SetTerm($"{Offer.Id}_desc");
                     break;
                 case Offer.OfferKind.Key:

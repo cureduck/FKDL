@@ -2,22 +2,27 @@
 using System.Linq;
 using Managers;
 using Sirenix.OdinInspector;
-using UI;
 
 namespace Game
 {
     public class ShopGoods
     {
-        public Offer[] SkillList;
-        public Offer[] PotionList;
         public Offer[] KeyList;
+        public Offer[] PotionList;
+        public Offer[] SkillList;
     }
 
     public class ShopSaveData : MapData
     {
+        private const int SkillNum = 3;
+        private const int PotionNum = 3;
+        private const int KeyNum = 3;
         public ShopGoods Goods;
 
         public CostInfo RefreshCost { get; }
+
+
+        public CostInfo UpGradeCost => new CostInfo(100);
 
         public override void Init()
         {
@@ -27,6 +32,7 @@ namespace Game
 
         public override void OnReact()
         {
+            RevealAround();
             base.OnReact();
         }
 
@@ -34,10 +40,6 @@ namespace Game
         {
             base.OnLeave();
         }
-
-        private const int SkillNum = 3;
-        private const int PotionNum = 3;
-        private const int KeyNum = 3;
 
         [Button]
         private ShopGoods GenerateGoods()
@@ -66,9 +68,6 @@ namespace Game
         {
             return GenerateGoods();
         }
-
-
-        public CostInfo UpGradeCost => new CostInfo(100);
 
 
         private int GetPrice(Offer.OfferKind kind, Rank rank)

@@ -1,12 +1,11 @@
 ﻿#if UNITY_EDITOR
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Game;
-using Sirenix.OdinInspector;
-using Debug = UnityEngine.Debug;
 using OfficeOpenXml;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Managers
 {
@@ -115,7 +114,7 @@ namespace Managers
                         floor.Squares.AddLast(new CemeterySaveData() { Placement = p });
                         break;
                     case "gold":
-                        floor.Squares.AddLast(new GoldSaveData(v) { Placement = p });
+                        floor.Squares.AddLast(new GuineasSaveData(v) { Placement = p });
                         break;
                     case "totem":
                         floor.Squares.AddLast(new TotemSaveData() { Placement = p });

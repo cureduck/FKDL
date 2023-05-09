@@ -12,7 +12,8 @@
 
     public enum RankDescType
     {
-        DaZhongXiao,
-        HaoHuai,
+        Size,
+        Quality,
+        Key
     }
 }

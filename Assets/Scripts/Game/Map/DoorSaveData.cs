@@ -1,14 +1,12 @@
 ﻿using System;
-using Managers;
-using Random = UnityEngine.Random;
+using Tools;
 
 namespace Game
 {
     public class DoorSaveData : MapData
     {
-        public Rank Rank;
-
         private const int HpCost = 3;
+        public Rank Rank;
 
         public DoorSaveData(Rank rank)
         {
@@ -57,6 +55,7 @@ namespace Game
         {
             var info = base.GetSquareInfo();
             info.P1 = HpCost.ToString();
+            info.P2 = Rank.ToString(RankDescType.Key);
             return info;
         }
     }

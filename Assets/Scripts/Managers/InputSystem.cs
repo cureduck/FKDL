@@ -44,6 +44,9 @@ namespace Managers
 
         public Light2D light2D;
 
+
+        private Vector3 center;
+
         [ShowInInspector] private Vector2 delta;
         private Vector2 prePos;
         private PlayerData P => GameManager.Instance.PlayerData;
@@ -72,9 +75,12 @@ namespace Managers
                 }
                 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Camera.main.transform.position -= (Vector3)delta;*/
-
                 Camera.main.transform.position -= (Vector3)delta * DragRate * Camera.main.fieldOfView;
                 BG.transform.position -= (Vector3)delta * DragRate * 0.05f;
+                if (Vector3.Distance(Camera.main.transform.position, center) > 20f)
+                {
+                    Camera.main.transform.position += (Vector3)delta * DragRate * Camera.main.fieldOfView;
+                }
             }
         }
 
@@ -91,9 +97,9 @@ namespace Managers
             return (Input.GetMouseButtonUp(0));
         }
 
-
         private bool BeginDrag()
         {
+            center = GameManager.Instance.FindStartSquare().transform.position;
             return Input.GetMouseButton(1);
         }
 

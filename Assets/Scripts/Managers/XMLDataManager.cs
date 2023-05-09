@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Text;
 using Csv;
 using Game;
@@ -12,7 +10,6 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Tools;
-using Unity.Mathematics;
 using UnityEngine;
 using Random = System.Random;
 
@@ -45,6 +42,10 @@ namespace Managers
 
     public abstract class XMLDataManager<T1, T2> : Singleton<XMLDataManager<T1, T2>>, IProvider<T1> where T1 : CsvData
     {
+        private const BindingFlags Flag = (BindingFlags.NonPublic) | (BindingFlags.Instance);
+
+
+        private const float LuckPassRate = .5f;
         [ShowInInspector] protected CustomDictionary<T1> Lib;
 
         protected abstract string CsvPath { get; }
@@ -53,6 +54,82 @@ namespace Managers
         {
             base.Awake();
             Load();
+        }
+
+
+        [CanBeNull]
+        public T1 GetById(string id)
+        {
+            if (id == null) return null;
+
+            Lib.TryGetValue(id, out var v);
+            return v;
+        }
+
+
+        /// <summary>
+        /// 注意如果所需数目太大超过所有可能选项，则只会产生所有可能选项，即达不到输入数目
+        /// </summary>
+        /// <param name="rank"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public virtual T1[] RollT(Rank rank, int count = 1)
+        {
+            if (count == 0)
+            {
+                return new T1[0];
+            }
+
+            var candidates = GetCandidates(rank);
+            if (candidates.Count() <= count)
+            {
+                return candidates.ToArray();
+            }
+            else
+            {
+                return candidates
+                    .OrderBy((data => Lib.Random.Next()))
+                    .Take(count).ToArray();
+            }
+        }
+
+        /// <summary>
+        /// 随机卡牌过程如下，首先尝试生成最高级卡牌，再依次向下尝试生成
+        /// </summary>
+        /// <param name="rank">最低生成等级</param>
+        /// <param name="luckyChance"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        [Button]
+        public virtual T1[] GenerateT(Rank rank, float luckyChance, int count = 1)
+        {
+            IEnumerable<T1> s = new LinkedList<T1>();
+            var slotLeft = count;
+            var random = Lib.Random;
+            for (var i = Lib.RankLevels - 1; i >= (int)rank; i--)
+            {
+                var rand = random.NextDouble();
+                var p = luckyChance * Math.Pow(LuckPassRate, i - (int)rank);
+
+                //二项分布
+                var bin = new MathNet.Numerics.Distributions.Binomial(p, slotLeft, random);
+                var k = 0;
+                //二项分布的概率累计函数
+                while (rand > bin.CumulativeDistribution(k))
+                {
+                    k += 1;
+                }
+
+                var chosen = RollT((Rank)i + 1, k);
+                s = s.Concat(chosen);
+
+                slotLeft -= k;
+                if (slotLeft == 0) break;
+            }
+
+            s = s.Concat(RollT(rank, slotLeft));
+
+            return s.ToArray();
         }
 
         protected virtual Sprite GetIcon(string id)
@@ -103,15 +180,10 @@ namespace Managers
         [CanBeNull]
         protected abstract T1 Line2T(ICsvLine line);
 
-        private const BindingFlags Flag = (BindingFlags.NonPublic) | (BindingFlags.Instance);
-
         protected virtual void Bind(T1 v, MethodInfo method, EffectAttribute attr)
         {
             v.Fs[attr.timing] = method;
         }
-
-
-        protected abstract T1 CreateTest(string id, MethodInfo method, EffectAttribute attr);
 
 
         private void FuncMatch()
@@ -126,103 +198,14 @@ namespace Managers
                         Bind(v, method, attr);
                         //v.Fs[attr.timing] = method;
                     }
-                    else
-                    {
-#if UNITY_EDITOR
-                        Lib[attr.id] = CreateTest(attr.id, method, attr);
-                        Debug.LogWarning($"test {typeof(T1).Name} {attr.id} Loaded");
-                        /*var t = new T1 { Id = attr.id};
-                        t.Fs[attr.timing] = method;
-                        Lib[attr.id.ToLower()] = t;*/
-#endif
-                    }
                 }
             }
-        }
-
-
-        [CanBeNull]
-        public T1 GetById(string id)
-        {
-            if (id == null) return null;
-
-            Lib.TryGetValue(id, out var v);
-            return v;
         }
 
 
         protected virtual IEnumerable<T1> GetCandidates(Rank rank)
         {
             return Lib.Values.Where((data => data.Rank == rank));
-        }
-
-
-        /// <summary>
-        /// 注意如果所需数目太大超过所有可能选项，则只会产生所有可能选项，即达不到输入数目
-        /// </summary>
-        /// <param name="rank"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public virtual T1[] RollT(Rank rank, int count = 1)
-        {
-            if (count == 0)
-            {
-                return new T1[0];
-            }
-
-            var candidates = GetCandidates(rank);
-            if (candidates.Count() <= count)
-            {
-                return candidates.ToArray();
-            }
-            else
-            {
-                return candidates
-                    .OrderBy((data => Lib.Random.Next()))
-                    .Take(count).ToArray();
-            }
-        }
-
-
-        private const float LuckPassRate = .5f;
-
-        /// <summary>
-        /// 随机卡牌过程如下，首先尝试生成最高级卡牌，再依次向下尝试生成
-        /// </summary>
-        /// <param name="rank">最低生成等级</param>
-        /// <param name="luckyChance"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        [Button]
-        public virtual T1[] GenerateT(Rank rank, float luckyChance, int count = 1)
-        {
-            IEnumerable<T1> s = new LinkedList<T1>();
-            var slotLeft = count;
-            var random = Lib.Random;
-            for (var i = Lib.RankLevels - 2; i >= (int)rank; i--)
-            {
-                var rand = random.NextDouble();
-                var p = luckyChance * Math.Pow(LuckPassRate, i - (int)rank);
-
-                //二项分布
-                var bin = new MathNet.Numerics.Distributions.Binomial(p, slotLeft, random);
-                var k = 0;
-                //二项分布的概率累计函数
-                while (rand > bin.CumulativeDistribution(k))
-                {
-                    k += 1;
-                }
-
-                var chosen = RollT((Rank)i + 1, k);
-                s = s.Concat(chosen);
-
-                slotLeft -= k;
-                if (slotLeft == 0) break;
-            }
-
-            s = s.Concat(RollT(rank, slotLeft));
-
-            return s.ToArray();
         }
 
         public bool ContainsKey(string id)

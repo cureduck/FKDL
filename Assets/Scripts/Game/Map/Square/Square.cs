@@ -70,39 +70,6 @@ namespace Game
 
         public void UpdateFace()
         {
-            /*if (!Data.Revealed)
-            {
-                SetContent("null", "");
-                return;
-            }*/
-
-            /*switch (Data.SquareState)
-            {
-                case SquareState.UnRevealed:
-                    _animator.SetTrigger("UnReveal");
-                    SetContent("empty", "", null);
-                    var t = Mask.color;
-                    t.a = 1f;
-                    Mask.color = t;
-                    return;
-                case SquareState.Done:
-                    _animator.SetTrigger("Done");
-                    //SetContent("empty", "", new Color(.5f, .5f, .5f, .6f), null);
-                    if (GameManager.Instance.Focus != this)
-                    {
-                        Mask.gameObject.SetActive(true);
-                    }
-                    var t2 = Mask.color;
-                    t2.a = .95f;
-                    Mask.color = t2;
-                    break;
-                case SquareState.Revealed:
-                    Box.gameObject.SetActive(true);
-                    Mask.gameObject.SetActive(false);
-                    break;
-                
-            }*/
-
             switch (Data.SquareState)
             {
                 case SquareState.UnRevealed:
@@ -172,7 +139,21 @@ namespace Game
                     SetContent("rock", d4.Cost.ToString());
                     break;
                 case DoorSaveData d5:
-                    SetContent("door", d5.Rank.ToString(), icon: lib["door"]);
+                    switch (d5.Rank)
+                    {
+                        case Rank.Normal:
+                            SetContent("copper door", " ", icon: lib["door"]);
+                            break;
+                        case Rank.Uncommon:
+                            SetContent("silver door", " ", icon: lib["door"]);
+                            break;
+                        case Rank.Rare:
+                            SetContent("gold door", " ", icon: lib["door"]);
+                            break;
+                        default:
+                            break;
+                    }
+
                     break;
                 case KeySaveData d6:
                     SetContent("key", d6.KeyRank.ToString());
@@ -181,19 +162,19 @@ namespace Game
                     SetContent("crystal", "", icon: lib["crystal"]);
                     break;
                 case ObsidianSaveData d8:
-                    SetContent("obsidian", "");
+                    SetContent(" ", "");
                     break;
                 case SupplySaveData d9:
                     switch (d9.Type)
                     {
                         case SupplyType.Spring:
-                            SetContent("spring", d9.Rank.ToString(RankDescType.DaZhongXiao), icon: lib["spring"]);
+                            SetContent("spring", d9.Rank.ToString(RankDescType.Size), icon: lib["spring"]);
                             break;
                         case SupplyType.Grassland:
-                            SetContent("grassland", d9.Rank.ToString(RankDescType.DaZhongXiao), icon: lib["grassland"]);
+                            SetContent("grassland", d9.Rank.ToString(RankDescType.Size), icon: lib["grassland"]);
                             break;
                         case SupplyType.Camp:
-                            SetContent("camp", d9.Rank.ToString(RankDescType.DaZhongXiao), icon: lib["camp"]);
+                            SetContent("camp", d9.Rank.ToString(RankDescType.Size), icon: lib["camp"]);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -213,8 +194,8 @@ namespace Game
                 case TravellerSaveData d13:
                     SetContent("traveler", "");
                     break;
-                case GoldSaveData d14:
-                    SetContent("gold", d14.Count.ToString(), icon: lib["gold"]);
+                case GuineasSaveData d14:
+                    SetContent("guineas", d14.Count.ToString(), icon: lib["gold"]);
                     break;
                 case TotemSaveData d15:
                     SetContent("totem", "");
@@ -248,6 +229,9 @@ namespace Game
 
         //public RectTransform Global;
 
+        private const float Normal = 2.5f;
+        private const float Large = 4f;
+
         private void SetSize(Placement d)
         {
             transform.position = new Vector3(d.x + Spacing / 2, -d.y + Spacing / 2, 0);
@@ -266,6 +250,9 @@ namespace Game
 
             OutLine.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
 
+            Id.GetComponent<TMP_Text>().fontSize = Normal;
+            Bonus.GetComponent<TMP_Text>().fontSize = Normal;
+
 
             if ((d.Height == 1) || (d.Width == 1))
             {
@@ -279,13 +266,15 @@ namespace Game
 
             if ((d.Height >= 3) && (d.Width >= 3))
             {
+                Id.GetComponent<TMP_Text>().fontSize = Large;
+                Bonus.GetComponent<TMP_Text>().fontSize = Large;
                 Id.GetComponent<RectTransform>().localPosition =
-                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f + .8f, -0.01f);
+                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f + 1f, -0.01f);
                 Bonus.GetComponent<RectTransform>().localPosition =
-                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f - .8f, -0.01f);
+                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f - 1f, -0.01f);
                 Icon.GetComponent<RectTransform>().localPosition =
                     new Vector3((d.Width - Spacing) / 2, -d.Height / 2f, 0);
-                Icon.transform.localScale = new Vector3(1.3f, 1.3f, 0);
+                Icon.transform.localScale = new Vector3(1.6f, 1.6f, 0);
                 return;
             }
 

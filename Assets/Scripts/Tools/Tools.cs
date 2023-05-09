@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using Game;
 using I2.Loc;
 using TMPro;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Tools
 {
@@ -78,7 +80,17 @@ namespace Tools
             var pattern = $"{pair.left}.+?{pair.right}";
             var match = Regex.Match(s, pattern);
             var ca = Regex.Replace(match.Value, "[<>]", "");
-            object result = new DataTable().Compute(ca, "");
+            object result;
+            try
+            {
+                result = new DataTable().Compute(ca, "");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                result = match.Value;
+            }
+
             return Regex.Replace(s, pattern, result.ToString());
         }
 
@@ -106,6 +118,12 @@ namespace Tools
             }
         }
 
+        public static void SetLocalizeParam(this Localize localize, string param, string values)
+        {
+            localize.GetComponent<LocalizationParamsManager>().SetParameterValue(param, values);
+        }
+
+
         public static void SetLocalizeParam(this Localize localize, IDictionary<string, string> dictionary)
         {
             foreach (var pair in dictionary)
@@ -125,11 +143,11 @@ namespace Tools
             localize.GetComponent<TMP_Text>().text = localize.GetComponent<TMP_Text>().text.RemoveBetween(pair);
         }
 
-        public static string ToString(this Rank @rank, RankDescType desc = RankDescType.HaoHuai)
+        public static string ToString(this Rank @rank, RankDescType desc = RankDescType.Quality)
         {
             switch (desc)
             {
-                case RankDescType.DaZhongXiao:
+                case RankDescType.Size:
                     switch (rank)
                     {
                         case Rank.Normal:
@@ -149,13 +167,41 @@ namespace Tools
                     }
 
                     break;
-                case RankDescType.HaoHuai:
+                case RankDescType.Quality:
                     return rank.ToString();
+                case RankDescType.Key:
+                    switch (rank)
+                    {
+                        case Rank.Normal:
+                            return "copper";
+                            break;
+                        case Rank.Uncommon:
+                            return "silver";
+                            break;
+                        case Rank.Rare:
+                            return "gold";
+                            break;
+                        default:
+                            return "";
+                            break;
+                    }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(desc), desc, null);
             }
 
             return null;
+        }
+
+        public static Texture2D ToTexture2D(this Sprite sprite)
+        {
+            var texture2D = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
+            var pixels = sprite.texture.GetPixels((int)sprite.textureRect.x,
+                (int)sprite.textureRect.y,
+                (int)sprite.textureRect.width,
+                (int)sprite.textureRect.height);
+            texture2D.SetPixels(pixels);
+            texture2D.Apply();
+            return texture2D;
         }
     }
 }

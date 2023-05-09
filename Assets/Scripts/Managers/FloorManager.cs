@@ -5,10 +5,7 @@ using System.Linq;
 using Game;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
-using JsonConvert = Newtonsoft.Json.JsonConvert;
-using Random = UnityEngine.Random;
 
 namespace Managers
 {
@@ -77,7 +74,7 @@ namespace Managers
             var f = JsonConvert.SerializeObject(floor, settings: new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
-                //Formatting = Formatting.Indented
+                Formatting = Formatting.Indented
             });
 
             if (!Directory.Exists(Path.Combine(FloorPath, floor.FloorName)))

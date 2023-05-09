@@ -42,6 +42,7 @@ namespace Managers
             private set => GameDataManager.Instance.SecondaryData = value;
         }
 
+
         public bool InBattle => (Focus?.Data is EnemySaveData e) && (e.IsAlive);
 
         private void Start()
@@ -60,6 +61,11 @@ namespace Managers
                     LoadFromSave();
                 }
             }
+        }
+
+        public Square FindStartSquare()
+        {
+            return squares.Find(square => square.Data is StartSaveData);
         }
 
 
@@ -122,7 +128,7 @@ namespace Managers
 
         public void RollForRelic(Rank rank)
         {
-            var skills = RelicManager.Instance.GenerateT(rank, PlayerData.LuckyChance, 3);
+            var skills = RelicManager.Instance.RollT(rank, 3);
 
             var offers = skills.Select((s => new Offer(s)));
 

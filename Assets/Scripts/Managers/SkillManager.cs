@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using Csv;
 using Game;
-using I2.Loc;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
-using Tools;
-using UnityEngine;
-using Random = System.Random;
-
 
 namespace Managers
 {
@@ -45,12 +34,6 @@ namespace Managers
         {
             if (attr.alwaysActive) v.AlwaysActiveTiming.Add(attr.timing);
             base.Bind(v, method, attr);
-        }
-
-
-        protected override Skill CreateTest(string id, MethodInfo method, EffectAttribute attr)
-        {
-            return new Skill(Rank.Normal, id);
         }
 
 #if UNITY_EDITOR
