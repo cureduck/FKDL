@@ -2,6 +2,7 @@
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Tools;
 using UnityEngine;
 using Random = System.Random;
 
@@ -9,28 +10,24 @@ namespace Game
 {
     public class SecondaryData : SaveData
     {
-        [JsonIgnore] public static string _savePath => Application.persistentDataPath + "/SecondarySaveData.json";
+        public readonly List<string> DiscoveredRelics;
+        [JsonIgnore] public Random CurCardRandom;
 
-        public Dictionary<Rank, int> SkillPoint;
+        [JsonIgnore] public Random CurGameRandom;
+        public int InitCardSeed;
+
+        public int InitGameSeed;
+        public int InitRelicSeed;
+        [JsonIgnore] public Random PotionRandom;
+        public int PotionSeed;
+
+        public string[] Prof;
+        [JsonIgnore] public Random RelicRandom;
 
         public int RemoveSkillPoint;
 
-        public string[] Prof;
+        public Dictionary<Rank, int> SkillPoint;
 
-        public int InitGameSeed;
-        public int InitCardSeed;
-        public int InitRelicSeed;
-        public int PotionSeed;
-
-        public Random CurGameRandom;
-        public Random CurCardRandom;
-        public Random RelicRandom;
-        public Random PotionRandom;
-
-        public readonly List<string> DiscoveredRelics;
-
-
-        [JsonConstructor]
         public SecondaryData()
         {
             SkillPoint = new Dictionary<Rank, int>
@@ -43,10 +40,55 @@ namespace Game
             DiscoveredRelics = new List<string>();
         }
 
+
+        [JsonConstructor]
+        public SecondaryData(RandomState gameRandomState, RandomState cardRandomState, RandomState relicRandomState,
+            RandomState potionRandomState) : this()
+        {
+            GameRandomState = gameRandomState;
+            CardRandomState = cardRandomState;
+            RelicRandomState = relicRandomState;
+            PotionRandomState = potionRandomState;
+        }
+
+        [JsonIgnore] public static string _savePath => Application.persistentDataPath + "/SecondarySaveData.json";
+
+        public RandomState GameRandomState
+        {
+            get => CurGameRandom.Save();
+            set => CurGameRandom = value.Restore();
+        }
+
+        public RandomState CardRandomState
+        {
+            get => CurCardRandom.Save();
+            set => CurCardRandom = value.Restore();
+        }
+
+        public RandomState RelicRandomState
+        {
+            get => RelicRandom.Save();
+            set => RelicRandom = value.Restore();
+        }
+
+        public RandomState PotionRandomState
+        {
+            get => PotionRandom.Save();
+            set => PotionRandom = value.Restore();
+        }
+
         public void Save()
         {
             Save(_savePath);
         }
+
+        [Button]
+        public void SaveToInit()
+        {
+            var path = Application.streamingAssetsPath + "/SecondarySaveData.json";
+            Save(path);
+        }
+
 
         public static SecondaryData LoadFromInit()
         {
@@ -56,6 +98,17 @@ namespace Game
         public static SecondaryData LoadFromSave()
         {
             return Load(_savePath);
+        }
+
+
+        private static SecondaryData CreateDefault()
+        {
+            return new SecondaryData();
+        }
+
+        public static SecondaryData GetOrCreate()
+        {
+            return GetOrCreate(CreateDefault, _savePath);
         }
 
 
@@ -75,20 +128,17 @@ namespace Game
             PotionRandom = new Random((int)Time.time);
 
 #endif
+        }
 
+        public void SetRandom()
+        {
             RelicManager.Instance.SetRandom(RelicRandom);
             CrystalManager.Instance.Lib.Random = CurGameRandom;
             SkillManager.Instance.SetRandom(CurCardRandom);
             PotionManager.Instance.SetRandom(PotionRandom);
             BuffManager.Instance.SetRandom(CurGameRandom);
-
-            SkillPoint = new Dictionary<Rank, int>
-            {
-                [Rank.Normal] = 0,
-                [Rank.Uncommon] = 0,
-                [Rank.Rare] = 0
-            };
         }
+
 
         public static SecondaryData Load(string path)
         {

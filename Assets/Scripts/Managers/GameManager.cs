@@ -144,6 +144,7 @@ namespace Managers
                 PlayerData = PlayerData.LoadFromSave();
                 SecondaryData = SecondaryData.LoadFromSave();
                 SecondaryData.LoadFromSave();
+                SecondaryData.SetRandom();
                 Map = Map.LoadFromSave();
                 PlayerData.BroadCastUpdated();
                 LoadMap();
@@ -162,6 +163,7 @@ namespace Managers
         public void LoadFromInit()
         {
             SecondaryData.Init();
+            SecondaryData.SetRandom();
             PlayerData = PlayerData.LoadFromInit();
             PlayerData.BroadCastUpdated();
             Map = Map.LoadFromInit();
@@ -170,9 +172,6 @@ namespace Managers
             GameLoaded?.Invoke();
             //GameManager.Instance.PlayerData.Gain(10000);
             //GC.Collect();
-#if UNITY_EDITOR
-            Debug.Log(((SkillManager)SkillManager.Instance).Available.Count);
-#endif
         }
 
         [Button]

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Csv;
 using Game;
@@ -36,34 +37,10 @@ namespace Managers
             base.Bind(v, method, attr);
         }
 
-#if UNITY_EDITOR
-
-
-        public List<string> Available = new List<string>();
-
-        public override Skill[] RollT(Rank rank, int count = 1)
+        protected override IEnumerable<Skill> GetCandidates(Rank rank)
         {
-            var s = base.RollT(rank, count);
-            foreach (var ss in s)
-            {
-                Available.Add(ss.Id);
-            }
-
-            return s;
+            return base.GetCandidates(rank)
+                .Where((skill => GameDataManager.Instance.SecondaryData.Prof.Contains(skill.Pool)));
         }
-
-
-        public override Skill[] GenerateT(Rank rank, float luckyChance, int count = 1)
-        {
-            var skills = base.GenerateT(rank, luckyChance, count);
-            foreach (var ss in skills)
-            {
-                Available.Add(ss.Id);
-            }
-
-            return skills;
-        }
-
-#endif
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Managers;
-using UnityEngine;
 
 namespace Game
 {
@@ -9,12 +8,13 @@ namespace Game
     {
         public const int MaxTimes = 3;
 
-        public int TimesLeft;
-        public Rank Rank;
-        public int Cost;
-
         private readonly Dictionary<Rank, int> _cost = new Dictionary<Rank, int>
             { { Rank.Normal, 3 }, { Rank.Rare, 6 }, { Rank.Uncommon, 9 }, { Rank.Ultra, 12 } };
+
+        public int Cost;
+        public Rank Rank;
+
+        public int TimesLeft;
 
         public override void Init()
         {
@@ -31,7 +31,7 @@ namespace Game
             if (Player.Gold >= Cost)
             {
                 Player.Gain(-Cost);
-                if (Random.Range(0f, 1f) > .5f)
+                if (SData.CurGameRandom.NextDouble() > .5f)
                 {
                     var potions = PotionManager.Instance.RollT(Rank, 3);
                     var offers = potions.Select((s => new Offer(s)));

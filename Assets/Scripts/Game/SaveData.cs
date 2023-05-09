@@ -1,7 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using JsonConvert = Newtonsoft.Json.JsonConvert;
+using UnityEngine;
 
 namespace Game
 {
@@ -21,9 +22,37 @@ namespace Game
         {
             var f = JsonConvert.SerializeObject(this, new JsonSerializerSettings
             {
-                TypeNameHandling = TypeNameHandling.All
+                TypeNameHandling = TypeNameHandling.All,
+                Formatting = Formatting.Indented
             });
             File.WriteAllText(path, f);
+        }
+
+
+        protected static T GetOrCreate<T>(Func<T> create, string path) where T : SaveData
+        {
+            T so;
+            if (File.Exists(path))
+            {
+                try
+                {
+                    so = Load<T>(path);
+                }
+                catch (Exception e)
+                {
+                    File.Delete(path);
+                    so = create();
+                    so.Save(path);
+                    Debug.Log(e);
+                }
+            }
+            else
+            {
+                so = create();
+                so.Save(path);
+            }
+
+            return so;
         }
     }
 }

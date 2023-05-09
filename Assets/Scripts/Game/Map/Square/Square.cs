@@ -251,8 +251,7 @@ namespace Game
             OutLine.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
 
             Id.GetComponent<TMP_Text>().fontSize = Normal;
-            Bonus.GetComponent<TMP_Text>().fontSize = Normal;
-
+            //Bonus.GetComponent<TMP_Text>().fontSize = Normal;
 
             if ((d.Height == 1) || (d.Width == 1))
             {
@@ -267,7 +266,7 @@ namespace Game
             if ((d.Height >= 3) && (d.Width >= 3))
             {
                 Id.GetComponent<TMP_Text>().fontSize = Large;
-                Bonus.GetComponent<TMP_Text>().fontSize = Large;
+                //Bonus.GetComponent<TMP_Text>().fontSize = Large;
                 Id.GetComponent<RectTransform>().localPosition =
                     new Vector3((d.Width - Spacing) / 2, -d.Height / 2f + 1f, -0.01f);
                 Bonus.GetComponent<RectTransform>().localPosition =

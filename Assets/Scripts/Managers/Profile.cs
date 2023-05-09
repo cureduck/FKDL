@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Game;
 using UnityEngine;
 
@@ -24,27 +23,7 @@ namespace Managers
 
         public static Profile GetOrCreate()
         {
-            Profile so;
-            if (File.Exists(_path))
-            {
-                try
-                {
-                    so = Load<Profile>(_path);
-                }
-                catch (Exception e)
-                {
-                    File.Delete(_path);
-                    Debug.LogError(e);
-                    throw;
-                }
-            }
-            else
-            {
-                so = NewProfile();
-                so.Save(_path);
-            }
-
-            return so;
+            return GetOrCreate(NewProfile, _path);
         }
 
         public void Save()
