@@ -1,8 +1,6 @@
 ﻿using Game;
 using Managers;
-using TMPro;
 using UnityEngine;
-using DG.Tweening;
 
 namespace UI
 {
@@ -24,18 +22,18 @@ namespace UI
                 Init();
                 relicListView.Init();
                 PlayerData playerData = GameManager.Instance.PlayerData;
-                if (GameDataManager.Instance.SecondaryData.Prof == null ||
-                    GameDataManager.Instance.SecondaryData.Prof.Length < 3)
+                if (GameDataManager.Instance.SecondaryData.Profs == null ||
+                    GameDataManager.Instance.SecondaryData.Profs.Length < 3)
                 {
-                    GameDataManager.Instance.SecondaryData.Prof = new string[3] { "CUR", "BAR", "KNI" };
+                    GameDataManager.Instance.SecondaryData.Profs = new string[3] { "CUR", "BAR", "KNI" };
                 }
 
-                for (int i = 0; i < GameDataManager.Instance.SecondaryData.Prof.Length; i++)
+                for (int i = 0; i < GameDataManager.Instance.SecondaryData.Profs.Length; i++)
                 {
-                    Debug.Log(GameDataManager.Instance.SecondaryData.Prof[i]);
+                    Debug.Log(GameDataManager.Instance.SecondaryData.Profs[i]);
                 }
 
-                playerData.profInfo = GameDataManager.Instance.SecondaryData.Prof;
+                playerData.profInfo = GameDataManager.Instance.SecondaryData.Profs;
                 //playerData.OnUpdated +=
 
                 /*playerData.Buffs.Add_Test(new BuffData("Blood", 1));

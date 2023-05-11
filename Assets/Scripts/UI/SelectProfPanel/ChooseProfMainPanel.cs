@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UI;
+﻿using System.Collections.Generic;
+using EasyTransition;
 using I2.Loc;
 using Managers;
-using System;
-using EasyTransition;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class ChooseProfMainPanel : MonoBehaviour
 {
@@ -25,13 +22,20 @@ public class ChooseProfMainPanel : MonoBehaviour
 
     private string[] curCanSelectProfs;
 
-    private string[] profDatas;
-
     #region 内部自用
 
     private List<int> curSelectViewIndex;
 
     #endregion
+
+    private string[] profDatas;
+
+    private void Start()
+    {
+        Init();
+        curCanSelectProfs = new string[] { "ALC", "ASS", "BAR", "BLI", "CUR", "KNI", "MAG" };
+        UpdateView();
+    }
 
     public void Init()
     {
@@ -41,13 +45,6 @@ public class ChooseProfMainPanel : MonoBehaviour
         chooseProfInfoView.gameObject.SetActive(false);
         curSelectViewIndex = new List<int>();
         profDatas = new string[3];
-    }
-
-    private void Start()
-    {
-        Init();
-        curCanSelectProfs = new string[] { "ALC", "ASS", "BAR", "BLI", "CUR", "KNI", "MAG" };
-        UpdateView();
     }
 
     private void UpdateView()
@@ -137,7 +134,7 @@ public class ChooseProfMainPanel : MonoBehaviour
     private void StartGame()
     {
         GameDataManager.Instance.SecondaryData = new Game.SecondaryData();
-        GameDataManager.Instance.SecondaryData.Prof = profDatas;
+        GameDataManager.Instance.SecondaryData.Profs = profDatas;
         FindObjectOfType<TransitionManager>().LoadScene("MainScene", "DiagonalRectangleGrid", .2f);
         AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
     }

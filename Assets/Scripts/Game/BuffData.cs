@@ -1,20 +1,33 @@
 ﻿using System;
-using System.Collections;
-using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UI;
-using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 namespace Game
 {
     public class BuffData : BpData<Buff>, IEffectContainer, ICloneable, IActivated
     {
+        [JsonConstructor]
+        public BuffData(string id, int curLv)
+        {
+            Id = id.ToLower();
+            CurLv = curLv;
+        }
+
+        public BuffData()
+        {
+        }
+
         [ShowInInspector] public int CurLv { get; private set; }
         [JsonIgnore] public override Buff Bp => BuffManager.Instance.TryGetById(Id, out var buff) ? buff : null;
+
+        public event Action Activated;
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
 
 
         public void StackChange(int value)
@@ -39,17 +52,6 @@ namespace Game
             }
         }
 
-        [JsonConstructor]
-        public BuffData(string id, int curLv)
-        {
-            Id = id.ToLower();
-            CurLv = curLv;
-        }
-
-        public BuffData()
-        {
-        }
-
         public event Action Removed;
 
         public void Remove()
@@ -57,12 +59,20 @@ namespace Game
             Removed?.Invoke();
         }
 
-        public event Action Activated;
-
 
         public override string ToString()
         {
             return $"{Id}:{CurLv}";
+        }
+
+        public static BuffData Leakage(int stack = 1)
+        {
+            return new BuffData("Leakage", stack);
+        }
+
+        public static BuffData PPlus(int stack = 1)
+        {
+            return new BuffData("PPlus", stack);
         }
 
 
@@ -228,21 +238,59 @@ namespace Game
             return skill;
         }
 
+        [Effect("Lucky", Timing.OnGet)]
+        private void Lucky(FighterData player)
+        {
+            ((PlayerData)player).LuckyChance += .5f;
+        }
+
+        [Effect("Lucky", Timing.OnLose)]
+        private void Lucky_lose(FighterData player)
+        {
+            ((PlayerData)player).LuckyChance -= .5f;
+        }
+
+
+        /// <summary>
+        /// 攻击倍率+0.5
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="f1"></param>
+        /// <param name="f2"></param>
+        /// <returns></returns>
+        [Effect("Power", Timing.OnAttack)]
+        private Attack Power(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.Multi += .5f;
+            return attack;
+        }
+
+        /// <summary>
+        /// 恢复值加倍
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="f1"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
+        [Effect("Vitality", Timing.OnHeal)]
+        private BattleStatus Vitality(BattleStatus status, FighterData f1, string kw)
+        {
+            status *= 2;
+            return status;
+        }
+
+        /// <summary>
+        /// 防御时：恢复和损失生命值等量的魔法值
+        /// </summary>
+        [Effect("Inspire", Timing.OnDefendSettle, priority = 100)]
+        private Attack Inspire(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (f2 == null || !f2.IsAlive) return attack;
+            Activated?.Invoke();
+            f1.Heal(BattleStatus.Mp(attack.SumDmg));
+            return attack;
+        }
+
         #endregion
-
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
-
-        public static BuffData Leakage(int stack = 1)
-        {
-            return new BuffData("Leakage", stack);
-        }
-
-        public static BuffData PPlus(int stack = 1)
-        {
-            return new BuffData("PPlus", stack);
-        }
     }
 }

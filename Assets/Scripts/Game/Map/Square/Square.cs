@@ -192,13 +192,13 @@ namespace Game
                     CameraMan.Instance.Target = transform.position;
                     break;
                 case TravellerSaveData d13:
-                    SetContent("traveler", "");
+                    SetContent("traveler", "", icon: lib["traveller"]);
                     break;
                 case GuineasSaveData d14:
                     SetContent("guineas", d14.Count.ToString(), icon: lib["gold"]);
                     break;
                 case TotemSaveData d15:
-                    SetContent("totem", "");
+                    SetContent("totem", "", icon: lib["totem"]);
                     break;
             }
         }
@@ -230,7 +230,7 @@ namespace Game
         //public RectTransform Global;
 
         private const float Normal = 2.5f;
-        private const float Large = 4f;
+        private const float Large = 3.5f;
 
         private void SetSize(Placement d)
         {
@@ -299,6 +299,10 @@ namespace Game
             if (!text.IsNullOrWhitespace())
             {
                 Bonus.GetComponent<Localize>().SetTerm(text.ToLower());
+            }
+            else
+            {
+                Bonus.text = "";
             }
 
             Icon.sprite = icon;

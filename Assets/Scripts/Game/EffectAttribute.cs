@@ -4,6 +4,12 @@ namespace Game
 {
     public class EffectAttribute : Attribute
     {
+        public bool alwaysActive;
+
+        public string id;
+        public int priority;
+        public Timing timing;
+
         public EffectAttribute(string id, Timing timing, int priority = 1, bool alwaysActive = false)
         {
             this.id = id;
@@ -11,11 +17,6 @@ namespace Game
             this.priority = priority;
             this.alwaysActive = alwaysActive;
         }
-
-        public string id;
-        public Timing timing;
-        public int priority;
-        public bool alwaysActive;
     }
 
 
@@ -168,6 +169,6 @@ namespace Game
         /// <summary>
         /// fighter
         /// </summary>
-        OnUnGet
+        OnLose
     }
 }

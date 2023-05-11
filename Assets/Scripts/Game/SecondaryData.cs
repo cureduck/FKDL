@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Tools;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = System.Random;
 
 namespace Game
@@ -14,14 +15,14 @@ namespace Game
         [JsonIgnore] public Random CurCardRandom;
 
         [JsonIgnore] public Random CurGameRandom;
-        public int InitCardSeed;
 
         public int InitGameSeed;
-        public int InitRelicSeed;
-        [JsonIgnore] public Random PotionRandom;
-        public int PotionSeed;
 
-        public string[] Prof;
+        [JsonIgnore] public Random PotionRandom;
+
+        [FormerlySerializedAs("Prof")] public string[] Profs;
+
+
         [JsonIgnore] public Random RelicRandom;
 
         public int RemoveSkillPoint;
@@ -51,7 +52,14 @@ namespace Game
             PotionRandomState = potionRandomState;
         }
 
-        [JsonIgnore] public static string _savePath => Application.persistentDataPath + "/SecondarySaveData.json";
+        public SecondaryData(int initGameSeed) : this()
+        {
+            InitGameSeed = initGameSeed;
+            Init();
+        }
+
+
+        [JsonIgnore] private static string _savePath => Application.persistentDataPath + "/SecondarySaveData.json";
 
         public RandomState GameRandomState
         {
@@ -103,7 +111,7 @@ namespace Game
 
         private static SecondaryData CreateDefault()
         {
-            return new SecondaryData();
+            return new SecondaryData(0);
         }
 
         public static SecondaryData GetOrCreate()
@@ -114,20 +122,10 @@ namespace Game
 
         public void Init()
         {
-#if UNITY_EDITOR
             CurGameRandom = new Random(InitGameSeed);
-            CurCardRandom = new Random(InitCardSeed);
-            RelicRandom = new Random(InitRelicSeed);
-            PotionRandom = new Random(PotionSeed);
-#endif
-
-#if !UNITY_EDITOR
-            CurGameRandom = new Random((int)Time.time);
-            CurCardRandom = new Random((int)Time.time);
-            RelicRandom = new Random((int)Time.time);
-            PotionRandom = new Random((int)Time.time);
-
-#endif
+            CurCardRandom = new Random(CurGameRandom.Next());
+            RelicRandom = new Random(CurGameRandom.Next());
+            PotionRandom = new Random(CurGameRandom.Next());
         }
 
         public void SetRandom()
@@ -140,7 +138,7 @@ namespace Game
         }
 
 
-        public static SecondaryData Load(string path)
+        private static SecondaryData Load(string path)
         {
             return Load<SecondaryData>(path);
         }

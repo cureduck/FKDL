@@ -1,10 +1,7 @@
-﻿using I2.Loc;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using Game;
+﻿using Game;
+using I2.Loc;
 using Managers;
+using UnityEngine;
 
 public class EnemySkillInfoView : MonoBehaviour
 {
@@ -22,7 +19,7 @@ public class EnemySkillInfoView : MonoBehaviour
         Skill curSkill = SkillManager.Instance.GetById(skillData.Id);
         if (curSkill != null)
         {
-            skillName.SetTerm(curSkill.Pool);
+            skillName.SetTerm(curSkill.Prof);
         }
         else
         {

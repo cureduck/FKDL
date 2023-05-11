@@ -47,6 +47,7 @@ namespace Managers
 
         private const float LuckPassRate = .5f;
         [ShowInInspector] protected CustomDictionary<T1> Lib;
+        protected SecondaryData SData => GameDataManager.Instance.SecondaryData;
 
         protected abstract string CsvPath { get; }
 
@@ -106,7 +107,7 @@ namespace Managers
             IEnumerable<T1> s = new LinkedList<T1>();
             var slotLeft = count;
             var random = Lib.Random;
-            for (var i = Lib.RankLevels - 1; i >= (int)rank; i--)
+            for (var i = Lib.RankLevels - 2; i >= (int)rank; i--)
             {
                 var rand = random.NextDouble();
                 var p = luckyChance * Math.Pow(LuckPassRate, i - (int)rank);

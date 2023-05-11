@@ -1,5 +1,4 @@
 ﻿using System;
-using Managers;
 using Unity.Mathematics;
 
 namespace Game
@@ -16,6 +15,21 @@ namespace Game
         public int PDef;
 
         public int Gold;
+
+
+        public BattleStatus(int maxHp = 0, int curHp = 0, int maxMp = 0, int curMp = 0, int mAtk = 0, int pAtk = 0,
+            int mDef = 0, int pDef = 0, int gold = 0)
+        {
+            MaxHp = maxHp;
+            CurHp = curHp;
+            MaxMp = maxMp;
+            CurMp = curMp;
+            MAtk = mAtk;
+            PAtk = pAtk;
+            MDef = mDef;
+            PDef = pDef;
+            Gold = gold;
+        }
 
 
         public BattleStatus LvUp(int lv)
@@ -123,15 +137,20 @@ namespace Game
         {
             return new BattleStatus
             {
-                MaxHp = (int)(s1.MaxHp * v),
-                CurHp = (int)(s1.CurHp * v),
-                MaxMp = (int)(s1.MaxMp * v),
-                CurMp = (int)(s1.CurMp * v),
-                MAtk = (int)(s1.MAtk * v),
-                PAtk = (int)(s1.PAtk * v),
-                MDef = (int)(s1.MDef * v),
-                PDef = (int)(s1.PDef * v)
+                MaxHp = (int)math.round(s1.MaxHp * v),
+                CurHp = (int)math.round(s1.CurHp * v),
+                MaxMp = (int)math.round(s1.MaxMp * v),
+                CurMp = (int)math.round(s1.CurMp * v),
+                MAtk = (int)math.round(s1.MAtk * v),
+                PAtk = (int)math.round(s1.PAtk * v),
+                MDef = (int)math.round(s1.MDef * v),
+                PDef = (int)math.round(s1.PDef * v)
             };
+        }
+
+        public static BattleStatus operator /(BattleStatus s1, float v)
+        {
+            return s1 * (1 / v);
         }
 
 
@@ -164,17 +183,75 @@ namespace Game
         }
 
 
-        /// <summary>
-        /// 自动将输入转为负值
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         public static BattleStatus Mp(int value)
         {
             return new BattleStatus
             {
-                CurMp = +value
+                CurMp = value
             };
+        }
+
+        private const int K = 3;
+
+        public static BattleStatus GetProfessionUpgrade(string prof)
+        {
+            prof = prof.ToLower();
+            switch (prof)
+            {
+                case "bar":
+                    return new BattleStatus
+                    {
+                        PAtk = 1,
+                        MAtk = -1
+                    };
+                case "mag":
+                    return new BattleStatus
+                    {
+                        MAtk = 1,
+                        MDef = 1,
+                        PAtk = -1,
+                        MaxMp = K
+                    };
+                case "ass":
+                    return new BattleStatus
+                    {
+                        PAtk = 1,
+                        MaxHp = -2 * K
+                    };
+                case "kni":
+                    return new BattleStatus
+                    {
+                        MDef = 1,
+                        PDef = 1
+                    };
+                case "alc":
+                    return new BattleStatus
+                    {
+                        MaxHp = 4 * K
+                    };
+                case "bli":
+                    return new BattleStatus
+                    {
+                        PAtk = 1,
+                    };
+                case "cur":
+                    return new BattleStatus
+                    {
+                        PAtk = 1,
+                        MAtk = 1,
+                        MaxHp = -2 * K,
+                        MaxMp = -2 * K
+                    };
+                case "com":
+                    return new BattleStatus()
+                    {
+                        MaxHp = K,
+                        MaxMp = K
+                    };
+
+                default:
+                    return new BattleStatus();
+            }
         }
 
 

@@ -148,7 +148,7 @@ namespace UI
                     }
 
                     //Debug.Log(skill.Description);
-                    Prof?.SetTerm(skill.Pool);
+                    Prof?.SetTerm(skill.Prof);
                     Description?.SetTerm($"{skill.Id}_desc");
                     Description.SetLocalizeParam(
                         new string[] { "P1", "P2" },

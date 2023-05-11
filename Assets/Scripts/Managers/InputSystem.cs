@@ -77,7 +77,7 @@ namespace Managers
                 Camera.main.transform.position -= (Vector3)delta;*/
                 Camera.main.transform.position -= (Vector3)delta * DragRate * Camera.main.fieldOfView;
                 BG.transform.position -= (Vector3)delta * DragRate * 0.05f;
-                if (Vector3.Distance(Camera.main.transform.position, center) > 20f)
+                if (Vector3.Distance(Camera.main.transform.position, center) > 25f)
                 {
                     Camera.main.transform.position += (Vector3)delta * DragRate * Camera.main.fieldOfView;
                 }
@@ -99,8 +99,9 @@ namespace Managers
 
         private bool BeginDrag()
         {
+            if (!Input.GetMouseButton(1)) return false;
             center = GameManager.Instance.FindStartSquare().transform.position;
-            return Input.GetMouseButton(1);
+            return true;
         }
 
 

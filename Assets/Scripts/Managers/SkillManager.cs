@@ -18,7 +18,7 @@ namespace Managers
             var icon = GetIcon(id);
             return new Skill((Rank)int.Parse(line["Rarity"]), id, icon)
             {
-                Pool = line["Pool"],
+                Prof = line["Pool"],
                 Positive = bool.Parse(line["Positive"]),
                 BattleOnly = bool.Parse(line["BattleOnly"]),
                 MaxLv = int.Parse(line["MaxLv"]),
@@ -39,8 +39,8 @@ namespace Managers
 
         protected override IEnumerable<Skill> GetCandidates(Rank rank)
         {
-            return base.GetCandidates(rank)
-                .Where((skill => GameDataManager.Instance.SecondaryData.Prof.Contains(skill.Pool)));
+            var candidates = base.GetCandidates(rank);
+            return candidates.Where((skill => SData.Profs.Contains(skill.Prof.ToUpper())));
         }
     }
 }

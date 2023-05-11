@@ -1,4 +1,6 @@
-﻿using Managers;
+﻿using System.Linq;
+using Managers;
+using Sirenix.Utilities;
 
 namespace Game
 {
@@ -14,6 +16,12 @@ namespace Game
 
         public override void OnReact()
         {
+            var buff = Player.Buffs.FirstOrDefault(da => da.Bp.BuffType == BuffType.Bless);
+            if (buff != null && !buff.Id.IsNullOrWhitespace())
+            {
+                Player.RemoveBuff(buff);
+            }
+
             Player.AppliedBuff(new BuffData(BuffId, 1));
             base.OnReact();
             Destroyed();

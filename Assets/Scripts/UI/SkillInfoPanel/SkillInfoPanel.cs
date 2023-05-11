@@ -1,15 +1,20 @@
 ﻿using Game;
 using I2.Loc;
+using TMPro;
 using Tools;
 using UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 {
     [SerializeField] private Localize skillName;
     [SerializeField] private Localize costInfo;
     [SerializeField] private LocalizationParamsManager CostParamsManager;
-    [SerializeField] private Localize colddownInfo;
+
+    [FormerlySerializedAs("colddownInfo")] [SerializeField]
+    private Localize coolDownInfo;
+
     [SerializeField] private LocalizationParamsManager ColdDownParamsManager;
     [SerializeField] private Localize describe;
     [SerializeField] private LocalizationParamsManager DescParamsManager;
@@ -22,6 +27,9 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 
     private Camera mainCamera;
 
+
+    private DisplayMode displayMode => Input.GetKey(KeyCode.LeftAlt) ? DisplayMode.Detail : DisplayMode.Short;
+
     private void Start()
     {
         mainCamera = Camera.main;
@@ -30,6 +38,11 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyUp(KeyCode.LeftAlt))
+        {
+            UpdateUI();
+        }
+
         if (Data.worldTrans != null)
         {
             transform.position = mainCamera.WorldToScreenPoint(Data.worldTrans.transform.position);
@@ -68,16 +81,16 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
         }
         else
         {
-            Skill curSkilInfo = Data.skillData.Bp;
+            Skill curSkillInfo = Data.skillData.Bp;
 
-            skillName.SetTerm(curSkilInfo.Id);
-            if (curSkilInfo.Positive)
+            skillName.SetTerm(curSkillInfo.Id);
+            if (curSkillInfo.Positive)
             {
-                if (curSkilInfo.CostInfo.CostType == CostType.Hp)
+                if (curSkillInfo.CostInfo.CostType == CostType.Hp)
                 {
                     costInfo.SetTerm("HPCostInfo");
                 }
-                else if (curSkilInfo.CostInfo.CostType == CostType.Gold)
+                else if (curSkillInfo.CostInfo.CostType == CostType.Gold)
                 {
                     costInfo.SetTerm("GoldCostInfo");
                 }
@@ -86,7 +99,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                     costInfo.SetTerm("MPCostInfo");
                 }
 
-                CostParamsManager.SetParameterValue("VALUE", curSkilInfo.CostInfo.Value.ToString());
+                CostParamsManager.SetParameterValue("VALUE", curSkillInfo.CostInfo.Value.ToString());
             }
             else
             {
@@ -94,28 +107,45 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                 //costInfo.text = $"无消耗";
             }
 
-            describe.SetTerm($"{curSkilInfo.Id}_desc");
+            describe.SetTerm($"{curSkillInfo.Id}_desc");
             describe.SetLocalizeParam(
                 new[] { "P1", "P2", "CurLv" },
                 new[]
                 {
-                    curSkilInfo.Param1.ToString(), curSkilInfo.Param2.ToString(), Data.skillData.CurLv.ToString()
+                    curSkillInfo.Param1.ToString(), curSkillInfo.Param2.ToString(), Data.skillData.CurLv.ToString()
                 });
-            describe.RemoveBetween();
+            switch (displayMode)
+            {
+                case DisplayMode.Short:
+                    describe.Calculate();
+                    var s = describe.GetComponent<TMP_Text>().text;
+                    describe.RemoveBetween((@"\(", @"\)"));
+                    describe.RemoveBetween(('（', '）'));
+                    break;
+                case DisplayMode.Detail:
+                    describe.RemoveBetween();
+                    break;
+            }
 
-            colddownInfo.SetTerm("CooldownInfo");
-            ColdDownParamsManager.SetParameterValue("VALUE", curSkilInfo.Cooldown.ToString());
+            coolDownInfo.SetTerm("CooldownInfo");
+            ColdDownParamsManager.SetParameterValue("VALUE", curSkillInfo.Cooldown.ToString());
 
             maxLevel.SetTerm("MaxLvInfo");
-            MaxParamsManager.SetParameterValue("MaxLv", curSkilInfo.MaxLv.ToString());
+            MaxParamsManager.SetParameterValue("MaxLv", curSkillInfo.MaxLv.ToString());
             MaxParamsManager.SetParameterValue("CurLv", Data.skillData.CurLv.ToString());
 
             curBelongProf.SetTerm("SkillBelong");
-            CurBelongProfManager.SetParameterValue("VALUE", curSkilInfo.Pool);
+            CurBelongProfManager.SetParameterValue("VALUE", curSkillInfo.Prof);
 
 
-            positiveInfo.SetTerm(curSkilInfo.Positive ? "positive" : "passive");
+            positiveInfo.SetTerm(curSkillInfo.Positive ? "positive" : "passive");
         }
+    }
+
+    private enum DisplayMode
+    {
+        Short,
+        Detail
     }
 
     public class Args

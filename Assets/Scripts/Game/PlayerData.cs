@@ -186,7 +186,7 @@ namespace Game
                         }
                         else
                         {
-                            Skills[i].LvUp(this);
+                            Upgrade(Skills[i]);
                             DelayUpdate();
                             return true;
                         }

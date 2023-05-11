@@ -53,3 +53,7 @@ auto_split(r"../../StreamingAssets/RelicsAll.csv", r"../../StreamingAssets/Relic
                                                                                         r"/relics_loc.csv")
 auto_split(r"../../StreamingAssets/CrystalAll.csv", r"../../StreamingAssets/Crystal.csv", r"../../Localization"
                                                                                           r"/crystal_loc.csv")
+auto_split(r"../../StreamingAssets/BuffsAll.csv", r"../../StreamingAssets/Buffs.csv", r"../../Localization/buffs_loc"
+                                                                                      r".csv")
+auto_split(r"../../StreamingAssets/PotionsAll.csv", r"../../StreamingAssets/Potions.csv",
+           r"../../Localization/potions_loc.csv")

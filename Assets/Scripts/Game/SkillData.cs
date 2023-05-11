@@ -5,6 +5,7 @@ using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using Tools;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -35,6 +36,9 @@ namespace Game
         [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
 
 
+        [JsonIgnore] public bool InCoolDown => CooldownLeft > 0;
+
+
         public object Clone()
         {
             return MemberwiseClone();
@@ -52,9 +56,6 @@ namespace Game
             return base.MayAffect(timing, out priority);
         }
 
-        public event Action<FighterData> OnLvUp;
-        public event Action<FighterData> OnUnEquip;
-
 
         public void Load(Skill skill, int lv = 1)
         {
@@ -65,18 +66,6 @@ namespace Game
             Counter = 0;
         }
 
-
-        public void LvUp(FighterData fighter, int lv = 1)
-        {
-            CurLv += lv;
-
-            if (Bp.Fs.TryGetValue(Timing.OnLvUp, out var method))
-            {
-                method.Invoke(this, new object[] { fighter });
-            }
-
-            OnLvUp?.Invoke(fighter);
-        }
 
         /// <summary>
         /// 设置冷却时间
@@ -320,7 +309,7 @@ namespace Game
         [Effect("TNFB_ALC", Timing.SkillEffect)]
         private void TNFB_ALC2(FighterData fighter)
         {
-            fighter.Heal(BattleStatus.HP(10));
+            fighter.CoolDown();
         }
 
 
@@ -431,10 +420,9 @@ namespace Game
         {
             if (player.Engaging)
             {
-                ((PlayerData)player).ApplySelfBuff(new BuffData("Mplus", CurLv));
+                Activated?.Invoke();
+                ((PlayerData)player).ApplySelfBuff(new BuffData("mplus", (int)Usual));
             }
-
-            Activated?.Invoke();
         }
 
 
@@ -581,6 +569,7 @@ namespace Game
         private Attack CD_ASS2(Attack attack, FighterData fighter, FighterData enemy, int time)
         {
             fighter.ApplyBuff(new BuffData("poison", (int)Bp.Param1 * CurLv), enemy);
+            Activated?.Invoke();
             return attack;
         }
 
@@ -641,9 +630,10 @@ namespace Game
         {
             if (((PlayerData)fighter).Engaging)
             {
-                var g = enemy.Status.Gold * (Bp.Param1 + Bp.Param2 * CurLv);
+                var g = enemy.Status.Gold * Usual;
                 fighter.Gain((int)g);
                 enemy.Gain(-(int)g);
+                Activated?.Invoke();
             }
 
             return attack;
@@ -700,6 +690,26 @@ namespace Game
         }
 
         /// <summary>
+        /// 攻击时，附加等于敌人金币数的临时物攻
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("JY_ASS", Timing.OnAttack, priority = 100)]
+        private Attack JY_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (enemy != null)
+            {
+                attack.PAtk += enemy.Gold;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+
+        /// <summary>
         /// 攻击时：有<P1+P2*CurLv>(P1+P2*Lv)的概率当成交锋
         /// </summary>
         /// <param name="attack"></param>
@@ -748,6 +758,177 @@ namespace Game
         private Attack LX_MON(Attack attack, FighterData attacker, FighterData enemy)
         {
             return new Attack(attacker.Status.PAtk, attacker.Status.MAtk, multi: 2f, kw: "LX_MON");
+        }
+
+
+        [Effect("YWSY_ALC", Timing.OnUsePotion)]
+        private PotionData YWSY_ALC(PotionData potion, FighterData user)
+        {
+            var v = ((int)potion.Bp.Rank + 1) * Usual;
+            user.Strengthen(new BattleStatus(maxHp: (int)v));
+            return potion;
+        }
+
+        [Effect("TC_ALC", Timing.SkillEffect)]
+        private FighterData TC_ALC(FighterData fighter)
+        {
+            var p = (PlayerData)fighter;
+            foreach (var potion in p.Potions)
+            {
+                if (potion != null && !potion.Id.IsNullOrWhitespace() && potion.Count > 0)
+                {
+                    potion.Count += (int)Usual;
+                }
+            }
+
+            return fighter;
+        }
+
+        [Effect("XFYJ_ALC", Timing.OnUsePotion)]
+        private PotionData XFYJ_ALC(PotionData potion, FighterData user)
+        {
+            if (user.Skills.CooldownRandomSkill(1))
+            {
+                Activated?.Invoke();
+            }
+
+            return potion;
+        }
+
+
+        /// <summary>
+        /// 防御时：恢复已损失魔法值的<P1+P2*CurLv>%(P1+P2*Lv)
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("LZ_MAG", Timing.OnDefendSettle)]
+        private Attack LZ_MAG(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (enemy != null)
+            {
+                var v = fighter.Status.MaxMp - fighter.Status.CurMp;
+                fighter.Heal(BattleStatus.Mp((int)(v * Usual / 100)));
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        /// <summary>
+        /// 造成<P1+P2*CurLv> P1 + P2*Lv倍纯粹伤害
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("MBS_MAG", Timing.OnAttack, priority = -10000)]
+        private Attack MBS_MAG(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            attack = new Attack(cAtk: fighter.Status.MAtk, multi: Usual);
+            return attack;
+        }
+
+
+        /// <summary>
+        /// 攻击时：攻击段数+1，攻击倍率-<P1-P2*CurLv>（P1-P2*Lv）
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("XYLS_ASS", Timing.OnAttack, priority = 1)]
+        private Attack XYLS_ASS(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            attack.Combo += 1;
+            attack.Multi -= Bp.Param1 - Bp.Param2 * CurLv;
+            Activated?.Invoke();
+            return attack;
+        }
+
+
+        /// <summary>
+        /// 获取、升级主职业技能时：获得两次对应提升
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        [Effect("SYZG_COM", Timing.OnLvUp)]
+        private SkillData SYZG_COM(SkillData skill, FighterData player)
+        {
+            if (skill.Bp.IsMainProf())
+            {
+                player.Strengthen(BattleStatus.GetProfessionUpgrade(skill.Bp.Prof));
+                Activated?.Invoke();
+            }
+
+            return skill;
+        }
+
+        /// <summary>
+        /// 获取、升级副职业技能时：获得两次对应提升
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        [Effect("WHBM_COM", Timing.OnLvUp)]
+        private SkillData WHBM_COM(SkillData skill, FighterData player)
+        {
+            if (!skill.Bp.IsMainProf())
+            {
+                player.Strengthen(BattleStatus.GetProfessionUpgrade(skill.Bp.Prof));
+                Activated?.Invoke();
+            }
+
+            return skill;
+        }
+
+        /// <summary>
+        /// 升级技能时：恢复<P1+P2*CurLv>（P1+P2*Lv）点生命值
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        [Effect("XTZX_COM", Timing.OnLvUp)]
+        private SkillData XTZX_COM(SkillData skill, FighterData player)
+        {
+            player.Heal(BattleStatus.HP((int)(Bp.Param1 + Bp.Param2 * CurLv)));
+            Activated?.Invoke();
+            return skill;
+        }
+
+        /// <summary>
+        /// 访问草地、泉水时：恢复提升<P1+P2*CurLv>%（P1+P2*Lv）%
+        /// </summary>
+        [Effect("QH_COM", Timing.OnHeal)]
+        private BattleStatus QH_COM(BattleStatus status, FighterData fighter, string kw)
+        {
+            if (kw == "supply")
+            {
+                status *= 1 + Usual / 100;
+                Activated?.Invoke();
+            }
+
+            return status;
+        }
+
+        /// <summary>
+        /// 访问草地、泉水时：不再恢复，提升恢复量<P1+P2*CurLv>%（P1+P2*Lv）%的最大值
+        /// </summary>
+        [Effect("DLY_COM", Timing.OnHeal, priority = 10)]
+        private BattleStatus DLY_COM(BattleStatus status, FighterData fighter, string kw)
+        {
+            if (kw == "supply")
+            {
+                status.MaxHp = (int)(status.CurHp * Usual / 100);
+                status.CurHp = 0;
+                status.MaxMp = (int)(status.CurMp * Usual / 100);
+                status.CurMp = 0;
+                Activated?.Invoke();
+            }
+
+            return status;
         }
 
         #endregion

@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Sirenix.Utilities;
 using Tools;
 using UI;
-using UnityEngine.Assertions.Must;
 
 namespace Game
 {
@@ -30,6 +29,10 @@ namespace Game
         }
 
         public Relic Bp => RelicManager.Instance.GetById(Id);
+
+        private SecondaryData SData => GameDataManager.Instance.SecondaryData;
+
+        public event Action Activated;
 
         public bool MayAffect(Timing timing, out int priority)
         {
@@ -65,8 +68,6 @@ namespace Game
         {
             return Id;
         }
-
-        private SecondaryData SData => GameDataManager.Instance.SecondaryData;
 
         #region Effects
 
@@ -173,8 +174,13 @@ namespace Game
             ((PlayerData)fighter).LuckyChance += .4f;
         }
 
-        #endregion
 
-        public event Action Activated;
+        [Effect("gjb", Timing.OnGet)]
+        private void gjb(FighterData fighter)
+        {
+            ((PlayerData)fighter).Status.Gold += 300;
+        }
+
+        #endregion
     }
 }

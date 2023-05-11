@@ -16,12 +16,14 @@ namespace Managers
 
         public void SetProf()
         {
-            SecondaryData = new SecondaryData { Prof = new string[ChoosingPanel.Instance.SelectedList.Count] };
+            var profs = new string[ChoosingPanel.Instance.SelectedList.Count];
             for (int i = 0; i < ChoosingPanel.Instance.SelectedList.Count; i++)
             {
-                SecondaryData.Prof[i] = ChoosingPanel.Instance.SelectedList[i].gameObject.name;
+                profs[i] = ChoosingPanel.Instance.SelectedList[i].gameObject.name;
             }
-            //SecondaryData.Prof = profs;
+
+            SecondaryData = SecondaryData.GetOrCreate();
+            SecondaryData.Profs = profs;
         }
     }
 }

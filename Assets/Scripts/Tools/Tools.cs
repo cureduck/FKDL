@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using Game;
 using I2.Loc;
+using Managers;
 using TMPro;
 using UnityEngine;
 using Random = System.Random;
@@ -110,6 +111,12 @@ namespace Tools
             return Regex.Replace(s, pattern, "");
         }
 
+        public static string RemoveBetween(this string s, (string left, string right) pair = default)
+        {
+            var pattern = $"{pair.left}.+?{pair.right}";
+            return Regex.Replace(s, pattern, "");
+        }
+
 
         public static void SetLocalizeParam(this Localize localize, IEnumerable<string> param,
             IEnumerable<string> values)
@@ -142,6 +149,11 @@ namespace Tools
         public static void RemoveBetween(this Localize localize, (char left, char right) pair = default)
         {
             if (pair == default) pair = ('<', '>');
+            localize.GetComponent<TMP_Text>().text = localize.GetComponent<TMP_Text>().text.RemoveBetween(pair);
+        }
+
+        public static void RemoveBetween(this Localize localize, (string left, string right) pair)
+        {
             localize.GetComponent<TMP_Text>().text = localize.GetComponent<TMP_Text>().text.RemoveBetween(pair);
         }
 
@@ -241,6 +253,14 @@ namespace Tools
         public override string ToString()
         {
             return State.ToString();
+        }
+    }
+
+    public static class SkillExtensions
+    {
+        public static bool IsMainProf(this Skill skill)
+        {
+            return skill.Prof == GameDataManager.Instance.SecondaryData.Profs[0];
         }
     }
 }

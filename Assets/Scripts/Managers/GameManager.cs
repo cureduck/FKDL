@@ -143,7 +143,6 @@ namespace Managers
             {
                 PlayerData = PlayerData.LoadFromSave();
                 SecondaryData = SecondaryData.LoadFromSave();
-                SecondaryData.LoadFromSave();
                 SecondaryData.SetRandom();
                 Map = Map.LoadFromSave();
                 PlayerData.BroadCastUpdated();

@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using Object = System.Object;
-using Random = UnityEngine.Random;
 
 namespace Game
 {
     public abstract class FighterData : MapData
     {
+        [ShowInInspector] public BuffAgent Buffs;
+        [JsonIgnore] public bool Cloned = false;
+
+        public int Shield;
+
+        [ShowInInspector] public SkillAgent Skills;
         public BattleStatus Status;
 
         [JsonIgnore]
@@ -28,23 +28,20 @@ namespace Game
             protected set => Status.Gold = value;
         }
 
-        [ShowInInspector] public SkillAgent Skills;
-        [ShowInInspector] public BuffAgent Buffs;
-
         public abstract FighterData Enemy { get; }
-        [JsonIgnore] public bool Cloned = false;
 
         [JsonIgnore] public int CurHp => Status.CurHp;
 
-        public int Shield;
+        [JsonIgnore] public bool IsPlayer => this is PlayerData;
+        [JsonIgnore] public bool IsAlive => Status.CurHp > 0;
+
+
+        [JsonIgnore] public int LossHp => Status.MaxHp - Status.CurHp;
 
         private Attack InitAttack(SkillData skill = null, CostInfo costInfo = default)
         {
             return new Attack(Status.PAtk, costInfo: costInfo); //{Skill = skill};
         }
-
-        [JsonIgnore] public bool IsPlayer => this is PlayerData;
-        [JsonIgnore] public bool IsAlive => Status.CurHp > 0;
 
         private Attack Defend(Attack attack, FighterData enemy)
         {
@@ -360,6 +357,13 @@ namespace Game
             }
         }
 
+        public void OnLose(IEffectContainer c)
+        {
+            if (c.MayAffect(Timing.OnLose, out _))
+            {
+                c.Affect(Timing.OnLose, new object[] { this });
+            }
+        }
 
         /*protected void Equip(SkillData sk)
         {
@@ -448,6 +452,12 @@ namespace Game
             }
         }
 
+        public void RemoveBuff(BuffData buff)
+        {
+            Buffs.Remove(buff);
+            OnLose(buff);
+        }
+
 
         [Button]
         public void Recover(BattleStatus modify, FighterData enemy, string kw = null)
@@ -467,9 +477,6 @@ namespace Game
 
             DelayUpdate();
         }
-
-
-        [JsonIgnore] public int LossHp => Status.MaxHp - Status.CurHp;
 
 
         /// <summary>
@@ -586,6 +593,7 @@ namespace Game
         {
             buff = CheckChain<BuffData>(Timing.OnApplied, new object[] { buff, this });
             Buffs.Add(buff);
+            OnGet(buff);
             DelayUpdate();
         }
 
@@ -692,7 +700,6 @@ namespace Game
             skill = (CheckChain<SkillData>(Timing.OnSetCoolDown, new object[] { skill, this }));
         }
 
-
         public void CoolDown(int x = 1)
         {
             for (int i = 0; i < Skills.Count; i++)
@@ -719,20 +726,9 @@ namespace Game
         {
             skillData.CurLv += lv;
             CheckChain<SkillData>(Timing.OnLvUp, new object[] { skillData, this });
+            DelayUpdate();
         }
 
-
-        /*public void Attack(FighterData target, Attack attack)
-        {
-            var result = target.Defend(attack, this);
-            var r = Settle(result, target);
-
-            if (r.Death)
-            {
-                Kill(r, target);
-            }
-        }
-        */
 
         public override string ToString()
         {

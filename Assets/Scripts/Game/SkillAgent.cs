@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Managers;
 using Tools;
-using Random = UnityEngine.Random;
+using UnityEngine;
 
 namespace Game
 {
     public class SkillAgent : List<SkillData>
     {
-        public int EmptySlot => this.Count((data => data == SkillData.Empty));
-
         public SkillAgent(SkillData[] bp)
         {
             if (bp.Length == 0)
@@ -27,6 +24,8 @@ namespace Game
         public SkillAgent()
         {
         }
+
+        public int EmptySlot => this.Count((data => data == SkillData.Empty));
 
         public IEnumerable<SkillData> ActiveSkills()
         {
@@ -68,6 +67,15 @@ namespace Game
 
         public bool CooldownRandomSkill(int count = 1)
         {
+            var candidates = this.Where
+                ((data => data != null && !data.IsEmpty && data.CooldownLeft > 0));
+            if (candidates.Any())
+            {
+                var chosen = candidates.ChooseRandom(GameDataManager.Instance.SecondaryData.CurGameRandom);
+                chosen.BonusCooldown(count);
+                return true;
+            }
+
             return false;
         }
 

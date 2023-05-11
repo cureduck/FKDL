@@ -1,25 +1,23 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using Managers;
-using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game
 {
     public class Skill : CsvData
     {
-        public string Pool;
-        public bool Positive;
+        public readonly HashSet<Timing> AlwaysActiveTiming;
         public bool BattleOnly;
+        public int Cooldown;
+        public CostInfo CostInfo;
         public int MaxLv;
 
         public float Param1;
         public float Param2;
-        public int Cooldown;
-        public CostInfo CostInfo;
+        public bool Positive;
 
-        public readonly HashSet<Timing> AlwaysActiveTiming;
-
+        [FormerlySerializedAs("Pool")] public string Prof;
 
         public Skill(Rank rank, string id, Sprite icon) : base(rank, id, icon)
         {
