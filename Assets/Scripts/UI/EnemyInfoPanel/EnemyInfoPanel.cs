@@ -1,19 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UI;
-using Game;
+﻿using Game;
 using Managers;
+using UI;
+using UnityEngine;
 
 public class EnemyInfoPanel : BasePanel<EnemyInfoPanel.Args>
 {
-    public class Args
-    {
-        public PlayerData playerData;
-        public EnemySaveData targetEnemy;
-    }
-
     [SerializeField] private TargetBattleView enemyView;
     [SerializeField] private TargetBattleView playerView;
 
@@ -57,6 +48,7 @@ public class EnemyInfoPanel : BasePanel<EnemyInfoPanel.Args>
     public void SetPlayerUseSkill(SkillData skillData)
     {
         playerUseSkill = skillData;
+        Debug.Log(playerUseSkill);
         UpdateUI();
     }
 
@@ -93,5 +85,11 @@ public class EnemyInfoPanel : BasePanel<EnemyInfoPanel.Args>
             int poisonDamage = Data.targetEnemy.Status.CurHp - fightPredictResult.Enemy.Status.CurHp;
             enemyView.SetResult(0, 1, 0, 1, 0, 1, poisonDamage);
         }
+    }
+
+    public class Args
+    {
+        public PlayerData playerData;
+        public EnemySaveData targetEnemy;
     }
 }

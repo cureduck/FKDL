@@ -1,6 +1,5 @@
 ﻿using System;
 using Managers;
-using UI;
 using UnityEngine;
 
 namespace Game
@@ -49,6 +48,7 @@ namespace Game
                 case RockSaveData rockSaveData:
                     break;
                 case ShopSaveData shopSaveData:
+                    AudioPlayer.Instance.Play(AudioPlayer.AudioOpenShop);
                     WindowManager.Instance.ShopPanel.Open(shopSaveData);
                     break;
                 case ChestSaveData chestSaveData:

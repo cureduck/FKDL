@@ -1,5 +1,4 @@
-﻿using System;
-using Game;
+﻿using Game;
 using Managers;
 using UnityEngine;
 
@@ -56,9 +55,11 @@ namespace UI
             }
 
             Data.Skills[0] = skillData;
-            Data.Skills[1] = null;
+            Data.Skills[1] = skillData;
             Data.Skills[2] = skillData02;
             Data.Skills[3] = skillData03;
+            Data.Skills[4] = skillData03;
+            Data.Skills[5] = skillData03;
             Debug.Log(Data.Skills.Count);
             UpdateUI();
         }

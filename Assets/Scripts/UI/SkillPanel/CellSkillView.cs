@@ -1,38 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Game;
+using I2.Loc;
+using Managers;
+using Sirenix.OdinInspector;
+using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
-using Managers;
-using Game;
-using I2.Loc;
-using TMPro;
-using Sirenix.OdinInspector;
-using Unity.Mathematics;
 
 public class CellSkillView : MonoBehaviour
 {
+    private const float SpeedParam = 1.1f;
     private static CellSkillView curSelectSkill;
     [SerializeField] private Transform mainView;
+
     [Header("详细显示")] [SerializeField] private Transform showDetailPoint;
+
     [SerializeField] private PointEnterAndExit pointEvent;
     [SerializeField] private ObjectColliderPointEnterAndExit objectPointEnterAndExit;
     [SerializeField] private bool isWorldObject = false;
+
     [Header("拖拽与交互组件")] [SerializeField] private CellUIDragView cellUIDragView;
+
     [SerializeField] private CellSkillViewDragReceive dragReceive;
 
-    public int Index
-    {
-        get { return dragReceive.index; }
-    }
-
     [Header("消耗颜色")] [SerializeField] private TMP_Text cost_txt;
+
     [SerializeField] private Color magicCost_color;
     [SerializeField] private Color healthCost_color;
     [SerializeField] private Color goldCost_color;
     [SerializeField] private Color notEnough_Color;
+
     [Header("技能升级按钮")] [SerializeField] private GameObject levelUpObject;
+
     [SerializeField] private Button levelUp_btn;
+
     [Header("其他组件")] [SerializeField] private GameObject heightlightView;
+
     [SerializeField] private GameObject haveSkillGroup;
     [SerializeField] private GameObject emptySkillGroup;
     [SerializeField] private GameObject passtiveBG;
@@ -44,19 +47,29 @@ public class CellSkillView : MonoBehaviour
     [SerializeField] private Image coldDown_mask;
     [SerializeField] private GameObject coolDownCompleteSign;
 
+    [SerializeField] private float targetPrecent;
+    [SerializeField] private float lastPrecent;
+
+    public bool canInteractive = true;
+
+
+    public float Speed;
+
+    private FighterData playerData;
+
     private SkillData skillData;
+
+    private float t0;
+
+    public int Index
+    {
+        get { return dragReceive.index; }
+    }
 
     public SkillData Data
     {
         get { return skillData; }
     }
-
-    private FighterData playerData;
-
-    [SerializeField] private float targetPrecent;
-    [SerializeField] private float lastPrecent;
-
-    public bool canInteractive = true;
 
     void Start()
     {
@@ -80,6 +93,36 @@ public class CellSkillView : MonoBehaviour
         coolDownCompleteSign.gameObject.SetActive(false);
         cellUIDragView.Init(this);
         cellUIDragView.dragParent = WindowManager.Instance.dragViewParent;
+    }
+
+    private void Update()
+    {
+        if (skillData == null || skillData.IsEmpty) return;
+        //Debug.Log(skillData.IsEmpty);
+        //if (canDebug) 
+        //{
+        //    Debug.Log(targetPrecent);
+        //}
+
+        //coldDown_mask.fillAmount = targetPrecent;
+        //return;
+
+
+        lastPrecent = coldDown_mask.fillAmount;
+        if (coldDown_mask.fillAmount <= targetPrecent)
+        {
+            coldDown_mask.fillAmount = targetPrecent;
+        }
+        else
+        {
+            coldDown_mask.fillAmount -= Time.deltaTime * Speed;
+            if (coldDown_mask.fillAmount <= 0 && lastPrecent > 0)
+            {
+                coolDownCompleteSign.gameObject.SetActive(false);
+                coolDownCompleteSign.gameObject.SetActive(true);
+                //Debug.Log("冷却完毕");
+            }
+        }
     }
 
     [Button]
@@ -296,16 +339,24 @@ public class CellSkillView : MonoBehaviour
         cur.transform.localPosition = Vector3.zero;
     }
 
+    private void SetNextRoundSpeed(float dt)
+    {
+        Speed = math.max(0.8f, math.min(Speed * 1.2f, SpeedParam / dt));
+    }
+
+    public override string ToString()
+    {
+        return $"Cell Skill Button {transform.GetSiblingIndex().ToString()}";
+    }
+
 
     #region 鼠标交互
 
     private void OnPointExit()
     {
         WindowManager.Instance.skillInfoPanel.Close();
-        //WindowManager.Instance.FightPredictPanel.Close();
-        if (GameManager.Instance.InBattle && Data.Bp.BattleOnly)
+        if (GameManager.Instance.InBattle)
         {
-            //var arena = Arena.ArrangeFight(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data, Data);
             WindowManager.Instance.EnemyPanel.SetPlayerUseSkill(null);
         }
     }
@@ -314,7 +365,7 @@ public class CellSkillView : MonoBehaviour
     {
         if (isWorldObject)
         {
-            Debug.Log(Camera.main.WorldToScreenPoint(transform.position));
+            //Debug.Log(Camera.main.WorldToScreenPoint(transform.position));
             WindowManager.Instance.skillInfoPanel.Open(new SkillInfoPanel.Args
                 { worldTrans = transform, skillData = skillData });
         }
@@ -330,7 +381,7 @@ public class CellSkillView : MonoBehaviour
             return;
         }
 
-        if (GameManager.Instance.InBattle && Data.Bp.BattleOnly)
+        if (GameManager.Instance.InBattle)
         {
             //var arena = Arena.ArrangeFight(GameManager.Instance.PlayerData, (EnemySaveData)GameManager.Instance.Focus.Data, Data);
             WindowManager.Instance.EnemyPanel.SetPlayerUseSkill(Data);
@@ -339,51 +390,4 @@ public class CellSkillView : MonoBehaviour
     }
 
     #endregion
-
-
-    public float Speed;
-
-    private float t0;
-
-    private void Update()
-    {
-        if (skillData == null || skillData.IsEmpty) return;
-        //Debug.Log(skillData.IsEmpty);
-        //if (canDebug) 
-        //{
-        //    Debug.Log(targetPrecent);
-        //}
-
-        //coldDown_mask.fillAmount = targetPrecent;
-        //return;
-
-
-        lastPrecent = coldDown_mask.fillAmount;
-        if (coldDown_mask.fillAmount <= targetPrecent)
-        {
-            coldDown_mask.fillAmount = targetPrecent;
-        }
-        else
-        {
-            coldDown_mask.fillAmount -= Time.deltaTime * Speed;
-            if (coldDown_mask.fillAmount <= 0 && lastPrecent > 0)
-            {
-                coolDownCompleteSign.gameObject.SetActive(false);
-                coolDownCompleteSign.gameObject.SetActive(true);
-                //Debug.Log("冷却完毕");
-            }
-        }
-    }
-
-    private const float SpeedParam = 1.1f;
-
-    private void SetNextRoundSpeed(float dt)
-    {
-        Speed = math.max(0.8f, math.min(Speed * 1.2f, SpeedParam / dt));
-    }
-
-    public override string ToString()
-    {
-        return $"Cell Skill Button {transform.GetSiblingIndex().ToString()}";
-    }
 }

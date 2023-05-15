@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OffersUIStartAnimation : MonoBehaviour
@@ -31,7 +30,7 @@ public class OffersUIStartAnimation : MonoBehaviour
     {
         canvasGroup.interactable = false;
         targetObject.gameObject.SetActive(false);
-        Debug.LogWarning(delayTime);
+        //Debug.LogWarning(delayTime);
         yield return new WaitForSeconds(delayTime);
         targetObject.gameObject.SetActive(true);
         canvasGroup.interactable = true;

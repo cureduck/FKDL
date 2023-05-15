@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using CH.ObjectPool;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.UI;
-using CH.ObjectPool;
 
 namespace Managers
 {
@@ -13,12 +11,12 @@ namespace Managers
     {
         public const string AudioNormalAttack = "Audio_Normal_Attack";
         public const string AudioOpenChest = "Audio_Open_Chest";
+        public const string AudioOpenShop = "Audio_Open_Shop";
         public const string AudioCrystal = "Audio_Crystal";
         public const string AudioClearRock = "Audio_Clear_Rock";
         public const string AudioGainCoin = "Audio_Gain_Coin";
         public const string AuidoUIButtonClick = "Auido_UI_ButtonClick";
         [SerializeField] private CellAudioPrefab cellAudioPrefab;
-        private ObjectPool objectPool;
         [SerializeField] private AudioClip[] normalBGMs;
         [SerializeField] private AudioClip[] bossBGMs;
 
@@ -27,12 +25,13 @@ namespace Managers
         public AudioSource SoundEffect;
 
 
+        public GameSettings Settings;
+
+
         public Dictionary<string, AudioClip> AudioClips;
+        private ObjectPool objectPool;
 
         [ShowInInspector] private LinkedList<AudioClip> SEQueue;
-
-
-        public GameSettings Settings;
 
         private void Start()
         {

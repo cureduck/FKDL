@@ -1,7 +1,5 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Linq;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace Game
 {
@@ -39,6 +37,29 @@ namespace Game
             Death = false;
         }*/
 
+        public void JoinKeyWord(string kw)
+        {
+            Kw += "|" + kw;
+        }
+
+        public bool ContainsKeyWord(string kw)
+        {
+            return Kw.Split('|').Contains(kw);
+        }
+
+        public Attack Change(int pAtk = 0, int mAtk = 0, int cAtk = 0, float multi = 1f, int combo = 1)
+        {
+            Combo = combo;
+            Multi = multi;
+            PAtk = pAtk;
+            MAtk = mAtk;
+            CAtk = cAtk;
+            PDmg = 0;
+            MDmg = 0;
+            CDmg = 0;
+
+            return this;
+        }
 
         public Attack(int pAtk = 0, int mAtk = 0, int cAtk = 0, float multi = 1f, int combo = 1, string kw = "",
             CostInfo costInfo = default)
@@ -48,13 +69,12 @@ namespace Game
             PAtk = pAtk;
             MAtk = mAtk;
             CAtk = cAtk;
-            Kw = kw;
             PDmg = 0;
             MDmg = 0;
             CDmg = 0;
             //Skill = null;
             CostInfo = costInfo;
-
+            Kw = kw;
             Death = false;
         }
 

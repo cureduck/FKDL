@@ -316,38 +316,26 @@ namespace Game
         [Effect("HQ_MAG", Timing.OnAttack, priority = -100)]
         private Attack FireBall(Attack attack, FighterData fighter, FighterData enemy)
         {
-            return new Attack(0, fighter.Status.MAtk, 0, Usual, 1, "HQ_MAG");
+            return attack.Change(mAtk: fighter.Status.MAtk, multi: (int)Usual);
         }
 
 
         [Effect("ZZFD_MAG", Timing.OnAttack, priority = -100)]
         private Attack TraceMissile(Attack attack, FighterData fighter, FighterData enemy)
         {
-            var multi = 2;
+            var multi = 2f;
             if (enemy.Buffs.Any((data => data.Bp.BuffType == BuffType.Negative)))
             {
-                multi += 2;
+                multi += Usual;
             }
 
-            return new Attack
-            {
-                MAtk = fighter.Status.MAtk,
-                Multi = multi,
-                Combo = 1,
-                Kw = "ZZFD_MAG",
-            };
+            return attack.Change(mAtk: fighter.Status.MAtk, multi: multi);
         }
 
         [Effect("ASFD_MAG", Timing.OnAttack, priority = -100)]
         private Attack ArcaneMissile(Attack attack, FighterData fighter, FighterData enemy)
         {
-            return new Attack
-            {
-                MAtk = fighter.Status.MAtk,
-                Multi = 1,
-                Combo = (int)Bp.Param1,
-                Kw = "ASFD_MAG"
-            };
+            return attack.Change(mAtk: fighter.Status.MAtk, combo: (int)Bp.Param1);
         }
 
 
@@ -387,13 +375,7 @@ namespace Game
         [Effect("YSS_MAG", Timing.OnAttack, priority = -100)]
         private Attack Meteor(Attack attack, FighterData fighter, FighterData enemy)
         {
-            return new Attack
-            {
-                MAtk = fighter.Status.MAtk,
-                Multi = 1,
-                Combo = (int)Bp.Param1,
-                Kw = "ASFD_MAG"
-            };
+            return attack.Change(mAtk: fighter.Status.MAtk, multi: Usual);
         }
 
         [Effect("AFLQ_MAG", Timing.SkillEffect)]
@@ -555,7 +537,7 @@ namespace Game
         [Effect("RDTP_ASS", Timing.OnAttack, priority = -100)]
         private Attack RDTP_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
-            return new Attack(fighter.Status.PAtk, multi: Bp.Param1);
+            return attack.Change(pAtk: fighter.Status.PAtk, multi: Bp.Param1);
         }
 
         [Effect("RDTP_ASS", Timing.OnStrike, alwaysActive = true)]
@@ -578,7 +560,7 @@ namespace Game
         {
             var multi = ((PlayerData)fighter).Engaging ? Bp.Param1 * CurLv + Bp.Param1 : Bp.Param1;
 
-            return new Attack(fighter.Status.PAtk, multi: multi);
+            return attack.Change(fighter.Status.PAtk, multi: multi);
         }
 
         [Effect("CJBY_ASS", Timing.OnAttack, priority = -100)]
@@ -586,7 +568,7 @@ namespace Game
         {
             var multi = Bp.Param1 + Bp.Param1 * CurLv;
 
-            return new Attack(fighter.Status.PAtk, multi: multi);
+            return attack.Change(fighter.Status.PAtk, multi: multi);
         }
 
 
@@ -606,7 +588,7 @@ namespace Game
         [Effect("DMJJ_ASS", Timing.OnAttack, priority = -100)]
         private Attack DMJJ2_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
-            return new Attack(fighter.Status.PAtk, combo: (int)Usual);
+            return attack.Change(fighter.Status.PAtk, combo: (int)Usual);
         }
 
 
@@ -741,7 +723,7 @@ namespace Game
         [Effect("SYS_ASS", Timing.OnAttack, priority = -10000)]
         private Attack SYS_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
-            attack = new Attack(pAtk: (int)(enemy.CurHp * Usual));
+            attack.Change(pAtk: (int)(enemy.CurHp * Usual));
 
             return attack;
         }
@@ -757,7 +739,7 @@ namespace Game
         [Effect("LX_MON", Timing.OnAttack, priority = -10000)]
         private Attack LX_MON(Attack attack, FighterData attacker, FighterData enemy)
         {
-            return new Attack(attacker.Status.PAtk, attacker.Status.MAtk, multi: 2f, kw: "LX_MON");
+            return attack.Change(attacker.Status.PAtk, attacker.Status.MAtk, multi: 2f);
         }
 
 
@@ -826,7 +808,7 @@ namespace Game
         [Effect("MBS_MAG", Timing.OnAttack, priority = -10000)]
         private Attack MBS_MAG(Attack attack, FighterData fighter, FighterData enemy)
         {
-            attack = new Attack(cAtk: fighter.Status.MAtk, multi: Usual);
+            attack.Change(cAtk: fighter.Status.MAtk, multi: Usual);
             return attack;
         }
 

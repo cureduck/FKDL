@@ -24,6 +24,13 @@ namespace Game
             Cost = _cost[Rank];
         }
 
+        public override SquareInfo GetSquareInfo()
+        {
+            var info = base.GetSquareInfo();
+            info.P1 = Cost.ToString();
+            info.P2 = Player.LuckyChance.ToString("P0");
+            return info;
+        }
 
         public override void OnReact()
         {

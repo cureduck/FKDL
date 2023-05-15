@@ -1,27 +1,14 @@
-﻿using System.Linq;
+﻿using CH.ObjectPool;
 using Game;
-using I2.Loc;
 using Managers;
-using Sirenix.OdinInspector;
-using UnityEngine;
-using CH.ObjectPool;
-using UI;
-using System;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
     public class ShopPanel : BasePanel<ShopSaveData>
     {
-        private class Args
-        {
-            public Offer offer;
-            public int index;
-            public int curHaveGold;
-            public System.Action<CellGoodView, Offer, int> onClick;
-        }
-
         [SerializeField] private CellGoodView relicView;
         [SerializeField] private CellGoodView skillAndPotionPrefab;
         [SerializeField] private CellGoodView keyPrefab;
@@ -33,10 +20,10 @@ namespace UI
         [SerializeField] private TMP_Text levelUpCost_txt;
         [SerializeField] private Button reflash_btn;
         [SerializeField] private TMP_Text reflashCost_txt;
+        private UIViewObjectPool<CellGoodView, Args> keyListObjectPool;
+        private UIViewObjectPool<CellGoodView, Args> potionListObjectPool;
 
         private UIViewObjectPool<CellGoodView, Args> skillListObjectPool;
-        private UIViewObjectPool<CellGoodView, Args> potionListObjectPool;
-        private UIViewObjectPool<CellGoodView, Args> keyListObjectPool;
 
         public override void Init()
         {
@@ -146,6 +133,7 @@ namespace UI
                 }
                 else
                 {
+                    WindowManager.Instance.warningInfoPanel.Open(info.ToString());
                     info.BroadCastInfo();
                 }
             }
@@ -177,14 +165,23 @@ namespace UI
 
         private void LevelUpClick()
         {
+            //Data.UpGradeCost
             Debug.LogError("升级按钮被点击");
         }
 
         private void ReflashClick()
         {
-            Data.Refresh();
+            Data.Goods = Data.Refresh();
             UpdateUI();
             //Debug.LogError("刷新按钮被点击");
+        }
+
+        private class Args
+        {
+            public int curHaveGold;
+            public int index;
+            public Offer offer;
+            public System.Action<CellGoodView, Offer, int> onClick;
         }
     }
 }

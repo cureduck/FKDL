@@ -1,18 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Game;
+using I2.Loc;
+using Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using Game;
-using Managers;
-using I2.Loc;
-using System;
 
 public class CellGoodView : MonoBehaviour
 {
-    [SerializeField] private Color posstiveColor;
-    [SerializeField] private Color unPosstiveColor;
-
     [SerializeField] private Image itemIcon;
     [SerializeField] private TMP_Text price_txt;
     [SerializeField] private Localize itemName_txt;
@@ -21,8 +15,18 @@ public class CellGoodView : MonoBehaviour
     [SerializeField] private PointEnterAndExit pointEnterAndExit;
     [SerializeField] private Button click_btn;
 
-    private Offer offer;
+    [Header("技能背景设置")] [SerializeField] private GameObject passtiveSkillBG;
+
+    [SerializeField] private GameObject unPasstiveSkillBG;
+
+    [Header("钥匙贴图")] [SerializeField] private Sprite keyIcon;
+
+    [SerializeField] private Color level01KeyColor;
+    [SerializeField] private Color level02KeyColor;
+    [SerializeField] private Color level03KeyColor;
     private int index;
+
+    private Offer offer;
     private System.Action<CellGoodView, Offer, int> onClick;
 
     private void Start()
@@ -49,6 +53,10 @@ public class CellGoodView : MonoBehaviour
 
         soldOutSign.gameObject.SetActive(offer.isSold);
         itemIcon.color = Color.white;
+        if (passtiveSkillBG)
+            passtiveSkillBG.gameObject.SetActive(false);
+        if (unPasstiveSkillBG)
+            unPasstiveSkillBG.gameObject.SetActive(false);
         if (offer.Kind == Offer.OfferKind.Skill)
         {
             Skill skill;
@@ -56,13 +64,14 @@ public class CellGoodView : MonoBehaviour
             itemIcon.sprite = skill.Icon;
             if (skill.Positive)
             {
-                itemIcon.color = posstiveColor;
+                unPasstiveSkillBG.gameObject.SetActive(false);
+                passtiveSkillBG.gameObject.SetActive(true);
             }
             else
             {
-                itemIcon.color = unPosstiveColor;
+                unPasstiveSkillBG.gameObject.SetActive(true);
+                passtiveSkillBG.gameObject.SetActive(false);
             }
-
 
             itemName_txt.SetTerm(skill.Id);
         }
@@ -76,17 +85,21 @@ public class CellGoodView : MonoBehaviour
         {
             string temp;
 
+            itemIcon.sprite = keyIcon;
             if (offer.Rank == Rank.Normal)
             {
                 temp = "铜钥匙";
+                itemIcon.color = level01KeyColor;
             }
             else if (offer.Rank == Rank.Uncommon)
             {
                 temp = "银钥匙";
+                itemIcon.color = level02KeyColor;
             }
             else
             {
                 temp = "金钥匙";
+                itemIcon.color = level03KeyColor;
             }
 
             itemName_txt.SetTerm(temp);

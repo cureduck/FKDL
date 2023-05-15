@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Managers;
-using UnityEngine;
 
 namespace Game
 {
@@ -9,12 +8,13 @@ namespace Game
     {
         public const int MaxTimes = 3;
 
-        public int TimesLeft;
-        public Rank Rank;
-        public int Cost;
-
         private readonly Dictionary<Rank, int> _cost = new Dictionary<Rank, int>
             { { Rank.Normal, 3 }, { Rank.Uncommon, 6 }, { Rank.Rare, 9 }, { Rank.Ultra, 12 } };
+
+        public int Cost;
+        public Rank Rank;
+
+        public int TimesLeft;
 
         public override void Init()
         {
@@ -72,6 +72,7 @@ namespace Game
         {
             var info = base.GetSquareInfo();
             info.P1 = _cost[_rank].ToString();
+            info.P2 = Player.LuckyChance.ToString("P0");
             return info;
         }
     }

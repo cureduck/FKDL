@@ -33,7 +33,8 @@ namespace Game
         OnGetSkillCost,
 
         /// <summary>
-        /// attack, fighter, enemy
+        /// NoReturn, fighter, enemy
+        /// 用checkchain
         /// </summary>
         BeforeAttack,
 

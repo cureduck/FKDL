@@ -20,6 +20,8 @@ namespace Managers
 
         private ObjectPool<Square> _pool;
 
+        public Profile Profile;
+
         public Dictionary<string, Color> SquareColors;
 
         private List<Square> squares = new List<Square>();
@@ -48,6 +50,7 @@ namespace Managers
         private void Start()
         {
             GetLocalization();
+            Profile = ProfileManager.Instance.Profile;
             _pool = new ObjectPool<Square>(CreateSquare);
 
             if (Application.isPlaying)

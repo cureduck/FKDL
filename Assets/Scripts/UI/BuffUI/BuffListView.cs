@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CH.ObjectPool;
 using Game;
-using UI;
 using UnityEngine;
-using UI.BuffUI;
-using CH.ObjectPool;
 
 public class BuffListView : MonoBehaviour
 {
     [SerializeField] private Transform prefabParent;
     [SerializeField] private CellBuffView cellBuffView;
-    private UIViewObjectPool<CellBuffView, BuffData> objectPoolData;
     [SerializeField] private bool isWorldObject = false;
 
     BuffAgent buffDatas;
+    private UIViewObjectPool<CellBuffView, BuffData> objectPoolData;
 
     public void Init()
     {
@@ -32,5 +28,7 @@ public class BuffListView : MonoBehaviour
     private void OnCellBuffSet(CellBuffView arg1, BuffData arg2)
     {
         arg1.SetData(arg2, isWorldObject);
+        arg1.transform.localRotation = Quaternion.identity;
+        arg1.transform.localPosition = Vector3.zero;
     }
 }

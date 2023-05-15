@@ -1,7 +1,7 @@
-﻿using Game;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Game;
 using Managers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,6 +22,14 @@ namespace UI
         public void Start()
         {
             skip_btn.onClick.AddListener(OnSkipButtonClick);
+        }
+
+        private void OnDisable()
+        {
+            for (int i = 0; i < offerUIParent.childCount; i++)
+            {
+                Destroy(offerUIParent.GetChild(i).gameObject);
+            }
         }
 
         public void Load(IEnumerable<Offer> ofs)
@@ -50,26 +58,26 @@ namespace UI
             animationGroup.Set(offersUIStartAnimations);
         }
 
-        private void OnDisable()
-        {
-            for (int i = 0; i < offerUIParent.childCount; i++)
-            {
-                Destroy(offerUIParent.GetChild(i).gameObject);
-            }
-        }
-
         private void OnClick(Offer offer, int targetIndex)
         {
             //Debug.Log($"{offer}被点击");
-            GameManager.Instance.PlayerData.TryTakeOffer(offer, out _);
-            animationGroup.SelectTarget(targetIndex);
-            StartCoroutine(CloseWindowIE());
+            Info info;
+            if (GameManager.Instance.PlayerData.TryTakeOffer(offer, out info))
+            {
+                animationGroup.SelectTarget(targetIndex);
+                StartCoroutine(CloseWindowIE());
+            }
+            else
+            {
+                WindowManager.Instance.warningInfoPanel.Open(info.ToString());
+            }
         }
 
         private void OnSkipButtonClick()
         {
             animationGroup.SelectTarget(-1);
             StartCoroutine(CloseWindowIE());
+            Debug.LogWarning("获得金币!");
             AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
         }
 

@@ -117,15 +117,13 @@ namespace Game
 
 
         [Effect("xyf", Timing.BeforeAttack)]
-        private Attack xyf(Attack attack, FighterData player, FighterData enemy)
+        private void xyf(FighterData player, FighterData enemy)
         {
             if (((PlayerData)player).LuckyChance > SData.CurGameRandom.NextDouble())
             {
                 player.ApplySelfBuff(new BuffData("buffer", 1));
                 Activated?.Invoke();
             }
-
-            return attack;
         }
 
         [Effect("wcsl", Timing.OnSetCoolDown, 900)]

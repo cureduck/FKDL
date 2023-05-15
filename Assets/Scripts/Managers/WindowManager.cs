@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using Game;
-using I2.Loc;
-using UI;
+﻿using UI;
 using UnityEngine;
 
 namespace Managers
@@ -19,6 +15,7 @@ namespace Managers
         public FightPredictPanel FightPredictPanel;
         public WarningInfoDebugPanel warningInfoPanel;
         public SettingPanel settingPanel;
+        public StartAndEndPanel startAndEndPanel;
 
         public SquareInfoPanel SquareInfoPanel;
         public SkillInfoPanel skillInfoPanel;
@@ -44,6 +41,7 @@ namespace Managers
             EnemyPanel?.Init();
             simpleInfoItemPanel?.Init();
             settingPanel?.Init();
+            startAndEndPanel?.Init();
         }
     }
 }

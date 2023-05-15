@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Game;
 
 namespace Managers
@@ -32,7 +31,19 @@ namespace Managers
             SkillData sk = null;
             if (skill != null)
             {
-                sk = PlayerClone.Skills.FirstOrDefault((data => data.Id == skill.Id));
+                UnityEngine.Debug.Log(PlayerClone.Skills);
+                sk = PlayerClone.Skills.FirstOrDefault(data =>
+                    {
+                        if (data == null)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return data.Id == skill.Id;
+                        }
+                    }
+                );
             }
 
 

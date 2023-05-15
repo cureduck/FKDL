@@ -159,6 +159,11 @@ namespace Game
         {
             attack.Combo -= 1;
             CurLv -= 1;
+            if (CurLv == 0)
+            {
+                Id = null;
+            }
+
             Activated?.Invoke();
             return attack;
         }

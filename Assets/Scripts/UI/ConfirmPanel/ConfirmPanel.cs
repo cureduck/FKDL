@@ -1,18 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UI;
+﻿using Managers;
 using TMPro;
+using UI;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ConfirmPanel : BasePanel<ConfirmPanel.Args>
 {
-    public class Args
-    {
-        public System.Action curEvent;
-        public string info;
-    }
-
     [SerializeField] private TMP_Text info;
     [SerializeField] private Button click_btn;
     [SerializeField] private Button cancel_btn;
@@ -32,9 +25,21 @@ public class ConfirmPanel : BasePanel<ConfirmPanel.Args>
     {
     }
 
+    public override void Close()
+    {
+        base.Close();
+        AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
+    }
+
     private void OnClick()
     {
         Data.curEvent?.Invoke();
         Close();
+    }
+
+    public class Args
+    {
+        public System.Action curEvent;
+        public string info;
     }
 }

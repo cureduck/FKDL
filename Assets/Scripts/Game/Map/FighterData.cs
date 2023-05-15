@@ -102,6 +102,7 @@ namespace Game
             {
                 skillData.Sealed = false;
                 var atk = InitAttack(skillData, cost);
+                atk.Kw = skillData.Id;
                 atk = CheckChain<Attack>(Timing.OnAttack, new object[] { atk, this, target });
                 skillData.Sealed = true;
                 //skillData.SetCooldown();
@@ -515,6 +516,8 @@ namespace Game
                 param[0] = origin;
             }
 
+            Buffs.RemoveZeroStackBuff();
+
             return origin;
         }
 
@@ -563,6 +566,8 @@ namespace Game
             {
                 sk.Affect(timing, param);
             }
+
+            Buffs.RemoveZeroStackBuff();
         }
 
 
@@ -605,9 +610,7 @@ namespace Game
         public void ApplySelfBuff(BuffData buff)
         {
             buff = CheckChain<BuffData>(Timing.OnApply, new object[] { buff, this });
-            buff = CheckChain<BuffData>(Timing.OnApplied, new object[] { buff, this });
-
-            Buffs.Add(buff);
+            AppliedBuff(buff);
             DelayUpdate();
         }
 
@@ -660,7 +663,6 @@ namespace Game
             if ((skill != null) && (!skill.Bp.BattleOnly))
             {
                 CastNonAimingSkill(skill);
-
                 CoolDownSettle(skill);
 
                 DelayUpdate();

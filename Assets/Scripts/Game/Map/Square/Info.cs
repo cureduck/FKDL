@@ -41,7 +41,9 @@ namespace Game
 
         public sealed override void BroadCastInfo()
         {
-            HelpInfoManager.Instance.SetTerm(Reason[0].ToString());
+            WindowManager.Instance.warningInfoPanel.Open(ToString());
+
+            //HelpInfoManager.Instance.SetTerm(Reason[0].ToString());
         }
 
         public override string ToString()

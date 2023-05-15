@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Game;
-using System;
+﻿using Game;
 using Managers;
+using UnityEngine;
 
 public class SkillListView : MonoBehaviour
 {
@@ -94,9 +91,5 @@ public class SkillListView : MonoBehaviour
             playerData.SwapSkill(cellSkillView.Index, cellSkillViewDragReceive.index);
             //Debug.Log(cellSkillView.Index + "与" + cellSkillViewDragReceive.index + "位置技能互换");
         }
-    }
-
-    private void UpgradeSkill()
-    {
     }
 }

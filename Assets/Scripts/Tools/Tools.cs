@@ -79,10 +79,10 @@ namespace Tools
         /// <returns></returns>
         public static string Calculate(this string s, (char left, char right) pair = default)
         {
-            if (pair == default) pair = ('<', '>');
+            if (pair == default) pair = ('#', '#');
             var pattern = $"{pair.left}.+?{pair.right}";
             var match = Regex.Match(s, pattern);
-            var ca = Regex.Replace(match.Value, "[<>]", "");
+            var ca = Regex.Replace(match.Value, "[#]", "");
             object result;
             try
             {
@@ -148,7 +148,7 @@ namespace Tools
 
         public static void RemoveBetween(this Localize localize, (char left, char right) pair = default)
         {
-            if (pair == default) pair = ('<', '>');
+            if (pair == default) pair = ('#', '#');
             localize.GetComponent<TMP_Text>().text = localize.GetComponent<TMP_Text>().text.RemoveBetween(pair);
         }
 

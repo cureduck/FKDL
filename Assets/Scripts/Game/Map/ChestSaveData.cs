@@ -1,13 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Managers;
 
 namespace Game
 {
     public sealed class ChestSaveData : MapData
     {
-        public Rank Rank;
         public Offer[] Offers;
+        public Rank Rank;
 
         public ChestSaveData(Rank rank) : base()
         {
@@ -35,6 +34,11 @@ namespace Game
             var info = base.GetSquareInfo();
             info.P1 = Rank.ToString().ToLower();
             return info;
+        }
+
+        public void Skip()
+        {
+            UnityEngine.Debug.LogWarning("获得金币！");
         }
     }
 }
