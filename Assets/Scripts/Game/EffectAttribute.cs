@@ -49,6 +49,11 @@ namespace Game
         OnStrike,
 
         /// <summary>
+        /// mapdata, player
+        /// </summary>
+        OnReact,
+        
+        /// <summary>
         /// attack, fighter, enemy 注意enemy可能为空
         /// </summary>
         OnDefend,

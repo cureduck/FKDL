@@ -11,11 +11,17 @@ namespace Game
 {
     public class MapData : IUpdateable, ICloneable
     {
+        public static void Destroy(MapData data)
+        {
+            data.Destroyed();
+        }
+        
+        
         public Placement Placement;
         public SquareState SquareState = SquareState.UnRevealed;
 
-        [JsonIgnore] protected PlayerData Player => GameManager.Instance.PlayerData;
-        [JsonIgnore] protected SecondaryData SData => GameDataManager.Instance.SecondaryData;
+        [JsonIgnore] protected static PlayerData Player => GameManager.Instance.PlayerData;
+        [JsonIgnore] protected static SecondaryData SData => GameDataManager.Instance.SecondaryData;
 
         public event Action<Args> ReactResultInfo;
 
@@ -64,6 +70,7 @@ namespace Game
 
         public virtual void OnReact()
         {
+            Player.ReactWith(this);
         }
 
         public virtual void OnLeave()

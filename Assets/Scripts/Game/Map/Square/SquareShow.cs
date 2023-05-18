@@ -1,6 +1,7 @@
 ﻿using System;
 using Managers;
 using UnityEngine;
+using UI;
 
 namespace Game
 {
@@ -50,9 +51,11 @@ namespace Game
                 case ShopSaveData shopSaveData:
                     AudioPlayer.Instance.Play(AudioPlayer.AudioOpenShop);
                     WindowManager.Instance.ShopPanel.Open(shopSaveData);
+                    PlayerMainPanel.Instance.SetUsePotionState(true);
                     break;
                 case ChestSaveData chestSaveData:
                     AudioPlayer.Instance.Play(AudioPlayer.AudioOpenChest);
+                    Debug.Log(chestSaveData.Offers.Length);
                     WindowManager.Instance.OffersWindow.Open(chestSaveData.Offers);
                     break;
                 case CrystalSaveData crystalPanel:

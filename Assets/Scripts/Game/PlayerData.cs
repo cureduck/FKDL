@@ -47,7 +47,7 @@ namespace Game
 #if UNITY_EDITOR
         [Button]
 #endif
-        public void UsePotion(int index)
+        public bool UsePotion(int index, out Info info)
         {
             if (!Potions[index].IsEmpty)
             {
@@ -63,8 +63,24 @@ namespace Game
 
                     AudioPlayer.Instance.PlaySoundEffect("potion");
                     DelayUpdate();
+                    info = new SuccessInfo();
+                    return true;
                 }
+
+                info = new FailureInfo(FailureReason.PotionNotNow);
+                return false;
             }
+            else
+            {
+                info = new FailureInfo(FailureReason.NoTarget);
+                return false;
+            }
+        }
+
+
+        public void ReactWith(MapData cell)
+        {
+            CheckChain(Timing.OnReact, new object[] { cell, this });
         }
 
 
@@ -172,7 +188,6 @@ namespace Game
 
         public bool TryTakeSkill(string id, out Info info)
         {
-            info = new Info();
             if (SkillManager.Instance.TryGetById(id, out var sk))
             {
                 for (int i = 0; i < Skills.Count; i++)
@@ -187,6 +202,7 @@ namespace Game
                         else
                         {
                             Upgrade(Skills[i]);
+                            info = new SuccessInfo();
                             DelayUpdate();
                             return true;
                         }
@@ -206,11 +222,13 @@ namespace Game
                         //Equip(Skills[i]);
                         OnGet(Skills[i]);
                         DelayUpdate();
+                        info = new SuccessInfo();
                         return true;
                     }
                 }
             }
 
+            info = new FailureInfo(FailureReason.NotEnoughSkillSlot, true);
             return false;
         }
 

@@ -9,9 +9,8 @@ namespace UI
     {
         [SerializeField] private CellPotionView prefab;
         [SerializeField] private Transform listParent;
-
         //public int MinLen => math.min(((PlayerData) _master).Potions.Length, SkillItems.Length);
-
+        private bool isSelling = false;
         public override void SetMaster(FighterData master)
         {
             base.SetMaster(master);
@@ -45,7 +44,7 @@ namespace UI
                         cellPotionView.gameObject.SetActive(true);
                     }
 
-                    cellPotionView.SetData(i, playerData.Potions[i]);
+                    cellPotionView.SetData(i, playerData.Potions[i], isSelling);
                 }
 
                 for (int i = playerData.Potions.Length; i < listParent.childCount; i++)
@@ -53,6 +52,12 @@ namespace UI
                     listParent.GetChild(i).gameObject.SetActive(false);
                 }
             }
+        }
+
+        public void SetSellingState(bool isSell)
+        {
+            isSelling = isSell;
+            UpdateData();
         }
     }
 }

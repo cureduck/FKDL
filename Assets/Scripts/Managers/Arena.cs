@@ -31,7 +31,6 @@ namespace Managers
             SkillData sk = null;
             if (skill != null)
             {
-                UnityEngine.Debug.Log(PlayerClone.Skills);
                 sk = PlayerClone.Skills.FirstOrDefault(data =>
                     {
                         if (data == null)

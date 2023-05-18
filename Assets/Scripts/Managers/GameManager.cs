@@ -66,6 +66,12 @@ namespace Managers
             }
         }
 
+        public void SkipReward()
+        {
+            PlayerData.Gain(10);
+        }
+        
+
         public Square FindStartSquare()
         {
             return squares.Find(square => square.Data is StartSaveData);
@@ -112,6 +118,16 @@ namespace Managers
             RollForSkill((Rank)rank);
         }
 
+        public void RollForPotion(int rank)
+        {
+            var potions = PotionManager.Instance.GenerateT((Rank)rank, PlayerData.LuckyChance, 3);
+
+            var offers = potions.Select((s => new Offer(s)));
+
+            WindowManager.Instance.OffersWindow.Load(offers);
+        }
+        
+        
         public void Attack()
         {
             if (PlayerData.Enemy != null)
@@ -128,6 +144,12 @@ namespace Managers
 
             WindowManager.Instance.OffersWindow.Load(offers);
         }
+
+        public void RollForRelic(int rank)
+        {
+            RollForRelic((Rank)rank);
+        }
+        
 
         public void RollForRelic(Rank rank)
         {

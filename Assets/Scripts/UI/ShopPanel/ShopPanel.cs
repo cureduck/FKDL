@@ -80,13 +80,13 @@ namespace UI
 
             keyListObjectPool.SetDatas(args, CellSet, keyListView);
             PlayerData playerData = GameManager.Instance.PlayerData;
-            if (Data.UpGradeCost.Value > playerData.Gold)
+            if (Data.UpgradeCost.Value > playerData.Gold)
             {
-                levelUpCost_txt.text = $"<color=red>{Data.UpGradeCost.Value}</color>";
+                levelUpCost_txt.text = $"<color=red>{Data.UpgradeCost.Value}</color>";
             }
             else
             {
-                levelUpCost_txt.text = $"<color=yellow>{Data.UpGradeCost.Value}</color>";
+                levelUpCost_txt.text = $"<color=yellow>{Data.UpgradeCost.Value}</color>";
             }
 
             if (Data.RefreshCost.Value > playerData.Gold)
@@ -99,6 +99,12 @@ namespace UI
             }
         }
 
+
+        public override void Close()
+        {
+            base.Close();
+            PlayerMainPanel.Instance.SetUsePotionState(false);
+        }
 
         private void CellSet(CellGoodView arg1, Args arg2)
         {
@@ -166,7 +172,14 @@ namespace UI
         private void LevelUpClick()
         {
             //Data.UpGradeCost
-            Debug.LogError("升级按钮被点击");
+            if (Data.UpgradeCost.Value <= GameManager.Instance.PlayerData.Gold)
+            {
+                Data.Upgrade();
+            }
+            else 
+            {
+                WindowManager.Instance.warningInfoPanel.Open("金币不足");
+            }
         }
 
         private void ReflashClick()

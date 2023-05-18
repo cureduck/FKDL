@@ -32,7 +32,7 @@ namespace Game
 
                     Player.Cost(cost, "door");
 
-                    if (SData.CurGameRandom.NextDouble() < .3f)
+                    if (SData.CurGameRandom.NextDouble() < .1f)
                     {
                         InformReactResult(new DoorArgs() { CanReact = true });
                         Destroyed();

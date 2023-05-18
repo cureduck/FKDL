@@ -70,5 +70,6 @@ namespace CH.ObjectPool
         {
             return curActive[index];
         }
+
     }
 }

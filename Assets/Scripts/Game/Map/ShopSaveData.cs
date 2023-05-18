@@ -14,6 +14,7 @@ namespace Game
 
     public class ShopSaveData : MapData
     {
+        public int Level;
         private const int SkillNum = 3;
         private const int PotionNum = 3;
         private const int KeyNum = 3;
@@ -22,11 +23,25 @@ namespace Game
         public CostInfo RefreshCost { get; }
 
 
-        public CostInfo UpGradeCost => new CostInfo(100);
+        public CostInfo UpgradeCost => new CostInfo(100, CostType.Gold);
 
+        public void Upgrade()
+        {
+            Player.Cost(UpgradeCost);
+            AdjustGoodQuality();
+            Level++;
+        }
+
+        private void AdjustGoodQuality()
+        {
+            
+        }
+        
+        
         public override void Init()
         {
             base.Init();
+            Level = 0;
             Goods = GenerateGoods();
         }
 
@@ -66,6 +81,7 @@ namespace Game
 
         public ShopGoods Refresh()
         {
+            Player.Cost(RefreshCost);
             return GenerateGoods();
         }
 

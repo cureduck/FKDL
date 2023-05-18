@@ -63,6 +63,7 @@ namespace Game
         SkillPassive,
         NoTarget,
 
+        PotionNotNow,
         PotionAlreadyFull,
         SkillSlotAlreadyFull
     }

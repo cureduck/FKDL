@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CH.ObjectPool;
 using System;
+using Managers;
 
 public class ChooseProfListView : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class ChooseProfListView : MonoBehaviour
         {
             for (int i = 0; i < curActiveCount; i++)
             {
-                Debug.Log(curHaveSelect.Contains(i));
+                //Debug.Log(curHaveSelect.Contains(i));
                 uIViewObjectPool.GetCurActiveMemberByIndex(i).SetToggleInteractable(curHaveSelect.Contains(i));
             }
         }
@@ -44,6 +45,21 @@ public class ChooseProfListView : MonoBehaviour
         {
             uIViewObjectPool.GetCurActiveMemberByIndex(i).SetToggleOnState(curHaveSelect.Contains(i));
         }
+        string[] curUnlocks = Profile.GetOrCreate().Unlocks;
+        for (int i = 0; i < curUnlocks.Length; i++)
+        {
+            for (int x = 0; x < profDatas.Length; x++)
+            {
+                CellChooseProfView cellChooseProfView = uIViewObjectPool.GetCurActiveMemberByIndex(x);
+                if (cellChooseProfView.ProfIndex == curUnlocks[i]) 
+                {
+                    cellChooseProfView.SetLock(true);
+                    break;
+                }
+            }
+
+        }
+
     }
 
     private void OnCellViewSet(CellChooseProfView arg1, string arg2)

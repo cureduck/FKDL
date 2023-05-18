@@ -9,8 +9,16 @@ public class CellChooseProfView : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private PointEnterAndExit pointEnterAndExit;
     [SerializeField] private Toggle toggle;
+    [SerializeField] private GameObject lockSign;
 
     private string profIndex;
+    public string ProfIndex 
+    {
+        get 
+        {
+            return profIndex;
+        }
+    }
     private System.Action<CellChooseProfView, string, bool> cellViewClick;
 
     private System.Action<CellChooseProfView, string> onPointEnter;
@@ -31,12 +39,18 @@ public class CellChooseProfView : MonoBehaviour
         this.onPointEnter = onPointEnter;
         this.onPointExit = onPointExit;
         toggle.interactable = true;
+        SetLock(false);
         icon.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Prof, $"{CellProfView.Title}{profIndex}");
     }
 
     public void SetToggleInteractable(bool interactable)
     {
         toggle.interactable = interactable;
+    }
+
+    public void SetLock(bool isLock) 
+    {
+        lockSign.gameObject.SetActive(isLock);
     }
 
     public void SetToggleOnState(bool isOn)

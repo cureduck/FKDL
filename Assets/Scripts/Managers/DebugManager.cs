@@ -66,6 +66,18 @@ namespace Managers
             AddSkill(SKillDebugInput.text);
         }
 
+        public void RollForRelic(int rank)
+        {
+            GameManager.Instance.RollForRelic((Rank)rank);
+        }
+
+
+        public void RollForPotion()
+        {
+            
+        }
+        
+
 
         [Button]
         public void AddBuff()

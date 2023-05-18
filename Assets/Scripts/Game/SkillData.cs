@@ -230,7 +230,7 @@ namespace Game
             {
                 var v = math.min(attack.PDmg, fighter.Status.CurHp);
                 Activated?.Invoke();
-                fighter.ApplyBuff(new BuffData("poison", (int)(CurLv * Bp.Param1 * v)), enemy);
+                fighter.ApplyBuff(new BuffData("poison", (int)(Usual * v)), enemy);
             }
 
             return attack;
@@ -420,8 +420,8 @@ namespace Game
         [Effect("YTZQ_MAG", Timing.OnAttack)]
         private Attack EtherBody(Attack attack, FighterData fighter, FighterData enemy)
         {
-            var num = (int)((fighter.Status.MaxMp - fighter.Status.CurHp) / Bp.Param1) * Bp.Param2;
-            attack.MAtk += (int)num;
+            var num = (int)((fighter.Status.MaxMp - fighter.Status.CurHp));
+            attack.MAtk += (int)(num * Usual);
             Activated?.Invoke();
             return attack;
         }
@@ -524,6 +524,7 @@ namespace Game
             }
 
             var count = enemy.Buffs.Sum((data => data.Bp.BuffType == BuffType.Negative ? data.CurLv : 0));
+            count = (int)(count * Usual);
             if (count > 0)
             {
                 Activated?.Invoke();
@@ -588,7 +589,7 @@ namespace Game
         [Effect("DMJJ_ASS", Timing.OnAttack, priority = -100)]
         private Attack DMJJ2_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
-            return attack.Change(fighter.Status.PAtk, combo: (int)Usual);
+            return attack.Change((int)(fighter.Status.PAtk * 0.7f), combo: (int)Usual);
         }
 
 
@@ -612,9 +613,9 @@ namespace Game
         {
             if (((PlayerData)fighter).Engaging)
             {
-                var g = enemy.Status.Gold * Usual;
-                fighter.Gain((int)g);
-                enemy.Gain(-(int)g);
+                var g = (int)(enemy.Status.Gold * Usual);
+                fighter.Gain(g);
+                enemy.Gain(-g);
                 Activated?.Invoke();
             }
 
@@ -911,6 +912,23 @@ namespace Game
             }
 
             return status;
+        }
+
+
+        [Effect("TEST_COM", Timing.OnReact)]
+        private void Test_com(MapData cell, PlayerData player)
+        {
+            switch (cell)
+            {
+                case TravellerSaveData traveller:
+                    Activated?.Invoke();
+                    break;
+                case ObsidianSaveData obsidian:
+                    MapData.Destroy(obsidian);
+                    break;
+                default:
+                    break;
+            }
         }
 
         #endregion

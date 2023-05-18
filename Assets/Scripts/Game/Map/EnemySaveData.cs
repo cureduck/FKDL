@@ -54,15 +54,6 @@ namespace Game
         }
 
 
-        private void DeathCheck()
-        {
-            if (!IsAlive && SquareState != SquareState.Done)
-            {
-                Killed();
-            }
-        }
-
-
         private void Chase()
         {
             Player.DrawBack = true;
@@ -155,12 +146,7 @@ namespace Game
         }
 
 
-        private void Killed()
-        {
-            Enemy.Gain(Gold, "trophy");
 
-            base.Destroyed();
-        }
 
         public override string ToString()
         {

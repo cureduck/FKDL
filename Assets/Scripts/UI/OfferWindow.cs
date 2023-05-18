@@ -40,6 +40,7 @@ namespace UI
             //    Debug.Log(c.Kind);
             //}
             OffersUIStartAnimation[] offersUIStartAnimations = new OffersUIStartAnimation[offers.Length];
+            Debug.Log(offers.Length);
             for (int i = 0; i < offers.Length; i++)
             {
                 OfferUI offerUI;

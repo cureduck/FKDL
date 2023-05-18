@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EasyTransition;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -22,8 +23,13 @@ namespace Managers
 
         public Button GoAheadBtn;
 
+        
+
+        
+        
         private void Start()
         {
+            
             foreach (var toggle in ToggleList)
             {
                 toggle.onValueChanged.AddListener(
@@ -58,7 +64,7 @@ namespace Managers
                             SelectedList.Remove(toggle);
                             foreach (var toggle1 in ToggleList)
                             {
-                                toggle1.interactable = true;
+                                toggle1.interactable = Profile.GetOrCreate().Unlocks.Contains(toggle1.name);
                             }
 
                             GoAheadBtn.interactable = false;
