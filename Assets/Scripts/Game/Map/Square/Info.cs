@@ -65,6 +65,7 @@ namespace Game
 
         PotionNotNow,
         PotionAlreadyFull,
+        PotionCannotUpgrade,
         SkillSlotAlreadyFull
     }
 }

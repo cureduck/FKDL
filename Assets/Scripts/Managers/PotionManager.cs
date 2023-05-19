@@ -13,8 +13,9 @@ namespace Managers
             var rank = (Rank)int.Parse(line["rarity"]);
             var icon = GetIcon(id);
             if (icon == null) icon = GetIcon(id.Replace("+", ""));
+            var upgrade = line["upgrade"];
 
-            return new Potion(rank, id, icon)
+            return new Potion(rank, id, upgrade, icon)
             {
                 Param1 = float.Parse(line["P1"]),
             };

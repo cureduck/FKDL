@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using Managers;
-using Newtonsoft.Json;
+﻿using Managers;
 using UnityEngine;
 
 namespace Game
@@ -9,18 +6,20 @@ namespace Game
     public class Potion : CsvData
     {
         public float Param1;
+        public string Upgrade;
 
-        public string Des
+        public Potion(Rank rank, string id, string upgrade, Sprite icon) : base(rank, id, icon)
         {
-            get { return $"{Id}_desc"; }
-        }
-
-        public Potion(Rank rank, string id, Sprite icon) : base(rank, id, icon)
-        {
+            Upgrade = upgrade;
         }
 
         public Potion(Rank rank, string id) : base(rank, id)
         {
+        }
+
+        public string Des
+        {
+            get { return $"{Id}_desc"; }
         }
     }
 }

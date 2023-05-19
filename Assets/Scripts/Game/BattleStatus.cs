@@ -159,7 +159,7 @@ namespace Game
                 return new CostInfo
                 {
                     CostType = CostType.Mp,
-                    Value = s.CurMp
+                    Value = -s.CurMp
                 };
             }
 
@@ -168,7 +168,7 @@ namespace Game
                 return new CostInfo
                 {
                     CostType = CostType.Hp,
-                    Value = s.CurHp
+                    Value = -s.CurHp
                 };
             }
 
@@ -177,7 +177,7 @@ namespace Game
                 return new CostInfo
                 {
                     CostType = CostType.Gold,
-                    Value = s.Gold
+                    Value = -s.Gold
                 };
             }
 

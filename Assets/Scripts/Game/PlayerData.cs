@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using EasyTransition;
 using Game.PlayerCommands;
 using Managers;
@@ -327,6 +328,24 @@ namespace Game
             foreach (var command in commands)
             {
                 command?.Execute(this);
+            }
+        }
+
+        public bool UpgradeRandomSkill(Func<SkillData, bool> filter, out Info info)
+        {
+            var skills = Skills.Where(filter).ToList();
+            if (skills.Count > 0)
+            {
+                var index = SData.CurGameRandom.Next(0, skills.Count);
+                var skill = skills[index];
+                Upgrade(skill);
+                info = new SuccessInfo();
+                return true;
+            }
+            else
+            {
+                info = new FailureInfo(FailureReason.SkillAlreadyMax);
+                return false;
             }
         }
 

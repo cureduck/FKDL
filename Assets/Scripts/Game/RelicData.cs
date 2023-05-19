@@ -166,10 +166,160 @@ namespace Game
             return attack;
         }
 
+
+        /// <summary>
+        /// cost P1% hp, upgrade a random skill
+        /// </summary>
+        /// <param name="fighterData"></param>
+        /// <returns></returns>
+        [Effect("rxss", Timing.OnMarch)]
+        private FighterData rxss(FighterData fighterData)
+        {
+            fighterData.Cost(CostInfo.HpCost((int)(fighterData.Status.CurHp * Bp.Param1 / 100)));
+            ((PlayerData)fighterData).UpgradeRandomSkill(SkillData.CanBeUpgrade, out _);
+            Activated?.Invoke();
+            return fighterData;
+        }
+
+
+        /// <summary>
+        /// upgrade a random potion when march
+        /// </summary>
+        /// <param name="fighterData"></param>
+        /// <returns></returns>
+        [Effect("klyp", Timing.OnMarch)]
+        private FighterData klyp(FighterData fighterData)
+        {
+            ((PlayerData)fighterData).Potions.Where((data => data.CanBeUpgrade)).ChooseRandom(SData.CurGameRandom)
+                .Upgrade(out _);
+            Activated?.Invoke();
+            return fighterData;
+        }
+
+
+        /// <summary>
+        /// double the physical damage taken, half the magic damage taken
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("xwzy", Timing.OnDefendSettle, priority = 10)]
+        private Attack xwzy(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.PDmg /= 2;
+            attack.MDmg *= 2;
+
+            if (attack.PDmg > 0 || attack.MDmg > 0)
+            {
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        /// <summary>
+        /// improve luck by P1
+        /// </summary>
+        /// <param name="fighter"></param>
         [Effect("zqms", Timing.OnGet)]
         private void zqms(FighterData fighter)
         {
-            ((PlayerData)fighter).LuckyChance += .4f;
+            ((PlayerData)fighter).LuckyChance += Bp.Param1;
+        }
+
+        /// <summary>
+        /// add P1 to multi if engaging
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("zdjq", Timing.OnAttack, priority = 5)]
+        private Attack zdjq(Attack attack, FighterData player, FighterData enemy)
+        {
+            var p = (PlayerData)player;
+            if (p.Engaging)
+            {
+                attack.Multi += (int)Bp.Param1;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+
+        /// <summary>
+        /// heals P1 hp when lv up
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <param name="fighter"></param>
+        /// <returns></returns>
+        [Effect("kbyh", Timing.OnLvUp)]
+        private SkillData kbyh(SkillData skill, FighterData fighter)
+        {
+            Activated?.Invoke();
+            fighter.Heal(BattleStatus.HP((int)Bp.Param1), "kbyh");
+
+            return skill;
+        }
+
+        /// <summary>
+        /// rcover P1 hp when attack
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("ftzx", Timing.OnAttack)]
+        private Attack ftzx(Attack attack, FighterData player, FighterData enemy)
+        {
+            player.Recover(BattleStatus.HP((int)Bp.Param1), enemy, "ftzx");
+            Activated?.Invoke();
+            return attack;
+        }
+
+
+        /// <summary>
+        /// overheal to mp
+        /// </summary>
+        /// <param name="modifier"></param>
+        /// <param name="fighter"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
+        [Effect("jmzg", Timing.OnHeal, priority = 30)]
+        private BattleStatus jmzg(BattleStatus modifier, FighterData fighter, string kw)
+        {
+            if (modifier.CurHp <= 0 || fighter.Status.CurMp == fighter.Status.MaxMp) return modifier;
+
+            var overHeal = modifier.CurHp + fighter.Status.CurHp - fighter.Status.MaxHp;
+            if (overHeal > 0)
+            {
+                modifier.CurHp -= overHeal;
+                fighter.Heal(new BattleStatus(curMp: overHeal));
+                Activated?.Invoke();
+            }
+
+            return modifier;
+        }
+
+        /// <summary>
+        /// overmax mp to hp
+        /// </summary>
+        [Effect("pgly", Timing.OnHeal, priority = 30)]
+        private BattleStatus pgly(BattleStatus modifier, FighterData fighter, string kw)
+        {
+            if (modifier.CurMp <= 0 || fighter.Status.CurHp == fighter.Status.MaxHp) return modifier;
+
+            var overHeal = modifier.CurMp + fighter.Status.CurMp - fighter.Status.MaxMp;
+            if (overHeal > 0)
+            {
+                modifier.CurMp -= overHeal;
+                fighter.Heal(new BattleStatus(curHp: overHeal));
+                Activated?.Invoke();
+            }
+
+            return modifier;
         }
 
 

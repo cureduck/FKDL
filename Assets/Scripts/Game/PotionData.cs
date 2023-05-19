@@ -11,6 +11,9 @@ namespace Game
         [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
         [JsonIgnore] public override Potion Bp => PotionManager.Instance.GetById(Id);
 
+
+        [JsonIgnore] public bool CanBeUpgrade => Bp != null && Bp.Upgrade.IsNullOrWhitespace();
+
         public void SetEmpty()
         {
             Id = "";
@@ -24,6 +27,21 @@ namespace Game
         public override string ToString()
         {
             return Id;
+        }
+
+        public bool Upgrade(out Info info)
+        {
+            if (CanBeUpgrade)
+            {
+                Id = Bp.Upgrade;
+                info = new SuccessInfo();
+                return true;
+            }
+            else
+            {
+                info = new FailureInfo(FailureReason.PotionCannotUpgrade);
+                return false;
+            }
         }
 
         #region 具体效果

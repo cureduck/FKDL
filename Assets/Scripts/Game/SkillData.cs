@@ -56,6 +56,11 @@ namespace Game
             return base.MayAffect(timing, out priority);
         }
 
+        public static bool CanBeUpgrade(SkillData skill)
+        {
+            return skill != null && !skill.Bp.Id.IsNullOrWhitespace() && skill.CurLv < skill.Bp.MaxLv;
+        }
+
 
         public void Load(Skill skill, int lv = 1)
         {
