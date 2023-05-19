@@ -1,15 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Game.PlayerCommands;
 using Managers;
 
 namespace Game
 {
     public class Crystal : CsvData
     {
-        public string Title;
-        public List<Option> Options;
         public int OptionLimit;
+        public List<Option> Options;
+        public string Title;
+
+
+        public Crystal(Rank rank, int optionLimit = 999) : base(rank)
+        {
+            Options = new List<Option>();
+            OptionLimit = optionLimit;
+        }
+
+        public Crystal()
+        {
+            Options = new List<Option>();
+        }
 
 
         public IEnumerable<Option> GetOptions(Random random)
@@ -46,23 +59,12 @@ namespace Game
             }
         }
 
-
-        public Crystal(Rank rank, int optionLimit = 999) : base(rank)
-        {
-            Options = new List<Option>();
-            OptionLimit = optionLimit;
-        }
-
-        public Crystal()
-        {
-            Options = new List<Option>();
-        }
-
         public class Option
         {
+            public PlayerCommand[] Commands;
+            public CostInfo CostInfo;
             public string Effect;
             public string Line;
-            public CostInfo CostInfo;
             public int Priority;
             public int Weight;
 
@@ -74,6 +76,7 @@ namespace Game
                 CostInfo = costInfo;
                 Priority = priority;
                 Weight = weight;
+                Commands = PlayerCommand.Interpret(effect);
             }
         }
     }

@@ -70,7 +70,7 @@ namespace Managers
         {
             PlayerData.Gain(10);
         }
-        
+
 
         public Square FindStartSquare()
         {
@@ -126,8 +126,8 @@ namespace Managers
 
             WindowManager.Instance.OffersWindow.Load(offers);
         }
-        
-        
+
+
         public void Attack()
         {
             if (PlayerData.Enemy != null)
@@ -149,7 +149,7 @@ namespace Managers
         {
             RollForRelic((Rank)rank);
         }
-        
+
 
         public void RollForRelic(Rank rank)
         {

@@ -148,6 +148,43 @@ namespace Game
             };
         }
 
+        /// <summary>
+        /// 将BattleStatus隐式转换成CostInfo
+        /// </summary>
+        /// <param name="s"></param>
+        public static implicit operator CostInfo(BattleStatus s)
+        {
+            if (s.CurMp < 0)
+            {
+                return new CostInfo
+                {
+                    CostType = CostType.Mp,
+                    Value = s.CurMp
+                };
+            }
+
+            if (s.CurHp < 0)
+            {
+                return new CostInfo
+                {
+                    CostType = CostType.Hp,
+                    Value = s.CurHp
+                };
+            }
+
+            if (s.Gold < 0)
+            {
+                return new CostInfo
+                {
+                    CostType = CostType.Gold,
+                    Value = s.Gold
+                };
+            }
+
+            return new CostInfo();
+        }
+
+
         public static BattleStatus operator /(BattleStatus s1, float v)
         {
             return s1 * (1 / v);

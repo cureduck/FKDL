@@ -2,26 +2,65 @@
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using Stateless;
 using UI;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace Game
 {
     public class MapData : IUpdateable, ICloneable
     {
-        public static void Destroy(MapData data)
-        {
-            data.Destroyed();
-        }
-        
-        
         public Placement Placement;
         public SquareState SquareState = SquareState.UnRevealed;
 
         [JsonIgnore] protected static PlayerData Player => GameManager.Instance.PlayerData;
         [JsonIgnore] protected static SecondaryData SData => GameDataManager.Instance.SecondaryData;
+
+
+        /// <summary>
+        /// 面积
+        /// </summary>
+        [JsonIgnore]
+        public int Area => Placement.Height * Placement.Width;
+
+        [JsonIgnore]
+        protected Rank _rank
+        {
+            get
+            {
+                if (Area <= 4)
+                {
+                    return Rank.Normal;
+                }
+
+                return Area >= 16 ? Rank.Rare : Rank.Uncommon;
+            }
+        }
+
+        public object Clone()
+        {
+            var f = JsonConvert.SerializeObject(this, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+
+            return JsonConvert.DeserializeObject(f, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+        }
+
+        public event Action OnDestroy;
+        public event Action OnUpdated;
+
+        public void BroadCastUpdated()
+        {
+            OnUpdated?.Invoke();
+        }
+
+        public static void Destroy(MapData data)
+        {
+            data.Destroyed();
+        }
 
         public event Action<Args> ReactResultInfo;
 
@@ -77,9 +116,6 @@ namespace Game
         {
         }
 
-        public event Action OnDestroy;
-        public event Action OnUpdated;
-
         protected virtual void Destroyed()
         {
             SquareState = SquareState.Done;
@@ -93,32 +129,6 @@ namespace Game
             if (!(this is FighterData f && f.Cloned))
             {
                 DelayBroadCastManager.Instance.Add(this);
-            }
-        }
-
-        public void BroadCastUpdated()
-        {
-            OnUpdated?.Invoke();
-        }
-
-
-        /// <summary>
-        /// 面积
-        /// </summary>
-        [JsonIgnore]
-        public int Area => Placement.Height * Placement.Width;
-
-        [JsonIgnore]
-        protected Rank _rank
-        {
-            get
-            {
-                if (Area <= 4)
-                {
-                    return Rank.Normal;
-                }
-
-                return Area >= 16 ? Rank.Rare : Rank.Uncommon;
             }
         }
 
@@ -178,19 +188,6 @@ namespace Game
         {
             ReactResultInfo?.Invoke(obj);
         }
-
-        public object Clone()
-        {
-            var f = JsonConvert.SerializeObject(this, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
-
-            return JsonConvert.DeserializeObject(f, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
-        }
     }
 
 
@@ -237,8 +234,8 @@ namespace Game
 
     public class SquareInfo
     {
-        public string Name;
         public string Desc;
+        public string Name;
         public string P1;
         public string P2;
     }

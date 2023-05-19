@@ -176,7 +176,7 @@ namespace UI
             {
                 Data.Upgrade();
             }
-            else 
+            else
             {
                 WindowManager.Instance.warningInfoPanel.Open("金币不足");
             }

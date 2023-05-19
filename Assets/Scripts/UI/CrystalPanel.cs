@@ -1,11 +1,8 @@
-﻿using System;
+﻿using CH.ObjectPool;
+using Game;
 using I2.Loc;
 using Managers;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.UI;
-using Game;
-using CH.ObjectPool;
 
 namespace UI
 {
@@ -37,7 +34,7 @@ namespace UI
 
         private void CellOptionClick(PlayerData playerData, Crystal.Option option)
         {
-            playerData.Execute(option.Effect);
+            playerData.Execute(option.Commands);
             Close();
         }
 

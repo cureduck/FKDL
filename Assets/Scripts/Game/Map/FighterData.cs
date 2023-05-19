@@ -154,7 +154,7 @@ namespace Game
         {
             var atk = CheckChain<Attack>(Timing.OnDefendSettle, new object[] { attack, this, target });
             Suffer(atk);
-            
+
             DeathCheck();
             return atk;
         }
@@ -174,8 +174,8 @@ namespace Game
                 Killed();
             }
         }
-        
-        
+
+
         private void Killed()
         {
             Enemy.Gain(Gold, "trophy");

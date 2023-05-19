@@ -11,12 +11,6 @@ namespace UI
 {
     public class CellPotionView : MonoBehaviour
     {
-        private int index;
-
-        private string Id => data.Id;
-        [JsonIgnore] public Potion Target => PotionManager.Instance.GetById(Id);
-        public PotionData data;
-
         public Localize IdText;
         public TMP_Text LvText;
 
@@ -26,9 +20,14 @@ namespace UI
 
         [SerializeField] private PointEnterAndExit pointEvent;
         [SerializeField] private GameObject curSelectSign;
+        public PotionData data;
+        private int index;
 
 
         private bool isSelling = false;
+
+        private string Id => data.Id;
+        [JsonIgnore] public Potion Target => PotionManager.Instance.GetById(Id);
 
         public void Start()
         {
@@ -43,7 +42,7 @@ namespace UI
         }
 
 
-        public void SetData(int index, PotionData data,bool isSelling)
+        public void SetData(int index, PotionData data, bool isSelling)
         {
             this.index = index;
             this.data = data;
@@ -52,7 +51,7 @@ namespace UI
             {
                 sellingSign.SetActive(false);
             }
-            else 
+            else
             {
                 sellingSign.SetActive(isSelling);
             }
@@ -91,7 +90,7 @@ namespace UI
             {
                 WindowManager.Instance.warningInfoPanel.Open("玩家出售药水！");
             }
-            else 
+            else
             {
                 Info curInfo;
                 if (!GameManager.Instance.PlayerData.UsePotion(index, out curInfo))
@@ -101,7 +100,6 @@ namespace UI
             }
 
 
-            
             if (data.Count <= 0)
             {
                 OnPointExit();

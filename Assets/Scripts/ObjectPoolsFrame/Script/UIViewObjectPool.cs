@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,8 +7,8 @@ namespace CH.ObjectPool
     {
         private List<MONO> curActive;
         private Stack<MONO> curUnactive;
-        private MONO prefab;
         private System.Action<MONO, ARGS> onInit;
+        private MONO prefab;
 
         public UIViewObjectPool(MONO prefab, System.Action<MONO, ARGS> onInit)
         {
@@ -70,6 +69,5 @@ namespace CH.ObjectPool
         {
             return curActive[index];
         }
-
     }
 }

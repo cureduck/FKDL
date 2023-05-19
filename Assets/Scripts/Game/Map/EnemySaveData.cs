@@ -146,8 +146,6 @@ namespace Game
         }
 
 
-
-
         public override string ToString()
         {
             return Id + "|" + base.ToString();

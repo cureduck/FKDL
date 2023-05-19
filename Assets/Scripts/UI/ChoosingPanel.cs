@@ -1,35 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EasyTransition;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Managers
 {
     public class ChoosingPanel : Singleton<ChoosingPanel>
     {
+        public const int RoleCount = 3;
         public Image MainImage;
         public Image[] Images;
-
-        [ShowInInspector] public Dictionary<string, Sprite> Icons;
 
         public List<Toggle> ToggleList;
         public List<Toggle> SelectedList;
 
-        public const int RoleCount = 3;
-
         public Button GoAheadBtn;
 
-        
+        [ShowInInspector] public Dictionary<string, Sprite> Icons;
 
-        
-        
+
         private void Start()
         {
-            
             foreach (var toggle in ToggleList)
             {
                 toggle.onValueChanged.AddListener(

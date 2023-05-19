@@ -47,13 +47,15 @@ def write_loc(reader, f, save_path):
         f.close()
 
 
-auto_split(r"../../StreamingAssets/SkillsAll.csv", r"../../StreamingAssets/Skills.csv", r"../../Localization"
-                                                                                        r"/Skills_loc.csv")
-auto_split(r"../../StreamingAssets/RelicsAll.csv", r"../../StreamingAssets/Relics.csv", r"../../Localization"
-                                                                                        r"/relics_loc.csv")
-auto_split(r"../../StreamingAssets/CrystalAll.csv", r"../../StreamingAssets/Crystal.csv", r"../../Localization"
-                                                                                          r"/crystal_loc.csv")
-auto_split(r"../../StreamingAssets/BuffsAll.csv", r"../../StreamingAssets/Buffs.csv", r"../../Localization/buffs_loc"
-                                                                                      r".csv")
-auto_split(r"../../StreamingAssets/PotionsAll.csv", r"../../StreamingAssets/Potions.csv",
-           r"../../Localization/potions_loc.csv")
+if __name__ == '__main__':
+    auto_split(r"../../StreamingAssets/SkillsAll.csv", r"../../StreamingAssets/Skills.csv", r"../../Localization"
+                                                                                            r"/Skills_loc.csv")
+    auto_split(r"../../StreamingAssets/RelicsAll.csv", r"../../StreamingAssets/Relics.csv", r"../../Localization"
+                                                                                            r"/relics_loc.csv")
+    auto_split(r"../../StreamingAssets/CrystalAll.csv", r"../../StreamingAssets/Crystal.csv", r"../../Localization"
+                                                                                              r"/crystal_loc.csv")
+    auto_split(r"../../StreamingAssets/BuffsAll.csv", r"../../StreamingAssets/Buffs.csv",
+               r"../../Localization/buffs_loc"
+               r".csv")
+    auto_split(r"../../StreamingAssets/PotionsAll.csv", r"../../StreamingAssets/Potions.csv",
+               r"../../Localization/potions_loc.csv")

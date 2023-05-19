@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Csv;
 using Game;
 using Tools;
@@ -75,15 +73,23 @@ namespace Managers
                         break;
                 }
 
-                var opt = new Crystal.Option(
-                    effects,
-                    suf,
-                    new CostInfo(int.TryParse(line["cost"], out var o) ? o : 0, costType),
-                    int.TryParse(line["priority"], out var p) ? p : 0,
-                    int.TryParse(line["weight"], out var w) ? w : 1
-                );
+                try
+                {
+                    var opt = new Crystal.Option(
+                        effects,
+                        suf,
+                        new CostInfo(int.TryParse(line["cost"], out var o) ? o : 0, costType),
+                        int.TryParse(line["priority"], out var p) ? p : 0,
+                        int.TryParse(line["weight"], out var w) ? w : 1
+                    );
 
-                Lib[tit].Options.Add(opt);
+                    Lib[tit].Options.Add(opt);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"option {id} dropped {line["effects"]}");
+                    Debug.Log(e);
+                }
             }
         }
     }

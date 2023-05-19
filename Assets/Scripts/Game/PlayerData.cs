@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using EasyTransition;
+using Game.PlayerCommands;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -321,7 +322,16 @@ namespace Game
         }
 
 
-        [Button]
+        public void Execute(IEnumerable<PlayerCommand> commands)
+        {
+            foreach (var command in commands)
+            {
+                command?.Execute(this);
+            }
+        }
+
+
+        /*[Button]
         public void Execute(string cmds)
         {
             foreach (var cmd in cmds.Replace(" ", "").Split('|'))
@@ -445,7 +455,7 @@ namespace Game
                     Debug.LogError(e);
                 }
             }
-        }
+        }*/
 
 
         public void Save()

@@ -14,11 +14,11 @@ namespace Game
 
     public class ShopSaveData : MapData
     {
-        public int Level;
         private const int SkillNum = 3;
         private const int PotionNum = 3;
         private const int KeyNum = 3;
         public ShopGoods Goods;
+        public int Level;
 
         public CostInfo RefreshCost { get; }
 
@@ -34,10 +34,9 @@ namespace Game
 
         private void AdjustGoodQuality()
         {
-            
         }
-        
-        
+
+
         public override void Init()
         {
             base.Init();

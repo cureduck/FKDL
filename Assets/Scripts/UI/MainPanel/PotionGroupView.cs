@@ -1,6 +1,4 @@
 ﻿using Game;
-using Unity.Mathematics;
-using UnityEngine.UI;
 using UnityEngine;
 
 namespace UI
@@ -8,9 +6,12 @@ namespace UI
     public class PotionGroupView : FighterUIPanel
     {
         [SerializeField] private CellPotionView prefab;
+
         [SerializeField] private Transform listParent;
+
         //public int MinLen => math.min(((PlayerData) _master).Potions.Length, SkillItems.Length);
         private bool isSelling = false;
+
         public override void SetMaster(FighterData master)
         {
             base.SetMaster(master);
