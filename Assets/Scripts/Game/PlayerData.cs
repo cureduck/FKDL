@@ -43,10 +43,12 @@ namespace Game
             CheckChain(Timing.OnMarch, new object[] { this });
         }
 
-
-#if UNITY_EDITOR
-        [Button]
-#endif
+        /// <summary>
+        /// Use a potion from the player's inventory.
+        /// </summary>
+        /// <param name="index">The index of the potion to use.</param>
+        /// <param name="info">The output Info message.</param>
+        /// <returns>Returns true if the potion was used successfully, false otherwise.</returns>
         public bool UsePotion(int index, out Info info)
         {
             if (!Potions[index].IsEmpty)
@@ -304,7 +306,7 @@ namespace Game
         {
             if (index >= 0 && index < Skills.Count)
             {
-                GetSkillPoint(Skills[index].Bp.Rank);
+                //GetSkillPoint(Skills[index].Bp.Rank);
                 Skills[index] = null;
                 SkillPointChanged?.Invoke();
                 DelayUpdate();

@@ -43,7 +43,6 @@ namespace UI
                 playerData.Relics.Add(new RelicData("Luck",1));*/
 
                 Master = playerData;
-                Debug.Log(playerData.Buffs.Count);
             };
         }
 
@@ -124,10 +123,9 @@ namespace UI
             }
         }
 
-        public void SetUsePotionState(bool isSell) 
+        public void SetUsePotionState(bool isSell)
         {
             PotionPanel.SetSellingState(isSell);
         }
-
     }
 }

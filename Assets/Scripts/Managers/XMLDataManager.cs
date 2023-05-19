@@ -166,7 +166,7 @@ namespace Managers
                 }
             }
 
-            FuncMatch();
+            MatchFunctionality();
             FuncMatchCheck();
             Debug.Log(
                 $"-----------------------------------------{typeof(T1).Name} 加载完毕-----------------------------------------------");
@@ -187,7 +187,7 @@ namespace Managers
         }
 
 
-        private void FuncMatch()
+        private void MatchFunctionality()
         {
             foreach (var method in typeof(T2).GetMethods(Flag))
             {

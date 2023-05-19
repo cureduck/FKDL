@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Game;
+using Managers;
 using UnityEngine;
 using UnityEngine.UI;
-using Game;
-using Managers;
-using System;
 
 public class CellRelicView : MonoBehaviour
 {
@@ -37,7 +34,12 @@ public class CellRelicView : MonoBehaviour
         if (relicData != null)
         {
             WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
-                { describe = "这是一个遗物", title = relicData.Id, screenPosition = transform.position });
+            {
+                describe = $"{relicData.Id}_desc",
+                title = relicData.Id,
+                screenPosition = transform.position,
+                param = relicData.Bp.Param1.ToString(),
+            });
         }
     }
 

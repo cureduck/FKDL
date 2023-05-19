@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Managers;
 using UnityEngine;
 using UnityEngine.UI;
-using Managers;
 
 public class CellChooseProfView : MonoBehaviour
 {
@@ -10,19 +8,17 @@ public class CellChooseProfView : MonoBehaviour
     [SerializeField] private PointEnterAndExit pointEnterAndExit;
     [SerializeField] private Toggle toggle;
     [SerializeField] private GameObject lockSign;
-
-    private string profIndex;
-    public string ProfIndex 
-    {
-        get 
-        {
-            return profIndex;
-        }
-    }
     private System.Action<CellChooseProfView, string, bool> cellViewClick;
 
     private System.Action<CellChooseProfView, string> onPointEnter;
     private System.Action<CellChooseProfView, string> onPointExit;
+
+    private string profIndex;
+
+    public string ProfIndex
+    {
+        get { return profIndex; }
+    }
 
     private void Start()
     {
@@ -39,7 +35,7 @@ public class CellChooseProfView : MonoBehaviour
         this.onPointEnter = onPointEnter;
         this.onPointExit = onPointExit;
         toggle.interactable = true;
-        SetLock(false);
+        SetLock(true);
         icon.sprite = SpriteManager.Instance.GetIcon(SpriteManager.IconType.Prof, $"{CellProfView.Title}{profIndex}");
     }
 
@@ -48,7 +44,7 @@ public class CellChooseProfView : MonoBehaviour
         toggle.interactable = interactable;
     }
 
-    public void SetLock(bool isLock) 
+    public void SetLock(bool isLock)
     {
         lockSign.gameObject.SetActive(isLock);
     }

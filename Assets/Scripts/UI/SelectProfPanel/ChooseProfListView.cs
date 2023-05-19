@@ -1,20 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using CH.ObjectPool;
-using System;
 using Managers;
+using UnityEngine;
 
 public class ChooseProfListView : MonoBehaviour
 {
     [SerializeField] private CellChooseProfView profViewPrefab;
     [SerializeField] private Transform listViewParent;
 
-    private UIViewObjectPool<CellChooseProfView, string> uIViewObjectPool;
-
     private System.Action<CellChooseProfView, string, bool> cellClick;
     private System.Action<CellChooseProfView, string> onPointEnter;
     private System.Action<CellChooseProfView, string> onPointExit;
+
+    private UIViewObjectPool<CellChooseProfView, string> uIViewObjectPool;
 
 
     public void Init()
@@ -45,21 +43,20 @@ public class ChooseProfListView : MonoBehaviour
         {
             uIViewObjectPool.GetCurActiveMemberByIndex(i).SetToggleOnState(curHaveSelect.Contains(i));
         }
+
         string[] curUnlocks = Profile.GetOrCreate().Unlocks;
         for (int i = 0; i < curUnlocks.Length; i++)
         {
             for (int x = 0; x < profDatas.Length; x++)
             {
                 CellChooseProfView cellChooseProfView = uIViewObjectPool.GetCurActiveMemberByIndex(x);
-                if (cellChooseProfView.ProfIndex == curUnlocks[i]) 
+                if (cellChooseProfView.ProfIndex == curUnlocks[i])
                 {
-                    cellChooseProfView.SetLock(true);
+                    cellChooseProfView.SetLock(false);
                     break;
                 }
             }
-
         }
-
     }
 
     private void OnCellViewSet(CellChooseProfView arg1, string arg2)
