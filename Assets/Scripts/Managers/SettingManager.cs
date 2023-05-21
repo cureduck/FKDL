@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 namespace Managers
 {
@@ -16,19 +15,15 @@ namespace Managers
 
     public class SettingManager : Singleton<SettingManager>
     {
-        private const float maxDegree = -35;
         //public static readonly Resolution[] CurCanUseResolution = Screen.resolutions;
 
         //private SettingData settingData;
 
         public GameSettings GameSettings;
-        public Slider DegreeSlider;
 
         protected override void Awake()
         {
             base.Awake();
-            DegreeSlider.value = GameSettings.Degree / maxDegree;
-            GameSettings.FOV = GameSettings.FOV;
             Application.targetFrameRate = 120;
         }
 
@@ -65,7 +60,7 @@ namespace Managers
 
         public void SetDegree(float f)
         {
-            GameSettings.Degree = maxDegree * f;
+            GameSettings.Degree = GameSettings.MaxDegree * f;
             //settingData.viewAngle = f;
         }
 

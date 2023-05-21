@@ -1,7 +1,6 @@
 ﻿using System;
 using DG.Tweening;
 using Game;
-using Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +14,12 @@ namespace UI
         [SerializeField] public Image icon_img;
         public Image OutLine;
 
+        private Sequence _seq;
+
+        public override string Id => Data.Id;
+        public override string Desc => $"{Data.Id}_desc";
+        public override string Param => Data.CurLv.ToString();
+
         protected override void OnActivated()
         {
             base.OnActivated();
@@ -24,12 +29,6 @@ namespace UI
                 .Insert(1f, icon_img.transform.DOScale(1f, .5f))
                 .OnComplete(() => icon_img.transform.localScale = Vector3.one);
         }
-
-        public override string Id => Data.Id;
-        public override string Desc => $"{Data.Id}_desc";
-        public override string Param => Data.CurLv.ToString();
-
-        private Sequence _seq;
 
 
         public override void UpdateUI()
@@ -55,7 +54,7 @@ namespace UI
                 case BuffType.Negative:
                     OutLine.color = Color.red;
                     break;
-                case BuffType.Bless:
+                case BuffType.Blessing:
                     OutLine.color = Color.black;
                     break;
                 case BuffType.Curse:

@@ -48,6 +48,7 @@ def write_loc(reader, f, save_path):
 
 
 if __name__ == '__main__':
+    print("start localization")
     auto_split(r"../../StreamingAssets/SkillsAll.csv", r"../../StreamingAssets/Skills.csv", r"../../Localization"
                                                                                             r"/Skills_loc.csv")
     auto_split(r"../../StreamingAssets/RelicsAll.csv", r"../../StreamingAssets/Relics.csv", r"../../Localization"
@@ -59,3 +60,4 @@ if __name__ == '__main__':
                r".csv")
     auto_split(r"../../StreamingAssets/PotionsAll.csv", r"../../StreamingAssets/Potions.csv",
                r"../../Localization/potions_loc.csv")
+    print("end localization")

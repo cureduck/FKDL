@@ -40,7 +40,8 @@ namespace Managers
     }
 
 
-    public abstract class XMLDataManager<T1, T2> : Singleton<XMLDataManager<T1, T2>>, IProvider<T1> where T1 : CsvData
+    public abstract class XMLDataManager<T1, T2, T3> : Singleton<T3>, IProvider<T1>
+        where T1 : CsvData where T3 : Singleton<T3>
     {
         private const BindingFlags Flag = (BindingFlags.NonPublic) | (BindingFlags.Instance);
 

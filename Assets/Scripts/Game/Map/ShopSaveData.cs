@@ -20,7 +20,7 @@ namespace Game
         public ShopGoods Goods;
         public int Level;
 
-        public CostInfo RefreshCost { get; }
+        public CostInfo RefreshCost => new CostInfo(10);
 
 
         public CostInfo UpgradeCost => new CostInfo(100, CostType.Gold);

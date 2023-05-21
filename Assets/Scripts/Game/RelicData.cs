@@ -176,7 +176,7 @@ namespace Game
         private FighterData rxss(FighterData fighterData)
         {
             fighterData.Cost(CostInfo.HpCost((int)(fighterData.Status.CurHp * Bp.Param1 / 100)));
-            ((PlayerData)fighterData).UpgradeRandomSkill(SkillData.CanBeUpgrade, out _);
+            ((PlayerData)fighterData).UpgradeRandomSkill(out _, true);
             Activated?.Invoke();
             return fighterData;
         }
@@ -327,6 +327,231 @@ namespace Game
         private void gjb(FighterData fighter)
         {
             ((PlayerData)fighter).Status.Gold += 300;
+        }
+
+        /// <summary>
+        /// can remove obsidian
+        /// </summary>
+        /// <param name="mapData"></param>
+        /// <param name="fighterData"></param>
+        /// <returns></returns>
+        [Effect("kgtq", Timing.OnReact)]
+        private MapData kgtq(MapData mapData, FighterData fighterData)
+        {
+            if (mapData is ObsidianSaveData)
+            {
+                Activated?.Invoke();
+                MapData.Destroy(mapData);
+            }
+
+            return mapData;
+        }
+
+
+        [Effect("xsjz", Timing.OnGet)]
+        private void xsjz(FighterData fighter)
+        {
+            Activated?.Invoke();
+            ((PlayerData)fighter).AddSkillSlot();
+        }
+
+        /// <summary>
+        /// 下层时，获得1瓶技能药，但是失去所有金币
+        /// </summary>
+        /// <returns></returns>
+        [Effect("edzh", Timing.OnMarch)]
+        private FighterData edzh(FighterData fighterData)
+        {
+            var player = (PlayerData)fighterData;
+            player.Status.Gold = 0;
+            player.TryTakePotion("skillpotion", out _);
+            Activated?.Invoke();
+            return player;
+        }
+
+        /// <summary>
+        /// 获得时随机技能升级P1次
+        /// </summary>
+        [Effect("pdlh", Timing.OnGet)]
+        private void pdlh(FighterData fighter)
+        {
+            var player = (PlayerData)fighter;
+            for (var i = 0; i < Bp.Param1; i++)
+            {
+                player.UpgradeRandomSkill(out _);
+            }
+        }
+
+        /// <summary>
+        /// 斩杀首领时：获得99层启示
+        /// </summary>
+        /// <returns></returns>
+        [Effect("xszq", Timing.OnKill)]
+        private Attack xszq(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (((EnemySaveData)enemy).Rank == Rank.Rare)
+            {
+                Activated?.Invoke();
+                ((PlayerData)player).AppliedBuff(BuffData.Divinity(99));
+            }
+
+            return attack;
+        }
+
+        /// <summary>
+        /// 商店不可重复进入，交互时获得P1金币
+        /// </summary>
+        /// <param name="mapData"></param>
+        /// <param name="fighterData"></param>
+        [Effect("slxk", Timing.OnReact)]
+        private void slxk(MapData mapData, FighterData fighterData)
+        {
+            if (mapData is ShopSaveData)
+            {
+                Activated?.Invoke();
+                ((PlayerData)fighterData).Gain((int)Bp.Param1);
+                MapData.Destroy(mapData);
+            }
+        }
+
+        /// <summary>
+        /// 进入下层时:无消耗使用所有非战主动技能一次
+        /// </summary>
+        /// <param name="fighterData"></param>
+        /// <returns></returns>
+        [Effect("hxzg", Timing.OnMarch)]
+        private FighterData hxzg(FighterData fighterData)
+        {
+            var player = (PlayerData)fighterData;
+            foreach (var skill in player.Skills)
+            {
+                if (skill.IsValid && !skill.Bp.BattleOnly)
+                {
+                    player.CastNonAimingSkill(skill, 0f);
+                }
+            }
+
+            Activated?.Invoke();
+            return player;
+        }
+
+        /// <summary>
+        /// 技能攻击时：当前所有技能，每剩余1点冷却，攻击倍率+{[P1]}
+        /// </summary>
+        /// <returns></returns>
+        [Effect("myrg", Timing.OnAttack, priority = 4)]
+        private Attack myrg(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsCommonAttack) return attack;
+            var playerData = (PlayerData)player;
+            var bonus = player.Skills.Sum((data => data.CooldownLeft));
+            attack.Multi += bonus * Bp.Param1;
+            Activated?.Invoke();
+            return attack;
+        }
+
+
+        /// <summary>
+        /// 防御时:每有一种诅咒,敌人的物防-{[P1]}
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("hz", Timing.OnDefendSettle)]
+        private Attack hz(Attack attack, FighterData player, FighterData enemy)
+        {
+            var playerData = (PlayerData)player;
+            var curseCount = playerData.Buffs.Count(buff => buff.Bp.BuffType == BuffType.Curse);
+            enemy.Status.PDef -= (int)(curseCount * Bp.Param1);
+            Activated?.Invoke();
+            return attack;
+        }
+
+        /// <summary>
+        /// 获得诅咒时:获得{[P1]}次主职业的属性升级
+        /// </summary>
+        /// <param name="buff"></param>
+        /// <param name="fighter"></param>
+        /// <returns></returns>
+        [Effect("ztsl", Timing.OnApplied)]
+        private BuffData ztsl(BuffData buff, FighterData fighter)
+        {
+            if (buff.Bp.BuffType == BuffType.Curse)
+            {
+                var player = (PlayerData)fighter;
+                for (var i = 0; i < Bp.Param1; i++)
+                {
+                    player.Strengthen(BattleStatus.GetProfessionUpgrade(player.profInfo[0]));
+                }
+            }
+
+            return buff;
+        }
+
+
+        /// <summary>
+        /// 移除诅咒时:每移除一种诅咒,最大生命值提升{[P1]}%
+        /// </summary>
+        /// <param name="buff"></param>
+        /// <param name="fighter"></param>
+        /// <returns></returns>
+        [Effect("lqfz", Timing.OnPurify)]
+        private BuffData lqfz(BuffData buff, FighterData fighter)
+        {
+            if (buff.Bp.BuffType == BuffType.Curse)
+            {
+                var player = (PlayerData)fighter;
+                player.Status.MaxHp += (int)(player.Status.MaxHp * Bp.Param1 / 100);
+            }
+
+            return buff;
+        }
+
+
+        /// <summary>
+        /// 获得祝福时:获得{[P1]}层连击
+        /// </summary>
+        /// <param name="buff"></param>
+        /// <param name="fighter"></param>
+        /// <returns></returns>
+        [Effect("xtt", Timing.OnApplied)]
+        private BuffData xtt(BuffData buff, FighterData fighter)
+        {
+            if (buff.Bp.BuffType == BuffType.Blessing)
+            {
+                var player = (PlayerData)fighter;
+                player.AppliedBuff(BuffData.Vigor((int)Bp.Param1));
+            }
+
+            return buff;
+        }
+
+        /// <summary>
+        /// 斩杀首领时:获得随机一种诅咒,当前所有技能升级1次
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("jnp", Timing.OnKill, priority = 3)]
+        private Attack jnp(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (((EnemySaveData)enemy).Rank == Rank.Rare)
+            {
+                Activated?.Invoke();
+                var playerData = (PlayerData)player;
+                playerData.AppliedBuff(((BuffManager)(BuffManager.Instance)).GetRandomBuffData(BuffType.Curse));
+                foreach (var skill in playerData.Skills)
+                {
+                    if (skill.IsValid)
+                    {
+                        playerData.Upgrade(skill);
+                    }
+                }
+            }
+
+            return attack;
         }
 
         #endregion

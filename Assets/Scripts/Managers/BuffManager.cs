@@ -6,7 +6,7 @@ using Tools;
 
 namespace Managers
 {
-    public class BuffManager : XMLDataManager<Buff, BuffData>
+    public class BuffManager : XMLDataManager<Buff, BuffData, BuffManager>
     {
         protected override string CsvPath => Paths.BuffDataPath;
 
@@ -24,6 +24,11 @@ namespace Managers
         public string GetRandomBuff(BuffType buffType)
         {
             return Lib.Values.Where((buff => buff.BuffType == buffType)).ChooseRandom(Lib.Random).Id;
+        }
+
+        public BuffData GetRandomBuffData(BuffType buffType)
+        {
+            return new BuffData(GetRandomBuff(buffType), 1);
         }
     }
 }

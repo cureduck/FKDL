@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Managers;
-using Sirenix.OdinInspector;
 
 namespace Game
 {
     public class BuffAgent : List<BuffData>
     {
-        public event Action<BuffData> BuffAdded;
-        public event Action<BuffData> BuffRemoved;
-
-
         public BuffAgent() : base()
         {
             foreach (var buff in this)
@@ -20,10 +14,8 @@ namespace Game
             }
         }
 
-        public void Add_Test(BuffData data)
-        {
-            base.Add(data);
-        }
+        public event Action<BuffData> BuffAdded;
+        public event Action<BuffData> BuffRemoved;
 
 
         public new void Add(BuffData data)

@@ -10,8 +10,11 @@ using UnityEngine;
 
 namespace Managers
 {
+    [RequireComponent(typeof(LocalizationParamsManager))]
     public class GameManager : Singleton<GameManager>
     {
+        public LocalizationParamsManager GlobalLocalizationParamsManager;
+
         public Square Prefab;
 
         public Transform MapGo;
@@ -49,7 +52,10 @@ namespace Managers
 
         private void Start()
         {
+            GlobalLocalizationParamsManager = GetComponent<LocalizationParamsManager>();
+#if UNITY_EDITOR
             GetLocalization();
+#endif
             Profile = ProfileManager.Instance.Profile;
             _pool = new ObjectPool<Square>(CreateSquare);
 
@@ -77,8 +83,7 @@ namespace Managers
             return squares.Find(square => square.Data is StartSaveData);
         }
 
-
-        public void GetLocalization()
+        private static void GetLocalization()
         {
             var localizationFilePath = "Assets/Localization";
             try

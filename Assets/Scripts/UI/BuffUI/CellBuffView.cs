@@ -1,10 +1,8 @@
-﻿using Game;
-using I2.Loc;
-using TMPro;
+﻿using System;
+using Game;
+using Managers;
 using UnityEngine;
 using UnityEngine.UI;
-using Managers;
-using System;
 
 public class CellBuffView : MonoBehaviour
 {
@@ -15,8 +13,8 @@ public class CellBuffView : MonoBehaviour
     [SerializeField] private ObjectColliderPointEnterAndExit objectPointEnterAndExit;
 
     [SerializeField] private Image OutLine;
-    private bool isWorldObject = false;
     private BuffData buffData;
+    private bool isWorldObject = false;
 
     private void Start()
     {
@@ -82,7 +80,7 @@ public class CellBuffView : MonoBehaviour
             case BuffType.Negative:
                 OutLine.color = (Color.red);
                 break;
-            case BuffType.Bless:
+            case BuffType.Blessing:
                 OutLine.color = (Color.black);
                 break;
             case BuffType.Curse:

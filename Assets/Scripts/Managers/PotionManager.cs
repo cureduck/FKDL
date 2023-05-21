@@ -3,7 +3,7 @@ using Game;
 
 namespace Managers
 {
-    public class PotionManager : XMLDataManager<Potion, PotionData>
+    public class PotionManager : XMLDataManager<Potion, PotionData, PotionManager>
     {
         protected override string CsvPath => Paths.PotionDataPath;
 

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Newtonsoft.Json;
+using Sirenix.Utilities;
 
 namespace Game
 {
@@ -19,6 +20,8 @@ namespace Game
         public CostInfo CostInfo;
 
         public bool Death;
+
+        [JsonIgnore] public bool IsCommonAttack => Kw.IsNullOrWhitespace();
 
         /*public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1,string id = "", CostInfo costInfo = default)
         {

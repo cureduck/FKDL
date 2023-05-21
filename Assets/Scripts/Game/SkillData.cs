@@ -22,8 +22,7 @@ namespace Game
         public int InitCoolDown;
         public bool Sealed = false;
 
-        [JsonIgnore] public bool IsEmpty => Id.IsNullOrWhitespace();
-
+        [JsonIgnore, Obsolete] public bool IsEmpty => Id.IsNullOrWhitespace();
 
         [JsonIgnore] public override Skill Bp => SkillManager.Instance.GetById(Id.ToLower());
 
@@ -34,7 +33,7 @@ namespace Game
         private SecondaryData SData => GameDataManager.Instance.SecondaryData;
 
         [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
-
+        [JsonIgnore] public bool IsValid => Id.IsNullOrWhitespace() && Bp != null;
 
         [JsonIgnore] public bool InCoolDown => CooldownLeft > 0;
 
@@ -56,9 +55,14 @@ namespace Game
             return base.MayAffect(timing, out priority);
         }
 
-        public static bool CanBeUpgrade(SkillData skill)
+        public static bool CanBreakOut(SkillData skill)
         {
-            return skill != null && !skill.Bp.Id.IsNullOrWhitespace() && skill.CurLv < skill.Bp.MaxLv;
+            return skill != null && !skill.Bp.Id.IsNullOrWhitespace() && skill.Bp.MaxLv == 1;
+        }
+
+        public static bool CanUpgrade(SkillData skill)
+        {
+            return CanBreakOut(skill) && skill.CurLv < skill.Bp.MaxLv;
         }
 
 
@@ -244,10 +248,9 @@ namespace Game
         [Effect("ZH_ALC", Timing.OnDefendSettle)]
         private Attack SelfDestructive(Attack attack, FighterData fighter, FighterData enemy)
         {
-            var c = Bp.Param1 + Bp.Param2 * CurLv;
             if (attack.SumDmg > 0)
             {
-                if (SData.CurGameRandom.NextDouble() < c)
+                if (SData.CurGameRandom.NextDouble() < Usual / 100)
                 {
                     fighter.RandomStrengthen();
                     Activated?.Invoke();

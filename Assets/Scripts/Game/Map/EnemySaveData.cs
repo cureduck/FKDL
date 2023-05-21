@@ -19,6 +19,8 @@ namespace Game
             */
         }
 
+        [JsonIgnore] public Rank Rank => Bp.Rank;
+
 
         [JsonIgnore] public override FighterData Enemy => enemy ?? GameManager.Instance.PlayerData;
 

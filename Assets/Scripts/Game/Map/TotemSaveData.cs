@@ -11,18 +11,28 @@ namespace Game
         public override void Init()
         {
             base.Init();
-            BuffId = ((BuffManager)BuffManager.Instance).GetRandomBuff(BuffType.Bless);
+            BuffId = ((BuffManager)BuffManager.Instance).GetRandomBuff(BuffType.Blessing);
         }
+
 
         public override void OnReact()
         {
-            var buff = Player.Buffs.FirstOrDefault(da => da.Bp.BuffType == BuffType.Bless);
-            if (buff != null && !buff.Id.IsNullOrWhitespace())
+            var bless = Player.Buffs.FirstOrDefault(da => da.Bp.BuffType == BuffType.Blessing);
+            if (bless != null && !bless.Id.IsNullOrWhitespace())
             {
-                Player.RemoveBuff(buff);
+                Player.RemoveBuff(bless);
             }
 
-            Player.AppliedBuff(new BuffData(BuffId, 1));
+            var curse = Player.Buffs.FirstOrDefault(da => da.Bp.BuffType == BuffType.Curse);
+            if (curse != null && !curse.Id.IsNullOrWhitespace())
+            {
+                Player.RemoveBuff(curse);
+            }
+            else
+            {
+                Player.AppliedBuff(new BuffData(BuffId, 1));
+            }
+
             base.OnReact();
             Destroyed();
         }

@@ -25,8 +25,6 @@ namespace UI
 
                 Data.OnUpdated += UpdateUI;
                 Data.SkillPointChanged += SkillPointChanged;
-
-                Test();
             };
         }
 
@@ -36,33 +34,6 @@ namespace UI
             //throw new NotImplementedException();
         }
 
-
-        private void Test()
-        {
-            //Data = new PlayerData();
-            SkillData skillData = new SkillData { CooldownLeft = 0, Id = "DZXY_ALC".ToLower(), CurLv = 1 };
-            SkillData skillData02 = new SkillData { CooldownLeft = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
-            SkillData skillData03 = new SkillData { CooldownLeft = 0, Id = "YWLZ_ALC".ToLower(), CurLv = 1 };
-            //Debug.Log(Data.Skills.Count);
-            for (int i = 0; i < 6; i++)
-            {
-                if (Data.Skills.Count >= 6)
-                {
-                    break;
-                }
-
-                Data.Skills.Add(null);
-            }
-
-            Data.Skills[0] = skillData;
-            Data.Skills[1] = skillData;
-            Data.Skills[2] = skillData02;
-            Data.Skills[3] = skillData03;
-            Data.Skills[4] = skillData03;
-            Data.Skills[5] = skillData03;
-            Debug.Log(Data.Skills.Count);
-            UpdateUI();
-        }
 
         protected override void UpdateUI()
         {

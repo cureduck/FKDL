@@ -183,12 +183,6 @@ namespace Game
             base.Destroyed();
         }
 
-        public void Purify(BuffData buff)
-        {
-            buff = CheckChain<BuffData>(Timing.OnPurify, new object[] { buff, this });
-            Buffs.Remove(buff);
-        }
-
 
         private CostInfo GetActualCostInfo(CostInfo costInfo, string kw = "")
         {
@@ -472,6 +466,7 @@ namespace Game
 
         public void RemoveBuff(BuffData buff)
         {
+            buff = CheckChain<BuffData>(Timing.OnPurify, new object[] { buff, this });
             Buffs.Remove(buff);
             OnLose(buff);
         }
@@ -641,14 +636,21 @@ namespace Game
             }
         }
 
-        public void CastNonAimingSkill(SkillData skill)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <param name="discount">打折，0.8就是8折，0就是免费</param>
+        /// <exception cref="Exception"></exception>
+        public void CastNonAimingSkill(SkillData skill, float discount = 1f)
         {
-            if ((skill.Bp.Positive) && (skill.Bp.Fs.ContainsKey(Timing.SkillEffect)))
+            if ((skill.Bp.Positive) && skill.Bp.Fs.TryGetValue(Timing.SkillEffect, out var f))
             {
-                skill.Bp.Fs[Timing.SkillEffect].Invoke(skill, new object[] { this });
+                f.Invoke(skill, new object[] { this });
 
                 CoolDownSettle(skill);
                 var cost = GetSkillCost(skill, false);
+                cost.Discount -= 1 - discount;
                 Cost(cost);
                 DelayUpdate();
             }
@@ -741,7 +743,7 @@ namespace Game
             }
         }
 
-        protected void Upgrade(SkillData skillData, int lv = 1)
+        public void Upgrade(SkillData skillData, int lv = 1)
         {
             skillData.CurLv += lv;
             CheckChain<SkillData>(Timing.OnLvUp, new object[] { skillData, this });

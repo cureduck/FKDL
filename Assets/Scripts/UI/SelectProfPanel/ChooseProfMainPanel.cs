@@ -33,7 +33,7 @@ public class ChooseProfMainPanel : MonoBehaviour
     private void Start()
     {
         Init();
-        curCanSelectProfs = new string[] { "ALC", "ASS", "BAR", "BLI", "CUR", "KNI", "MAG" };
+        curCanSelectProfs = new string[] { "ALC", "ASS", "MAG", "BAR", "BLI", "CUR", "KNI" };
         UpdateView();
     }
 

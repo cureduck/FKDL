@@ -13,6 +13,7 @@ namespace Game
 {
     public class PlayerData : FighterData
     {
+        [JsonIgnore] private float _luckChance;
         public bool DrawBack;
 
         [JsonIgnore] public FighterData enemy;
@@ -20,9 +21,6 @@ namespace Game
         public bool Engaging;
         public string Id;
         public Dictionary<Rank, int> Keys;
-
-
-        public float LuckyChance;
         public PotionData[] Potions;
 
         public string[] profInfo;
@@ -34,6 +32,17 @@ namespace Game
             Relics = new RelicAgent();
         }
 
+        public float LuckyChance
+        {
+            get => _luckChance;
+            set
+            {
+                _luckChance = value;
+                GameManager.Instance.GlobalLocalizationParamsManager.SetParameterValue("LuckyChance",
+                    _luckChance.ToString("P0"));
+            }
+        }
+
         public Dictionary<Rank, int> skillPoint => GameDataManager.Instance.SecondaryData.SkillPoint;
 
         [JsonIgnore] public override FighterData Enemy => enemy ?? (EnemySaveData)GameManager.Instance.Focus.Data;
@@ -42,7 +51,15 @@ namespace Game
         public void March(string destination)
         {
             Debug.Log($"destination {destination}");
+
+            ClearAllBuffs();
             CheckChain(Timing.OnMarch, new object[] { this });
+        }
+
+        private void ClearAllBuffs()
+        {
+            Buffs.RemoveAll(data => data.Bp.BuffType == BuffType.Blessing || data.Bp.BuffType == BuffType.Curse);
+            DelayUpdate();
         }
 
         /// <summary>
@@ -331,8 +348,18 @@ namespace Game
             }
         }
 
-        public bool UpgradeRandomSkill(Func<SkillData, bool> filter, out Info info)
+        public bool UpgradeRandomSkill(out Info info, bool breakOut = false)
         {
+            Func<SkillData, bool> filter;
+            if (breakOut)
+            {
+                filter = SkillData.CanBreakOut;
+            }
+            else
+            {
+                filter = SkillData.CanUpgrade;
+            }
+
             var skills = Skills.Where(filter).ToList();
             if (skills.Count > 0)
             {

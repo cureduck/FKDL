@@ -156,29 +156,26 @@ namespace Game
         {
             if (s.CurMp < 0)
             {
-                return new CostInfo
-                {
-                    CostType = CostType.Mp,
-                    Value = -s.CurMp
-                };
+                return new CostInfo(
+                    -s.CurMp,
+                    CostType.Mp
+                );
             }
 
             if (s.CurHp < 0)
             {
-                return new CostInfo
-                {
-                    CostType = CostType.Hp,
-                    Value = -s.CurHp
-                };
+                return new CostInfo(
+                    -s.CurHp,
+                    CostType.Hp
+                );
             }
 
             if (s.Gold < 0)
             {
-                return new CostInfo
-                {
-                    CostType = CostType.Gold,
-                    Value = -s.Gold
-                };
+                return new CostInfo(
+                    -s.Gold,
+                    CostType.Gold
+                );
             }
 
             return new CostInfo();

@@ -6,6 +6,10 @@ namespace Game
     {
         public int Value;
         public CostType CostType;
+
+        /// <summary>
+        /// 折扣，0.8就是8折
+        /// </summary>
         public float Discount;
 
         [JsonIgnore] public int ActualValue => (int)(Value * Discount);
@@ -31,6 +35,11 @@ namespace Game
         public static CostInfo HpCost(int value)
         {
             return new CostInfo(value, CostType.Hp);
+        }
+
+        public override string ToString()
+        {
+            return $"{CostType}: {Value}";
         }
 
         public static readonly CostInfo Zero = new CostInfo();

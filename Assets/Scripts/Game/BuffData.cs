@@ -144,6 +144,12 @@ namespace Game
             return attack;
         }
 
+        public static BuffData Divinity(int stack = 1)
+        {
+            return new BuffData("Divinity", stack);
+        }
+
+
         [Effect("Vigor", Timing.OnAttack, priority = -4)]
         private Attack Vigor(Attack attack, FighterData f1, FighterData f2)
         {
@@ -151,6 +157,11 @@ namespace Game
             CurLv -= 1;
             Activated?.Invoke();
             return attack;
+        }
+
+        public static BuffData Vigor(int stack = 1)
+        {
+            return new BuffData("Vigor", stack);
         }
 
 
@@ -168,6 +179,11 @@ namespace Game
             return attack;
         }
 
+        public static BuffData Weaken(int stack = 1)
+        {
+            return new BuffData("Weaken", stack);
+        }
+
         [Effect("Thorn", Timing.OnDefend, priority = -4)]
         private Attack Thorn(Attack attack, FighterData f1, FighterData f2)
         {
@@ -179,6 +195,11 @@ namespace Game
             return attack;
         }
 
+        public static BuffData Thorn(int stack = 1)
+        {
+            return new BuffData("Thorn", stack);
+        }
+
         [Effect("Flaming", Timing.OnAttack, priority = -4)]
         private Attack Flaming(Attack attack, FighterData f1, FighterData f2)
         {
@@ -186,6 +207,11 @@ namespace Game
             CurLv -= 1;
             Activated?.Invoke();
             return attack;
+        }
+
+        public static BuffData Flaming(int stack = 1)
+        {
+            return new BuffData("Flaming", stack);
         }
 
 
@@ -196,6 +222,11 @@ namespace Game
             attack.PDmg = 0;
             attack.CDmg = 0;
             return attack;
+        }
+
+        public static BuffData Buffer(int stack = 1)
+        {
+            return new BuffData("buffer", stack);
         }
 
 
@@ -212,6 +243,11 @@ namespace Game
             return cost;
         }
 
+        public static BuffData Clarity(int stack = 1)
+        {
+            return new BuffData("Clarity", stack);
+        }
+
         [Effect("Leakage", Timing.OnGetSkillCost, priority = -1)]
         private CostInfo Leakage(CostInfo cost, SkillData skill, FighterData f1, bool test = true)
         {
@@ -225,12 +261,18 @@ namespace Game
             return cost;
         }
 
+
         [Effect("BloodLust", Timing.OnAttackSettle, priority = 100)]
         private Attack BloodLust(Attack attack, FighterData f1, FighterData f2)
         {
             f1.Recover(BattleStatus.HP(attack.SumDmg), f2);
             CurLv = 0;
             return attack;
+        }
+
+        public static BuffData BloodLust(int stack = 1)
+        {
+            return new BuffData("BloodLust", stack);
         }
 
 
@@ -293,6 +335,128 @@ namespace Game
             if (f2 == null || !f2.IsAlive) return attack;
             Activated?.Invoke();
             f1.Heal(BattleStatus.Mp(attack.SumDmg));
+            return attack;
+        }
+
+        private const int CurseIndent = 10;
+
+        /// <summary>
+        /// 斩杀时：物攻和物防会减少
+        /// </summary>
+        /// <returns></returns>
+        [Effect("impotence", Timing.OnKill)]
+        private Attack Impotence(Attack attack, FighterData f1, FighterData f2)
+        {
+            CurLv += 1;
+            if (CurLv >= CurseIndent)
+            {
+                CurLv = 0;
+                f1.Status.PAtk -= 1;
+                f1.Status.PDef -= 1;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        /// <summary>
+        /// 斩杀时：物攻和魔攻会减少
+        /// </summary>
+        /// <returns></returns>
+        [Effect("puny", Timing.OnKill)]
+        private Attack Puny(Attack attack, FighterData f1, FighterData f2)
+        {
+            CurLv += 1;
+            if (CurLv >= CurseIndent)
+            {
+                CurLv = 0;
+                f1.Status.PAtk -= 1;
+                f1.Status.MAtk -= 1;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        /// <summary>
+        /// 斩杀时：魔攻和魔防会减少
+        /// </summary>
+        /// <returns></returns>
+        [Effect("confused", Timing.OnKill)]
+        private Attack Confused(Attack attack, FighterData f1, FighterData f2)
+        {
+            CurLv += 1;
+            if (CurLv >= CurseIndent)
+            {
+                CurLv = 0;
+                f1.Status.MAtk -= 1;
+                f1.Status.MDef -= 1;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        /// <summary>
+        /// 斩杀时：物防和魔防会减少
+        /// </summary>
+        /// <returns></returns>
+        [Effect("fragile", Timing.OnKill)]
+        private Attack Fragile(Attack attack, FighterData f1, FighterData f2)
+        {
+            CurLv += 1;
+            if (CurLv >= CurseIndent)
+            {
+                CurLv = 0;
+                f1.Status.PDef -= 1;
+                f1.Status.MDef -= 1;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        /// <summary>
+        /// 斩杀时：最大生命值和物防会减少
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="f1"></param>
+        /// <param name="f2"></param>
+        /// <returns></returns>
+        [Effect("anemic", Timing.OnKill)]
+        private Attack Anemic(Attack attack, FighterData f1, FighterData f2)
+        {
+            CurLv += 1;
+            if (CurLv >= CurseIndent)
+            {
+                CurLv = 0;
+                f1.Status.MaxHp -= 1;
+                f1.Status.PDef -= 1;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        /// <summary>
+        /// 斩杀时：最大魔法值和魔防会减少
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="f1"></param>
+        /// <param name="f2"></param>
+        /// <returns></returns>
+        [Effect("dull", Timing.OnKill)]
+        private Attack Dull(Attack attack, FighterData f1, FighterData f2)
+        {
+            CurLv += 1;
+            if (CurLv >= CurseIndent)
+            {
+                CurLv = 0;
+                f1.Status.MaxMp -= 1;
+                f1.Status.MDef -= 1;
+                Activated?.Invoke();
+            }
+
             return attack;
         }
 

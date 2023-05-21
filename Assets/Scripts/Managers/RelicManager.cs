@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Managers
 {
     [ExecuteAlways]
-    public class RelicManager : XMLDataManager<Relic, RelicData>
+    public class RelicManager : XMLDataManager<Relic, RelicData, RelicManager>
     {
         protected override string CsvPath => Paths.RelicDataPath;
 

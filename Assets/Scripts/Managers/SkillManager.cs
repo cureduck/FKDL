@@ -6,7 +6,7 @@ using Game;
 
 namespace Managers
 {
-    public class SkillManager : XMLDataManager<Skill, SkillData>
+    public class SkillManager : XMLDataManager<Skill, SkillData, SkillManager>
     {
         protected override string CsvPath => Paths.SkillDataPath;
 

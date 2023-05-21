@@ -2,6 +2,7 @@
 using TMPro;
 using UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class SettingPanel : BasePanel<GameSettings>
@@ -18,6 +19,10 @@ public class SettingPanel : BasePanel<GameSettings>
 
     [SerializeField] private bool isInitOnStart = false;
     [SerializeField] private Button close_btn;
+    [SerializeField] private Toggle CameraAtoFollowToggle;
+
+    [FormerlySerializedAs("back_to_start_btn")] [SerializeField]
+    private Button backToStartBtn;
 
     private void Start()
     {
@@ -30,10 +35,12 @@ public class SettingPanel : BasePanel<GameSettings>
     public override void Init()
     {
         //LanguageSliderInit();
-
+        CameraAtoFollowToggle.isOn = gameSettings.AutoGoToFocus;
         bgmSizeSilder.value = gameSettings.BgmVolume;
         soundEffectSizeSilder.value = gameSettings.SEVolume;
-        viewAngleSelecter.value = gameSettings.Degree;
+        viewAngleSelecter.value = gameSettings.Degree / GameSettings.MaxDegree;
+        Camera.main.fieldOfView = gameSettings.FOV;
+
         bool haveFound = false;
         // for (int i = 0; i < languageSelecter.options.Count; i++)
         // {
@@ -73,6 +80,12 @@ public class SettingPanel : BasePanel<GameSettings>
         isFullScreenSelecter.onValueChanged.AddListener(IsFullScreenToggleValueChange);
         viewAngleSelecter.onValueChanged.AddListener(ViewAngleSelectorSliderValueChange);
         close_btn.onClick.AddListener(ClosePanelButtonClick);
+        CameraAtoFollowToggle.onValueChanged.AddListener((v => gameSettings.AutoGoToFocus = v));
+        backToStartBtn?.onClick.AddListener(() =>
+        {
+            GameManager.Instance.Save();
+            CurtainManager.Instance.UpCurtain("StartScene");
+        });
         //Debug.LogError("chushihua!");
     }
 
