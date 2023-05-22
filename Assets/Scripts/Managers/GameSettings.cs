@@ -2,12 +2,14 @@
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Managers
 {
     [CreateAssetMenu(fileName = "GameSettings", menuName = "Game", order = 0)]
     public class GameSettings : SerializedScriptableObject
     {
+        public const float MaxDegree = -35;
         [Range(0, 1)] public float BgmVolume;
         [Range(0, 1)] public float SEVolume;
         public bool BgmMute;
@@ -42,6 +44,7 @@ namespace Managers
             get => _degree;
             set
             {
+                if (SceneManager.GetActiveScene().name == "StartScene") return;
                 var r = Camera.main.transform.rotation.eulerAngles;
                 r.x = value;
                 Debug.Log(r);
@@ -64,6 +67,7 @@ namespace Managers
             get => _fov;
             set
             {
+                if (SceneManager.GetActiveScene().name == "StartScene") return;
                 _fov = value;
                 Camera.main.fieldOfView = value;
                 BG.transform.localScale = new Vector3(2, 2, 0) * (float)Math.Tan(_fov / 360 * Math.PI);

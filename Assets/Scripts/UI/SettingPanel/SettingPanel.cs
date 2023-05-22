@@ -19,7 +19,9 @@ public class SettingPanel : BasePanel<GameSettings>
 
     [SerializeField] private bool isInitOnStart = false;
     [SerializeField] private Button close_btn;
-    [SerializeField] private Toggle CameraAtoFollowToggle;
+
+    [FormerlySerializedAs("CameraAtoFollowToggle")] [SerializeField]
+    private Toggle CameraAutoFollowToggle;
 
     [FormerlySerializedAs("back_to_start_btn")] [SerializeField]
     private Button backToStartBtn;
@@ -35,26 +37,10 @@ public class SettingPanel : BasePanel<GameSettings>
     public override void Init()
     {
         //LanguageSliderInit();
-        CameraAtoFollowToggle.isOn = gameSettings.AutoGoToFocus;
+        CameraAutoFollowToggle.isOn = gameSettings.AutoGoToFocus;
         bgmSizeSilder.value = gameSettings.BgmVolume;
         soundEffectSizeSilder.value = gameSettings.SEVolume;
         viewAngleSelecter.value = gameSettings.Degree / GameSettings.MaxDegree;
-        Camera.main.fieldOfView = gameSettings.FOV;
-
-        bool haveFound = false;
-        // for (int i = 0; i < languageSelecter.options.Count; i++)
-        // {
-        //     if (languageSelecter.options[i].text == gameSettings.LanguageType)
-        //     {
-        //         languageSelecter.value = i;
-        //         break;
-        //     }
-        // }
-        //
-        // if (!haveFound)
-        // {
-        //     languageSelecter.value = 0;
-        // }
 
 
         for (int i = 0; i < resoltionSelecter.options.Count; i++)
@@ -66,10 +52,7 @@ public class SettingPanel : BasePanel<GameSettings>
             }
         }
 
-        if (!haveFound)
-        {
-            resoltionSelecter.value = 0;
-        }
+        resoltionSelecter.value = 0;
 
         isFullScreenSelecter.isOn = gameSettings.IsFullScreen;
 
@@ -80,33 +63,19 @@ public class SettingPanel : BasePanel<GameSettings>
         isFullScreenSelecter.onValueChanged.AddListener(IsFullScreenToggleValueChange);
         viewAngleSelecter.onValueChanged.AddListener(ViewAngleSelectorSliderValueChange);
         close_btn.onClick.AddListener(ClosePanelButtonClick);
-        CameraAtoFollowToggle.onValueChanged.AddListener((v => gameSettings.AutoGoToFocus = v));
+        CameraAutoFollowToggle.onValueChanged.AddListener((v => gameSettings.AutoGoToFocus = v));
         backToStartBtn?.onClick.AddListener(() =>
         {
             GameManager.Instance.Save();
             CurtainManager.Instance.UpCurtain("StartScene");
         });
-        //Debug.LogError("chushihua!");
+
+        if (!isInitOnStart)
+        {
+            Camera.main.fieldOfView = gameSettings.FOV;
+            Camera.main.transform.eulerAngles = new Vector3(gameSettings.Degree, 0, 0);
+        }
     }
-
-
-    // private void LanguageSliderInit()
-    // {
-    //     var dropdown = languageSelecter;
-    //     if (dropdown == null)
-    //         return;
-    //
-    //     var currentLanguage = LocalizationManager.CurrentLanguage;
-    //     if (LocalizationManager.Sources.Count == 0) LocalizationManager.UpdateSources();
-    //     var languages = LocalizationManager.GetAllLanguages();
-    //
-    //     // Fill the dropdown elements
-    //     dropdown.ClearOptions();
-    //     dropdown.AddOptions(languages);
-    //
-    //     dropdown.value = languages.IndexOf(currentLanguage);
-    //     dropdown.onValueChanged.AddListener(LanguageSelectOnValueChanged);
-    // }
 
     private void BGMSilderValueChange(float value)
     {
@@ -126,19 +95,6 @@ public class SettingPanel : BasePanel<GameSettings>
         }
     }
 
-
-    // private void LanguageSelectOnValueChanged(int index)
-    // {
-    //     var dropdown = languageSelecter;
-    //     if (index < 0)
-    //     {
-    //         index = 0;
-    //         dropdown.value = index;
-    //     }
-    //
-    //     //gameSettings.LanguageType = dropdown.options[index].text;
-    //     //LocalizationManager.CurrentLanguage = dropdown.options[index].text;
-    // }
 
     private void ResoltionSelecterOnValueChange(int index)
     {

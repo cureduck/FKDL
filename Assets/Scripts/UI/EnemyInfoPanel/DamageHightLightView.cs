@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using System;
-using TMPro;
 
 public class DamageHightLightView : MonoBehaviour
 {
@@ -18,7 +14,7 @@ public class DamageHightLightView : MonoBehaviour
     //[SerializeField]
     //private Transform endPoint;
     public void SetData(int curLeftHealth, int pDamage, int PDCount, int mDamage, int MDCount, int tDamage, int TDCount,
-        int posionCount)
+        int dif)
     {
         if (curLeftHealth <= 0)
         {
@@ -37,7 +33,7 @@ public class DamageHightLightView : MonoBehaviour
         //Debug.Log(endPoint.transform.localPosition);
         //Debug.Log(startPoint.transform.localPosition);
         //Debug.Log(curWidth);
-        int totalDamage = pDamage + mDamage + tDamage + posionCount;
+        int totalDamage = pDamage + mDamage + tDamage + dif;
         //Debug.Log(curWidth);
         curWidth = totalDamage / (float)curLeftHealth * curWidth;
 
@@ -58,7 +54,7 @@ public class DamageHightLightView : MonoBehaviour
         tureDamage_view.sizeDelta = cur;
 
         cur = posionDamage_View.sizeDelta;
-        cur.x = posionCount / (float)totalDamage * curWidth;
+        cur.x = dif / (float)totalDamage * curWidth;
         posionDamage_View.sizeDelta = cur;
 
         string curPDamageInfo;
@@ -92,13 +88,20 @@ public class DamageHightLightView : MonoBehaviour
         }
 
         string curBuffDamageInfo;
-        if (posionCount > 0)
+        if (dif > 0)
         {
-            curBuffDamageInfo = $"-{posionCount}(状态)";
+            curBuffDamageInfo = $"-{dif}(状态)";
         }
         else
         {
-            curBuffDamageInfo = string.Empty;
+            if (dif < 0)
+            {
+                curBuffDamageInfo = $"+{-dif}(恢复)";
+            }
+            else
+            {
+                curBuffDamageInfo = string.Empty;
+            }
         }
 
 

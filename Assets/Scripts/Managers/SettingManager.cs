@@ -23,6 +23,8 @@ namespace Managers
 
         protected override void Awake()
         {
+            DontDestroyOnLoad(this);
+
             base.Awake();
             Application.targetFrameRate = 120;
         }

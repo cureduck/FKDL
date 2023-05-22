@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Game;
+using I2.Loc;
+using Tools;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using Game;
-using I2.Loc;
 
 public class TargetBattleView : MonoBehaviour
 {
@@ -24,6 +22,7 @@ public class TargetBattleView : MonoBehaviour
     [SerializeField] private LocalizationParamsManager mrParamsManager;
     [SerializeField] private CellSkillView curSkillView;
     [SerializeField] private BuffListView buffListView;
+    [SerializeField] private Localize reward_txt;
 
     private FighterData fighterData;
 
@@ -69,6 +68,11 @@ public class TargetBattleView : MonoBehaviour
         mr_txt.SetTerm("MR_Title");
         mrParamsManager.SetParameterValue("VALUE", fighterData.Status.MDef.ToString());
 
+        if (reward_txt != null)
+        {
+            reward_txt.SetLocalizeParam("Gold", fighterData.Gold.ToString());
+        }
+
         if (curSkillView)
         {
             if (fighterData is PlayerData)
@@ -91,8 +95,18 @@ public class TargetBattleView : MonoBehaviour
         buffListView.SetData(fighterData.Buffs);
     }
 
-    public void SetResult(int pd, int pdCount, int md, int mdCount, int td, int tdCount, int posionCount)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pd"></param>
+    /// <param name="pdCount"></param>
+    /// <param name="md"></param>
+    /// <param name="mdCount"></param>
+    /// <param name="td"></param>
+    /// <param name="tdCount"></param>
+    /// <param name="dif">实际血量变化与攻击伤害间的差值</param>
+    public void SetResult(int pd, int pdCount, int md, int mdCount, int td, int tdCount, int dif)
     {
-        damageHightLightView.SetData(fighterData.Status.CurHp, pd, pdCount, md, mdCount, td, tdCount, posionCount);
+        damageHightLightView.SetData(fighterData.Status.CurHp, pd, pdCount, md, mdCount, td, tdCount, dif);
     }
 }

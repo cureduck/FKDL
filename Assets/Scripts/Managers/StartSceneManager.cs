@@ -21,13 +21,13 @@ namespace Managers
 
             NewGameButton.onClick.AddListener((() =>
             {
-                SceneSwitchManager.Instance.NewGame = false;
+                SceneSwitchManager.Instance.NewGame = true;
                 CurtainManager.Instance.UpCurtain("ChooseScene");
             }));
 
             LoadGameButton.onClick.AddListener((() =>
             {
-                SceneSwitchManager.Instance.NewGame = true;
+                SceneSwitchManager.Instance.NewGame = false;
                 CurtainManager.Instance.UpCurtain("MainScene");
             }));
         }
