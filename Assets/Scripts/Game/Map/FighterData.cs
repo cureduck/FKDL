@@ -84,7 +84,7 @@ namespace Game
         {
             Status.CurHp -= attack.SumDmg;
 
-            Status.CurHp = math.max(0, Status.CurHp);
+            //Status.CurHp = math.max(0, Status.CurHp);
         }
 
 
@@ -489,6 +489,13 @@ namespace Game
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
 
             DelayUpdate();
+        }
+
+
+        public void Heal(float percent, string kw = null)
+        {
+            var modify = BattleStatus.HP((int)(Status.MaxHp * percent));
+            Heal(modify, kw);
         }
 
 

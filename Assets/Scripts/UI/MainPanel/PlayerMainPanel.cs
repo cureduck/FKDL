@@ -1,5 +1,8 @@
-﻿using Game;
+﻿using System;
+using Game;
+using I2.Loc;
 using Managers;
+using Tools;
 using UnityEngine;
 
 namespace UI
@@ -14,6 +17,7 @@ namespace UI
         [SerializeField] private TMP_TextAnimation pdStateViewTransform;
         [SerializeField] private TMP_TextAnimation maStateViewTransform;
         [SerializeField] private TMP_TextAnimation mdStateViewTransform;
+        [SerializeField] private Localize FloorInfo;
 
         private void Start()
         {
@@ -34,17 +38,34 @@ namespace UI
                 }
 
                 playerData.profInfo = GameDataManager.Instance.SecondaryData.Profs;
-                //playerData.OnUpdated +=
 
-                /*playerData.Buffs.Add_Test(new BuffData("Blood", 1));
-                playerData.Buffs.Add_Test(new BuffData("Attack_Increase", 4));
-
-                playerData.Relics.Add(new RelicData("1203",2));
-                playerData.Relics.Add(new RelicData("Luck",1));*/
+                GameManager.Instance.Marched += UpdateFloorInfo;
+                UpdateFloorInfo(GameManager.Instance.CurFloor);
 
                 Master = playerData;
             };
         }
+
+        private void UpdateFloorInfo(string v)
+        {
+            try
+            {
+                if (v.StartsWith("A"))
+                {
+                    var s = v.Remove(0, 1).Remove(1, 1);
+                    FloorInfo.SetLocalizeParam("P1", int.Parse(s).ToChineseOrdinal());
+                }
+                else
+                {
+                    FloorInfo.SetLocalizeParam("P1", int.Parse(v).ToChineseOrdinal());
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"楼层错误 {v} {e.Message}");
+            }
+        }
+
 
         public void PlayGetItemEffect(Offer offer, Vector2 screenPosiion)
         {

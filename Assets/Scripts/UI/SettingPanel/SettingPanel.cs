@@ -56,9 +56,8 @@ public class SettingPanel : BasePanel<GameSettings>
 
         isFullScreenSelecter.isOn = gameSettings.IsFullScreen;
 
-
-        bgmSizeSilder.onValueChanged.AddListener(BGMSilderValueChange);
-        soundEffectSizeSilder.onValueChanged.AddListener(SESilderValueChange);
+        bgmSizeSilder.onValueChanged.AddListener(BGMSliderValueChange);
+        soundEffectSizeSilder.onValueChanged.AddListener(SESliderValueChange);
         resoltionSelecter.onValueChanged.AddListener(ResoltionSelecterOnValueChange);
         isFullScreenSelecter.onValueChanged.AddListener(IsFullScreenToggleValueChange);
         viewAngleSelecter.onValueChanged.AddListener(ViewAngleSelectorSliderValueChange);
@@ -77,7 +76,7 @@ public class SettingPanel : BasePanel<GameSettings>
         }
     }
 
-    private void BGMSilderValueChange(float value)
+    private void BGMSliderValueChange(float value)
     {
         gameSettings.BgmVolume = value;
         if (AudioPlayer.Instance)
@@ -86,7 +85,7 @@ public class SettingPanel : BasePanel<GameSettings>
         }
     }
 
-    private void SESilderValueChange(float value)
+    private void SESliderValueChange(float value)
     {
         gameSettings.SEVolume = value;
         if (AudioPlayer.Instance)

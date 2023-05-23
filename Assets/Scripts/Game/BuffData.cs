@@ -90,9 +90,13 @@ namespace Game
         [Effect("MPlus", Timing.OnAttack, priority = -4)]
         private Attack Surging(Attack attack, FighterData f1, FighterData f2)
         {
-            attack.MAtk += CurLv;
-            CurLv -= 1;
-            Activated?.Invoke();
+            if (attack.MAtk != 0)
+            {
+                attack.MAtk += CurLv;
+                CurLv -= 1;
+                Activated?.Invoke();
+            }
+
             return attack;
         }
 
@@ -203,7 +207,7 @@ namespace Game
         [Effect("Flaming", Timing.OnAttack, priority = -4)]
         private Attack Flaming(Attack attack, FighterData f1, FighterData f2)
         {
-            attack.MAtk += CurLv;
+            attack.CAtk += CurLv;
             CurLv -= 1;
             Activated?.Invoke();
             return attack;

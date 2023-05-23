@@ -17,6 +17,17 @@ namespace Game
     {
     }
 
+
+    public class SkipInfo : SuccessInfo
+    {
+        public readonly int ReturnCoin;
+
+        public SkipInfo(int returnCoin)
+        {
+            ReturnCoin = returnCoin;
+        }
+    }
+
     public class FailureInfo : Info
     {
         public FailureInfo(FailureReason reason, bool autoBroadCast = true)

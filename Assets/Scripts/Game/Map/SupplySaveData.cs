@@ -5,8 +5,8 @@ namespace Game
 {
     public class SupplySaveData : MapData
     {
-        public SupplyType Type;
         public Rank Rank;
+        public SupplyType Type;
 
         public SupplySaveData(SupplyType supplyType) : base()
         {
@@ -14,18 +14,18 @@ namespace Game
             Rank = _rank;
         }
 
-        private int value
+        private int Value
         {
             get
             {
                 switch (Rank)
                 {
                     case Rank.Normal:
-                        return 10;
+                        return (int)(Player.Status.MaxHp * 0.1f);
                     case Rank.Uncommon:
-                        return 20;
+                        return (int)(Player.Status.MaxHp * 0.2f);
                     case Rank.Rare:
-                        return 30;
+                        return (int)(Player.Status.MaxHp * 0.3f);
                     case Rank.Ultra:
                         break;
                     default:
@@ -43,10 +43,10 @@ namespace Game
             switch (Type)
             {
                 case SupplyType.Spring:
-                    GameManager.Instance.PlayerData.Heal(new BattleStatus { CurMp = value }, "supply");
+                    GameManager.Instance.PlayerData.Heal(new BattleStatus { CurMp = Value }, "supply");
                     break;
                 case SupplyType.Grassland:
-                    GameManager.Instance.PlayerData.Heal(new BattleStatus { CurHp = value }, "supply");
+                    GameManager.Instance.PlayerData.Heal(new BattleStatus { CurHp = Value }, "supply");
                     break;
                 default:
                     break;
@@ -64,14 +64,14 @@ namespace Game
                     {
                         Name = "spring",
                         Desc = "spring_desc",
-                        P1 = value.ToString()
+                        P1 = Value.ToString()
                     };
                 case SupplyType.Grassland:
                     return new SquareInfo()
                     {
                         Name = "grassland",
                         Desc = "grassland_desc",
-                        P1 = value.ToString()
+                        P1 = Value.ToString()
                     };
                 case SupplyType.Camp:
                     return null;

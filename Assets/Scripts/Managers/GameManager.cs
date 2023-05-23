@@ -28,6 +28,7 @@ namespace Managers
         public Dictionary<string, Color> SquareColors;
 
         private List<Square> squares = new List<Square>();
+        public string CurFloor => $"{Map.CurrentFloor}";
 
         public PlayerData PlayerData
         {
@@ -72,8 +73,9 @@ namespace Managers
             }
         }
 
-        public void SkipReward()
+        public void SkipReward(out SkipInfo info)
         {
+            info = new SkipInfo(10);
             PlayerData.Gain(10);
         }
 
@@ -106,6 +108,7 @@ namespace Managers
         }
 
         public event Action GameLoaded;
+        public event Action<string> Marched;
         public event Action<Square> FocusChanged;
 
         public void BroadcastSquareChanged(Square square)
@@ -221,6 +224,7 @@ namespace Managers
 
         public void LoadFloor(Map.Floor floor)
         {
+            Marched?.Invoke(floor.FloorName);
             foreach (var square in squares)
             {
                 square.UnbindCurrent();

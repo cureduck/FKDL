@@ -60,24 +60,64 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 
         if (Data is Args02)
         {
-            //Skill curSkilInfo = (Data as Args02).skill;
+            Skill curSkilInfo = (Data as Args02).skill;
 
-            //skillName.SetTerm(curSkilInfo.Id);
-            //if (curSkilInfo.Positive)
-            //{
-            //    costInfo.text = $"{curSkilInfo.CostInfo.CostType}:{curSkilInfo.CostInfo.Value}";
-            //}
-            //else
-            //{
-            //    costInfo.text = $"无消耗";
-            //}
+            skillName.SetTerm(curSkilInfo.Id);
+            if (curSkilInfo.Positive)
+            {
+                if (curSkilInfo.CostInfo.CostType == CostType.Hp)
+                {
+                    costInfo.SetTerm("HPCostInfo");
+                }
+                else if (curSkilInfo.CostInfo.CostType == CostType.Gold)
+                {
+                    costInfo.SetTerm("GoldCostInfo");
+                }
+                else
+                {
+                    costInfo.SetTerm("MPCostInfo");
+                }
 
-            //colddownInfo.text = $"CoolDown:{curSkilInfo.Cooldown}";
+                CostParamsManager.SetParameterValue("VALUE", curSkilInfo.CostInfo.Value.ToString());
+            }
+            else
+            {
+                costInfo.SetTerm("NoCost");
+                //costInfo.text = $"无消耗";
+            }
+
+            coolDownInfo.SetTerm("CooldownInfo");
+            ColdDownParamsManager.SetParameterValue("VALUE", curSkilInfo.Cooldown.ToString());
 
             //describe.SetTerm($"{curSkilInfo.Id}_desc");
+            describe.SetTerm($"{curSkilInfo.Id}_desc");
+            describe.SetLocalizeParam(
+                new[] { "P1", "P2", "CurLv" },
+                new[]
+                {
+                    curSkilInfo.Param1.ToString(), curSkilInfo.Param2.ToString(), 1.ToString()
+                });
+            switch (displayMode)
+            {
+                case DisplayMode.Short:
+                    describe.Calculate();
+                    var s = describe.GetComponent<TMP_Text>().text;
+                    describe.RemoveBetween((@"\(", @"\)"));
+                    describe.RemoveBetween(('（', '）'));
+                    break;
+                case DisplayMode.Detail:
+                    describe.RemoveBetween();
+                    break;
+            }
 
-            //maxLevel.text = $"最大等级{curSkilInfo.MaxLv}";
-            //positiveInfo.SetTerm(curSkilInfo.Positive ? "positive" : "passive");
+            maxLevel.SetTerm("MaxLvInfo");
+            MaxParamsManager.SetParameterValue("MaxLv", curSkilInfo.MaxLv.ToString());
+            MaxParamsManager.SetParameterValue("CurLv", "0");
+
+            curBelongProf.SetTerm("SkillBelong");
+            CurBelongProfManager.SetParameterValue("VALUE", curSkilInfo.Prof);
+
+            positiveInfo.SetTerm(curSkilInfo.Positive ? "positive" : "passive");
         }
         else
         {

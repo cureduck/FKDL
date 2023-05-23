@@ -248,7 +248,7 @@ public class CellSkillView : MonoBehaviour
                 }
                 else
                 {
-                    levelUpObject.SetActive(player.skillPoint[curSkill.Rank] > 0);
+                    levelUpObject.SetActive(player.skillPoint > 0);
                 }
             }
             else

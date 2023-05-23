@@ -119,6 +119,7 @@ public class CellGoodView : MonoBehaviour
     {
         if (offer.Kind == Offer.OfferKind.Skill)
         {
+            Debug.Log("Enter!");
             Skill skill;
             SkillManager.Instance.TryGetById(offer.Id, out skill);
 

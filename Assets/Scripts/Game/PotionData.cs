@@ -86,14 +86,14 @@ namespace Game
         [Effect("hppotion+", Timing.PotionEffect)]
         private void HpPotionP(FighterData player)
         {
-            player.Heal(new BattleStatus { CurHp = (int)(player.Status.MaxHp * Bp.Param1) });
+            player.Heal(new BattleStatus { CurHp = (int)(player.Status.MaxHp * Bp.Param1 / 100) });
         }
 
 
         [Effect("mppotion+", Timing.PotionEffect)]
         private void MpPotionP(FighterData player)
         {
-            player.Heal(new BattleStatus { CurMp = (int)(player.Status.MaxMp * Bp.Param1) });
+            player.Heal(new BattleStatus { CurMp = (int)(player.Status.MaxMp * Bp.Param1 / 100) });
         }
 
         [Effect("angerpotion+", Timing.PotionEffect)]
@@ -193,20 +193,20 @@ namespace Game
         [Effect("skillpotion", Timing.PotionEffect)]
         private void SkillPotion(FighterData player)
         {
-            ((PlayerData)player).GetSkillPoint(Rank.Normal);
+            ((PlayerData)player).GetSkillPoint();
         }
 
 
         [Effect("skillpotion+", Timing.PotionEffect)]
         private void SkillPotionP(FighterData player)
         {
-            ((PlayerData)player).GetSkillPoint(Rank.Uncommon);
+            ((PlayerData)player).GetSkillPoint();
         }
 
         [Effect("skillpotion++", Timing.PotionEffect)]
         private void SkillPotionPP(FighterData player)
         {
-            ((PlayerData)player).GetSkillPoint(Rank.Rare);
+            ((PlayerData)player).GetBreakoutPoint(1);
         }
 
         #endregion

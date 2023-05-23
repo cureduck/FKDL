@@ -172,8 +172,14 @@ namespace UI
                     break;
                 case Offer.OfferKind.Relic:
                     Id.SetTerm(Offer.Id);
-                    Icon.sprite = RelicManager.Instance.GetById(Offer.Id).Icon;
-                    Description?.SetTerm($"{Offer.Id}_desc");
+                    var relic = RelicManager.Instance.GetById(Offer.Id);
+                    if (relic != null)
+                    {
+                        Icon.sprite = relic.Icon;
+                        Description?.SetTerm($"{Offer.Id}_desc");
+                        Description?.SetLocalizeParam("P1", relic.Param1.ToString());
+                    }
+
                     break;
                 case Offer.OfferKind.Key:
                     break;

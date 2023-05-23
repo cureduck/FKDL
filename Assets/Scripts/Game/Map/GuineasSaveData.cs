@@ -1,6 +1,4 @@
-﻿using Managers;
-
-namespace Game
+﻿namespace Game
 {
     public class GuineasSaveData : MapData
     {
@@ -19,7 +17,7 @@ namespace Game
         public override void OnReact()
         {
             base.OnReact();
-            GameManager.Instance.PlayerData.Gain(Count);
+            Player.Gain(Count);
             Destroyed();
         }
 

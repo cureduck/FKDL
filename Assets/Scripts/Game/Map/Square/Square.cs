@@ -124,7 +124,7 @@ namespace Game
                         }
                     }
 
-                    SetContent(d0.Id.ToLower(), d0.Status.CurHp + "/" + d0.Bp.Status.MaxHp, lib[icon]);
+                    SetContent(d0.Id.ToLower(), d0.Status.ToString("short"), lib[icon]);
                     break;
                 case CasinoSaveData d1:
                     SetContent("casino", d1.TimesLeft + "/" + CasinoSaveData.MaxTimes, lib["casino"]);

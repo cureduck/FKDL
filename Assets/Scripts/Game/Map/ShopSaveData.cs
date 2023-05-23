@@ -17,6 +17,10 @@ namespace Game
         private const int SkillNum = 3;
         private const int PotionNum = 3;
         private const int KeyNum = 3;
+
+        private static readonly float[] PotionPriceMulti = new[] { 1f, 2f, 4f, 7f };
+        private static readonly float[] SkillPriceMulti = new[] { 2f, 3f, 4f };
+        private static readonly float[] RelicPriceMulti = new[] { 2f, 3f, 4f };
         public ShopGoods Goods;
         public int Level;
 
@@ -93,45 +97,27 @@ namespace Game
         private int GetPrice(CsvData good)
         {
             int basePrice;
+            float multi;
             switch (good)
             {
                 case Potion potion:
-                    basePrice = 10;
+                    basePrice = 15;
+                    multi = PotionPriceMulti[(int)potion.Rank];
                     break;
                 case Relic relic:
                     basePrice = 30;
+                    multi = RelicPriceMulti[(int)relic.Rank];
                     break;
                 case Skill skill:
                     basePrice = 20;
+                    multi = SkillPriceMulti[(int)skill.Rank];
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(good));
             }
 
-            float multi = 5f;
-
-            switch (good.Rank)
-            {
-                case Rank.Normal:
-                    multi = 1;
-                    break;
-                case Rank.Uncommon:
-                    multi = 2;
-                    break;
-                case Rank.Rare:
-                    multi = 3;
-                    break;
-                case Rank.Ultra:
-                    break;
-                case Rank.Prof:
-                    break;
-                case Rank.God:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
             var r = 0.8f + .4f * SData.CurGameRandom.NextDouble();
+
 
             return (int)(basePrice * multi * r);
         }
@@ -144,8 +130,10 @@ namespace Game
                     return 10;
                     break;
                 case Rank.Uncommon:
+                    return 15;
                     break;
                 case Rank.Rare:
+                    return 20;
                     break;
                 case Rank.Ultra:
                     break;

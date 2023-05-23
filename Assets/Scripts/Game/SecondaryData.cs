@@ -12,6 +12,7 @@ namespace Game
     public class SecondaryData : SaveData
     {
         public readonly List<string> DiscoveredRelics;
+        public int BreakoutPoint;
         [JsonIgnore] public Random CurCardRandom;
 
         [JsonIgnore] public Random CurGameRandom;
@@ -27,16 +28,11 @@ namespace Game
 
         public int RemoveSkillPoint;
 
-        public Dictionary<Rank, int> SkillPoint;
+        public int SkillPoint;
 
         public SecondaryData()
         {
-            SkillPoint = new Dictionary<Rank, int>
-            {
-                [Rank.Normal] = 0,
-                [Rank.Uncommon] = 0,
-                [Rank.Rare] = 0
-            };
+            SkillPoint = 0;
 
             DiscoveredRelics = new List<string>();
         }

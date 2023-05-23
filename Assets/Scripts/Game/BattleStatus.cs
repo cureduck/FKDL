@@ -289,9 +289,16 @@ namespace Game
         }
 
 
-        public override string ToString()
+        public string ToString(string format = "detail", IFormatProvider formatProvider = null)
         {
-            return $"({CurHp}/{MaxHp},{CurMp}/{MaxMp})";
+            if (format == "short")
+            {
+                return $"{math.max(0, CurHp)}/{MaxHp}";
+            }
+            else
+            {
+                return $"{CurHp}/{MaxHp},{CurMp}/{MaxMp}";
+            }
         }
     }
 }

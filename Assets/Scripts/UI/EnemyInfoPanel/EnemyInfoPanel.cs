@@ -52,35 +52,40 @@ public class EnemyInfoPanel : BasePanel<EnemyInfoPanel.Args>
         UpdateUI();
     }
 
-    private void SetResult(Arena.FightPredictResult outcome)
+    private void SetResult(Arena.FightPredictResult fightPredictResult)
     {
         //return;
-        if (outcome.EnemyAttack != null)
+        if (fightPredictResult.EnemyAttack != null)
         {
-            int totalDamage = outcome.EnemyAttack.Value.SumDmg;
-            int dif = Data.playerData.Status.CurHp - outcome.Player.Status.CurHp - totalDamage;
+            int totalDamage = fightPredictResult.EnemyAttack.Value.PDmg + fightPredictResult.EnemyAttack.Value.MDmg +
+                              fightPredictResult.EnemyAttack.Value.CDmg;
+            int poisonDamage = Data.playerData.Status.CurHp - fightPredictResult.Player.Status.CurHp - totalDamage;
 
-            playerView.SetResult(outcome.EnemyAttack.Value.PDmg, 1,
-                outcome.EnemyAttack.Value.MDmg, 1, outcome.EnemyAttack.Value.CDmg, 1,
-                dif);
+            playerView.SetResult(fightPredictResult.EnemyAttack.Value.PDmg, 1,
+                fightPredictResult.EnemyAttack.Value.MDmg, 1, fightPredictResult.EnemyAttack.Value.CDmg, 1,
+                poisonDamage);
         }
         else
         {
-            int posionDamage = Data.playerData.Status.CurHp - outcome.Player.Status.CurHp;
+            int posionDamage = Data.playerData.Status.CurHp - fightPredictResult.Player.Status.CurHp;
             playerView.SetResult(0, 1, 0, 1, 0, 1, posionDamage);
         }
 
-        if (outcome.PlayerAttack != null)
+        if (fightPredictResult.PlayerAttack != null)
         {
-            int enemyTotal = outcome.PlayerAttack.Value.SumDmg;
-            int dif = Data.targetEnemy.Status.CurHp - outcome.Enemy.Status.CurHp - enemyTotal;
+            int enemyTotal = fightPredictResult.PlayerAttack.Value.PDmg + fightPredictResult.PlayerAttack.Value.MDmg +
+                             fightPredictResult.PlayerAttack.Value.CDmg;
+            Debug.Log(Data.targetEnemy.Status.CurHp);
+            Debug.Log(fightPredictResult.Enemy.Status.CurHp);
+            Debug.Log(enemyTotal);
+            int posion = Data.targetEnemy.Status.CurHp - fightPredictResult.Enemy.Status.CurHp - enemyTotal;
 
-            enemyView.SetResult(outcome.PlayerAttack.Value.PDmg, 1,
-                outcome.PlayerAttack.Value.MDmg, 1, outcome.PlayerAttack.Value.CDmg, 1, dif);
+            enemyView.SetResult(fightPredictResult.PlayerAttack.Value.PDmg, 1,
+                fightPredictResult.PlayerAttack.Value.MDmg, 1, fightPredictResult.PlayerAttack.Value.CDmg, 1, posion);
         }
         else
         {
-            int poisonDamage = Data.targetEnemy.Status.CurHp - outcome.Enemy.Status.CurHp;
+            int poisonDamage = Data.targetEnemy.Status.CurHp - fightPredictResult.Enemy.Status.CurHp;
             enemyView.SetResult(0, 1, 0, 1, 0, 1, poisonDamage);
         }
     }

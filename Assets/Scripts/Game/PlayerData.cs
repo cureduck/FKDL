@@ -43,7 +43,7 @@ namespace Game
             }
         }
 
-        public Dictionary<Rank, int> skillPoint => GameDataManager.Instance.SecondaryData.SkillPoint;
+        public int skillPoint => GameDataManager.Instance.SecondaryData.SkillPoint;
 
         [JsonIgnore] public override FighterData Enemy => enemy ?? (EnemySaveData)GameManager.Instance.Focus.Data;
 
@@ -51,6 +51,8 @@ namespace Game
         public void March(string destination)
         {
             Debug.Log($"destination {destination}");
+
+            Player.Heal(0.5f, "march");
 
             ClearAllBuffs();
             CheckChain(Timing.OnMarch, new object[] { this });
@@ -279,30 +281,23 @@ namespace Game
         {
             Upgrade(skillData);
 
-            for (var i = skillData.Bp.Rank; i < Rank.God; i++)
-            {
-                if (SData.SkillPoint[i] > 0)
-                {
-                    SData.SkillPoint[i] -= 1;
-                    break;
-                }
-            }
+            SData.SkillPoint -= 1;
 
             DelayUpdate();
             SkillPointChanged?.Invoke();
         }
 
-        public void GetSkillPoint(Rank rank, int v = 1)
+        public void GetSkillPoint(int v = 1)
         {
-            if (GameDataManager.Instance.SecondaryData.SkillPoint.ContainsKey(rank))
-            {
-                GameDataManager.Instance.SecondaryData.SkillPoint[rank] += v;
-            }
-            else
-            {
-                GameDataManager.Instance.SecondaryData.SkillPoint[rank] = v;
-            }
+            SData.SkillPoint += v;
 
+            SkillPointChanged?.Invoke();
+        }
+
+
+        public void GetBreakoutPoint(int v = 1)
+        {
+            GameDataManager.Instance.SecondaryData.BreakoutPoint += v;
             SkillPointChanged?.Invoke();
         }
 
