@@ -1,4 +1,5 @@
 import csv
+import chardet
 
 
 def auto_split(source_path, data_path, loc_path):
@@ -9,7 +10,11 @@ def auto_split(source_path, data_path, loc_path):
 
 
 def get_csv(path):
-    f = open(path)
+    with open(path, "rb") as f:
+        data = f.read()
+        result = chardet.detect(data)
+
+    f = open(path, encoding=result["encoding"])
     reader = csv.DictReader(f)
     return reader, f
 

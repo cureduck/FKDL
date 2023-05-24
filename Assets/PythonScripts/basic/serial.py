@@ -39,7 +39,7 @@ def dict2obj(obj):
             for module in modules.values():
                 if hasattr(module, obj["type"]):
                     ty = getattr(module, obj["type"])
-                    if obj["values"] is dict:
+                    if isinstance(obj["values"], dict):
                         obj["values"] = dict2obj(obj["values"])
                         return ty(**obj["values"])
                     elif isinstance(obj["values"], (list, set)):
