@@ -471,6 +471,15 @@ namespace Game
             OnLose(buff);
         }
 
+        public void RemoveBuff(string id)
+        {
+            var buff = Buffs.FirstOrDefault(x => x.Id == id);
+            if (buff != null)
+            {
+                RemoveBuff(buff);
+            }
+        }
+
 
         [Button]
         public void Recover(BattleStatus modify, FighterData enemy, string kw = null)
@@ -494,7 +503,7 @@ namespace Game
 
         public void Heal(float percent, string kw = null)
         {
-            var modify = BattleStatus.HP((int)(Status.MaxHp * percent));
+            var modify = BattleStatus.Hp((int)(Status.MaxHp * percent));
             Heal(modify, kw);
         }
 

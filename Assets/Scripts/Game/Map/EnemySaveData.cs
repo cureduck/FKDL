@@ -71,7 +71,6 @@ namespace Game
         {
             base.Init();
             Status = Bp.Status;
-            Gold = Bp.Gold;
 
             Skills = new SkillAgent(Bp.Skills);
             //Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);

@@ -179,14 +179,14 @@ namespace Managers
                             }
                             else
                             {
-                                sq.OnReact();
                                 t.OnReact();
+                                sq.OnReact();
                             }
                         }
                         else
                         {
-                            sq.OnReact();
                             t.OnReact();
+                            sq.OnReact();
                         }
                     }
                 }

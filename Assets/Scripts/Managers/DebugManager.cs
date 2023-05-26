@@ -100,7 +100,7 @@ namespace Managers
 
         public void ResetStatus()
         {
-            Player.Heal(BattleStatus.HP(Player.Status.MaxHp));
+            Player.Heal(BattleStatus.Hp(Player.Status.MaxHp));
             Player.Heal(BattleStatus.Mp(Player.Status.MaxMp));
         }
 

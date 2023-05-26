@@ -67,17 +67,14 @@ public class EnemyInfoPanel : BasePanel<EnemyInfoPanel.Args>
         }
         else
         {
-            int posionDamage = Data.playerData.Status.CurHp - fightPredictResult.Player.Status.CurHp;
-            playerView.SetResult(0, 1, 0, 1, 0, 1, posionDamage);
+            int poisonDmg = Data.playerData.Status.CurHp - fightPredictResult.Player.Status.CurHp;
+            playerView.SetResult(0, 1, 0, 1, 0, 1, poisonDmg);
         }
 
         if (fightPredictResult.PlayerAttack != null)
         {
             int enemyTotal = fightPredictResult.PlayerAttack.Value.PDmg + fightPredictResult.PlayerAttack.Value.MDmg +
                              fightPredictResult.PlayerAttack.Value.CDmg;
-            Debug.Log(Data.targetEnemy.Status.CurHp);
-            Debug.Log(fightPredictResult.Enemy.Status.CurHp);
-            Debug.Log(enemyTotal);
             int posion = Data.targetEnemy.Status.CurHp - fightPredictResult.Enemy.Status.CurHp - enemyTotal;
 
             enemyView.SetResult(fightPredictResult.PlayerAttack.Value.PDmg, 1,

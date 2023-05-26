@@ -333,7 +333,9 @@ namespace Game
                                 color = GameManager.Instance.SquareColors["boss"];
                                 break;
                             default:
-                                throw new ArgumentOutOfRangeException();
+                                color = GameManager.Instance.SquareColors["soldier"];
+                                e.Bp.Rank = Rank.Normal;
+                                break;
                         }
 
                         for (int i = 0; i < Light2D.Length; i++)

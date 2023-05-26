@@ -17,11 +17,11 @@ namespace Tools
 {
     public static class Tools
     {
-        public static T[] ChooseRandom<T>(int count, IList<T> list, Random random)
+        public static T[] ChooseRandom<T>(this IEnumerable<T> list, int count, Random random)
         {
             var s = new T[count];
             int[] selectNumArray =
-                Enumerable.Range(0, list.Count).OrderBy(t => random.Next(10000)).Take(count).ToArray();
+                Enumerable.Range(0, list.Count()).OrderBy(t => random.Next(10000)).Take(count).ToArray();
             for (int i = 0; i < s.Length; i++)
             {
                 s[i] = list.ToList()[selectNumArray[i]];
@@ -32,7 +32,7 @@ namespace Tools
 
         public static T ChooseRandom<T>(this IList<T> list, Random random) where T : class
         {
-            var L = ChooseRandom<T>(1, list, random);
+            var L = ChooseRandom<T>(list, 1, random);
             if (L.Length > 0)
             {
                 return L[0];

@@ -81,9 +81,13 @@ namespace Game
         [Effect("PPlus", Timing.OnAttack, priority = -4)]
         private Attack Anger(Attack attack, FighterData f1, FighterData f2)
         {
-            attack.PAtk += CurLv;
-            CurLv -= 1;
-            Activated?.Invoke();
+            if (attack.PAtk != 0)
+            {
+                attack.PAtk += CurLv;
+                CurLv -= 1;
+                Activated?.Invoke();
+            }
+
             return attack;
         }
 
@@ -103,18 +107,26 @@ namespace Game
         [Effect("PMinus", Timing.OnAttack, priority = -4)]
         private Attack PMinus(Attack attack, FighterData f1, FighterData f2)
         {
-            attack.PAtk -= CurLv;
-            CurLv -= 1;
-            Activated?.Invoke();
+            if (attack.PAtk > 0)
+            {
+                attack.PAtk -= CurLv;
+                CurLv -= 1;
+                Activated?.Invoke();
+            }
+
             return attack;
         }
 
         [Effect("MMinus", Timing.OnAttack, priority = -4)]
         private Attack MMinus(Attack attack, FighterData f1, FighterData f2)
         {
-            attack.MAtk -= CurLv;
-            CurLv -= 1;
-            Activated?.Invoke();
+            if (attack.MAtk > 0)
+            {
+                attack.MAtk -= CurLv;
+                CurLv -= 1;
+                Activated?.Invoke();
+            }
+
             return attack;
         }
 
@@ -218,6 +230,19 @@ namespace Game
             return new BuffData("Flaming", stack);
         }
 
+        [Effect("torture", Timing.OnAttack, priority = -4)]
+        private Attack Torture(Attack attack, FighterData f1, FighterData f2)
+        {
+            f1.CounterCharge(BattleStatus.Hp(CurLv), "torture");
+            Activated?.Invoke();
+            return attack;
+        }
+
+        public static BuffData Torture(int stack = 1)
+        {
+            return new BuffData("torture", stack);
+        }
+
 
         [Effect("buffer", Timing.OnDefendSettle, priority = 1000)]
         private Attack Buffer(Attack attack, FighterData f1, FighterData f2)
@@ -269,7 +294,7 @@ namespace Game
         [Effect("BloodLust", Timing.OnAttackSettle, priority = 100)]
         private Attack BloodLust(Attack attack, FighterData f1, FighterData f2)
         {
-            f1.Recover(BattleStatus.HP(attack.SumDmg), f2);
+            f1.Recover(BattleStatus.Hp(attack.SumDmg), f2);
             CurLv = 0;
             return attack;
         }

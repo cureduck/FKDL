@@ -1,18 +1,19 @@
 ﻿using System;
 using Managers;
+using Newtonsoft.Json;
 
 namespace Game
 {
     public class SupplySaveData : MapData
     {
-        public Rank Rank;
         public SupplyType Type;
 
         public SupplySaveData(SupplyType supplyType) : base()
         {
             Type = supplyType;
-            Rank = _rank;
         }
+
+        [JsonIgnore] public Rank Rank => _rank;
 
         private int Value
         {

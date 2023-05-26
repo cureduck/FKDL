@@ -28,7 +28,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
     private Camera mainCamera;
 
 
-    private DisplayMode displayMode => Input.GetKey(KeyCode.LeftAlt) ? DisplayMode.Detail : DisplayMode.Short;
+    private DisplayMode displayMode => Input.GetKey(KeyCode.LeftAlt) ? DisplayMode.Detail : DisplayMode.Brief;
 
     private void Start()
     {
@@ -99,7 +99,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                 });
             switch (displayMode)
             {
-                case DisplayMode.Short:
+                case DisplayMode.Brief:
                     describe.Calculate();
                     var s = describe.GetComponent<TMP_Text>().text;
                     describe.RemoveBetween((@"\(", @"\)"));
@@ -156,7 +156,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                 });
             switch (displayMode)
             {
-                case DisplayMode.Short:
+                case DisplayMode.Brief:
                     describe.Calculate();
                     var s = describe.GetComponent<TMP_Text>().text;
                     describe.RemoveBetween((@"\(", @"\)"));
@@ -184,8 +184,8 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 
     private enum DisplayMode
     {
-        Short,
-        Detail
+        Detail,
+        Brief
     }
 
     public class Args

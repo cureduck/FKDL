@@ -7,7 +7,9 @@ using Game.PlayerCommands;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Tools;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Game
 {
@@ -32,6 +34,7 @@ namespace Game
             Relics = new RelicAgent();
         }
 
+        [SerializeField]
         public float LuckyChance
         {
             get => _luckChance;
@@ -371,132 +374,36 @@ namespace Game
             }
         }
 
-
-        /*[Button]
-        public void Execute(string cmds)
+        internal void UpgradeRandomSkills(Random random, Rank rank, int count = 1, bool breakout = false)
         {
-            foreach (var cmd in cmds.Replace(" ", "").Split('|'))
+            Func<SkillData, bool> filter;
+
+            if (breakout)
             {
-                try
+                filter = data => SkillData.CanBreakOut(data) && (rank == Rank.All || data.Bp.Rank == rank);
+            }
+            else
+            {
+                filter = data => SkillData.CanUpgrade(data) && (rank == Rank.All || data.Bp.Rank == rank);
+            }
+
+            var skills = Skills.Where(filter);
+            if (skills.Count() <= count)
+            {
+                foreach (var skill in skills)
                 {
-                    var prefix = cmd.Split(':')[0];
-                    switch (prefix)
-                    {
-                        case "buff":
-                            var kind = cmd.Split(':')[1];
-                            var stack = cmd.Split(':')[2];
-                            AppliedBuff(new BuffData(kind, int.Parse(stack)));
-                            break;
-                        case "gold":
-                            var count = int.Parse(cmd.Split(':')[1]);
-                            Gain(count);
-                            break;
-                        case "skill":
-                            var ess = cmd.Split(':');
-                            var r = int.Parse(ess[1]);
-                            GameManager.Instance.RollForSkill(r);
-                            break;
-                        case "relic":
-                            var esr = cmd.Split(':');
-                            var idr = esr[1];
-                            if (idr.EndsWith("/random"))
-                            {
-                                var rr = (Rank)int.Parse(idr[0].ToString());
-                                idr = RelicManager.Instance.RollT(rr)[0].Id;
-                                TryTakeRelic(idr, out _);
-                            }
-                            else
-                            {
-                                var rr = (Rank)int.Parse(idr[0].ToString());
-                                GameManager.Instance.RollForRelic(rr);
-                            }
-
-                            break;
-                        case "attr":
-                            var type = cmd.Split(':')[1].ToLower();
-                            var count1 = int.Parse(cmd.Split(':')[2]);
-                            switch (type)
-                            {
-                                case "curhp":
-                                    if (count1 > 0)
-                                    {
-                                        Heal(BattleStatus.HP(count1));
-                                    }
-                                    else
-                                    {
-                                        Cost(CostInfo.HpCost(count1));
-                                    }
-
-                                    break;
-                                case "curmp":
-                                    if (count1 > 0)
-                                    {
-                                        Heal(BattleStatus.Mp(count1));
-                                    }
-                                    else
-                                    {
-                                        Cost(CostInfo.MpCost(count1));
-                                    }
-
-                                    break;
-                                case "maxhp":
-                                    Strengthen(new BattleStatus { MaxHp = count1 });
-                                    break;
-                                case "maxmp":
-                                    Strengthen(new BattleStatus { MaxHp = count1 });
-                                    break;
-                                case "matk":
-                                    Strengthen(new BattleStatus { MAtk = count1 });
-                                    break;
-                                case "patk":
-                                    Strengthen(new BattleStatus { PAtk = count1 });
-                                    break;
-                                case "mdef":
-                                    Strengthen(new BattleStatus { MDef = count1 });
-                                    break;
-                                case "pdef":
-                                    Strengthen(new BattleStatus { PDef = count1 });
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                            break;
-                        case "jump":
-                            var jid = cmd.Split(':')[1].ToLower();
-                            var cc = CrystalManager.Instance.Lib[jid];
-                            WindowManager.Instance.CrystalPanel.Open((this, cc));
-                            break;
-                        case "potion":
-                            var es = cmd.Split(':');
-                            var id = es[1];
-                            if (id.EndsWith("/random"))
-                            {
-                                var rr = (Rank)int.Parse(id[0].ToString());
-                                id = PotionManager.Instance.RollT(rr)[0].Id;
-                            }
-
-                            var c = es.Length > 2 ? int.Parse(es[2]) : 1;
-                            for (int i = 0; i < c; i++)
-                            {
-                                TryTakePotion(id, out _);
-                            }
-
-                            break;
-                        case "skillslot":
-                            Player.AddSkillSlot();
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"{cmd} execute error");
-                    Debug.LogError(e);
+                    Upgrade(skill);
                 }
             }
-        }*/
+            else
+            {
+                skills = skills.ChooseRandom(count, random);
+                foreach (var skill in skills)
+                {
+                    Upgrade(skill);
+                }
+            }
+        }
 
 
         public void Save()

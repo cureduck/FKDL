@@ -11,6 +11,8 @@ namespace Game
         private readonly Dictionary<Rank, int> _cost = new Dictionary<Rank, int>
             { { Rank.Normal, 3 }, { Rank.Uncommon, 6 }, { Rank.Rare, 9 }, { Rank.Ultra, 12 } };
 
+        public float BaseBias = 0f;
+
         public int Cost;
         public Rank Rank;
 
@@ -72,7 +74,7 @@ namespace Game
         {
             var info = base.GetSquareInfo();
             info.P1 = _cost[_rank].ToString();
-            info.P2 = Player.LuckyChance.ToString("P0");
+            info.P2 = (BaseBias + Player.LuckyChance).ToString("P0");
             return info;
         }
     }

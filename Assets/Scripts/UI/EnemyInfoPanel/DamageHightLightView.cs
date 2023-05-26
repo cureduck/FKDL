@@ -102,6 +102,7 @@ public class DamageHightLightView : MonoBehaviour
             {
                 curBuffDamageInfo = string.Empty;
             }
+            //curBuffDamageInfo = string.Empty;
         }
 
 

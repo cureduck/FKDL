@@ -76,8 +76,9 @@ namespace UI
         private void OnSkipButtonClick()
         {
             animationGroup.SelectTarget(-1);
+            GameManager.Instance.SkipReward(out _);
             StartCoroutine(CloseWindowIE());
-            Debug.LogWarning("获得金币!");
+            //Debug.LogWarning("获得金币!");
             AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
         }
 

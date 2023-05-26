@@ -259,7 +259,7 @@ namespace Game
         private SkillData kbyh(SkillData skill, FighterData fighter)
         {
             Activated?.Invoke();
-            fighter.Heal(BattleStatus.HP((int)Bp.Param1), "kbyh");
+            fighter.Heal(BattleStatus.Hp((int)Bp.Param1), "kbyh");
 
             return skill;
         }
@@ -274,7 +274,7 @@ namespace Game
         [Effect("ftzx", Timing.OnAttack)]
         private Attack ftzx(Attack attack, FighterData player, FighterData enemy)
         {
-            player.Recover(BattleStatus.HP((int)Bp.Param1), enemy, "ftzx");
+            player.Recover(BattleStatus.Hp((int)Bp.Param1), enemy, "ftzx");
             Activated?.Invoke();
             return attack;
         }

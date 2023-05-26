@@ -328,6 +328,8 @@ public class CellSkillView : MonoBehaviour
         if (temp != null)
         {
             temp.UpgradeWithPoint(skillData);
+            coolDownCompleteSign.gameObject.SetActive(false);
+            coolDownCompleteSign.gameObject.SetActive(true);
         }
     }
 

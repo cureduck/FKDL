@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game;
-using Sirenix.OdinInspector;
-using UnityEngine;
-using Random = System.Random;
 
 namespace Tools
 {
     public class CustomDictionary<T> : Dictionary<string, T> where T : IRank
     {
+        private int _rankLevels;
         public Random Random;
 
         public int RankLevels
@@ -27,16 +26,14 @@ namespace Tools
             }
         }
 
-        private int _rankLevels;
-
         public T[] ChooseRandom(int count = 1)
         {
-            return Tools.ChooseRandom(count, Values.ToArray(), Random);
+            return Values.ChooseRandom(count, Random);
         }
 
         public T[] ChooseRandom(Rank r, int count = 1)
         {
-            return Tools.ChooseRandom(count, Values.ToArray().Where(rank => rank.Rank == r).ToArray(), Random);
+            return Values.Where(rank => rank.Rank == r).ChooseRandom(count, Random);
         }
     }
 

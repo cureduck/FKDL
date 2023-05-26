@@ -200,7 +200,7 @@ namespace Game
             CurHp = math.min(MaxHp, CurHp);
         }
 
-        public static BattleStatus HP(int value)
+        public static BattleStatus Hp(int value)
         {
             return new BattleStatus
             {

@@ -83,3 +83,15 @@ s.reveal_around(floor)
 
 ss = (dict2obj(obj2dict(m)))
 print(obj2dict(ss))
+
+
+class student:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+a = student("a", 1)
+a_str = json.dumps(obj2dict(a))
+b_dict = json.loads(a_str)
+b = dict2obj(b_dict)
+print(b.name)

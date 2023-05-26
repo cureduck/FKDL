@@ -9,18 +9,16 @@ namespace Game
     {
         public Sprite Icon;
         public string Id;
-        public BattleStatus Status;
 
-
-        public int Gold;
         public int Spirit;
 
         public string Description;
 
         public Rank Rank;
+        public List<BuffData> Buffs;
 
 
         public SkillData[] Skills;
-        public List<BuffData> Buffs;
+        public BattleStatus Status;
     }
 }

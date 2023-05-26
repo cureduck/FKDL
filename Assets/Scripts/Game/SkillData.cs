@@ -22,7 +22,11 @@ namespace Game
         public int InitCoolDown;
         public bool Sealed = false;
 
-        [JsonIgnore, Obsolete] public bool IsEmpty => Id.IsNullOrWhitespace();
+        /// <summary>
+        /// Use IsValid instead
+        /// </summary>
+        [JsonIgnore, Obsolete]
+        public bool IsEmpty => Id.IsNullOrWhitespace();
 
         [JsonIgnore] public override Skill Bp => SkillManager.Instance.GetById(Id.ToLower());
 
@@ -178,9 +182,13 @@ namespace Game
         [Effect("TYTQ_ALC", Timing.OnKill)]
         private Attack HumorialExtraction(Attack attack, FighterData fighter, FighterData enemy)
         {
-            //var potion = PotionManager.Instance.
-            fighter.Recover(BattleStatus.HP(CurLv), enemy);
-            Activated?.Invoke();
+            if (SData.CurGameRandom.NextDouble() < Usual)
+            {
+                var p = PotionManager.Instance.RollT(Rank.Normal).First();
+                ((PlayerData)fighter).TryTakeOffer(new Offer(p), out _);
+                Activated?.Invoke();
+            }
+
             return attack;
         }
 
@@ -208,7 +216,8 @@ namespace Game
         {
             if (buff.Id == "poison")
             {
-                buff.StackChange((int)(CurLv * Bp.Param1));
+                buff.StackChange((int)Usual);
+                Activated?.Invoke();
             }
 
             return buff;
@@ -225,7 +234,7 @@ namespace Game
             }
             else
             {
-                player.Heal(BattleStatus.HP(v));
+                player.Heal(BattleStatus.Hp(v));
             }
         }
 
@@ -263,16 +272,40 @@ namespace Game
         [Effect("MY_ALC", Timing.OnUsePotion)]
         private PotionData MagicAddiction(PotionData potion, FighterData fighter)
         {
-            fighter.Heal(new BattleStatus { CurHp = CurLv, CurMp = CurLv });
+            fighter.Heal(BattleStatus.Hp((int)Usual));
+            fighter.Heal(BattleStatus.Mp((int)Usual));
+            fighter.RemoveBuff("torture");
             Activated?.Invoke();
             return potion;
         }
 
-        [Effect("ZN_ALC", Timing.OnCounterCharge)]
+
+        /// <summary>
+        /// 攻击时，为自己施加一层折磨
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("MY_ALC", Timing.OnAttack)]
+        private Attack MagicAddiction(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            fighter.ApplySelfBuff(BuffData.Torture(1));
+            Activated?.Invoke();
+            return attack;
+        }
+
+
+        [Effect("ZN_ALC", Timing.OnCounterCharge, priority = -100)]
         private BattleStatus SelfAbuse(BattleStatus status, FighterData fighter, string kw)
         {
-            fighter.RandomStrengthen();
-            Activated?.Invoke();
+            var chance = status.CurHp * Usual;
+            if (SData.CurGameRandom.NextDouble() < chance)
+            {
+                fighter.Strengthen(new BattleStatus() { MaxHp = 1, MaxMp = 1 });
+                Activated?.Invoke();
+            }
+
             return status;
         }
 
@@ -364,7 +397,7 @@ namespace Game
         {
             if (info is FailureInfo failure && failure.Reason.Contains(FailureReason.SkillNotReady))
             {
-                player.CounterCharge(-BattleStatus.HP((int)(Bp.Param1 - Bp.Param2 * CurLv) * skill.CooldownLeft));
+                player.CounterCharge(-BattleStatus.Hp((int)(Bp.Param1 - Bp.Param2 * CurLv) * skill.CooldownLeft));
                 failure.Reason.Remove(FailureReason.SkillNotReady);
                 if (failure.Reason.Count == 0)
                 {
@@ -438,7 +471,7 @@ namespace Game
         private Attack FaLiBaoZou(Attack attack, FighterData fighter, FighterData enemy)
         {
             var num = attack.CostInfo.ActualValue;
-            if (num != 0)
+            if (num != 0 && attack.MAtk >= 0)
             {
                 attack.MAtk += num;
                 Activated?.Invoke();
@@ -741,7 +774,7 @@ namespace Game
         [Effect("XX_MON", Timing.OnAttackSettle, priority = 2)]
         private Attack XX_MON(Attack attack, FighterData player, FighterData enemy)
         {
-            player.Recover(BattleStatus.HP(attack.PDmg), enemy);
+            player.Recover(BattleStatus.Hp(attack.PDmg), enemy);
             return attack;
         }
 
@@ -884,7 +917,7 @@ namespace Game
         [Effect("XTZX_COM", Timing.OnLvUp)]
         private SkillData XTZX_COM(SkillData skill, FighterData player)
         {
-            player.Heal(BattleStatus.HP((int)(Bp.Param1 + Bp.Param2 * CurLv)));
+            player.Heal(BattleStatus.Hp((int)(Bp.Param1 + Bp.Param2 * CurLv)));
             Activated?.Invoke();
             return skill;
         }
@@ -923,20 +956,176 @@ namespace Game
         }
 
 
-        [Effect("TEST_COM", Timing.OnReact)]
-        private void Test_com(MapData cell, PlayerData player)
+        /// <summary>
+        /// 访问岩石时：消耗法力减少#P1*CurLv#（P1*Lv）,获得金币#P2*CurLv#（P2*Lv）
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="fighter"></param>
+        /// <returns></returns>
+        [Effect("KCTF_COM", Timing.OnCost)]
+        private CostInfo KCTF_COM(CostInfo cost, FighterData fighter, string kw)
         {
-            switch (cell)
+            if (kw == "rock")
             {
-                case TravellerSaveData traveller:
-                    Activated?.Invoke();
-                    break;
-                case ObsidianSaveData obsidian:
-                    MapData.Destroy(obsidian);
-                    break;
-                default:
-                    break;
+                Activated?.Invoke();
+                cost.Value -= (int)(Bp.Param1 * CurLv);
+                fighter.Gain((int)Bp.Param2 * CurLv);
             }
+
+            return cost;
+        }
+
+        /// <summary>
+        /// 访问坟墓、赌场时：获胜的概率提高#P1+P2*CurLv#%（P1+P2*Lv）%
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="fighter"></param>
+        /// <returns></returns>
+        [Effect("PMZD_COM", Timing.OnReact)]
+        private MapData PMZD_COM(MapData map, FighterData fighter)
+        {
+            if (map is CasinoSaveData casino)
+            {
+                casino.BaseBias = Usual / 100;
+                Activated?.Invoke();
+            }
+
+            if (map is CemeterySaveData cemetery)
+            {
+                cemetery.BaseBias = Usual / 100;
+                Activated?.Invoke();
+            }
+
+            return map;
+        }
+
+
+        /// <summary>
+        /// 下层时：#P1+P2*CurLv#（P1+P2*Lv）个1星技能提升1级
+        /// </summary>
+        /// <returns></returns>
+        [Effect("DDZJ_COM", Timing.OnMarch)]
+        private void DDZJ_COM(FighterData fighter)
+        {
+            ((PlayerData)fighter).UpgradeRandomSkills(SData.CurGameRandom, Rank.Normal,
+                (int)(Bp.Param1 + Bp.Param2 * CurLv));
+            Activated?.Invoke();
+        }
+
+        /// <summary>
+        /// 下层时：#P1+P2*CurLv#（P1+P2*Lv）个2星技能提升1级
+        /// </summary>
+        /// <returns></returns>
+        [Effect("CKMJ_COM", Timing.OnMarch)]
+        private void CKMJ_COM(FighterData fighter)
+        {
+            if (fighter is PlayerData player)
+            {
+                player.UpgradeRandomSkills(SData.CurGameRandom, Rank.Rare, (int)(Bp.Param1 + Bp.Param2 * CurLv));
+                Activated?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// 下层时：每有一个3星黄色技能，获得1次主职业对应的属性提升
+        /// </summary>
+        [Effect("DTRS_COM", Timing.OnMarch)]
+        private void DTRS_COM(FighterData fighter)
+        {
+            if (fighter is PlayerData player)
+            {
+                var times = player.Skills.Count(skill => skill.Bp.Rank == Rank.Rare);
+                for (int i = 0; i < times; i++)
+                {
+                    player.Strengthen(BattleStatus.GetProfessionUpgrade(player.profInfo[0]));
+                }
+
+                Activated?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// 下层时：若除主职业的技能数量超过2个，则#P1+P2*CurLv#(P1+P2*Lv)个技能升级一次
+        /// </summary>
+        /// <returns></returns>
+        [Effect("ZZ_COM", Timing.OnMarch)]
+        private void ZZ_COM(FighterData fighter)
+        {
+            if (fighter is PlayerData player)
+            {
+                bool satisfy = player.Skills.Count(skill => !skill.Bp.IsMainProf()) > 2;
+                if (satisfy)
+                {
+                    player.UpgradeRandomSkills(SData.CurGameRandom, Rank.All, (int)(Bp.Param1 + Bp.Param2 * CurLv));
+                    Activated?.Invoke();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 下层时：若没有一个职业的技能数量超过2个，则#P1+P2*CurLv#(P1+P2*Lv)个技能升级一次
+        /// </summary>
+        /// <param name="fighter"></param>
+        [Effect("RH_COM", Timing.OnMarch)]
+        private void RH_COM(FighterData fighter)
+        {
+            if (fighter is PlayerData player)
+            {
+                bool satisfy = true;
+                foreach (var prof in player.profInfo)
+                {
+                    if (player.Skills.Count(skill => skill.Bp.Prof == prof) > 2)
+                    {
+                        satisfy = false;
+                        break;
+                    }
+                }
+
+                if (satisfy)
+                {
+                    player.UpgradeRandomSkills(SData.CurGameRandom, Rank.All, (int)(Bp.Param1 + Bp.Param2 * CurLv));
+                    Activated?.Invoke();
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 造成#P1+P2*CurLv#（P1+P2*Lv）倍法术伤害
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <returns></returns>
+        [Effect("ZSS_COM", Timing.OnAttack)]
+        private Attack ZSS_COM(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            return attack.Change(mAtk: fighter.Status.MAtk, multi: Usual);
+        }
+
+        /// <summary>
+        /// 造成#P1+P2*CurLv#（P1+P2*Lv）倍物理伤害
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="fighter"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("QLJ_COM", Timing.OnAttack)]
+        private Attack QLJ_COM(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            attack.Change(pAtk: fighter.Status.PAtk, multi: Usual);
+            Activated?.Invoke();
+            return attack;
+        }
+
+        /// <summary>
+        /// 恢复#P1+P2*CurLv#（P1+P2*Lv）点生命值
+        /// </summary>
+        /// <returns></returns>
+        [Effect("ZYS_COM", Timing.SkillEffect)]
+        private void ZYS_COM(FighterData fighter)
+        {
+            fighter.Heal((int)Usual);
+            Activated?.Invoke();
         }
 
         #endregion

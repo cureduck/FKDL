@@ -7,7 +7,8 @@
         Rare,
         Ultra,
         Prof,
-        God
+        God,
+        All
     }
 
     public enum RankDescType

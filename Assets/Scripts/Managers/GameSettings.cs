@@ -1,4 +1,5 @@
 ﻿using System;
+using EasyTransition;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Managers
         public bool SEMute;
         public bool AutoGoToFocus;
 
+        public TransitionManagerSettings TransitionManagerSettings;
 
         private GameObject _bg;
 
@@ -118,6 +120,8 @@ namespace Managers
                     _settingScreenX = value.x;
                     _settingScreenY = value.y;
                     Screen.SetResolution(_settingScreenX, _settingScreenY, _isFullScreen);
+                    TransitionManagerSettings.transitions[5].refrenceResolution =
+                        new Vector2(_settingScreenX, _settingScreenY);
                 }
             }
         }

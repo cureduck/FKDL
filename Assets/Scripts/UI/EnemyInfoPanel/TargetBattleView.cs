@@ -1,6 +1,7 @@
 ﻿using Game;
 using I2.Loc;
 using Tools;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,7 +53,7 @@ public class TargetBattleView : MonoBehaviour
 
         healthBar.value = fighterData.Status.CurHp;
         healthBar.maxValue = fighterData.Status.MaxHp;
-        healthValue_txt.text = $"{fighterData.Status.CurHp}/{fighterData.Status.MaxHp}";
+        healthValue_txt.text = $"{math.max(0, fighterData.Status.CurHp)}/{fighterData.Status.MaxHp}";
 
         magicBar.value = fighterData.Status.CurMp;
         magicBar.maxValue = fighterData.Status.MaxMp;

@@ -19,6 +19,7 @@ public class ConfirmPanel : BasePanel<ConfirmPanel.Args>
     protected override void OnOpen()
     {
         info.text = Data.info;
+        transform.SetAsLastSibling();
     }
 
     protected override void UpdateUI()

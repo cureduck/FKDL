@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EasyTransition;
+using Game;
 using I2.Loc;
 using Managers;
 using UnityEngine;
@@ -19,7 +20,7 @@ public class ChooseProfMainPanel : MonoBehaviour
     [SerializeField] private CellProfView secondProf02;
     [Header("按钮")] [SerializeField] private Button resetChoose_btn;
     [SerializeField] private Button startGame_btn;
-
+    [SerializeField] private GameObject waringInfo;
     private string[] curCanSelectProfs;
 
     #region 内部自用
@@ -44,7 +45,7 @@ public class ChooseProfMainPanel : MonoBehaviour
         startGame_btn.onClick.AddListener(StartGame);
         chooseProfInfoView.gameObject.SetActive(false);
         curSelectViewIndex = new List<int>();
-        profDatas = new string[3];
+        profDatas = new string[4];
     }
 
     private void UpdateView()
@@ -56,6 +57,7 @@ public class ChooseProfMainPanel : MonoBehaviour
         secondProf02.SetData(profDatas[2]);
 
         startGame_btn.interactable = curSelectViewIndex.Count >= 3;
+        waringInfo.gameObject.SetActive(curSelectViewIndex.Count < 3);
     }
 
     private void CellPointExit(CellChooseProfView arg1, string arg2)
@@ -133,7 +135,8 @@ public class ChooseProfMainPanel : MonoBehaviour
 
     private void StartGame()
     {
-        GameDataManager.Instance.SecondaryData = new Game.SecondaryData();
+        GameDataManager.Instance.SecondaryData = SecondaryData.GetOrCreate();
+        profDatas[3] = "COM";
         GameDataManager.Instance.SecondaryData.Profs = profDatas;
         FindObjectOfType<TransitionManager>().LoadScene("MainScene", "DiagonalRectangleGrid", .2f);
         AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
