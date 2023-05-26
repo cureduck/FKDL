@@ -11,14 +11,15 @@ namespace UI
 
     public abstract class BasePanel<T> : MonoBehaviour
     {
+        private T _data;
         protected static PlayerData PlayerData => GameManager.Instance.PlayerData;
+
+        public bool IsOpen => gameObject.activeInHierarchy;
 
         public T Data
         {
             get => _data;
         }
-
-        private T _data;
 
         public virtual void Init()
         {

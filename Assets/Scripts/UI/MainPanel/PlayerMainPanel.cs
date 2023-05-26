@@ -143,10 +143,5 @@ namespace UI
                 relicListView.SetData(playerData.Relics);
             }
         }
-
-        public void SetUsePotionState(bool isSell)
-        {
-            PotionPanel.SetSellingState(isSell);
-        }
     }
 }

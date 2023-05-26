@@ -6,8 +6,8 @@ using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Tools;
-using Unity.Mathematics;
 using UnityEngine;
+using static Unity.Mathematics.math;
 using Random = UnityEngine.Random;
 
 namespace Game
@@ -22,10 +22,7 @@ namespace Game
         public int InitCoolDown;
         public bool Sealed = false;
 
-        /// <summary>
-        /// Use IsValid instead
-        /// </summary>
-        [JsonIgnore, Obsolete]
+        [JsonIgnore, Obsolete("Use IsValid instead")]
         public bool IsEmpty => Id.IsNullOrWhitespace();
 
         [JsonIgnore] public override Skill Bp => SkillManager.Instance.GetById(Id.ToLower());
@@ -205,7 +202,7 @@ namespace Game
         private BattleStatus DrugResistance(BattleStatus status, FighterData fighter, string kw)
         {
             status.CurHp -= (int)(Bp.Param1 * CurLv);
-            status.CurHp = math.max(status.CurHp, 0);
+            status.CurHp = max(status.CurHp, 0);
             Activated?.Invoke();
             return status;
         }
@@ -246,7 +243,7 @@ namespace Game
 
             if (attack.PDmg > 0)
             {
-                var v = math.min(attack.PDmg, fighter.Status.CurHp);
+                var v = min(attack.PDmg, fighter.Status.CurHp);
                 Activated?.Invoke();
                 fighter.ApplyBuff(new BuffData("poison", (int)(Usual * v)), enemy);
             }
@@ -515,7 +512,7 @@ namespace Game
             {
                 Activated?.Invoke();
 
-                var maxAbsorb = math.max(fighter.Status.CurMp * Usual, attack.PDmg);
+                var maxAbsorb = max(fighter.Status.CurMp * Usual, attack.PDmg);
 
                 fighter.Cost(new CostInfo((int)(maxAbsorb / Usual), CostType.Mp));
 

@@ -444,6 +444,7 @@ namespace Game
 
         private void OnDone()
         {
+            OnLogicDone();
             _sequence.Kill();
             _sequence = DOTween.Sequence();
             _breath.Kill();

@@ -160,16 +160,16 @@ namespace Managers
 
                             GameManager.Instance.Focus = sq;
 
-                            if ((GameManager.Instance.Focus.Data is EnemySaveData es))
+                            /*if ((GameManager.Instance.Focus.Data is EnemySaveData es))
                             {
                                 WindowManager.Instance.EnemyPanel.gameObject.SetActive(false);
                                 WindowManager.Instance.EnemyPanel.gameObject.SetActive(true);
                                 Vector3 curPosition = sq.transform.position;
                                 curPosition.x = sq.Icon.transform.position.x;
                                 WindowManager.Instance.EnemyPanel.transform.position = curPosition;
-                                WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args
-                                    { targetEnemy = es, playerData = GameManager.Instance.PlayerData });
-                            }
+                                //WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args
+                                //    { targetEnemy = es, playerData = GameManager.Instance.PlayerData });
+                            }*/
 
                             if (previous != null) previous.UpdateFace();
                             sq.Focus();

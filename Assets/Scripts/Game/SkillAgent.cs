@@ -29,7 +29,7 @@ namespace Game
 
         public IEnumerable<SkillData> ActiveSkills()
         {
-            return this.Where((data => (data != null && !data.IsEmpty && data.Bp != null)));
+            return this.Where((data => (data != null && data.IsValid && data.Bp != null)));
         }
 
 

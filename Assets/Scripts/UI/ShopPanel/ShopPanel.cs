@@ -103,7 +103,6 @@ namespace UI
         public override void Close()
         {
             base.Close();
-            PlayerMainPanel.Instance.SetUsePotionState(false);
         }
 
         private void CellSet(CellGoodView arg1, Args arg2)
@@ -114,9 +113,8 @@ namespace UI
         private void OnCellGoodsClick(CellGoodView cellGoodView, Offer offer, int index)
         {
             //FailureInfo会在创建的时候就自动播报，不用在这里再播报一次
-            Info info;
             //会有资源不够的info返回
-            if (PlayerData.CanAfford(offer.Cost, out info))
+            if (PlayerData.CanAfford(offer.Cost, out var info))
             {
                 //可能会有技能槽位不够、药水槽位不够等info返回
                 if (PlayerData.TryTakeOffer(offer, out info))

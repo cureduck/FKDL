@@ -16,15 +16,12 @@ namespace UI
 
         public Image BottleIcon;
         public Image PotionIcon;
-        public GameObject sellingSign;
 
         [SerializeField] private PointEnterAndExit pointEvent;
         [SerializeField] private GameObject curSelectSign;
         public PotionData data;
         private int index;
 
-
-        private bool isSelling = false;
 
         private string Id => data.Id;
         [JsonIgnore] public Potion Target => PotionManager.Instance.GetById(Id);
@@ -42,20 +39,10 @@ namespace UI
         }
 
 
-        public void SetData(int index, PotionData data, bool isSelling)
+        public void SetData(int index, PotionData data)
         {
             this.index = index;
             this.data = data;
-            this.isSelling = isSelling;
-            if (data == null)
-            {
-                sellingSign.SetActive(false);
-            }
-            else
-            {
-                sellingSign.SetActive(isSelling);
-            }
-
             Load();
         }
 
@@ -86,17 +73,9 @@ namespace UI
 
         public void UsePotion()
         {
-            if (isSelling)
+            if (!GameManager.Instance.PlayerData.UsePotion(index, out var currentInfo))
             {
-                WindowManager.Instance.warningInfoPanel.Open("玩家出售药水！");
-            }
-            else
-            {
-                Info curInfo;
-                if (!GameManager.Instance.PlayerData.UsePotion(index, out curInfo))
-                {
-                    WindowManager.Instance.warningInfoPanel.Open(curInfo.ToString());
-                }
+                WindowManager.Instance.warningInfoPanel.Open(currentInfo.ToString());
             }
 
 

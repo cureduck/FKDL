@@ -13,19 +13,5 @@ namespace Managers
             DontDestroyOnLoad(gameObject);
             base.Awake();
         }
-
-        public void SetProf()
-        {
-            var profs = new string[ChoosingPanel.Instance.SelectedList.Count + 1];
-            for (int i = 0; i < ChoosingPanel.Instance.SelectedList.Count; i++)
-            {
-                profs[i] = ChoosingPanel.Instance.SelectedList[i].gameObject.name;
-            }
-
-            profs[ChoosingPanel.Instance.SelectedList.Count] = "COM";
-
-            SecondaryData = SecondaryData.GetOrCreate();
-            SecondaryData.Profs = profs;
-        }
     }
 }

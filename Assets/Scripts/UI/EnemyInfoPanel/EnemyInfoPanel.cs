@@ -3,7 +3,7 @@ using Managers;
 using UI;
 using UnityEngine;
 
-public class EnemyInfoPanel : BasePanel<EnemyInfoPanel.Args>
+public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData targetEnemy, Vector3 position)>
 {
     [SerializeField] private TargetBattleView enemyView;
     [SerializeField] private TargetBattleView playerView;
@@ -16,16 +16,16 @@ public class EnemyInfoPanel : BasePanel<EnemyInfoPanel.Args>
         playerView.Init();
     }
 
-    protected override void SetData(Args d)
+    protected override void SetData((PlayerData, EnemySaveData, Vector3) d)
     {
-        if (Data != null)
+        if (!Data.Equals(default))
         {
             Data.playerData.OnUpdated -= UpdateUI;
             Data.targetEnemy.OnUpdated -= UpdateUI;
         }
 
         base.SetData(d);
-        if (Data != null)
+        if (!Data.Equals(default))
         {
             Data.playerData.OnUpdated += UpdateUI;
             Data.targetEnemy.OnUpdated += UpdateUI;
@@ -34,6 +34,9 @@ public class EnemyInfoPanel : BasePanel<EnemyInfoPanel.Args>
 
     protected override void OnOpen()
     {
+        Vector3 curPosition = Data.position;
+        transform.position = curPosition;
+        base.OnOpen();
         UpdateUI();
     }
 
@@ -85,11 +88,5 @@ public class EnemyInfoPanel : BasePanel<EnemyInfoPanel.Args>
             int poisonDamage = Data.targetEnemy.Status.CurHp - fightPredictResult.Enemy.Status.CurHp;
             enemyView.SetResult(0, 1, 0, 1, 0, 1, poisonDamage);
         }
-    }
-
-    public class Args
-    {
-        public PlayerData playerData;
-        public EnemySaveData targetEnemy;
     }
 }

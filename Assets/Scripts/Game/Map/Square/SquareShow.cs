@@ -1,12 +1,14 @@
 ﻿using System;
 using Managers;
+using Newtonsoft.Json;
 using UnityEngine;
-using UI;
 
 namespace Game
 {
     public partial class Square
     {
+        [JsonIgnore] PlayerData _player => GameManager.Instance.PlayerData;
+
         private void OnSquareDestroy()
         {
             if (Data is EnemySaveData)
@@ -51,7 +53,6 @@ namespace Game
                 case ShopSaveData shopSaveData:
                     AudioPlayer.Instance.Play(AudioPlayer.AudioOpenShop);
                     WindowManager.Instance.ShopPanel.Open(shopSaveData);
-                    PlayerMainPanel.Instance.SetUsePotionState(true);
                     break;
                 case ChestSaveData chestSaveData:
                     AudioPlayer.Instance.Play(AudioPlayer.AudioOpenChest);
@@ -73,10 +74,15 @@ namespace Game
             }
         }
 
+
         private void OnReactEnemy(EnemySaveData d)
         {
-            WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args
-                { targetEnemy = d, playerData = GameManager.Instance.PlayerData });
+            if (!WindowManager.Instance.EnemyPanel.IsOpen)
+            {
+                var tmp = transform.position;
+                tmp.x = Icon.transform.position.x;
+                WindowManager.Instance.EnemyPanel.Open((_player, d, tmp));
+            }
 
             EnemyBp enemyBp = d.Bp;
             if (enemyBp != null && enemyBp.Rank >= Rank.Rare)
@@ -88,6 +94,18 @@ namespace Game
                 AudioPlayer.Instance.SwitchBossOrNormalBGM(true);
             }
         }
+
+
+        private void OnLogicDone()
+        {
+            switch (Data)
+            {
+                case EnemySaveData enemy:
+                    WindowManager.Instance.EnemyPanel.Close();
+                    break;
+            }
+        }
+
 
         private void OnReactSupply(SupplySaveData supplySaveData)
         {
