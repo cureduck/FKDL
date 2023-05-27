@@ -1,5 +1,4 @@
-﻿using System;
-using Game;
+﻿using Game;
 using Managers;
 using TMPro;
 
@@ -12,9 +11,9 @@ namespace UI
         protected void Start()
         {
             //Data = GameManager.Instance.PlayerData;
-            Open(GameManager.Instance.PlayerData);
+            Open(GameManager.Instance.Player);
             GameManager.Instance.GameLoaded +=
-                () => { Open(GameManager.Instance.PlayerData); };
+                () => { Open(GameManager.Instance.Player); };
         }
 
         protected override void UpdateUI()

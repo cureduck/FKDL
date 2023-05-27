@@ -139,6 +139,12 @@ namespace Game
             Activated?.Invoke();
         }
 
+        public static BuffData Poison(int stack = 1)
+        {
+            return new BuffData("Poison", stack);
+        }
+
+
         [Effect("Bellow", Timing.OnAttack, priority = -4)]
         private Attack Bellow(Attack attack, FighterData f1, FighterData f2)
         {

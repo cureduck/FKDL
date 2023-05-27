@@ -458,9 +458,13 @@ namespace Game
         [Effect("YTZQ_MAG", Timing.OnAttack)]
         private Attack EtherBody(Attack attack, FighterData fighter, FighterData enemy)
         {
-            var num = (int)((fighter.Status.MaxMp - fighter.Status.CurHp));
-            attack.MAtk += (int)(num * Usual);
-            Activated?.Invoke();
+            var num = (int)((fighter.Status.CurMp - fighter.Status.CurHp));
+            if (num > 0 && attack.MAtk >= 0)
+            {
+                attack.MAtk += num;
+                Activated?.Invoke();
+            }
+
             return attack;
         }
 

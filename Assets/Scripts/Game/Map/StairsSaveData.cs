@@ -19,7 +19,7 @@ namespace Game
 
             if (!Destination.StartsWith("A"))
             {
-                GameManager.Instance.PlayerData.March(Destination);
+                GameManager.Instance.Player.March(Destination);
             }
         }
     }

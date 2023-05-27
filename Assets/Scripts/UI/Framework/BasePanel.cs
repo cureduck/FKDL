@@ -12,7 +12,7 @@ namespace UI
     public abstract class BasePanel<T> : MonoBehaviour
     {
         private T _data;
-        protected static PlayerData PlayerData => GameManager.Instance.PlayerData;
+        protected static PlayerData PlayerData => GameManager.Instance.Player;
 
         public bool IsOpen => gameObject.activeInHierarchy;
 
@@ -41,8 +41,6 @@ namespace UI
         protected virtual void SetData(T d)
         {
             _data = d;
-
-
             UpdateUI();
         }
 

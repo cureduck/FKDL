@@ -7,7 +7,7 @@ namespace Game
 {
     public partial class Square
     {
-        [JsonIgnore] PlayerData _player => GameManager.Instance.PlayerData;
+        [JsonIgnore] PlayerData _player => GameManager.Instance.Player;
 
         private void OnSquareDestroy()
         {
@@ -20,7 +20,7 @@ namespace Game
             {
                 WindowManager.Instance.CrystalPanel.Open(
                     (
-                        GameManager.Instance.PlayerData,
+                        GameManager.Instance.Player,
                         CrystalManager.Instance.Lib["boss"]
                     ));
             }
@@ -37,8 +37,20 @@ namespace Game
             //DestroyImmediate(gameObject);
         }
 
+        private void OnFocusLogic()
+        {
+            switch (Data)
+            {
+                case EnemySaveData enemy:
+                    DisplayEnemyInfoView(enemy);
+                    break;
+                default:
+                    break;
+            }
+        }
 
-        public void OnReact()
+
+        public void OnReactLogic()
         {
             switch (Data)
             {
@@ -64,7 +76,7 @@ namespace Game
 
                     var panel = WindowManager.Instance.CrystalPanel;
                     WindowManager.Instance.CrystalPanel.Open(
-                        (GameManager.Instance.PlayerData, CrystalManager.Instance.Lib[crystalPanel.Id])
+                        (GameManager.Instance.Player, CrystalManager.Instance.Lib[crystalPanel.Id])
                     );
                     panel.gameObject.SetActive(true);
                     break;
@@ -77,13 +89,7 @@ namespace Game
 
         private void OnReactEnemy(EnemySaveData d)
         {
-            if (!WindowManager.Instance.EnemyPanel.IsOpen)
-            {
-                var tmp = transform.position;
-                tmp.x = Icon.transform.position.x;
-                WindowManager.Instance.EnemyPanel.Open((_player, d, tmp));
-            }
-
+            DisplayEnemyInfoView(d);
             EnemyBp enemyBp = d.Bp;
             if (enemyBp != null && enemyBp.Rank >= Rank.Rare)
             {
@@ -92,6 +98,16 @@ namespace Game
             else
             {
                 AudioPlayer.Instance.SwitchBossOrNormalBGM(true);
+            }
+        }
+
+        private void DisplayEnemyInfoView(EnemySaveData d)
+        {
+            if (!WindowManager.Instance.EnemyPanel.IsOpen && d.IsAlive)
+            {
+                var tmp = transform.position;
+                tmp.x = Icon.transform.position.x;
+                WindowManager.Instance.EnemyPanel.Open((_player, d, tmp));
             }
         }
 

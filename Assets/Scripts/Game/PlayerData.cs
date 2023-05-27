@@ -23,6 +23,8 @@ namespace Game
         public bool Engaging;
         public string Id;
         public Dictionary<Rank, int> Keys;
+
+        [JsonIgnore] public Action<float> OnLuckyChanceChanged;
         public PotionData[] Potions;
 
         public string[] profInfo;
@@ -41,10 +43,10 @@ namespace Game
             set
             {
                 _luckChance = value;
-                GameManager.Instance.GlobalLocalizationParamsManager.SetParameterValue("LuckyChance",
-                    _luckChance.ToString("P0"));
+                OnLuckyChanceChanged?.Invoke(_luckChance);
             }
         }
+
 
         public int skillPoint => GameDataManager.Instance.SecondaryData.SkillPoint;
 
@@ -276,15 +278,28 @@ namespace Game
                 return true;
             }
 
+            if (skillData.Bp.MaxLv == 1 && SData.BreakoutPoint > 0)
+            {
+                info = new SuccessInfo();
+                return true;
+            }
+
             info = new FailureInfo(FailureReason.SkillAlreadyMax);
             return false;
         }
 
         public void UpgradeWithPoint(SkillData skillData)
         {
-            Upgrade(skillData);
+            if (skillData.CurLv == skillData.Bp.MaxLv)
+            {
+                SData.BreakoutPoint -= 1;
+            }
+            else
+            {
+                SData.SkillPoint -= 1;
+            }
 
-            SData.SkillPoint -= 1;
+            Upgrade(skillData);
 
             DelayUpdate();
             SkillPointChanged?.Invoke();
@@ -300,14 +315,14 @@ namespace Game
 
         public void GetBreakoutPoint(int v = 1)
         {
-            GameDataManager.Instance.SecondaryData.BreakoutPoint += v;
+            SData.BreakoutPoint += v;
             SkillPointChanged?.Invoke();
         }
 
 
         public void GetRemoveSkillPoint(int v = 1)
         {
-            GameDataManager.Instance.SecondaryData.RemoveSkillPoint += v;
+            SData.RemoveSkillPoint += v;
             SkillPointChanged?.Invoke();
             DelayUpdate();
         }

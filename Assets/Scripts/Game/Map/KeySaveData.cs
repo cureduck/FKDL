@@ -14,7 +14,7 @@ namespace Game
         public override void OnReact()
         {
             base.OnReact();
-            GameManager.Instance.PlayerData.TryTakeKey(KeyRank, out _);
+            GameManager.Instance.Player.TryTakeKey(KeyRank, out _);
             Destroyed();
         }
     }

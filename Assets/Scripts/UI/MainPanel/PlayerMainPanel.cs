@@ -25,7 +25,7 @@ namespace UI
             {
                 Init();
                 relicListView.Init();
-                PlayerData playerData = GameManager.Instance.PlayerData;
+                PlayerData playerData = GameManager.Instance.Player;
                 if (GameDataManager.Instance.SecondaryData.Profs == null ||
                     GameDataManager.Instance.SecondaryData.Profs.Length < 3)
                 {

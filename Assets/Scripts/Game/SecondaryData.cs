@@ -107,7 +107,8 @@ namespace Game
 
         private static SecondaryData CreateDefault()
         {
-            return new SecondaryData(0);
+            var seed = UnityEngine.Random.Range(0, 100000);
+            return new SecondaryData(seed);
         }
 
         public static SecondaryData GetOrCreate()

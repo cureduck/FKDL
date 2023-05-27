@@ -44,10 +44,10 @@ namespace Game
             switch (Type)
             {
                 case SupplyType.Spring:
-                    GameManager.Instance.PlayerData.Heal(new BattleStatus { CurMp = Value }, "supply");
+                    GameManager.Instance.Player.Heal(new BattleStatus { CurMp = Value }, "supply");
                     break;
                 case SupplyType.Grassland:
-                    GameManager.Instance.PlayerData.Heal(new BattleStatus { CurHp = Value }, "supply");
+                    GameManager.Instance.Player.Heal(new BattleStatus { CurHp = Value }, "supply");
                     break;
                 default:
                     break;

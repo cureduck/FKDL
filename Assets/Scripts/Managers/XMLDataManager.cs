@@ -46,7 +46,7 @@ namespace Managers
         private const BindingFlags Flag = (BindingFlags.NonPublic) | (BindingFlags.Instance);
 
 
-        private const float LuckPassRate = .5f;
+        private const float LuckPassRate = .33f;
         [ShowInInspector] protected CustomDictionary<T1> Lib;
         protected SecondaryData SData => GameDataManager.Instance.SecondaryData;
 

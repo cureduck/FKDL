@@ -18,6 +18,7 @@ namespace Managers
             return new Potion(rank, id, upgrade, icon)
             {
                 Param1 = float.Parse(line["P1"]),
+                Param2 = float.Parse(line["P2"]),
             };
         }
     }

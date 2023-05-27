@@ -22,7 +22,7 @@ namespace Game
         [JsonIgnore] public Rank Rank => Bp.Rank;
 
 
-        [JsonIgnore] public override FighterData Enemy => enemy ?? GameManager.Instance.PlayerData;
+        [JsonIgnore] public override FighterData Enemy => enemy ?? GameManager.Instance.Player;
 
 
         [JsonIgnore]

@@ -17,7 +17,7 @@ namespace Managers
         [Button]
         public void Apply(string id, int lv)
         {
-            GameManager.Instance.PlayerData.AppliedBuff(
+            GameManager.Instance.Player.AppliedBuff(
                 new BuffData(id, lv));
         }
 
@@ -25,7 +25,7 @@ namespace Managers
         [Button]
         public void AddPotion(string id)
         {
-            GameManager.Instance.PlayerData.TryTakeOffer(new Offer()
+            GameManager.Instance.Player.TryTakeOffer(new Offer()
             {
                 Id = id,
                 Kind = Offer.OfferKind.Potion
@@ -35,7 +35,7 @@ namespace Managers
         [Button]
         public void AddBuff(string id)
         {
-            GameManager.Instance.PlayerData.ApplySelfBuff(new BuffData(id, 1));
+            GameManager.Instance.Player.ApplySelfBuff(new BuffData(id, 1));
         }
 
         [Button]
@@ -43,7 +43,7 @@ namespace Managers
         {
             if (RelicManager.Instance.TryGetById(id, out var relic))
             {
-                GameManager.Instance.PlayerData.TryTakeOffer(new Offer(relic), out _);
+                GameManager.Instance.Player.TryTakeOffer(new Offer(relic), out _);
             }
         }
 
@@ -57,7 +57,7 @@ namespace Managers
         {
             if (SkillManager.Instance.TryGetById(id, out var skill))
             {
-                GameManager.Instance.PlayerData.TryTakeOffer(new Offer(skill), out _);
+                GameManager.Instance.Player.TryTakeOffer(new Offer(skill), out _);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Managers
 
         public void AddPotion()
         {
-            GameManager.Instance.PlayerData.TryTakeOffer(new Offer()
+            GameManager.Instance.Player.TryTakeOffer(new Offer()
             {
                 Id = PotionDebugInput.text,
                 Kind = Offer.OfferKind.Potion
@@ -95,7 +95,7 @@ namespace Managers
 
         public void Add100Gold()
         {
-            GameManager.Instance.PlayerData.Gain(100);
+            GameManager.Instance.Player.Gain(100);
         }
 
         public void ResetStatus()
@@ -106,13 +106,13 @@ namespace Managers
 
         public void Add1Atk()
         {
-            GameManager.Instance.PlayerData.Strengthen(new BattleStatus { PAtk = 1 });
+            GameManager.Instance.Player.Strengthen(new BattleStatus { PAtk = 1 });
             PlayerMainPanel.Instance.PlayGetCharacterPointEffect(0);
         }
 
         public void Add1Def()
         {
-            GameManager.Instance.PlayerData.Strengthen(new BattleStatus { PDef = 1 });
+            GameManager.Instance.Player.Strengthen(new BattleStatus { PDef = 1 });
             PlayerMainPanel.Instance.PlayGetCharacterPointEffect(2);
         }
     }

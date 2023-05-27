@@ -48,7 +48,7 @@ namespace UI
 
         private void Load()
         {
-            if ((GameManager.Instance.PlayerData == null) || (Id.IsNullOrWhitespace()))
+            if ((GameManager.Instance.Player == null) || (Id.IsNullOrWhitespace()))
             {
                 IdText.SetTerm("empty");
                 GetComponent<Button>().interactable = false;
@@ -73,7 +73,7 @@ namespace UI
 
         public void UsePotion()
         {
-            if (!GameManager.Instance.PlayerData.UsePotion(index, out var currentInfo))
+            if (!GameManager.Instance.Player.UsePotion(index, out var currentInfo))
             {
                 WindowManager.Instance.warningInfoPanel.Open(currentInfo.ToString());
             }
@@ -97,7 +97,13 @@ namespace UI
 
             Potion potion = PotionManager.Instance.GetById(data.Id);
             WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
-                { describe = potion.Des, screenPosition = transform.position, title = data.Id });
+            {
+                describe = potion.Des,
+                param1 = potion.Param1.ToString(),
+                param2 = potion.Param2.ToString(),
+                screenPosition = transform.position,
+                title = data.Id
+            });
         }
 
 

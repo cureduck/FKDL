@@ -1,20 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using I2.Loc;
 using UI;
-using I2.Loc;
+using UnityEngine;
 
 public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
 {
-    public class Args
-    {
-        public Vector2 screenPosition;
-        public Transform worldTrans;
-        public string title;
-        public string describe;
-        public string param;
-    }
-
     [SerializeField] private Localize title_txt;
     [SerializeField] private Localize describe_txt;
     [SerializeField] private NotBeyoundTheScreen notBeyoundTheScreen;
@@ -28,11 +17,6 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
         mainCamera = Camera.main;
     }
 
-    public override void Init()
-    {
-        notBeyoundTheScreen.Init(transform.parent.GetComponent<Canvas>());
-    }
-
     private void Update()
     {
         if (Data.worldTrans != null)
@@ -41,12 +25,28 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
         }
     }
 
+    public override void Init()
+    {
+        notBeyoundTheScreen.Init(transform.parent.GetComponent<Canvas>());
+    }
+
     protected override void UpdateUI()
     {
         title_txt.SetTerm(Data.title);
         describe_txt.SetTerm(Data.describe);
-        _paramsManager.SetParameterValue("P1", Data.param);
+        _paramsManager.SetParameterValue("P1", Data.param1);
+        _paramsManager.SetParameterValue("P2", Data.param2);
         notBeyoundTheScreen.PanelFollowQuadrant(Data.screenPosition);
         transform.position = Data.screenPosition;
+    }
+
+    public class Args
+    {
+        public string describe;
+        public string param1;
+        public string param2;
+        public Vector2 screenPosition;
+        public string title;
+        public Transform worldTrans;
     }
 }

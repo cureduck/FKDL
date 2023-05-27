@@ -1,13 +1,12 @@
-﻿using System;
-using Game;
+﻿using Game;
 using Managers;
 
 namespace UI.BuffUI
 {
     public class BuffUIController : UpdateablePanel<FighterData>
     {
-        private BuffListPanel _buffListPanel;
         public bool IsPlayerBuffUI;
+        private BuffListPanel _buffListPanel;
 
         private Square CurrentFocus;
 
@@ -17,7 +16,7 @@ namespace UI.BuffUI
 
             if (IsPlayerBuffUI)
             {
-                GameManager.Instance.GameLoaded += () => { SetData(GameManager.Instance.PlayerData); };
+                GameManager.Instance.GameLoaded += () => { SetData(GameManager.Instance.Player); };
             }
             else
             {

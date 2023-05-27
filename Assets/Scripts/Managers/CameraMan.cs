@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections;
+using Game;
 using Sirenix.OdinInspector;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Game;
 
 namespace Managers
 {
     public class CameraMan : Singleton<CameraMan>
     {
-        private Camera _camera;
         [SerializeField] private Volume volume;
+
+        public Vector3 offset;
+        private Camera _camera;
+
+        private Vector2 _target;
 
         public Vector2 Target
         {
@@ -22,10 +25,6 @@ namespace Managers
                 StartCoroutine(GoToPoint());
             }
         }
-
-        private Vector2 _target;
-
-        public Vector3 offset;
 
         [ShowInInspector]
         private Vector3 _offset
@@ -55,7 +54,7 @@ namespace Managers
         {
             if (GameManager.Instance)
             {
-                PlayerData playerData = GameManager.Instance.PlayerData;
+                PlayerData playerData = GameManager.Instance.Player;
                 if (playerData != null)
                 {
                     volume.weight = 1 - playerData.Status.CurHp / (float)playerData.Status.MaxHp;

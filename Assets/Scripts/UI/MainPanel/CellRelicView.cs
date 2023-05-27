@@ -38,7 +38,7 @@ public class CellRelicView : MonoBehaviour
                 describe = $"{relicData.Id}_desc",
                 title = relicData.Id,
                 screenPosition = transform.position,
-                param = relicData.Bp.Param1.ToString(),
+                param1 = relicData.Bp.Param1.ToString(),
             });
         }
     }

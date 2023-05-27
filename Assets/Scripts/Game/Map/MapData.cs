@@ -12,7 +12,7 @@ namespace Game
         public Placement Placement;
         public SquareState SquareState = SquareState.UnRevealed;
 
-        [JsonIgnore] protected static PlayerData Player => GameManager.Instance.PlayerData;
+        [JsonIgnore] protected static PlayerData Player => GameManager.Instance.Player;
         [JsonIgnore] protected static SecondaryData SData => GameDataManager.Instance.SecondaryData;
 
 
@@ -46,7 +46,7 @@ namespace Game
             return JsonConvert.DeserializeObject(f, new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All
-            });
+            }) ?? throw new InvalidOperationException();
         }
 
         public event Action OnDestroy;

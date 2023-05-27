@@ -77,7 +77,7 @@ namespace Game
                     OnUnReveal();
                     break;
                 case SquareState.Focus:
-                    OnFocus();
+                    OnFocusAnimator();
                     //_animator.SetTrigger("Focus");
                     break;
                 case SquareState.UnFocus:
@@ -352,7 +352,8 @@ namespace Game
         public void Focus()
         {
             Data.SquareState = SquareState.Focus;
-            OnFocus();
+            OnFocusAnimator();
+            OnFocusLogic();
             //_animator.SetTrigger("Focus");
         }
 
@@ -378,7 +379,7 @@ namespace Game
         [SerializeField] private Light2D _breathLight;
         [SerializeField] private Light2D _pointerOverLight;
 
-        private void OnFocus()
+        private void OnFocusAnimator()
         {
             if (Data.SquareState == SquareState.Done) return;
 

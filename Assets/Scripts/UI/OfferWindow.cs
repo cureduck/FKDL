@@ -62,7 +62,7 @@ namespace UI
         {
             //Debug.Log($"{offer}被点击");
             Info info;
-            if (GameManager.Instance.PlayerData.TryTakeOffer(offer, out info))
+            if (GameManager.Instance.Player.TryTakeOffer(offer, out info))
             {
                 animationGroup.SelectTarget(targetIndex);
                 StartCoroutine(CloseWindowIE());

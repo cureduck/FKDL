@@ -2,7 +2,6 @@
 using System.Reflection;
 using Managers;
 using Newtonsoft.Json;
-using UI;
 using UnityEngine;
 
 namespace Game
@@ -11,7 +10,6 @@ namespace Game
     {
         public string Id;
         [JsonIgnore] public abstract TT Bp { get; }
-
 
         public virtual bool MayAffect(Timing timing, out int priority)
         {

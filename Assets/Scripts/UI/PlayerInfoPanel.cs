@@ -11,7 +11,7 @@ namespace UI
 
         protected void Start()
         {
-            Open(GameManager.Instance.PlayerData);
+            Open(GameManager.Instance.Player);
             GameManager.Instance.GameLoaded += () =>
             {
                 if (Data != null)
@@ -20,7 +20,7 @@ namespace UI
                     Data.SkillPointChanged -= SkillPointChanged;
                 }
 
-                Open(GameManager.Instance.PlayerData);
+                Open(GameManager.Instance.Player);
                 //Data = GameManager.Instance.PlayerData;
 
                 Data.OnUpdated += UpdateUI;

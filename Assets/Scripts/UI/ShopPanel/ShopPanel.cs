@@ -48,7 +48,7 @@ namespace UI
             {
                 args[i] = new Args
                 {
-                    offer = Data.Goods.SkillList[i], curHaveGold = GameManager.Instance.PlayerData.Gold, index = i,
+                    offer = Data.Goods.SkillList[i], curHaveGold = GameManager.Instance.Player.Gold, index = i,
                     onClick = OnCellGoodsClick
                 };
             }
@@ -61,7 +61,7 @@ namespace UI
             {
                 args[i] = new Args
                 {
-                    offer = Data.Goods.PotionList[i], curHaveGold = GameManager.Instance.PlayerData.Gold, index = i,
+                    offer = Data.Goods.PotionList[i], curHaveGold = GameManager.Instance.Player.Gold, index = i,
                     onClick = OnCellGoodsClick
                 };
             }
@@ -73,13 +73,13 @@ namespace UI
             {
                 args[i] = new Args
                 {
-                    offer = Data.Goods.KeyList[i], curHaveGold = GameManager.Instance.PlayerData.Gold, index = i,
+                    offer = Data.Goods.KeyList[i], curHaveGold = GameManager.Instance.Player.Gold, index = i,
                     onClick = OnCellGoodsClick
                 };
             }
 
             keyListObjectPool.SetDatas(args, CellSet, keyListView);
-            PlayerData playerData = GameManager.Instance.PlayerData;
+            PlayerData playerData = GameManager.Instance.Player;
             if (Data.UpgradeCost.Value > playerData.Gold)
             {
                 levelUpCost_txt.text = $"<color=red>{Data.UpgradeCost.Value}</color>";
@@ -170,7 +170,7 @@ namespace UI
         private void LevelUpClick()
         {
             //Data.UpGradeCost
-            if (Data.UpgradeCost.Value <= GameManager.Instance.PlayerData.Gold)
+            if (Data.UpgradeCost.Value <= GameManager.Instance.Player.Gold)
             {
                 Data.Upgrade();
             }

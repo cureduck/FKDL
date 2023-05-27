@@ -30,7 +30,7 @@ namespace Managers
         private List<Square> squares = new List<Square>();
         public string CurFloor => $"{Map.CurrentFloor}";
 
-        public PlayerData PlayerData
+        public PlayerData Player
         {
             get => GameDataManager.Instance.PlayerData;
             set => GameDataManager.Instance.PlayerData = value;
@@ -71,12 +71,28 @@ namespace Managers
                     LoadFromSave();
                 }
             }
+
+            SetGlobalLocalizationParams();
         }
+
+
+        private void SetGlobalLocalizationParams()
+        {
+            void Set(string key, string value)
+            {
+                GlobalLocalizationParamsManager.SetParameterValue(key, value);
+            }
+
+            Set("LuckyChance", Player.LuckyChance.ToString("P0"));
+
+            Player.OnLuckyChanceChanged += (chance) => Set("LuckyChance", chance.ToString("P0"));
+        }
+
 
         public void SkipReward(out SkipInfo info)
         {
             info = new SkipInfo(10);
-            PlayerData.Gain(10);
+            Player.Gain(10);
         }
 
 
@@ -128,7 +144,7 @@ namespace Managers
 
         public void RollForPotion(int rank)
         {
-            var potions = PotionManager.Instance.GenerateT((Rank)rank, PlayerData.LuckyChance, 3);
+            var potions = PotionManager.Instance.GenerateT((Rank)rank, Player.LuckyChance, 3);
 
             var offers = potions.Select((s => new Offer(s)));
 
@@ -138,15 +154,15 @@ namespace Managers
 
         public void Attack()
         {
-            if (PlayerData.Enemy != null)
+            if (Player.Enemy != null)
             {
-                PlayerData.OnReact();
+                Player.OnReact();
             }
         }
 
         public void RollForSkill(Rank rank)
         {
-            var skills = SkillManager.Instance.GenerateT(rank, PlayerData.LuckyChance, 3);
+            var skills = SkillManager.Instance.GenerateT(rank, Player.LuckyChance, 3);
 
             var offers = skills.Select((s => new Offer(s)));
 
@@ -174,11 +190,11 @@ namespace Managers
         {
             try
             {
-                PlayerData = PlayerData.LoadFromSave();
+                Player = PlayerData.LoadFromSave();
                 SecondaryData = SecondaryData.LoadFromSave();
                 SecondaryData.SetRandom();
                 Map = Map.LoadFromSave();
-                PlayerData.BroadCastUpdated();
+                Player.BroadCastUpdated();
                 LoadMap();
             }
             catch (Exception e)
@@ -196,8 +212,8 @@ namespace Managers
         {
             SecondaryData.Init();
             SecondaryData.SetRandom();
-            PlayerData = PlayerData.LoadFromInit();
-            PlayerData.BroadCastUpdated();
+            Player = PlayerData.LoadFromInit();
+            Player.BroadCastUpdated();
             Map = Map.LoadFromInit();
             Map.Init();
             LoadMap();
@@ -209,7 +225,7 @@ namespace Managers
         [Button]
         public void Save()
         {
-            PlayerData.Save();
+            Player.Save();
             Map.Save();
             //SecondaryData.CurCardSeed = CardRand.
             SecondaryData.Save();

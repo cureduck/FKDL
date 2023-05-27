@@ -49,7 +49,7 @@ namespace Managers
 
         [ShowInInspector] private Vector2 delta;
         private Vector2 prePos;
-        private PlayerData P => GameManager.Instance.PlayerData;
+        private PlayerData P => GameManager.Instance.Player;
 
         private void Update()
         {
@@ -153,7 +153,7 @@ namespace Managers
                                 }*/
                                 GameManager.Instance.Focus.Data.OnLeave();
 
-                                GameManager.Instance.PlayerData.Engaging = true;
+                                GameManager.Instance.Player.Engaging = true;
 
                                 previous = GameManager.Instance.Focus;
                             }
@@ -180,13 +180,13 @@ namespace Managers
                             else
                             {
                                 t.OnReact();
-                                sq.OnReact();
+                                sq.OnReactLogic();
                             }
                         }
                         else
                         {
                             t.OnReact();
-                            sq.OnReact();
+                            sq.OnReactLogic();
                         }
                     }
                 }

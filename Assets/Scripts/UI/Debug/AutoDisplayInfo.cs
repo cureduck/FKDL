@@ -1,7 +1,4 @@
-﻿using System;
-using Game;
-using Managers;
-using Sirenix.OdinInspector;
+﻿using Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -22,7 +19,7 @@ namespace UI
             {
                 title = _cellView.Id,
                 describe = _cellView.Desc,
-                param = _cellView.Param,
+                param1 = _cellView.Param,
                 screenPosition = transform.position
             });
         }

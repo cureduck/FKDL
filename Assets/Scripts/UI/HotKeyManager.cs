@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Managers;
+﻿using Managers;
 using UnityEngine;
 
 namespace UI
@@ -39,7 +37,7 @@ namespace UI
             {
                 if (Input.GetKeyDown(i.ToString()))
                 {
-                    GameManager.Instance.PlayerData.TryUseSkill(i, out _);
+                    GameManager.Instance.Player.TryUseSkill(i, out _);
                 }
             }
         }

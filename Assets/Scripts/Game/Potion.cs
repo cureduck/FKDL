@@ -6,6 +6,7 @@ namespace Game
     public class Potion : CsvData
     {
         public float Param1;
+        public float Param2;
         public string Upgrade;
 
         public Potion(Rank rank, string id, string upgrade, Sprite icon) : base(rank, id, icon)

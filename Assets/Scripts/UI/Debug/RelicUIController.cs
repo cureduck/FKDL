@@ -1,5 +1,4 @@
-﻿using System;
-using Game;
+﻿using Game;
 using Managers;
 
 namespace UI.BuffUI
@@ -12,7 +11,7 @@ namespace UI.BuffUI
         {
             _relicListPanel = GetComponent<RelicListPanel>();
 
-            GameManager.Instance.GameLoaded += () => { SetData(GameManager.Instance.PlayerData); };
+            GameManager.Instance.GameLoaded += () => { SetData(GameManager.Instance.Player); };
         }
 
         protected override void UpdateUI()

@@ -61,7 +61,7 @@ namespace Game
         [Effect("angerpotion", Timing.PotionEffect)]
         private void AngerPotion(FighterData player)
         {
-            player.AppliedBuff(new BuffData("anger", (int)Bp.Param1));
+            player.AppliedBuff(BuffData.PPlus((int)Bp.Param1));
         }
 
         [Effect("firepotion", Timing.PotionEffect)]
@@ -70,7 +70,11 @@ namespace Game
             if (GameManager.Instance.InBattle)
             {
                 var attack = new Attack(mAtk: (int)Bp.Param1, kw: "firepotion");
-                GameManager.Instance.PlayerData.Enemy.SingleDefendSettle(attack, player);
+                GameManager.Instance.Player.Enemy.SingleDefendSettle(attack, player);
+            }
+            else
+            {
+                player.ApplySelfBuff(BuffData.Flaming((int)Bp.Param2));
             }
         }
 
@@ -79,7 +83,12 @@ namespace Game
         {
             if (GameManager.Instance.InBattle)
             {
-                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData("poison", (int)Bp.Param1));
+                var buff = player.ApplyBuff(BuffData.Poison((int)Bp.Param1));
+                player.Enemy.AppliedBuff(buff);
+            }
+            else
+            {
+                ((PlayerData)player).RemoveBuff("poison");
             }
         }
 
@@ -99,7 +108,7 @@ namespace Game
         [Effect("angerpotion+", Timing.PotionEffect)]
         private void AngerPotionP(FighterData player)
         {
-            player.AppliedBuff(new BuffData("anger", (int)Bp.Param1));
+            player.AppliedBuff(BuffData.PPlus((int)Bp.Param1));
         }
 
         [Effect("firepotion+", Timing.PotionEffect)]
@@ -108,7 +117,11 @@ namespace Game
             if (GameManager.Instance.InBattle)
             {
                 var attack = new Attack(mAtk: (int)Bp.Param1, kw: "firepotion");
-                GameManager.Instance.PlayerData.Enemy.SingleDefendSettle(attack, player);
+                player.Enemy.SingleDefendSettle(attack, player);
+            }
+            else
+            {
+                player.ApplySelfBuff(BuffData.Flaming((int)Bp.Param2));
             }
         }
 
@@ -118,7 +131,11 @@ namespace Game
         {
             if (GameManager.Instance.InBattle)
             {
-                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData("poison", (int)Bp.Param1));
+                player.Enemy.AppliedBuff(BuffData.Poison((int)Bp.Param1));
+            }
+            else
+            {
+                player.RemoveBuff("poison");
             }
         }
 
@@ -141,7 +158,11 @@ namespace Game
             if (GameManager.Instance.InBattle)
             {
                 var attack = new Attack(mAtk: (int)Bp.Param1, kw: "firepotion");
-                GameManager.Instance.PlayerData.Enemy.SingleDefendSettle(attack, player);
+                player.Enemy.SingleDefendSettle(attack, player);
+            }
+            else
+            {
+                player.ApplySelfBuff(BuffData.Flaming((int)Bp.Param2));
             }
         }
 
@@ -151,7 +172,11 @@ namespace Game
         {
             if (GameManager.Instance.InBattle)
             {
-                GameManager.Instance.PlayerData.Enemy.AppliedBuff(new BuffData("poison", (int)Bp.Param1));
+                player.Enemy.AppliedBuff(BuffData.Poison((int)Bp.Param1));
+            }
+            else
+            {
+                player.RemoveBuff("poison");
             }
         }
 
