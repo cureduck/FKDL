@@ -10,6 +10,7 @@
             Relic = 0b001000,
             Key = 0b010000,
             SkillSlot = 0b100000,
+            Attr = 0b1000000,
 
             NeedOnGetCheck = Skill | Relic
         }

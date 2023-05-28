@@ -79,6 +79,11 @@ namespace Game
             return cost;
         }
 
+        public void Weaken(BattleStatus modify)
+        {
+            Status -= modify;
+        }
+
 
         private void Suffer(Attack attack)
         {
@@ -435,7 +440,11 @@ namespace Game
             modify = CheckChain<BattleStatus>(Timing.OnStrengthen, new object[] { modify, this });
             Status += modify;
             DelayUpdate();
+            Strengthened?.Invoke(modify);
         }
+
+
+        public event Action<BattleStatus> Strengthened;
 
 
         public void RandomStrengthen(int v = 1)

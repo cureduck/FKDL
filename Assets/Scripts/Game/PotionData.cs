@@ -234,6 +234,17 @@ namespace Game
             ((PlayerData)player).GetBreakoutPoint(1);
         }
 
+
+        [Effect("slotpotion", Timing.PotionEffect)]
+        private void SlotPotion(FighterData player)
+        {
+            if (player is PlayerData p)
+            {
+                p.AddSkillSlot();
+                p.Weaken(new BattleStatus(maxHp: (int)Bp.Param1, maxMp: (int)Bp.Param2));
+            }
+        }
+
         #endregion
     }
 }

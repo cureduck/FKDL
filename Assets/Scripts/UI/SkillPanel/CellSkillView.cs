@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class CellSkillView : MonoBehaviour
@@ -44,11 +45,17 @@ public class CellSkillView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelInfo;
     [SerializeField] private Localize skillName;
     [SerializeField] private TextMeshProUGUI coldDown_txt;
-    [SerializeField] private Image coldDown_mask;
+
+    [FormerlySerializedAs("coldDown_mask")] [SerializeField]
+    private Image coolDownMask;
+
     [SerializeField] private GameObject coolDownCompleteSign;
 
-    [SerializeField] private float targetPrecent;
-    [SerializeField] private float lastPrecent;
+    [FormerlySerializedAs("targetPrecent")] [SerializeField]
+    private float targetPercent;
+
+    [FormerlySerializedAs("lastPrecent")] [SerializeField]
+    private float lastPercent;
 
     public bool canInteractive = true;
 
@@ -108,15 +115,15 @@ public class CellSkillView : MonoBehaviour
         //return;
 
 
-        lastPrecent = coldDown_mask.fillAmount;
-        if (coldDown_mask.fillAmount <= targetPrecent)
+        lastPercent = coolDownMask.fillAmount;
+        if (coolDownMask.fillAmount <= targetPercent)
         {
-            coldDown_mask.fillAmount = targetPrecent;
+            coolDownMask.fillAmount = targetPercent;
         }
         else
         {
-            coldDown_mask.fillAmount -= Time.deltaTime * Speed;
-            if (coldDown_mask.fillAmount <= 0 && lastPrecent > 0)
+            coolDownMask.fillAmount -= Time.deltaTime * Speed;
+            if (coolDownMask.fillAmount <= 0 && lastPercent > 0)
             {
                 coolDownCompleteSign.gameObject.SetActive(false);
                 coolDownCompleteSign.gameObject.SetActive(true);
@@ -137,13 +144,13 @@ public class CellSkillView : MonoBehaviour
     {
         if (this.skillData != null)
         {
-            this.skillData.Activated -= UnpositiveSkillTrigger;
+            this.skillData.Activated -= PassiveSkillTrigger;
         }
 
         this.skillData = skillData;
         if (this.skillData != null)
         {
-            this.skillData.Activated += UnpositiveSkillTrigger;
+            this.skillData.Activated += PassiveSkillTrigger;
         }
 
         this.playerData = playerData;
@@ -180,7 +187,7 @@ public class CellSkillView : MonoBehaviour
             //被动技能且基础冷却为0不会触发特效
             if (!Data.Bp.Positive && Data.Bp.Cooldown <= 0)
             {
-                coldDown_mask.fillAmount = 0;
+                coolDownMask.fillAmount = 0;
             }
 
             if (curSkill.Icon != null)
@@ -219,11 +226,11 @@ public class CellSkillView : MonoBehaviour
                 coldDown_txt.text = skillData.CooldownLeft.ToString();
                 if (curSkill.Cooldown <= 0)
                 {
-                    targetPrecent = 1;
+                    targetPercent = 1;
                 }
                 else
                 {
-                    targetPrecent = skillData.CooldownLeft / (float)skillData.InitCoolDown;
+                    targetPercent = skillData.CooldownLeft / (float)skillData.InitCoolDown;
                 }
 
                 coldDown_txt.gameObject.SetActive(true);
@@ -235,21 +242,14 @@ public class CellSkillView : MonoBehaviour
                 if (dt > 0) SetNextRoundSpeed(dt);
 
                 coldDown_txt.gameObject.SetActive(false);
-                targetPrecent = 0;
+                targetPercent = 0;
             }
             //levelUpObject
 
             PlayerData player = playerData as PlayerData;
             if (player != null)
             {
-                if (skillData.CurLv >= curSkill.MaxLv)
-                {
-                    levelUpObject.SetActive(false);
-                }
-                else
-                {
-                    levelUpObject.SetActive(player.skillPoint > 0);
-                }
+                levelUpObject.SetActive(player.CanUpgradeWithSkillPoint(skillData, out _));
             }
             else
             {
@@ -312,7 +312,7 @@ public class CellSkillView : MonoBehaviour
             Info cantCostInfo;
             if (playerData.CanCast(skillData, out cantCostInfo))
             {
-                coldDown_mask.fillAmount = 1;
+                coolDownMask.fillAmount = 1;
                 playerData.UseSkill(skillData);
             }
             else
@@ -333,7 +333,7 @@ public class CellSkillView : MonoBehaviour
         }
     }
 
-    private void UnpositiveSkillTrigger()
+    private void PassiveSkillTrigger()
     {
         GameObject cur = ObjectPoolManager.Instance.SpawnUnPasstiveSkillSignEffect(icon.sprite);
         cur.transform.SetParent(transform);

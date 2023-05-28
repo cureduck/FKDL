@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public partial class Square
+    public sealed partial class Square
     {
         [JsonIgnore] PlayerData _player => GameManager.Instance.Player;
 

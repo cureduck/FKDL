@@ -79,7 +79,7 @@ namespace Managers
         {
             if (count == 0)
             {
-                return new T1[0];
+                return Array.Empty<T1>();
             }
 
             var candidates = GetCandidates(rank);

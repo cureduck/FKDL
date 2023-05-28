@@ -13,7 +13,7 @@ using UnityEngine.Experimental.Rendering.Universal;
 namespace Game
 {
     [DisallowMultipleComponent]
-    public partial class Square : SerializedMonoBehaviour
+    public sealed partial class Square : SerializedMonoBehaviour
     {
         [ShowInInspector] public MapData Data;
 
@@ -85,11 +85,12 @@ namespace Game
                     //_animator.SetTrigger("UnFocus");
                     break;
                 case SquareState.Done:
-                    if (GameManager.Instance.Focus != this)
+                    OnDone();
+                    /*if (GameManager.Instance.Focus != this)
                     {
                         OnDone();
                         //_animator.SetTrigger("Done");
-                    }
+                    }*/
 
                     break;
                 default:
@@ -358,7 +359,7 @@ namespace Game
         }
 
 
-        public virtual void UnFocus()
+        public void UnFocus()
         {
             if (Data.SquareState == SquareState.Done)
             {

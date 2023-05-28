@@ -9,7 +9,7 @@ namespace Game
         public const int MaxTimes = 3;
 
         private readonly Dictionary<Rank, int> _cost = new Dictionary<Rank, int>
-            { { Rank.Normal, 3 }, { Rank.Uncommon, 6 }, { Rank.Rare, 9 }, { Rank.Ultra, 12 } };
+            { { Rank.Normal, 20 }, { Rank.Uncommon, 30 }, { Rank.Rare, 40 }, { Rank.Ultra, 12 } };
 
         public float BaseBias = 0f;
 
@@ -32,7 +32,7 @@ namespace Game
             base.OnReact();
             if (Player.CurHp >= Cost)
             {
-                Player.Cost(new CostInfo(_cost[Rank], CostType.Mp));
+                Player.Cost(new CostInfo(_cost[Rank], CostType.Hp));
                 if (SData.CurGameRandom.NextDouble() < Player.LuckyChance)
                 {
                     var skills = SkillManager.Instance.RollT(Rank, 3);

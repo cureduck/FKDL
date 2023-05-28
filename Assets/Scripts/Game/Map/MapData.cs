@@ -15,7 +15,6 @@ namespace Game
         [JsonIgnore] protected static PlayerData Player => GameManager.Instance.Player;
         [JsonIgnore] protected static SecondaryData SData => GameDataManager.Instance.SecondaryData;
 
-
         /// <summary>
         /// 面积
         /// </summary>
@@ -57,36 +56,46 @@ namespace Game
             OnUpdated?.Invoke();
         }
 
+/*        private enum SquareChangeTrigger
+        {
+            UnFocus,
+            Focus,
+            UsedUp,
+        }
+
+        [JsonIgnore] private StateMachine<SquareState, SquareChangeTrigger> sm;
+
+        private void InitStateMachine()
+        {
+            sm = new StateMachine<SquareState, SquareChangeTrigger>(() => SquareState, s => SquareState = s);
+            sm.Configure(SquareState.UnRevealed)
+                .Permit(SquareChangeTrigger.UnFocus, SquareState.UnFocus)
+                .Permit(SquareChangeTrigger.Focus, SquareState.Focus)
+                .Permit(SquareChangeTrigger.UsedUp, SquareState.Done);
+            sm.Configure(SquareState.UnFocus)
+                .Permit(SquareChangeTrigger.Focus, SquareState.Focus)
+                .Permit(SquareChangeTrigger.UsedUp, SquareState.Done);
+            sm.Configure(SquareState.Focus)
+                .Permit(SquareChangeTrigger.UnFocus, SquareState.UnFocus)
+                .Permit(SquareChangeTrigger.UsedUp, SquareState.Done);
+            sm.Configure(SquareState.Done)
+                .Permit(SquareChangeTrigger.UsedUp, SquareState.Done);
+        }*/
+
+
+        /// <summary>
+        /// reset before return to the object pool
+        /// </summary>
+        private void ResetBeforeReturn()
+        {
+        }
+
         public static void Destroy(MapData data)
         {
             data.Destroyed();
         }
 
         public event Action<Args> ReactResultInfo;
-
-        /*
-        [ShowInInspector, JsonIgnore]
-        private StateMachine<SquareState, SquareChangeTrigger> sm;
-
-
-        public MapData()
-        {
-            sm = new StateMachine<SquareState, SquareChangeTrigger>(
-                (() => SquareState),
-                s => SquareState = s
-                );
-
-            sm.Configure(SquareState.UnRevealed)
-                .Permit(SquareChangeTrigger.UnFocus, SquareState.UnFocus)
-                .Permit(SquareChangeTrigger.Focus, SquareState.Focus);
-
-            sm.Configure(SquareState.UnFocus)
-                .Permit(SquareChangeTrigger.Focus, SquareState.Focus);
-            
-            sm.Configure(SquareState.Done)
-                .Permit()
-        }
-        */
 
 
         /// <summary>
@@ -221,14 +230,6 @@ namespace Game
         UnFocus = 0b0100,
         Done = 0b1000,
         Revealed = Focus | UnFocus
-    }
-
-    public enum SquareChangeTrigger
-    {
-        UnReveal,
-        Focus,
-        UnFocus,
-        Done
     }
 
 

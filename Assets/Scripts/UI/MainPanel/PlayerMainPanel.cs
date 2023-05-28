@@ -67,11 +67,11 @@ namespace UI
         }
 
 
-        public void PlayGetItemEffect(Offer offer, Vector2 screenPosiion)
+        public void PlayGetItemEffect(Offer offer, Vector2 screenPosition)
         {
             if (offer.Kind == Offer.OfferKind.Key)
             {
-                GoldPanel.PlayGetKeyEffect(screenPosiion, offer.Rank);
+                GoldPanel.PlayGetKeyEffect(screenPosition, offer.Rank);
             }
         }
 
@@ -108,22 +108,46 @@ namespace UI
             targetTrans.SetTempFontSize(2);
         }
 
+        private void OnStrengthen(BattleStatus status)
+        {
+            if (status.PAtk > 0)
+            {
+                PlayGetCharacterPointEffect(0);
+            }
+
+            if (status.MAtk > 0)
+            {
+                PlayGetCharacterPointEffect(1);
+            }
+
+            if (status.PDef > 0)
+            {
+                PlayGetCharacterPointEffect(2);
+            }
+
+            if (status.MDef > 0)
+            {
+                PlayGetCharacterPointEffect(3);
+            }
+        }
+
 
         protected override void SetMaster(FighterData master)
         {
-            if (this.Master != null)
+            if (Master != null)
             {
                 Master.OnUpdated -= UpdateView;
+                Master.Strengthened -= OnStrengthen;
             }
 
             base.SetMaster(master);
             master.OnUpdated += UpdateView;
+            master.Strengthened += OnStrengthen;
 
 
             GoldPanel.SetMaster(master);
             PotionPanel.SetMaster(master);
-            PlayerData playerData = master as PlayerData;
-            if (playerData != null)
+            if (master is PlayerData playerData)
             {
                 profInformationView.SetData(playerData.profInfo);
                 relicListView.SetData(playerData.Relics);

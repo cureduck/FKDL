@@ -270,21 +270,21 @@ namespace Game
         }
 
 
-        public bool CanUpgrade(SkillData skillData, out Info info)
+        public bool CanUpgradeWithSkillPoint(SkillData skillData, out Info info, bool autoBroadCast = false)
         {
-            if (skillData.CurLv < skillData.Bp.MaxLv)
+            if (skillData.CurLv < skillData.Bp.MaxLv && SData.SkillPoint > 0)
             {
                 info = new SuccessInfo();
                 return true;
             }
 
-            if (skillData.Bp.MaxLv == 1 && SData.BreakoutPoint > 0)
+            if (skillData.Bp.MaxLv != 1 && skillData.Bp.MaxLv <= skillData.CurLv && SData.BreakoutPoint > 0)
             {
                 info = new SuccessInfo();
                 return true;
             }
 
-            info = new FailureInfo(FailureReason.SkillAlreadyMax);
+            info = new FailureInfo(FailureReason.SkillAlreadyMax, autoBroadCast);
             return false;
         }
 
@@ -491,6 +491,8 @@ namespace Game
             {
                 File.Delete(Paths._savePath);
             }
+
+            SecondaryData.DeleteSave();
 
             GameObject.FindObjectOfType<TransitionManager>().LoadScene("StartScene", "DiagonalRectangleGrid", .2f);
         }

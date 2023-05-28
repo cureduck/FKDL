@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -55,7 +56,7 @@ namespace Game
         }
 
 
-        [JsonIgnore] private static string _savePath => Application.persistentDataPath + "/SecondarySaveData.json";
+        [JsonIgnore] private static string SavePath => Application.persistentDataPath + "/SecondarySaveData.json";
 
         public RandomState GameRandomState
         {
@@ -81,9 +82,17 @@ namespace Game
             set => PotionRandom = value.Restore();
         }
 
+        internal static void DeleteSave()
+        {
+            if (File.Exists(SavePath))
+            {
+                File.Delete(SavePath);
+            }
+        }
+
         public void Save()
         {
-            Save(_savePath);
+            Save(SavePath);
         }
 
         [Button]
@@ -101,7 +110,7 @@ namespace Game
 
         public static SecondaryData LoadFromSave()
         {
-            return Load(_savePath);
+            return Load(SavePath);
         }
 
 
@@ -113,7 +122,7 @@ namespace Game
 
         public static SecondaryData GetOrCreate()
         {
-            return GetOrCreate(CreateDefault, _savePath);
+            return GetOrCreate(CreateDefault, SavePath);
         }
 
 
