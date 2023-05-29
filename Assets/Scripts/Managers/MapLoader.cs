@@ -5,6 +5,7 @@ using System.IO;
 using Game;
 using OfficeOpenXml;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 
 namespace Managers
@@ -12,8 +13,9 @@ namespace Managers
     public class MapLoader : Singleton<MapLoader>
     {
         [Button]
-        void Load(string fileName)
+        private static void Load(string fileName)
         {
+            DeletePrevious();
             var path = $"Assets/Maps/{fileName}.xlsx";
 
             var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -35,8 +37,40 @@ namespace Managers
             }
         }
 
+        private static void DeletePrevious()
+        {
+            var path = Application.persistentDataPath + "/Floors";
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
 
-        public Map.Floor LoadFloor(ExcelWorksheet worksheet)
+            Directory.CreateDirectory(path);
+        }
+
+        [MenuItem("Editors/Create Map")]
+        public static void CreateMap()
+        {
+            var max = 0;
+            foreach (var file in Directory.GetFiles("Assets/Maps"))
+            {
+                if (file.EndsWith(".xlsx") && !file.Contains("~"))
+                {
+                    var t = file.Replace("test", "");
+                    if (int.Parse(t) > max)
+                    {
+                        max = int.Parse(t);
+                    }
+                }
+            }
+
+            DeletePrevious();
+
+            Load($"Assets/Maps/test{max}.xlsx");
+        }
+
+
+        private static Map.Floor LoadFloor(ExcelWorksheet worksheet)
         {
             var floor = new Map.Floor
             {
@@ -97,6 +131,7 @@ namespace Managers
                         break;
                     case "enemy":
                         floor.Squares.AddLast(new EnemySaveData(suffix.ToLower()) { Placement = p });
+                        EnemyLegalCheck(suffix.ToLower());
                         break;
                     case "rock":
                         floor.Squares.AddLast(new RockSaveData() { Placement = p });
@@ -126,6 +161,14 @@ namespace Managers
             }
 
             return floor;
+        }
+
+        private static void EnemyLegalCheck(string id)
+        {
+            if (EnemyManager.Instance.EnemyBps.ContainsKey(id) == false)
+            {
+                Debug.LogError($"{id} not found");
+            }
         }
     }
 }

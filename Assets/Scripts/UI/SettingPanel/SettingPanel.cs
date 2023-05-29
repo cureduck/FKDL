@@ -2,7 +2,6 @@
 using TMPro;
 using UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class SettingPanel : BasePanel<GameSettings>
@@ -14,24 +13,21 @@ public class SettingPanel : BasePanel<GameSettings>
 
     //[SerializeField] private TMP_Dropdown languageSelecter;
     [SerializeField] private TMP_Dropdown resoltionSelecter;
+    [SerializeField] private ResolutionSettingSelecter resolutionSetting;
     [SerializeField] private Toggle isFullScreenSelecter;
     [SerializeField] private Slider viewAngleSelecter;
-
-    [SerializeField] private bool isInitOnStart = false;
     [SerializeField] private Button close_btn;
 
-    [FormerlySerializedAs("CameraAtoFollowToggle")] [SerializeField]
-    private Toggle CameraAutoFollowToggle;
+    //[FormerlySerializedAs("CameraAtoFollowToggle")] 
+    [SerializeField] private Toggle CameraAutoFollowToggle;
 
-    [FormerlySerializedAs("back_to_start_btn")] [SerializeField]
-    private Button backToStartBtn;
+    //[FormerlySerializedAs("back_to_start_btn")] 
+    [SerializeField] private Button backToStartBtn;
 
     private void Start()
     {
-        if (isInitOnStart)
-        {
-            Init();
-        }
+        resolutionSetting.Init();
+        Init();
     }
 
     public override void Init()
@@ -42,17 +38,17 @@ public class SettingPanel : BasePanel<GameSettings>
         soundEffectSizeSilder.value = gameSettings.SEVolume;
         viewAngleSelecter.value = gameSettings.Degree / GameSettings.MaxDegree;
 
-
+        resoltionSelecter.value = 0;
         for (int i = 0; i < resoltionSelecter.options.Count; i++)
         {
-            if (resoltionSelecter.options[i].text == $"{gameSettings.ScreenSize.x}X{gameSettings.ScreenSize.y}")
+            //Debug.Log(resoltionSelecter.options[i].text + $"{Screen.width}X{Screen.height}");
+            //Debug.Log(resoltionSelecter.options[i].text == $"{Screen.width}X{Screen.height}");
+            if (resoltionSelecter.options[i].text == $"{Screen.width}X{Screen.height}")
             {
                 resoltionSelecter.value = i;
                 break;
             }
         }
-
-        resoltionSelecter.value = 0;
 
         isFullScreenSelecter.isOn = gameSettings.IsFullScreen;
 
@@ -63,17 +59,17 @@ public class SettingPanel : BasePanel<GameSettings>
         viewAngleSelecter.onValueChanged.AddListener(ViewAngleSelectorSliderValueChange);
         close_btn.onClick.AddListener(ClosePanelButtonClick);
         CameraAutoFollowToggle.onValueChanged.AddListener((v => gameSettings.AutoGoToFocus = v));
-        backToStartBtn?.onClick.AddListener(() =>
+        if (backToStartBtn)
         {
-            GameManager.Instance.Save();
-            CurtainManager.Instance.UpCurtain("StartScene");
-        });
-
-        if (!isInitOnStart)
-        {
-            Camera.main.fieldOfView = gameSettings.FOV;
-            Camera.main.transform.eulerAngles = new Vector3(gameSettings.Degree, 0, 0);
+            backToStartBtn?.onClick.AddListener(() =>
+            {
+                GameManager.Instance.Save();
+                CurtainManager.Instance.UpCurtain("StartScene");
+            });
         }
+
+        Camera.main.fieldOfView = gameSettings.FOV;
+        Camera.main.transform.eulerAngles = new Vector3(gameSettings.Degree, 0, 0);
     }
 
     private void BGMSliderValueChange(float value)

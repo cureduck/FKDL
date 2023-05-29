@@ -236,6 +236,32 @@ namespace Managers
         {
             GameManager.Instance.Focus = null;
             LoadFloor(Map.Floors[Map.CurrentFloor]);
+            ScanEnemyLegal();
+        }
+
+        private void ScanEnemyLegal()
+        {
+            foreach (var floor in Map.Floors.Values)
+            {
+                foreach (var sq in floor.Squares)
+                {
+                    if (sq is EnemySaveData enemy)
+                    {
+                        try
+                        {
+                            if (!EnemyManager.Instance.EnemyBps.ContainsKey(enemy.Id))
+                            {
+                                Debug.LogError($"{enemy.Id} not found, in {floor.FloorName}");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            throw;
+                        }
+                    }
+                }
+            }
         }
 
         public void LoadFloor(Map.Floor floor)

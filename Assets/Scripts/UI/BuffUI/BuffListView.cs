@@ -1,11 +1,13 @@
 ﻿using CH.ObjectPool;
 using Game;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BuffListView : MonoBehaviour
 {
     [SerializeField] private Transform prefabParent;
     [SerializeField] private CellBuffView cellBuffView;
+    [SerializeField] private HorizontalLayoutGroup horizontalLayoutGroup;
     [SerializeField] private bool isWorldObject = false;
 
     BuffAgent buffDatas;
@@ -23,6 +25,15 @@ public class BuffListView : MonoBehaviour
     {
         this.buffDatas = buffDatas;
         objectPoolData.SetDatas(buffDatas, OnCellBuffSet, prefabParent);
+        if (horizontalLayoutGroup)
+        {
+            RectTransform rectTransform = prefabParent.GetComponent<RectTransform>();
+            Vector2 curSize = rectTransform.sizeDelta;
+            curSize.x = horizontalLayoutGroup.preferredWidth;
+            rectTransform.sizeDelta = curSize;
+            horizontalLayoutGroup.CalculateLayoutInputHorizontal();
+            horizontalLayoutGroup.SetLayoutHorizontal();
+        }
     }
 
     private void OnCellBuffSet(CellBuffView arg1, BuffData arg2)

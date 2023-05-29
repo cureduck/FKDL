@@ -17,9 +17,21 @@ namespace Game
             GameManager.Instance.LoadFloor(GameManager.Instance.Map.Floors[Destination]);
             GameManager.Instance.Map.CurrentFloor = Destination;
 
-            if (!Destination.StartsWith("A"))
+            if (IsNextFloor(Destination))
             {
                 GameManager.Instance.Player.March(Destination);
+            }
+        }
+
+        private bool IsNextFloor(string destination)
+        {
+            if (!destination.StartsWith("A") && !GameManager.Instance.Map.CurrentFloor.StartsWith("A"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

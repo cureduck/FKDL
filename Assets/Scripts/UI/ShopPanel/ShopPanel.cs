@@ -89,6 +89,7 @@ namespace UI
                 levelUpCost_txt.text = $"<color=yellow>{Data.UpgradeCost.Value}</color>";
             }
 
+            reflash_btn.interactable = Data.RefreshCost.Value <= playerData.Gold;
             if (Data.RefreshCost.Value > playerData.Gold)
             {
                 reflashCost_txt.text = $"<color=red>{Data.RefreshCost.Value}</color>";

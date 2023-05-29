@@ -2,6 +2,7 @@
 
 namespace Game
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class EffectAttribute : Attribute
     {
         public bool alwaysActive;

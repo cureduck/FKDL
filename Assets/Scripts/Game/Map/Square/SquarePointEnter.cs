@@ -1,5 +1,4 @@
-﻿using System;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Managers;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
@@ -8,10 +7,12 @@ namespace Game
 {
     public class SquarePointEnter : MonoBehaviour
     {
+        [SerializeField] private const float targetIntensity = 2.5f;
+
+        [SerializeField] private const float changeSpeed = .7f;
+
         //private static SquarePointEnter curClick;
         [SerializeField] private Light2D targetLight;
-        [SerializeField] private const float targetIntensity = 2.5f;
-        [SerializeField] private const float changeSpeed = .7f;
         [SerializeField] private GameObject targetMask;
 
         [SerializeField] private Square square;
@@ -22,6 +23,11 @@ namespace Game
         private void Start()
         {
             targetLight.intensity = 0;
+        }
+
+        private void Update()
+        {
+            //targetLight.intensity = Mathf.Lerp(targetLight.intensity, curTargetIntensity, changeSpeed * Time.deltaTime);
         }
 
         private void OnMouseEnter()
@@ -54,30 +60,14 @@ namespace Game
             }
         }
 
-
-        private float Getter()
-        {
-            return targetLight.intensity;
-        }
-
-        private void Setter(float f)
-        {
-            targetLight.intensity = f;
-        }
-
-        private void Update()
-        {
-            //targetLight.intensity = Mathf.Lerp(targetLight.intensity, curTargetIntensity, changeSpeed * Time.deltaTime);
-        }
-
         private void OnMouseExit()
         {
             if (targetMask.activeInHierarchy) return;
 
-            if (square.Data.SquareState == SquareState.UnFocus || square.Data.SquareState == SquareState.Focus)
-            {
-                WindowManager.Instance.simpleInfoItemPanel.Close();
-            }
+            //if (square.Data.SquareState == SquareState.UnFocus || square.Data.SquareState == SquareState.Focus)
+            //{
+            //    WindowManager.Instance.simpleInfoItemPanel.Close();
+            //}
 
             anim.Kill();
             anim = DOTween.To(Getter, Setter, 0, changeSpeed / 1.5f)
@@ -99,6 +89,17 @@ namespace Game
         }
         curTargetIntensity = targetIntensity;
         curClick = this;*/
+        }
+
+
+        private float Getter()
+        {
+            return targetLight.intensity;
+        }
+
+        private void Setter(float f)
+        {
+            targetLight.intensity = f;
         }
     }
 }

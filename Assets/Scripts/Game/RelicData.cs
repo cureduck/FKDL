@@ -94,7 +94,7 @@ namespace Game
         private Attack lmzw(Attack attack, FighterData player, FighterData enemy)
         {
             attack.Combo += 1;
-            var skill = player.Skills.ActiveSkills().Where((data => data.Bp.Positive))
+            var skill = player.Skills.Where((data => data.IsValid && data.Bp.Positive))
                 .ToArray().ChooseRandom(SData.CurGameRandom);
             skill?.BonusCooldown(-(int)Bp.Param1);
             Activated?.Invoke();
@@ -364,7 +364,7 @@ namespace Game
         {
             var player = (PlayerData)fighterData;
             player.Status.Gold = 0;
-            player.TryTakePotion("skillpotion", out _);
+            player.TryTakePotion("skillpotion+", out _);
             Activated?.Invoke();
             return player;
         }

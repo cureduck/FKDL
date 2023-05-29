@@ -164,7 +164,7 @@ namespace Game
         }
 
 
-        public void RevealAround()
+        protected virtual void RevealAround()
         {
             foreach (var square in GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares)
             {

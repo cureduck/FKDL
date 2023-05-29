@@ -32,6 +32,11 @@ namespace Tools
 
         public static T ChooseRandom<T>(this IList<T> list, Random random) where T : class
         {
+            if (list.Count == 0)
+            {
+                return null;
+            }
+
             var L = ChooseRandom<T>(list, 1, random);
             if (L.Length > 0)
             {

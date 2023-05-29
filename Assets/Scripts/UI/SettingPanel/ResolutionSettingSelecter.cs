@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using System.Collections.Generic;
 using Managers;
+using TMPro;
+using UnityEngine;
 
 [RequireComponent(typeof(TMP_Dropdown))]
 public class ResolutionSettingSelecter : MonoBehaviour
@@ -11,7 +9,7 @@ public class ResolutionSettingSelecter : MonoBehaviour
     [SerializeField] private TMP_Dropdown tMP_Dropdown;
     private Resolution[] resolutions;
 
-    public void Start()
+    public void Init()
     {
         resolutions = Screen.resolutions;
         tMP_Dropdown.ClearOptions();

@@ -102,10 +102,10 @@ namespace Managers
 
         #region 分辨率
 
-        private int _settingScreenX;
-        private int _settingScreenY;
+        [SerializeField] private int _settingScreenX;
 
-        [JsonIgnore, ShowInInspector]
+        [SerializeField] private int _settingScreenY;
+
         public Vector2Int ScreenSize
         {
             get => new Vector2Int(_settingScreenX, _settingScreenY);
@@ -130,9 +130,8 @@ namespace Managers
 
         #region 全屏
 
-        private bool _isFullScreen;
+        [ShowInInspector] private bool _isFullScreen;
 
-        [JsonIgnore, ShowInInspector]
         public bool IsFullScreen
         {
             get => _isFullScreen;
@@ -145,7 +144,7 @@ namespace Managers
                 else
                 {
                     _isFullScreen = value;
-                    Screen.SetResolution(_settingScreenX, _settingScreenY, _isFullScreen);
+                    Screen.SetResolution(Screen.width, Screen.height, _isFullScreen);
                 }
             }
         }

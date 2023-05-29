@@ -68,13 +68,8 @@ namespace Managers
 
             if (BeginDrag())
             {
-                /*delta =  ((Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - pos + delta);
-                if (Input.GetMouseButtonDown(1))
-                {
-                    //delta = Vector2.zero;
-                }
-                pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Camera.main.transform.position -= (Vector3)delta;*/
+                Debug.Log(Screen.currentResolution.height);
+                delta = delta * 960 / SettingManager.Instance.GameSettings.ScreenSize.y;
                 Camera.main.transform.position -= (Vector3)delta * DragRate * Camera.main.fieldOfView;
                 BG.transform.position -= (Vector3)delta * DragRate * 0.05f;
                 if (Vector3.Distance(Camera.main.transform.position, center) > 25f)

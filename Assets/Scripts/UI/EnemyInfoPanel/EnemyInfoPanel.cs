@@ -32,6 +32,13 @@ public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData ta
         }
     }
 
+
+    protected override void OnClose()
+    {
+        base.OnClose();
+        playerUseSkill = null;
+    }
+
     protected override void OnOpen()
     {
         Vector3 curPosition = Data.position;

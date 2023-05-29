@@ -34,6 +34,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
     {
         mainCamera = Camera.main;
         DescParamsManager = describe.GetComponent<LocalizationParamsManager>();
+        gameObject.SetActive(false);
     }
 
     private void Update()

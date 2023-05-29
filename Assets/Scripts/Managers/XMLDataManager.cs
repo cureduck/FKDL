@@ -62,7 +62,7 @@ namespace Managers
         [CanBeNull]
         public T1 GetById(string id)
         {
-            if (id == null) return null;
+            if (id == null || id.IsNullOrWhitespace()) return null;
 
             Lib.TryGetValue(id, out var v);
             return v;

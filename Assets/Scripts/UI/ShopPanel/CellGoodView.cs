@@ -128,6 +128,7 @@ public class CellGoodView : MonoBehaviour
         }
         else if (offer.Kind == Offer.OfferKind.Potion)
         {
+            //Debug.Log("开启！");
             Potion potion = PotionManager.Instance.GetById(offer.Id);
             WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
                 { title = potion.Id, describe = potion.Des, screenPosition = itemIcon.transform.position });
@@ -162,6 +163,7 @@ public class CellGoodView : MonoBehaviour
         }
         else if (offer.Kind == Offer.OfferKind.Potion || offer.Kind == Offer.OfferKind.Key)
         {
+            //Debug.Log("关闭！");
             WindowManager.Instance.simpleInfoItemPanel.Close();
         }
     }

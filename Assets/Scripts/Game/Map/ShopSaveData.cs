@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Managers;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 
 namespace Game
@@ -21,10 +22,19 @@ namespace Game
         private static readonly float[] PotionPriceMulti = new[] { 1f, 2f, 4f, 7f };
         private static readonly float[] SkillPriceMulti = new[] { 2f, 3f, 4f };
         private static readonly float[] RelicPriceMulti = new[] { 2f, 3f, 4f };
+
+        [JsonProperty] private int _refreshTimes = 0;
         public ShopGoods Goods;
         public int Level;
 
-        public CostInfo RefreshCost => new CostInfo(10);
+        public CostInfo RefreshCost
+        {
+            get
+            {
+                var cost = new CostInfo(20 + _refreshTimes * 5, CostType.Gold);
+                return cost;
+            }
+        }
 
 
         public CostInfo UpgradeCost => new CostInfo(100, CostType.Gold);
@@ -85,6 +95,7 @@ namespace Game
         public ShopGoods Refresh()
         {
             Player.Cost(RefreshCost);
+            _refreshTimes += 1;
             return GenerateGoods();
         }
 

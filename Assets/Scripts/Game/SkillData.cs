@@ -34,7 +34,7 @@ namespace Game
         private SecondaryData SData => GameDataManager.Instance.SecondaryData;
 
         [JsonIgnore] private MapData CurrentMapData => GameManager.Instance.Focus.Data;
-        [JsonIgnore] public bool IsValid => Id.IsNullOrWhitespace() && Bp != null;
+        [JsonIgnore] public bool IsValid => !Id.IsNullOrWhitespace() && Bp != null;
 
         [JsonIgnore] public bool InCoolDown => CooldownLeft > 0;
 
@@ -474,7 +474,7 @@ namespace Game
             var num = attack.CostInfo.ActualValue;
             if (num != 0 && attack.MAtk >= 0)
             {
-                attack.MAtk += num;
+                attack.MAtk += (int)(Usual * num);
                 Activated?.Invoke();
             }
 
@@ -655,7 +655,7 @@ namespace Game
         {
             if (((PlayerData)fighter).Engaging)
             {
-                var g = (int)(enemy.Status.Gold * Usual);
+                var g = (int)(enemy.Status.Gold * Usual / 100);
                 fighter.Gain(g);
                 enemy.Gain(-g);
                 Activated?.Invoke();
@@ -918,7 +918,8 @@ namespace Game
         [Effect("XTZX_COM", Timing.OnLvUp)]
         private SkillData XTZX_COM(SkillData skill, FighterData player)
         {
-            player.Heal(BattleStatus.Hp((int)(Bp.Param1 + Bp.Param2 * CurLv)));
+            player.Heal(BattleStatus.Hp((int)Usual));
+            player.Heal(BattleStatus.Mp((int)Usual));
             Activated?.Invoke();
             return skill;
         }
@@ -1125,7 +1126,7 @@ namespace Game
         [Effect("ZYS_COM", Timing.SkillEffect)]
         private void ZYS_COM(FighterData fighter)
         {
-            fighter.Heal((int)Usual);
+            fighter.Heal(BattleStatus.Hp((int)Usual));
             Activated?.Invoke();
         }
 

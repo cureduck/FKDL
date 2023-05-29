@@ -718,12 +718,12 @@ namespace Game
 
                 if (skill != null) skill.Sealed = false;
 
+                CoolDownSettle(skill);
                 pa = OperateAttack(Enemy, pa);
 
                 //Settle(pa, Enemy);
                 if (skill != null) skill.Sealed = true;
                 Cost(pa.CostInfo);
-                CoolDownSettle(skill);
                 DelayUpdate();
                 return pa;
             }

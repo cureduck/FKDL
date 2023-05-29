@@ -9,7 +9,7 @@ namespace Game
         public const int MaxTimes = 3;
 
         private readonly Dictionary<Rank, int> _cost = new Dictionary<Rank, int>
-            { { Rank.Normal, 20 }, { Rank.Uncommon, 30 }, { Rank.Rare, 40 }, { Rank.Ultra, 12 } };
+            { { Rank.Normal, 10 }, { Rank.Uncommon, 15 }, { Rank.Rare, 20 }, { Rank.Ultra, 12 } };
 
         public float BaseBias = 0f;
 

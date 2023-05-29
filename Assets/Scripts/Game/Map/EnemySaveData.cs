@@ -98,6 +98,14 @@ namespace Game
             }
         }
 
+        protected override void RevealAround()
+        {
+            if (!Cloned)
+            {
+                base.RevealAround();
+            }
+        }
+
 
         public override void OnFocus()
         {

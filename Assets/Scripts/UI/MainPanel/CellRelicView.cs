@@ -67,7 +67,6 @@ public class CellRelicView : MonoBehaviour
 
     private void OnTrigger()
     {
-        Debug.LogError("触发relic效果！并播放动画（这段代码如果影响测试，请删除，当出现需要删除该代码时，说明接入成功）");
         activeIcon.gameObject.SetActive(false);
         activeIcon.gameObject.SetActive(true);
     }

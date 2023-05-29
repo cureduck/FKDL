@@ -15,6 +15,7 @@ namespace Game
 {
     public class PlayerData : FighterData
     {
+        private const int _floorLimit = 3;
         [JsonIgnore] private float _luckChance;
         public bool DrawBack;
 
@@ -52,7 +53,6 @@ namespace Game
 
         [JsonIgnore] public override FighterData Enemy => enemy ?? (EnemySaveData)GameManager.Instance.Focus.Data;
 
-
         public void March(string destination)
         {
             Debug.Log($"destination {destination}");
@@ -61,6 +61,11 @@ namespace Game
 
             ClearAllBuffs();
             CheckChain(Timing.OnMarch, new object[] { this });
+
+            if (destination.Contains("4"))
+            {
+                Destroyed();
+            }
         }
 
         private void ClearAllBuffs()
@@ -290,7 +295,7 @@ namespace Game
 
         public void UpgradeWithPoint(SkillData skillData)
         {
-            if (skillData.CurLv == skillData.Bp.MaxLv)
+            if (skillData.CurLv >= skillData.Bp.MaxLv)
             {
                 SData.BreakoutPoint -= 1;
             }
