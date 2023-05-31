@@ -16,7 +16,8 @@ namespace Managers
             int.TryParse(line["cost"], out var cost);
             var id = line["id"].ToLower();
             var icon = GetIcon(id);
-            return new Skill((Rank)int.Parse(line["Rarity"]), id, icon)
+            bool.TryParse(line["CanGet"], out var canGet);
+            return new Skill((Rank)int.Parse(line["Rarity"]), id, canGet, icon)
             {
                 Prof = line["Pool"],
                 Positive = bool.Parse(line["Positive"]),
@@ -40,7 +41,7 @@ namespace Managers
         protected override IEnumerable<Skill> GetCandidates(Rank rank)
         {
             var candidates = base.GetCandidates(rank);
-            return candidates.Where((skill => SData.Profs.Contains(skill.Prof.ToUpper())));
+            return candidates.Where(skill => skill.CanGet && SData.Profs.Contains(skill.Prof.ToUpper()));
         }
     }
 }

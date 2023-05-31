@@ -138,13 +138,13 @@ namespace Game
             switch (rank)
             {
                 case Rank.Normal:
-                    return 10;
+                    return 7;
                     break;
                 case Rank.Uncommon:
-                    return 15;
+                    return 14;
                     break;
                 case Rank.Rare:
-                    return 20;
+                    return 21;
                     break;
                 case Rank.Ultra:
                     break;

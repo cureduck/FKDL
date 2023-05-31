@@ -138,12 +138,13 @@ namespace UI
             {
                 Master.OnUpdated -= UpdateView;
                 Master.Strengthened -= OnStrengthen;
+                Master.onGoldValueChange -= GoldPanel.PlayGetCoinEffect;
             }
 
             base.SetMaster(master);
             master.OnUpdated += UpdateView;
             master.Strengthened += OnStrengthen;
-
+            master.onGoldValueChange += GoldPanel.PlayGetCoinEffect;
 
             GoldPanel.SetMaster(master);
             PotionPanel.SetMaster(master);

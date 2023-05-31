@@ -19,19 +19,45 @@ namespace Game
         {
             get
             {
-                switch (Rank)
+                switch (Type)
                 {
-                    case Rank.Normal:
-                        return (int)(Player.Status.MaxHp * 0.1f);
-                    case Rank.Uncommon:
-                        return (int)(Player.Status.MaxHp * 0.2f);
-                    case Rank.Rare:
-                        return (int)(Player.Status.MaxHp * 0.3f);
-                    case Rank.Ultra:
+                    case SupplyType.Spring:
+                        switch (Rank)
+                        {
+                            case Rank.Normal:
+                                return 10;
+                            case Rank.Uncommon:
+                                return 20;
+                            case Rank.Rare:
+                                return 30;
+                            default:
+                                return 0;
+                        }
+
+
+                        break;
+                    case SupplyType.Grassland:
+                        switch (Rank)
+                        {
+                            case Rank.Normal:
+                                return (int)(7 + Player.Status.MaxHp * 0.03f);
+                            case Rank.Uncommon:
+                                return (int)(14 + Player.Status.MaxHp * 0.06f);
+                            case Rank.Rare:
+                                return (int)(21 + Player.Status.MaxHp * 0.1f);
+                            case Rank.Ultra:
+                                break;
+                            default:
+                                return 0;
+                        }
+
+                        break;
+                    case SupplyType.Camp:
                         break;
                     default:
-                        return 0;
+                        throw new ArgumentOutOfRangeException();
                 }
+
 
                 return 0;
             }

@@ -196,7 +196,7 @@ namespace Game
                     SetContent("traveler", "", icon: lib["traveller"]);
                     break;
                 case GuineasSaveData d14:
-                    SetContent("guineas", d14.Count.ToString(), icon: lib["gold"]);
+                    SetContent("guineas", d14.Value.ToString(), icon: lib["gold"]);
                     break;
                 case TotemSaveData d15:
                     SetContent("totem", "", icon: lib["totem"]);

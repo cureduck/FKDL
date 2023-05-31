@@ -4,8 +4,15 @@ namespace Game
 {
     public struct CostInfo
     {
-        public int Value;
-        public CostType CostType;
+        private int _value;
+
+        public int Value
+        {
+            get => _value;
+            set => _value = value < 0 ? 0 : value;
+        }
+
+        public readonly CostType CostType;
 
         /// <summary>
         /// 折扣，0.8就是8折
@@ -22,7 +29,7 @@ namespace Game
         /// <param name="discount"></param>
         public CostInfo(int value = 0, CostType costType = CostType.Gold, float discount = 1f)
         {
-            Value = value;
+            _value = value;
             CostType = costType;
             Discount = discount;
         }

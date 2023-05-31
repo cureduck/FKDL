@@ -190,7 +190,7 @@ namespace Game
 
                     break;
                 case DoorArgs doorArgs:
-                    PlaySoundEffect(doorArgs.CanReact ? "door" : "blocked");
+                    PlaySoundEffect(doorArgs.CanReact ? "door" : "door_knocked");
                     break;
                 case RockArgs rockArgs:
                     PlaySoundEffect(rockArgs.CanReact ? AudioPlayer.AudioClearRock : null);

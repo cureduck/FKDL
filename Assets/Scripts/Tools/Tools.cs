@@ -17,6 +17,8 @@ namespace Tools
 {
     public static class Tools
     {
+        private const char V = '#';
+
         public static T[] ChooseRandom<T>(this IEnumerable<T> list, int count, Random random)
         {
             var s = new T[count];
@@ -78,29 +80,36 @@ namespace Tools
 
 
         /// <summary>
-        /// 计算默认<>号内的数学表达式
+        /// Calculates the mathematical expression within the given text.
         /// </summary>
-        /// <param name="s"></param>
-        /// <param name="pair">标识计算段落的左右标识符，默认为<></param>
-        /// <returns></returns>
-        public static string Calculate(this string s, (char left, char right) pair = default)
+        /// <param name="text">The text to search for the mathematical expression.</param>
+        /// <param name="pair">(Optional) The pair of characters used to separate the mathematical expression.
+        /// Default is "#".</param>
+        /// <returns>A string with the resolved mathematical expression.</returns>
+        public static string Calculate(this string text, (char left, char right) pair = default)
         {
             if (pair == default) pair = ('#', '#');
-            var pattern = $"{pair.left}.+?{pair.right}";
-            var match = Regex.Match(s, pattern);
-            var ca = Regex.Replace(match.Value, "[#]", "");
-            object result;
-            try
+            string pattern = $@"\{pair.left}[\d\s+*/().\-]+?\{pair.right}";
+            MatchCollection matches = Regex.Matches(text, pattern);
+            foreach (Match match in matches)
             {
-                result = new DataTable().Compute(ca, "");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-                result = match.Value;
+                string matchValue = match.Value;
+                string expression = match.Value.Substring(1, matchValue.Length - 2);
+                double result;
+                try
+                {
+                    result = Convert.ToDouble(new DataTable().Compute(expression, ""));
+                }
+                catch (Exception)
+                {
+                    // In case of an error, the original expression is kept unmodified
+                    continue;
+                }
+
+                text = text.Replace(matchValue, result.ToString());
             }
 
-            return Regex.Replace(s, pattern, result.ToString());
+            return text;
         }
 
 

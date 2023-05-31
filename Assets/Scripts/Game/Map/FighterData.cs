@@ -25,11 +25,10 @@ namespace Game
         public int Gold
         {
             get => Status.Gold;
-            protected set => Status.Gold = value;
+            private set => Status.Gold = value;
         }
 
         public abstract FighterData Enemy { get; }
-
         [JsonIgnore] public int CurHp => Status.CurHp;
 
         [JsonIgnore] public bool IsPlayer => this is PlayerData;
@@ -37,6 +36,7 @@ namespace Game
 
 
         [JsonIgnore] public int LossHp => Status.MaxHp - Status.CurHp;
+        public event System.Action<int> onGoldValueChange;
 
         private Attack InitAttack(SkillData skill = null, CostInfo costInfo = default)
         {
@@ -231,7 +231,7 @@ namespace Game
                         return false;
                     }
                 case CostType.Gold:
-                    if (Status.Gold > actualCost.ActualValue)
+                    if (Status.Gold >= actualCost.ActualValue)
                     {
                         info = new SuccessInfo();
                         return true;
@@ -339,6 +339,7 @@ namespace Game
             if (g > 0)
             {
                 AudioPlayer.Instance.Play(AudioPlayer.AudioGainCoin);
+                onGoldValueChange?.Invoke(g);
             }
 
             Gold += g;

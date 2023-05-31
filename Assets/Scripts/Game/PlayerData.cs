@@ -57,7 +57,8 @@ namespace Game
         {
             Debug.Log($"destination {destination}");
 
-            Player.Heal(0.5f, "march");
+            Player.Heal(0.3f, "march");
+            Player.Heal(BattleStatus.Mp((int)(Player.Status.MaxMp * 0.3f)), "march");
 
             ClearAllBuffs();
             CheckChain(Timing.OnMarch, new object[] { this });
@@ -366,7 +367,7 @@ namespace Game
             }
         }
 
-        public bool UpgradeRandomSkill(out Info info, bool breakOut = false)
+        public bool UpgradeRandomSkill(out Info info, bool breakOut = false, bool autoBroadCast = false)
         {
             Func<SkillData, bool> filter;
             if (breakOut)
@@ -389,7 +390,7 @@ namespace Game
             }
             else
             {
-                info = new FailureInfo(FailureReason.SkillAlreadyMax);
+                info = new FailureInfo(FailureReason.SkillAlreadyMax, autoBroadCast);
                 return false;
             }
         }

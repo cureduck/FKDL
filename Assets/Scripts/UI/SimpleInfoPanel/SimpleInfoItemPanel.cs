@@ -28,7 +28,6 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
     public override void Close()
     {
         base.Close();
-        Debug.Log("GUANBI1!");
     }
 
     public override void Init()

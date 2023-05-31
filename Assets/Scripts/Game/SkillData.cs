@@ -8,7 +8,6 @@ using Sirenix.Utilities;
 using Tools;
 using UnityEngine;
 using static Unity.Mathematics.math;
-using Random = UnityEngine.Random;
 
 namespace Game
 {
@@ -29,6 +28,7 @@ namespace Game
 
         public static SkillData Empty => new SkillData();
         private float Usual => Bp.Param1 + Bp.Param2 * CurLv;
+        private float Unusual => Bp.Param1 - Bp.Param2 * CurLv;
 
         private bool InBattle => GameManager.Instance.InBattle;
         private SecondaryData SData => GameDataManager.Instance.SecondaryData;
@@ -56,9 +56,19 @@ namespace Game
             return base.MayAffect(timing, out priority);
         }
 
+
+        /// <summary>
+        /// 将技能转化为另一个技能
+        /// </summary>
+        /// <param name="id"></param>
+        private void SwitchTo(string id)
+        {
+            Id = id.ToLower();
+        }
+
         public static bool CanBreakOut(SkillData skill)
         {
-            return skill != null && !skill.Bp.Id.IsNullOrWhitespace() && skill.Bp.MaxLv == 1;
+            return skill != null && !skill.Id.IsNullOrWhitespace() && skill.Bp.MaxLv != 1;
         }
 
         public static bool CanUpgrade(SkillData skill)
@@ -167,7 +177,8 @@ namespace Game
         {
             if (InBattle)
             {
-                fighter.Enemy.Strengthen(new BattleStatus() { MaxHp = (int)(fighter.Enemy.Status.MaxHp * Bp.Param1) });
+                fighter.Enemy.Strengthen(new BattleStatus()
+                    { MaxHp = -(int)(fighter.Enemy.Status.MaxHp * (Bp.Param2 * CurLv) / 100) });
             }
             else
             {
@@ -323,7 +334,7 @@ namespace Game
         [Effect("JLYJ_ALC", Timing.OnUsePotion)]
         private PotionData RefiningElixir(PotionData potion, FighterData fighter)
         {
-            if (Random.Range(0, 1f) < ((PlayerData)fighter).LuckyChance * Bp.Param1)
+            if (SData.CurGameRandom.NextDouble() < Usual / 100)
             {
                 ((PlayerData)fighter).TryTakePotion(potion.Id, out _);
                 Activated?.Invoke();
@@ -449,7 +460,7 @@ namespace Game
         [Effect("MS_MAG", Timing.OnKill)]
         private Attack MieShi(Attack attack, FighterData player, FighterData enemy)
         {
-            player.Strengthen(new BattleStatus { MaxMp = (int)Bp.Param1 });
+            player.Strengthen(new BattleStatus { MaxMp = (int)Usual });
             Activated?.Invoke();
             return attack;
         }
@@ -458,10 +469,10 @@ namespace Game
         [Effect("YTZQ_MAG", Timing.OnAttack)]
         private Attack EtherBody(Attack attack, FighterData fighter, FighterData enemy)
         {
-            var num = (int)((fighter.Status.CurMp - fighter.Status.CurHp));
-            if (num > 0 && attack.MAtk >= 0)
+            var num = fighter.Status.CurMp - fighter.Status.CurHp;
+            if (num > 0 && attack.MAtk > 0)
             {
-                attack.MAtk += num;
+                attack.MAtk += (int)(num * Usual);
                 Activated?.Invoke();
             }
 
@@ -472,7 +483,7 @@ namespace Game
         private Attack FaLiBaoZou(Attack attack, FighterData fighter, FighterData enemy)
         {
             var num = attack.CostInfo.ActualValue;
-            if (num != 0 && attack.MAtk >= 0)
+            if (num != 0 && attack.MAtk > 0)
             {
                 attack.MAtk += (int)(Usual * num);
                 Activated?.Invoke();
@@ -516,7 +527,7 @@ namespace Game
             {
                 Activated?.Invoke();
 
-                var maxAbsorb = max(fighter.Status.CurMp * Usual, attack.PDmg);
+                var maxAbsorb = min(fighter.Status.CurMp * Usual, attack.PDmg);
 
                 fighter.Cost(new CostInfo((int)(maxAbsorb / Usual), CostType.Mp));
 
@@ -531,6 +542,8 @@ namespace Game
         [Effect("LJZL_MAG", Timing.OnAttackSettle)]
         private Attack LJZL_MAG(Attack attack, FighterData fighter, FighterData enemy)
         {
+            if (!attack.Kw.IsNullOrWhitespace()) return attack;
+
             if (fighter.Skills.CooldownRandomSkill(1))
             {
                 Activated?.Invoke();
@@ -655,7 +668,8 @@ namespace Game
         {
             if (((PlayerData)fighter).Engaging)
             {
-                var g = (int)(enemy.Status.Gold * Usual / 100);
+                var m = min(Usual, 100);
+                var g = (int)(enemy.Status.Gold * m / 100);
                 fighter.Gain(g);
                 enemy.Gain(-g);
                 Activated?.Invoke();
@@ -782,7 +796,7 @@ namespace Game
         [Effect("LX_MON", Timing.OnAttack, priority = -10000)]
         private Attack LX_MON(Attack attack, FighterData attacker, FighterData enemy)
         {
-            return attack.Change(attacker.Status.PAtk, attacker.Status.MAtk, multi: 2f);
+            return attack.Change(attacker.Status.PAtk, attacker.Status.MAtk, multi: Usual);
         }
 
 
@@ -790,7 +804,12 @@ namespace Game
         private PotionData YWSY_ALC(PotionData potion, FighterData user)
         {
             var v = ((int)potion.Bp.Rank + 1) * Usual;
-            user.Strengthen(new BattleStatus(maxHp: (int)v));
+            if (SData.CurGameRandom.NextDouble() < ((PlayerData)user).LuckyChance)
+            {
+                user.Strengthen(new BattleStatus(maxHp: (int)v));
+                Activated?.Invoke();
+            }
+
             return potion;
         }
 
@@ -812,9 +831,14 @@ namespace Game
         [Effect("XFYJ_ALC", Timing.OnUsePotion)]
         private PotionData XFYJ_ALC(PotionData potion, FighterData user)
         {
-            if (user.Skills.CooldownRandomSkill(1))
+            Counter += 1;
+            if (Counter >= Unusual)
             {
-                Activated?.Invoke();
+                Counter = 0;
+                if (user.Skills.CooldownRandomSkill(1))
+                {
+                    Activated?.Invoke();
+                }
             }
 
             return potion;
@@ -831,7 +855,7 @@ namespace Game
         [Effect("LZ_MAG", Timing.OnDefendSettle)]
         private Attack LZ_MAG(Attack attack, FighterData fighter, FighterData enemy)
         {
-            if (enemy != null)
+            if (enemy != null && attack.SumDmg > 0 && fighter.Status.CurMp < fighter.Status.MaxMp)
             {
                 var v = fighter.Status.MaxMp - fighter.Status.CurMp;
                 fighter.Heal(BattleStatus.Mp((int)(v * Usual / 100)));
@@ -948,9 +972,9 @@ namespace Game
             if (kw == "supply")
             {
                 status.MaxHp = (int)(status.CurHp * Usual / 100);
-                status.CurHp = 0;
+                status.CurHp = (int)((1 - Usual / 100) * status.CurHp);
                 status.MaxMp = (int)(status.CurMp * Usual / 100);
-                status.CurMp = 0;
+                status.CurMp = (int)((1 - Usual / 100) * status.CurMp);
                 Activated?.Invoke();
             }
 
@@ -1128,6 +1152,110 @@ namespace Game
         {
             fighter.Heal(BattleStatus.Hp((int)Usual));
             Activated?.Invoke();
+        }
+
+
+        [Effect("XM1_ASS", Timing.OnAttack, priority = -1000)]
+        private Attack XM1_ASS(Attack attack, FighterData player, FighterData enemy)
+        {
+            SwitchTo("XM2_ASS");
+            attack = attack.Change(pAtk: player.Status.PAtk, multi: Usual);
+            return attack;
+        }
+
+        [Effect("XM2_ASS", Timing.OnAttack, priority = -1000)]
+        private Attack XM2_ASS(Attack attack, FighterData player, FighterData enemy)
+        {
+            SwitchTo("XM3_ASS");
+            attack = attack.Change(mAtk: player.Status.MAtk, multi: Usual);
+            return attack;
+        }
+
+        [Effect("XM2_ASS", Timing.OnKill, alwaysActive = true)]
+        private Attack XM2_ASS2(Attack attack, FighterData player, FighterData enemy)
+        {
+            SwitchTo("XM1_ASS");
+            return attack;
+        }
+
+        [Effect("XM3_ASS", Timing.OnAttack, priority = -1000)]
+        private Attack XM3_ASS(Attack attack, FighterData player, FighterData enemy)
+        {
+            SwitchTo("XM1_ASS");
+            attack = attack.Change(cAtk: player.Status.PAtk, multi: Usual);
+            return attack;
+        }
+
+        [Effect("XM3_ASS", Timing.OnKill, alwaysActive = true)]
+        private Attack XM3_ASS2(Attack attack, FighterData player, FighterData enemy)
+        {
+            SwitchTo("XM1_ASS");
+            return attack;
+        }
+
+        [Effect("AFXT1_MAG", Timing.SkillEffect)]
+        private void AFXT1_MAG(FighterData player)
+        {
+            SwitchTo("AFXT2_MAG");
+        }
+
+        [Effect("AFXT2_MAG", Timing.SkillEffect)]
+        private void AFXT2_MAG(FighterData player)
+        {
+            SwitchTo("AFXT1_MAG");
+        }
+
+        [Effect("AFXT2_MAG", Timing.OnAttack)]
+        private Attack AFXT2_mag2(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.Kw.IsNullOrWhitespace())
+            {
+                if (player.CanAfford(Bp.CostInfo, out _))
+                {
+                    Activated?.Invoke();
+                    return attack.Change(mAtk: player.Status.MAtk, multi: Usual);
+                }
+                else
+                {
+                    SwitchTo("AFXT1_MAG");
+                    return attack;
+                }
+            }
+            else
+            {
+                return attack;
+            }
+        }
+
+
+        [Effect("ZYSY_ASS", Timing.OnReact)]
+        private MapData ZYSY(MapData atom, PlayerData playerData)
+        {
+            var chance = Usual / 100;
+            if (atom is CasinoSaveData casino)
+            {
+                Activated?.Invoke();
+                casino.BaseBias += chance;
+            }
+
+            if (atom is DoorSaveData door)
+            {
+                Activated?.Invoke();
+                if (SData.CurGameRandom.NextDouble() < chance)
+                {
+                    door.Open();
+                }
+            }
+
+            return atom;
+        }
+
+
+        [Effect("SD_ALC", Timing.OnAttack)]
+        private Attack SD_ALC(Attack attack, FighterData player, FighterData enemy)
+        {
+            player.ApplyBuff(BuffData.Poison((int)Usual), enemy);
+            return attack.Change();
         }
 
         #endregion

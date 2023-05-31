@@ -76,7 +76,7 @@ namespace Managers
             }
         }
 
-        public void SetVignetteInstensity(float targetWeight)
+        public void SetVignetteIntensity(float targetWeight)
         {
             volume.weight = targetWeight;
         }

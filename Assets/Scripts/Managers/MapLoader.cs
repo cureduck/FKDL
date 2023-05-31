@@ -56,7 +56,8 @@ namespace Managers
             {
                 if (file.EndsWith(".xlsx") && !file.Contains("~"))
                 {
-                    var t = file.Replace("test", "");
+                    var n = Path.GetFileNameWithoutExtension(file);
+                    var t = n.Replace("test", "");
                     if (int.Parse(t) > max)
                     {
                         max = int.Parse(t);
@@ -66,7 +67,7 @@ namespace Managers
 
             DeletePrevious();
 
-            Load($"Assets/Maps/test{max}.xlsx");
+            Load($"test{max}");
         }
 
 
@@ -131,7 +132,7 @@ namespace Managers
                         break;
                     case "enemy":
                         floor.Squares.AddLast(new EnemySaveData(suffix.ToLower()) { Placement = p });
-                        EnemyLegalCheck(suffix.ToLower());
+                        //EnemyLegalCheck(suffix.ToLower());
                         break;
                     case "rock":
                         floor.Squares.AddLast(new RockSaveData() { Placement = p });
@@ -149,7 +150,8 @@ namespace Managers
                         floor.Squares.AddLast(new CemeterySaveData() { Placement = p });
                         break;
                     case "gold":
-                        floor.Squares.AddLast(new GuineasSaveData(v) { Placement = p });
+                        var level = int.Parse(floor.FloorName.Replace("A", ""));
+                        floor.Squares.AddLast(new GuineasSaveData(level) { Placement = p });
                         break;
                     case "totem":
                         floor.Squares.AddLast(new TotemSaveData() { Placement = p });

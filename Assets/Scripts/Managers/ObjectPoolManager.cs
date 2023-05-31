@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using CH.ObjectPool;
 using UnityEngine;
-using CH.ObjectPool;
 
 namespace Managers
 {
@@ -15,8 +13,9 @@ namespace Managers
         [SerializeField] private GameObject damageSignEffect;
 
         private ObjectPool attackEffectPool;
-        private ObjectPool unpasstivePool;
         private ObjectPool damageSignEffectPool;
+        private ObjectPool unpasstivePool;
+
 
         protected override void Awake()
         {

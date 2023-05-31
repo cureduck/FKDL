@@ -1,17 +1,18 @@
-﻿using System;
+﻿using CH.ObjectPool;
+using DG.Tweening;
 using Game;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
-using CH.ObjectPool;
-using DG.Tweening;
 
 namespace UI
 {
     public class GoldPanel : FighterUIPanel
     {
         public TMP_Text GoldText;
+
+        [SerializeField] private Transform goldPanelParent;
+
         public TMP_Text CKey;
         public TMP_Text GoldKey;
         public TMP_Text SilverKey;
@@ -21,19 +22,21 @@ namespace UI
         [SerializeField] private Color rank02KeyColor;
         [SerializeField] private Color rank03KeyColor;
         [SerializeField] private GameObject curGetKeyEffect;
+        [SerializeField] private GameObject gainCoinEffect;
         [SerializeField] private Transform effectParent;
-        private ObjectPool keyObjectPool;
-
-
-        private int _targetGoldCount;
         private int _currentGoldCount;
 
         private int _pause;
+
+        private int _targetGoldCount;
+        private ObjectPool gainCoinEffectPool;
+        private ObjectPool keyObjectPool;
 
 
         private void Start()
         {
             keyObjectPool = new ObjectPool(curGetKeyEffect);
+            gainCoinEffectPool = new ObjectPool(gainCoinEffect);
         }
 
         private void Update()
@@ -111,5 +114,33 @@ namespace UI
         {
             keyObjectPool.UnSpawnInstance(target);
         }
+
+        #region 金币特效
+
+        public void PlayGetCoinEffect(int getValue)
+        {
+            //Debug.Log("获得金币！");
+            GameObject cur = gainCoinEffectPool.CreatInstance(getValue);
+            cur.transform.SetParent(goldPanelParent);
+            cur.transform.localPosition = Vector3.zero;
+            cur.transform.localScale = Vector3.one;
+            if (getValue > 0)
+            {
+                cur.transform.GetComponentInChildren<TMP_Text>().text = $"+{getValue}";
+            }
+            else
+            {
+                cur.transform.GetComponentInChildren<TMP_Text>().text = $"{getValue}";
+            }
+
+            cur.AddComponent<InvokeTrigger>().Set(1.5f, () => UnspawnCoinSignEffect(cur));
+        }
+
+        private void UnspawnCoinSignEffect(GameObject targetObject)
+        {
+            gainCoinEffectPool.UnSpawnInstance(targetObject);
+        }
+
+        #endregion
     }
 }

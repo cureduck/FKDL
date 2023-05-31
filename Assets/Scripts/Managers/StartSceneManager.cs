@@ -12,7 +12,6 @@ namespace Managers
 
         private void Start()
         {
-            print(Paths._savePath);
             GameObject.Find("Load").GetComponent<Button>().interactable = File.Exists(Paths._savePath);
             if (!File.Exists(Paths._savePath))
             {

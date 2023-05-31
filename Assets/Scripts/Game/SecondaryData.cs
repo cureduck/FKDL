@@ -82,6 +82,17 @@ namespace Game
             set => PotionRandom = value.Restore();
         }
 
+
+        public double NextDouble()
+        {
+            return CurGameRandom.NextDouble();
+        }
+
+        public int NextInt(int min, int max)
+        {
+            return CurGameRandom.Next(min, max);
+        }
+
         internal static void DeleteSave()
         {
             if (File.Exists(SavePath))

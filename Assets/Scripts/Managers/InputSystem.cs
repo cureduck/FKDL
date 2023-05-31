@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering.Universal;
+using static UnityEngine.Mathf;
 
 namespace Managers
 {
@@ -14,6 +15,9 @@ namespace Managers
             SelectEnemyMode,
             NormalMode
         }
+
+
+        private const float BaseIndent = 1f;
 
         public GameObject BG;
 
@@ -48,6 +52,8 @@ namespace Managers
         private Vector3 center;
 
         [ShowInInspector] private Vector2 delta;
+        private float HoldTime;
+        private float indent;
         private Vector2 prePos;
         private PlayerData P => GameManager.Instance.Player;
 
@@ -62,13 +68,26 @@ namespace Managers
 
             if (LeftClicked())
             {
-                Raycast();
+                ClickReact();
                 return;
             }
 
+            if (Input.GetMouseButton(0))
+            {
+                HoldTime += Time.deltaTime;
+                HoldToContinuousAttack();
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                ResetContinuousAttack();
+            }
+
+            MiddleClickToCloseBattlePredict();
+
+
             if (BeginDrag())
             {
-                Debug.Log(Screen.currentResolution.height);
                 delta = delta * 960 / SettingManager.Instance.GameSettings.ScreenSize.y;
                 Camera.main.transform.position -= (Vector3)delta * DragRate * Camera.main.fieldOfView;
                 BG.transform.position -= (Vector3)delta * DragRate * 0.05f;
@@ -76,6 +95,41 @@ namespace Managers
                 {
                     Camera.main.transform.position += (Vector3)delta * DragRate * Camera.main.fieldOfView;
                 }
+            }
+        }
+
+        private void ResetContinuousAttack()
+        {
+            HoldTime = 0;
+            indent = BaseIndent;
+        }
+
+
+        private void MiddleClickToCloseBattlePredict()
+        {
+            if (Input.GetMouseButton(2))
+            {
+                WindowManager.Instance.EnemyPanel.Close();
+            }
+        }
+
+        private void HoldToContinuousAttack()
+        {
+            var sq = RaycastGetSquare();
+            if (sq != null && GameManager.Instance.Focus != null && sq == GameManager.Instance.Focus &&
+                sq.Data is EnemySaveData enemy)
+            {
+                indent -= Time.deltaTime;
+                if (indent < 0)
+                {
+                    enemy.OnReact();
+                    sq.OnReactLogic();
+                    indent = Max(.1f, BaseIndent - HoldTime / 7f);
+                }
+            }
+            else
+            {
+                ResetContinuousAttack();
             }
         }
 
@@ -109,7 +163,8 @@ namespace Managers
             return Input.mousePosition;
         }
 
-        private void Raycast()
+
+        private Square RaycastGetSquare()
         {
             var Pos = Input.mousePosition;
 
@@ -123,67 +178,70 @@ namespace Managers
                 {
                     var sq = hit.transform.GetComponentInParent<Square>();
 
-                    var t = sq.Data;
+                    return sq;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
 
-                    if ((t != null) && (t.SquareState != SquareState.UnRevealed) &&
-                        SettingManager.Instance.GameSettings.AutoGoToFocus)
+        private void ClickReact()
+        {
+            var sq = RaycastGetSquare();
+            var t = sq != null ? sq.Data : null;
+
+            if ((t != null) && (t.SquareState != SquareState.UnRevealed) &&
+                SettingManager.Instance.GameSettings.AutoGoToFocus)
+            {
+                CameraMan.Instance.Target = sq.transform.position;
+            }
+
+            if ((t != null) && ((t.SquareState == SquareState.Focus) || (t.SquareState == SquareState.UnFocus)))
+            {
+                if (GameManager.Instance.Focus != sq)
+                {
+                    GameManager.Instance.BroadcastSquareChanged(sq);
+
+                    Square previous = null;
+                    if (GameManager.Instance.Focus != null)
                     {
-                        CameraMan.Instance.Target = sq.transform.position;
+                        GameManager.Instance.Focus?.UnFocus();
+
+                        /*if ((GameManager.Instance.Focus.Data is EnemySaveData es)&&(es.IsAlive))
+                        {
+                            es.Chase();
+                        }*/
+                        GameManager.Instance.Focus.Data.OnLeave();
+
+                        GameManager.Instance.Player.Engaging = true;
+
+                        previous = GameManager.Instance.Focus;
                     }
 
-                    if ((t != null) && ((t.SquareState == SquareState.Focus) || (t.SquareState == SquareState.UnFocus)))
+                    GameManager.Instance.Focus = sq;
+
+                    if (previous != null) previous.UpdateFace();
+                    sq.Focus();
+
+                    if (t is EnemySaveData)
                     {
-                        if (GameManager.Instance.Focus != sq)
-                        {
-                            GameManager.Instance.BroadcastSquareChanged(sq);
-
-                            Square previous = null;
-                            if (GameManager.Instance.Focus != null)
-                            {
-                                GameManager.Instance.Focus?.UnFocus();
-
-                                /*if ((GameManager.Instance.Focus.Data is EnemySaveData es)&&(es.IsAlive))
-                                {
-                                    es.Chase();
-                                }*/
-                                GameManager.Instance.Focus.Data.OnLeave();
-
-                                GameManager.Instance.Player.Engaging = true;
-
-                                previous = GameManager.Instance.Focus;
-                            }
-
-                            GameManager.Instance.Focus = sq;
-
-                            /*if ((GameManager.Instance.Focus.Data is EnemySaveData es))
-                            {
-                                WindowManager.Instance.EnemyPanel.gameObject.SetActive(false);
-                                WindowManager.Instance.EnemyPanel.gameObject.SetActive(true);
-                                Vector3 curPosition = sq.transform.position;
-                                curPosition.x = sq.Icon.transform.position.x;
-                                WindowManager.Instance.EnemyPanel.transform.position = curPosition;
-                                //WindowManager.Instance.EnemyPanel.Open(new EnemyInfoPanel.Args
-                                //    { targetEnemy = es, playerData = GameManager.Instance.PlayerData });
-                            }*/
-
-                            if (previous != null) previous.UpdateFace();
-                            sq.Focus();
-
-                            if (t is EnemySaveData)
-                            {
-                            }
-                            else
-                            {
-                                t.OnReact();
-                                sq.OnReactLogic();
-                            }
-                        }
-                        else
-                        {
-                            t.OnReact();
-                            sq.OnReactLogic();
-                        }
                     }
+                    else
+                    {
+                        t.OnReact();
+                        sq.OnReactLogic();
+                    }
+                }
+                else
+                {
+                    t.OnReact();
+                    sq.OnReactLogic();
                 }
             }
         }

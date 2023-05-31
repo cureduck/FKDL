@@ -19,13 +19,13 @@ namespace Game
 
             if (IsNextFloor(Destination))
             {
-                GameManager.Instance.Player.March(Destination);
+                Player.March(Destination);
             }
         }
 
         private bool IsNextFloor(string destination)
         {
-            if (!destination.StartsWith("A") && !GameManager.Instance.Map.CurrentFloor.StartsWith("A"))
+            if (!destination.StartsWith("A") && !GameManager.Instance.Map.CurrentFloor.ToLower().StartsWith("a"))
             {
                 return true;
             }

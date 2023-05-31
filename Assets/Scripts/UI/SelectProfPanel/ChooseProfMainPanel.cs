@@ -135,6 +135,7 @@ public class ChooseProfMainPanel : MonoBehaviour
 
     private void StartGame()
     {
+        SecondaryData.DeleteSave();
         GameDataManager.Instance.SecondaryData = SecondaryData.GetOrCreate();
         profDatas[3] = "COM";
         GameDataManager.Instance.SecondaryData.Profs = profDatas;
