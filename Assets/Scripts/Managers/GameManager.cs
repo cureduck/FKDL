@@ -7,14 +7,13 @@ using I2.Loc;
 using Sirenix.OdinInspector;
 using Tools;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Managers
 {
     [RequireComponent(typeof(LocalizationParamsManager))]
     public class GameManager : Singleton<GameManager>
     {
-        public LocalizationParamsManager GlobalLocalizationParamsManager;
-
         public Square Prefab;
 
         public Transform MapGo;
@@ -22,6 +21,9 @@ namespace Managers
         public Square Focus;
 
         private ObjectPool<Square> _pool;
+
+        [FormerlySerializedAs("GlobalLocalizationParamsManager")]
+        private LocalizationParamsManager GLPM;
 
         public Profile Profile;
 
@@ -53,7 +55,7 @@ namespace Managers
 
         private void Start()
         {
-            GlobalLocalizationParamsManager = GetComponent<LocalizationParamsManager>();
+            GLPM = GetComponent<LocalizationParamsManager>();
 #if UNITY_EDITOR
             GetLocalization();
 #endif
@@ -80,12 +82,25 @@ namespace Managers
         {
             void Set(string key, string value)
             {
-                GlobalLocalizationParamsManager.SetParameterValue(key, value);
+                GLPM.SetParameterValue(key, value);
             }
 
-            Set("LuckyChance", Player.LuckyChance.ToString("P0"));
+            void SetParam()
+            {
+                Set("player_max_hp", Player.Status.MaxHp.ToString());
+                Set("player_cur_hp", Player.Status.CurHp.ToString());
+                Set("player_max_mp", Player.Status.MaxMp.ToString());
+                Set("player_cur_mp", Player.Status.CurMp.ToString());
+                Set("player_patk", Player.Status.PAtk.ToString());
+                Set("player_matk", Player.Status.MAtk.ToString());
+                Set("player_pdef", Player.Status.PDef.ToString());
+                Set("player_mdef", Player.Status.MDef.ToString());
+                Set("player_lucky_chance", Player.LuckyChance.ToString("player_lucky_chance"));
+            }
 
-            Player.OnLuckyChanceChanged += (chance) => Set("LuckyChance", chance.ToString("P0"));
+            SetParam();
+
+            Player.OnUpdated += SetParam;
         }
 
 
@@ -99,6 +114,43 @@ namespace Managers
         public Square FindStartSquare()
         {
             return squares.Find(square => square.Data is StartSaveData);
+        }
+
+        public void SetCameraMoveRange(out Vector2 leftDownPoint, out Vector2 rightUpPoint)
+        {
+            leftDownPoint = new Vector2(9999999, 9999999);
+            rightUpPoint = new Vector2(-9999999, -9999999);
+
+            for (int i = 0; i < squares.Count; i++)
+            {
+                if (!squares[i].gameObject.activeInHierarchy) continue;
+
+                if (squares[i].Icon.transform.position.x > rightUpPoint.x)
+                {
+                    rightUpPoint.x = squares[i].Icon.transform.position.x;
+                }
+
+                if (squares[i].Icon.transform.position.x < leftDownPoint.x)
+                {
+                    leftDownPoint.x = squares[i].Icon.transform.position.x;
+                }
+
+                if (squares[i].Icon.transform.position.y > rightUpPoint.y)
+                {
+                    rightUpPoint.y = squares[i].Icon.transform.position.y;
+                }
+
+                if (squares[i].Icon.transform.position.y < leftDownPoint.y)
+                {
+                    leftDownPoint.y = squares[i].Icon.transform.position.y;
+                }
+            }
+
+            if (CameraMove.Instance)
+            {
+                CameraMove.Instance.leftDownPoint = leftDownPoint;
+                CameraMove.Instance.rightUpRange = rightUpPoint;
+            }
         }
 
         private static void GetLocalization()
@@ -289,6 +341,8 @@ namespace Managers
                     squares.Add(curObject);
                 }
             }
+
+            SetCameraMoveRange(out _, out _);
         }
 
 

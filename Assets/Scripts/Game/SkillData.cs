@@ -177,12 +177,25 @@ namespace Game
         {
             if (InBattle)
             {
-                fighter.Enemy.Strengthen(new BattleStatus()
-                    { MaxHp = -(int)(fighter.Enemy.Status.MaxHp * (Bp.Param2 * CurLv) / 100) });
+                var enemy = fighter.Enemy;
+                if (enemy is EnemySaveData e && e.Bp.Rank >= Rank.Rare)
+                {
+                    fighter.Enemy.Strengthen(new BattleStatus()
+                    {
+                        MaxHp = -(int)(fighter.Enemy.Status.MaxHp * Usual / 200)
+                    });
+                }
+                else
+                {
+                    fighter.Enemy.Strengthen(new BattleStatus()
+                    {
+                        MaxHp = -(int)(fighter.Enemy.Status.MaxHp * Usual / 100)
+                    });
+                }
             }
             else
             {
-                fighter.Heal(new BattleStatus { CurHp = (int)Bp.Param1 * fighter.Status.MaxHp });
+                fighter.Heal(new BattleStatus { CurHp = (int)(Usual * fighter.Status.MaxHp) / 100 });
             }
         }
 
@@ -544,7 +557,7 @@ namespace Game
         {
             if (!attack.Kw.IsNullOrWhitespace()) return attack;
 
-            if (fighter.Skills.CooldownRandomSkill(1))
+            if (fighter.CooldownRandomSkill(1))
             {
                 Activated?.Invoke();
             }
@@ -789,7 +802,7 @@ namespace Game
         [Effect("XX_MON", Timing.OnAttackSettle, priority = 2)]
         private Attack XX_MON(Attack attack, FighterData player, FighterData enemy)
         {
-            player.Recover(BattleStatus.Hp(attack.PDmg), enemy);
+            player.Recover(BattleStatus.Hp(attack.SumDmg) * Usual / 100, enemy);
             return attack;
         }
 
@@ -797,6 +810,26 @@ namespace Game
         private Attack LX_MON(Attack attack, FighterData attacker, FighterData enemy)
         {
             return attack.Change(attacker.Status.PAtk, attacker.Status.MAtk, multi: Usual);
+        }
+
+
+        [Effect("DT_MON", Timing.OnAttack)]
+        private Attack DT_MON(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.Combo = (int)Usual;
+            return attack;
+        }
+
+        [Effect("ZY_MON", Timing.BeforeAttack)]
+        private void ZY_MON(FighterData player, FighterData enemy)
+        {
+            player.Heal(BattleStatus.Hp((int)Usual), "ZY_MON");
+        }
+
+        [Effect("HLDJ_MON", Timing.OnAttack, priority: -10000)]
+        private Attack HLDJ_MON(Attack attack, FighterData player, FighterData enemy)
+        {
+            return attack.Change(mAtk: player.Status.PAtk, multi: Usual);
         }
 
 
@@ -825,8 +858,17 @@ namespace Game
                 }
             }
 
+            Counter += 1;
             return fighter;
         }
+
+
+        [Effect("TC_ALC", Timing.OnMarch, alwaysActive = true)]
+        private void TC_ALC2(FighterData fighter)
+        {
+            CooldownLeft = 0;
+        }
+
 
         [Effect("XFYJ_ALC", Timing.OnUsePotion)]
         private PotionData XFYJ_ALC(PotionData potion, FighterData user)
@@ -835,7 +877,7 @@ namespace Game
             if (Counter >= Unusual)
             {
                 Counter = 0;
-                if (user.Skills.CooldownRandomSkill(1))
+                if (user.CooldownRandomSkill(1))
                 {
                     Activated?.Invoke();
                 }
@@ -1255,7 +1297,120 @@ namespace Game
         private Attack SD_ALC(Attack attack, FighterData player, FighterData enemy)
         {
             player.ApplyBuff(BuffData.Poison((int)Usual), enemy);
-            return attack.Change();
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("QS_MON", Timing.OnAttack)]
+        private Attack QS_MON(Attack attack, FighterData player, FighterData enemy)
+        {
+            return attack.Change(mAtk: player.Status.MAtk);
+        }
+
+
+        [Effect("QX_MAG", Timing.OnAttack)]
+        private Attack QX_MAG(Attack attack, FighterData player, FighterData enemy)
+        {
+            var first_battle_skill =
+                player.Skills.FirstOrDefault(skill => skill.IsValid && skill.Bp.BattleOnly && skill != this);
+            if (first_battle_skill != null)
+            {
+                Sealed = true;
+                for (var i = 0; i < Usual; i++)
+                {
+                    if (player.CanAfford(first_battle_skill.Bp.CostInfo, out _) && player.IsAlive)
+                    {
+                        player.ManageAttackRound(first_battle_skill);
+                        if (!enemy.IsAlive) break;
+                    }
+                }
+            }
+
+            return attack.SwitchToEmpty();
+        }
+
+
+        [Effect("DSYB_ALC", Timing.OnAttack)]
+        private Attack DSYB_ALC(Attack attack, FighterData player, FighterData enemy)
+        {
+            var enemyPoison = enemy.Buffs.FirstOrDefault(buff => buff.Id.Equals("poison"));
+            if (enemyPoison?.CurLv > 0)
+            {
+                return attack.Change(mAtk: enemyPoison.CurLv, multi: Usual);
+            }
+            else
+            {
+                return attack.Change(multi: Usual);
+            }
+        }
+
+
+        [Effect("SH1_KNI", Timing.SkillEffect)]
+        private void SH1_KNI(FighterData player)
+        {
+            SwitchTo("SH2_KNI");
+            var gold = player.Status.Gold;
+            player.Status *= 1 + Usual / 100;
+            player.Status.Gold = gold;
+            foreach (var skill in player.Skills)
+            {
+                if (skill.IsValid && skill.Bp.Prof.Equals("mon"))
+                {
+                    player.Upgrade(skill, 3);
+                }
+            }
+        }
+
+        [Effect("SH2_KNI", Timing.SkillEffect)]
+        private void SH2_KNI(FighterData player)
+        {
+            SwitchTo("SH1_KNI");
+            var gold = player.Status.Gold;
+            player.Status *= 1 / (1 + Usual / 100);
+            player.Status.Gold = gold;
+            foreach (var skill in player.Skills)
+            {
+                if (skill.IsValid && skill.Bp.Prof.Equals("mon"))
+                {
+                    skill.CurLv -= 3;
+                }
+            }
+        }
+
+
+        [Effect("SH2_KNI", Timing.BeforeAttack)]
+        private void SH2_KNI(FighterData player, FighterData enemy)
+        {
+            var cost = new CostInfo((int)(player.Status.MaxHp * 0.05f), CostType.Hp);
+            if (player.CanAfford(cost, out _))
+            {
+                player.Cost(cost);
+            }
+            else
+            {
+                SwitchTo("SH1_KNI");
+            }
+        }
+
+
+        /// <summary>
+        /// 攻击时:若生命值在50%以下,则倍率增加#P1+P2*CurLv#（P1+P2*Lv）
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("BQ_MON", Timing.OnAttack)]
+        private Attack BQ_MON(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (player.Status.CurHp < player.Status.MaxHp / 2)
+            {
+                attack.Multi += Usual;
+                return attack;
+            }
+            else
+            {
+                return attack;
+            }
         }
 
         #endregion

@@ -244,7 +244,13 @@ public class CellSkillView : MonoBehaviour
                 coldDown_txt.gameObject.SetActive(false);
                 targetPercent = 0;
             }
-            //levelUpObject
+
+            if (skillData.CooldownLeft > 100)
+            {
+                coldDown_txt.gameObject.SetActive(false);
+                targetPercent = 1f;
+            }
+
 
             PlayerData player = playerData as PlayerData;
             if (player != null)

@@ -1,4 +1,4 @@
-﻿using Unity.Plastic.Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Game
 {
@@ -7,6 +7,8 @@ namespace Game
         [JsonProperty] private readonly int Level;
         public int Value;
 
+
+        [JsonConstructor]
         public GuineasSaveData(int level) : base()
         {
             Level = level;

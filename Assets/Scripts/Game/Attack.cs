@@ -19,6 +19,7 @@ namespace Game
         public int Combo;
         public CostInfo CostInfo;
 
+        public bool Empty;
         public bool Death;
 
         [JsonIgnore] public bool IsCommonAttack => Kw.IsNullOrWhitespace();
@@ -79,6 +80,7 @@ namespace Game
             CostInfo = costInfo;
             Kw = kw;
             Death = false;
+            Empty = false;
         }
 
 
@@ -116,6 +118,24 @@ namespace Game
             CDmg = this.CDmg;
             SDmg = this.SumDmg;
         }
+
+        public Attack SwitchToEmpty()
+        {
+            PAtk = 0;
+            MAtk = 0;
+            CAtk = 0;
+            Multi = 0f;
+            Combo = 0;
+            Empty = true;
+            return this;
+        }
+
+        public bool IsEmpty()
+        {
+            return IsEmpty(this);
+        }
+
+        public static bool IsEmpty(Attack attack) => attack.Empty;
 
         public override string ToString()
         {

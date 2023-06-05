@@ -31,7 +31,7 @@ namespace Game
         {
             get
             {
-                var cost = new CostInfo(20 + _refreshTimes * 5, CostType.Gold);
+                var cost = new CostInfo(3 + _refreshTimes * 8, CostType.Gold);
                 return cost;
             }
         }
@@ -96,7 +96,8 @@ namespace Game
         {
             Player.Cost(RefreshCost);
             _refreshTimes += 1;
-            return GenerateGoods();
+            Goods = GenerateGoods();
+            return Goods;
         }
 
 

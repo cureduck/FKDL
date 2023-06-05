@@ -79,29 +79,25 @@ namespace Tools
         }
 
 
-        /// <summary>
-        /// Calculates the mathematical expression within the given text.
-        /// </summary>
-        /// <param name="text">The text to search for the mathematical expression.</param>
-        /// <param name="pair">(Optional) The pair of characters used to separate the mathematical expression.
-        /// Default is "#".</param>
-        /// <returns>A string with the resolved mathematical expression.</returns>
         public static string Calculate(this string text, (char left, char right) pair = default)
         {
             if (pair == default) pair = ('#', '#');
-            string pattern = $@"\{pair.left}[\d\s+*/().\-]+?\{pair.right}";
+            string pattern = $"{pair.left}.+?{pair.right}";
             MatchCollection matches = Regex.Matches(text, pattern);
             foreach (Match match in matches)
             {
                 string matchValue = match.Value;
-                string expression = match.Value.Substring(1, matchValue.Length - 2);
+                string expression = matchValue.Substring(1, matchValue.Length - 2);
+
                 double result;
                 try
                 {
                     result = Convert.ToDouble(new DataTable().Compute(expression, ""));
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Debug.Log(expression);
+                    Debug.LogError(e);
                     // In case of an error, the original expression is kept unmodified
                     continue;
                 }

@@ -1,4 +1,5 @@
 ﻿using I2.Loc;
+using Tools;
 using UI;
 using UnityEngine;
 
@@ -41,6 +42,7 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
         describe_txt.SetTerm(Data.describe);
         _paramsManager.SetParameterValue("P1", Data.param1);
         _paramsManager.SetParameterValue("P2", Data.param2);
+        describe_txt.Calculate();
         notBeyoundTheScreen.PanelFollowQuadrant(Data.screenPosition);
         transform.position = Data.screenPosition;
     }

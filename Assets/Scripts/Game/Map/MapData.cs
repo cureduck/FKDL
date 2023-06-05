@@ -133,7 +133,7 @@ namespace Game
         }
 
 
-        protected void DelayUpdate()
+        protected virtual void DelayUpdate()
         {
             if (!(this is FighterData f && f.Cloned))
             {

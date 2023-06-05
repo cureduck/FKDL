@@ -1,5 +1,4 @@
-﻿using Managers;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game
 {
@@ -10,8 +9,8 @@ namespace Game
         public override void Init()
         {
             base.Init();
-            var c = Placement.Height * Placement.Width;
-            Cost = Random.Range((int)c, (int)2 * c);
+            var c = Area;
+            Cost = Random.Range(2 * c, 3 * c);
         }
 
         public override void OnReact()

@@ -15,13 +15,12 @@ namespace Game
 {
     public class PlayerData : FighterData
     {
-        private const int _floorLimit = 3;
+        private const int _floorLimit = 5;
         [JsonIgnore] private float _luckChance;
+        public int BattleRound = 0;
         public bool DrawBack;
 
         [JsonIgnore] public FighterData enemy;
-
-        public bool Engaging;
         public string Id;
         public Dictionary<Rank, int> Keys;
 
@@ -31,10 +30,22 @@ namespace Game
         public string[] profInfo;
         public RelicAgent Relics;
 
-
         public PlayerData()
         {
             Relics = new RelicAgent();
+        }
+
+        [JsonIgnore]
+        public bool Engaging
+        {
+            get => BattleRound == 0;
+            set
+            {
+                if (value)
+                {
+                    BattleRound = 0;
+                }
+            }
         }
 
         [SerializeField]
@@ -63,7 +74,7 @@ namespace Game
             ClearAllBuffs();
             CheckChain(Timing.OnMarch, new object[] { this });
 
-            if (destination.Contains("4"))
+            if (destination.Contains((_floorLimit + 1).ToString()))
             {
                 Destroyed();
             }

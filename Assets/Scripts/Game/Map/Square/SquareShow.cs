@@ -52,6 +52,7 @@ namespace Game
 
         public void OnReactLogic()
         {
+            AudioPlayer.Instance.SwitchBossOrNormalBGM(true);
             switch (Data)
             {
                 case EnemySaveData d:
@@ -79,6 +80,9 @@ namespace Game
                         (GameManager.Instance.Player, CrystalManager.Instance.Lib[crystalPanel.Id])
                     );
                     panel.gameObject.SetActive(true);
+                    break;
+                case StairsSaveData stairsSaveData:
+                    WindowManager.Instance.effectPanel.enterNewAreaEffect.Play();
                     break;
                 case DoorSaveData doorSaveData:
 

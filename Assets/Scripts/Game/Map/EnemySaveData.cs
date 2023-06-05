@@ -148,7 +148,7 @@ namespace Game
 
             DeathCheck();
 
-            ((PlayerData)Enemy).Engaging = false;
+            ((PlayerData)Enemy).BattleRound += 1;
             DelayUpdate();
         }
 

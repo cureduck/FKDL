@@ -71,7 +71,7 @@ public class ChooseProfMainPanel : MonoBehaviour
         profTitle_txt.SetTerm(arg2);
         chooseProfInfoIcon_img.sprite =
             SpriteManager.Instance.GetIcon(SpriteManager.IconType.ChooseProf, $"{ChooseProfTitle}{arg2}");
-        profDescribe_txt.SetTerm($"{arg2}职业介绍");
+        profDescribe_txt.SetTerm($"{arg2}_desc".ToLower());
     }
 
     private void CellClick(CellChooseProfView cellChooseProfView, string curProfData, bool isActive)

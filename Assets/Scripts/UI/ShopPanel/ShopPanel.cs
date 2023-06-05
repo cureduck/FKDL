@@ -16,7 +16,10 @@ namespace UI
         [SerializeField] private Transform potionListView;
         [SerializeField] private Transform keyListView;
         [SerializeField] private Button sellPoition_btn;
+
         [SerializeField] private Button levelUp_btn;
+
+        //[SerializeField] private RectTransform levelUpCostRect;
         [SerializeField] private TMP_Text levelUpCost_txt;
         [SerializeField] private Button reflash_btn;
         [SerializeField] private TMP_Text reflashCost_txt;
@@ -34,6 +37,7 @@ namespace UI
             sellPoition_btn.onClick.AddListener(SellPotionClick);
             levelUp_btn.onClick.AddListener(LevelUpClick);
             reflash_btn.onClick.AddListener(ReflashClick);
+            gameObject.SetActive(false);
         }
 
         protected override void UpdateUI()
@@ -42,7 +46,7 @@ namespace UI
             //    new Offer { Id = "DZXY_ALC".ToLower(), Kind = Offer.OfferKind.Skill, Cost = new CostInfo(10) },
             //    new Offer { Id = "YWLZ_ALC".ToLower(), Kind = Offer.OfferKind.Skill, Cost = new CostInfo(10) },
             //};
-
+            //LayoutRebuilder.ForceRebuildLayoutImmediate(levelUpCostRect);
             Args[] args = new Args[Data.Goods.SkillList.Length];
             for (int i = 0; i < args.Length; i++)
             {

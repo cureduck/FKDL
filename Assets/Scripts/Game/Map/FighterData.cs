@@ -357,12 +357,18 @@ namespace Game
         }
 
 
+        /// <summary>
+        /// 与参数相加
+        /// </summary>
+        /// <param name="modify"></param>
+        /// <param name="kw"></param>
         public void CounterCharge(BattleStatus modify, string kw = null)
         {
             modify = CheckChain<BattleStatus>(Timing.OnCounterCharge, new object[] { modify, this, kw });
             Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
+            DeathCheck();
             DelayUpdate();
         }
 
@@ -550,8 +556,16 @@ namespace Game
             var origin = (T)param[0];
             foreach (var sk in tmp)
             {
-                origin = sk.Affect<T>(timing, param);
-                param[0] = origin;
+                try
+                {
+                    origin = sk.Affect<T>(timing, param);
+                    param[0] = origin;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"{sk} {timing} 作用失败");
+                    Debug.LogError(e);
+                }
             }
 
             Buffs.RemoveZeroStackBuff();
@@ -602,7 +616,15 @@ namespace Game
 
             foreach (var sk in tmp)
             {
-                sk.Affect(timing, param);
+                try
+                {
+                    sk.Affect(timing, param);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"{sk} {timing} 作用失败");
+                    Debug.LogError(e);
+                }
             }
 
             Buffs.RemoveZeroStackBuff();
@@ -717,6 +739,14 @@ namespace Game
             {
                 var pa = ForgeAttack(Enemy, skill);
 
+                if (pa.IsEmpty())
+                {
+                    CoolDownSettle(skill);
+                    Cost(pa.CostInfo);
+                    DelayUpdate();
+                    return pa;
+                }
+
                 if (skill != null) skill.Sealed = false;
 
                 CoolDownSettle(skill);
@@ -730,6 +760,11 @@ namespace Game
             }
         }
 
+
+        public bool CooldownRandomSkill(int cd = 1)
+        {
+            return Skills.CooldownRandomSkill(cd);
+        }
 
         private void CoolDownSettle([CanBeNull] SkillData skill)
         {

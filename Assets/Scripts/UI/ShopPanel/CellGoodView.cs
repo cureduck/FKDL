@@ -131,7 +131,13 @@ public class CellGoodView : MonoBehaviour
             //Debug.Log("开启！");
             Potion potion = PotionManager.Instance.GetById(offer.Id);
             WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
-                { title = potion.Id, describe = potion.Des, screenPosition = itemIcon.transform.position });
+            {
+                title = potion.Id,
+                describe = potion.Des,
+                param1 = potion.Param1.ToString(),
+                param2 = potion.Param2.ToString(),
+                screenPosition = itemIcon.transform.position
+            });
         }
         else if (offer.Kind == Offer.OfferKind.Key)
         {

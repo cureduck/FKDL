@@ -7,6 +7,7 @@ public class BuffListView : MonoBehaviour
 {
     [SerializeField] private Transform prefabParent;
     [SerializeField] private CellBuffView cellBuffView;
+    [SerializeField] private RectTransform listRect;
     [SerializeField] private HorizontalLayoutGroup horizontalLayoutGroup;
     [SerializeField] private bool isWorldObject = false;
 
@@ -25,6 +26,7 @@ public class BuffListView : MonoBehaviour
     {
         this.buffDatas = buffDatas;
         objectPoolData.SetDatas(buffDatas, OnCellBuffSet, prefabParent);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(listRect);
         if (horizontalLayoutGroup)
         {
             RectTransform rectTransform = prefabParent.GetComponent<RectTransform>();

@@ -11,6 +11,7 @@ namespace Managers
         public TMP_InputField BuffDebugInput;
         public TMP_InputField RelicDebugInput;
         public TMP_InputField SKillDebugInput;
+        public TMP_InputField CrystalInput;
 
         private static PlayerData Player => GameDataManager.Instance.PlayerData;
 
@@ -19,6 +20,34 @@ namespace Managers
         {
             GameManager.Instance.Player.AppliedBuff(
                 new BuffData(id, lv));
+        }
+
+
+        [Button]
+        public void ShowAll()
+        {
+            foreach (var mapData in GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares)
+            {
+                mapData.Reveal();
+            }
+        }
+
+
+        [Button]
+        public void CreateCrystal()
+        {
+            CreateCrystal(CrystalInput.text);
+        }
+
+        public void CreateCrystal(string id)
+        {
+            if (CrystalManager.Instance.Lib.TryGetValue(id, out var crystal))
+            {
+                WindowManager.Instance.CrystalPanel.Open(
+                    (GameManager.Instance.Player,
+                        crystal)
+                );
+            }
         }
 
 

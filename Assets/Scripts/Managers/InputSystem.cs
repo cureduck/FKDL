@@ -88,6 +88,7 @@ namespace Managers
 
             if (BeginDrag())
             {
+                return;
                 delta = delta * 960 / SettingManager.Instance.GameSettings.ScreenSize.y;
                 Camera.main.transform.position -= (Vector3)delta * DragRate * Camera.main.fieldOfView;
                 BG.transform.position -= (Vector3)delta * DragRate * 0.05f;

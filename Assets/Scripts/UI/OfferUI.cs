@@ -19,6 +19,7 @@ namespace UI
         public Sprite PassiveImage;
 
         public Button targetButton;
+        public PointEnterAndExit pointEvent;
         public Image Icon;
         public Localize Id;
         public Localize Prof;
@@ -50,7 +51,43 @@ namespace UI
         private void Start()
         {
             targetButton.onClick.AddListener(OnClick);
+            pointEvent.onPointEnter.AddListener(OnPointEnter);
+            pointEvent.onPointExit.AddListener(OnPointExit);
         }
+
+        private void OnPointEnter()
+        {
+            //寻找关键词
+            if (this.Offer.Kind == Offer.OfferKind.Skill)
+            {
+                string totalDescribe = string.Empty;
+                Skill skill = SkillManager.Instance.GetById(Offer.Id);
+                foreach (var c in skill.Fs.Keys)
+                {
+                    string curInfo = GetTimingInfo(c);
+                    if (!string.IsNullOrEmpty(curInfo))
+                    {
+                        totalDescribe += $"{curInfo}\n";
+                    }
+                }
+
+
+                if (!string.IsNullOrEmpty(totalDescribe))
+                {
+                    WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
+                        { title = "关键词", screenPosition = transform.position, describe = totalDescribe });
+                }
+            }
+        }
+
+        private void OnPointExit()
+        {
+            if (this.Offer.Kind == Offer.OfferKind.Skill)
+            {
+                WindowManager.Instance.simpleInfoItemPanel.Close();
+            }
+        }
+
 
         //private void OnEnable()
         //{
@@ -190,6 +227,75 @@ namespace UI
                 default:
                     throw new ArgumentOutOfRangeException($"未知类型：{Offer.Kind}");
             }
+        }
+
+        private string GetTimingInfo(Timing timing)
+        {
+            switch (timing)
+            {
+                case Timing.OnHandleSkillInfo:
+                    break;
+                case Timing.OnGetSkillCost:
+                    break;
+                case Timing.BeforeAttack:
+                    return "<color=yellow>交锋时</color>:第一次攻击时。";
+                case Timing.OnAttack:
+                    break;
+                case Timing.OnStrike:
+                    break;
+                case Timing.OnReact:
+                    break;
+                case Timing.OnDefend:
+                    break;
+                case Timing.OnAttackSettle:
+                    break;
+                case Timing.OnDefendSettle:
+                    break;
+                case Timing.OnKill:
+                    break;
+                case Timing.OnRecover:
+                    break;
+                case Timing.OnLvUp:
+                    break;
+                case Timing.OnHeal:
+                    break;
+                case Timing.OnStrengthen:
+                    break;
+                case Timing.PotionEffect:
+                    break;
+                case Timing.SkillEffect:
+                    break;
+                case Timing.OnUsePotion:
+                    break;
+                case Timing.OnGetKey:
+                    break;
+                case Timing.OnUseKey:
+                    break;
+                case Timing.OnMarch:
+                    break;
+                case Timing.OnGain:
+                    break;
+                case Timing.OnApplied:
+                    break;
+                case Timing.OnApply:
+                    break;
+                case Timing.OnPurify:
+                    break;
+                case Timing.OnSetCoolDown:
+                    break;
+                case Timing.OnCounterCharge:
+                    return "<color=yellow>反噬</color>:使用技能或道具损失生命值时。";
+                case Timing.OnCost:
+                    break;
+                case Timing.OnGet:
+                    break;
+                case Timing.OnLose:
+                    break;
+                default:
+                    break;
+            }
+
+            return string.Empty;
         }
     }
 }

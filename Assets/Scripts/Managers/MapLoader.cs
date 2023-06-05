@@ -128,7 +128,7 @@ namespace Managers
                         floor.Squares.AddLast(new CrystalSaveData((Rank)v) { Placement = p });
                         break;
                     case "traveler":
-                        floor.Squares.AddLast(new TravellerSaveData() { Placement = p });
+                        floor.Squares.AddLast(new TravellerSaveData(suffix) { Placement = p });
                         break;
                     case "enemy":
                         floor.Squares.AddLast(new EnemySaveData(suffix.ToLower()) { Placement = p });
@@ -151,7 +151,15 @@ namespace Managers
                         break;
                     case "gold":
                         var level = int.Parse(floor.FloorName.Replace("A", ""));
-                        floor.Squares.AddLast(new GuineasSaveData(level) { Placement = p });
+                        if (floor.FloorName.StartsWith("A"))
+                        {
+                            floor.Squares.AddLast(new GuineasSaveData(1) { Placement = p });
+                        }
+                        else
+                        {
+                            floor.Squares.AddLast(new GuineasSaveData(level) { Placement = p });
+                        }
+
                         break;
                     case "totem":
                         floor.Squares.AddLast(new TotemSaveData() { Placement = p });

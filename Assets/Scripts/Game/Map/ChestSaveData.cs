@@ -5,7 +5,7 @@ namespace Game
 {
     public sealed class ChestSaveData : MapData
     {
-        private const float SkillChance = .2f;
+        private const float SkillChance = .25f;
         public Offer[] Offers;
         public Rank Rank;
 

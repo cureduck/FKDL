@@ -3,6 +3,7 @@ using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UI;
+using static Unity.Mathematics.math;
 
 namespace Game
 {
@@ -86,6 +87,12 @@ namespace Game
                 attack.PAtk += CurLv;
                 CurLv -= 1;
                 Activated?.Invoke();
+
+                var overload = CurLv - f1.Status.PAtk;
+                if (overload > 0)
+                {
+                    f1.CounterCharge(-BattleStatus.Hp(overload), "pplus");
+                }
             }
 
             return attack;
@@ -99,10 +106,23 @@ namespace Game
                 attack.MAtk += CurLv;
                 CurLv -= 1;
                 Activated?.Invoke();
+
+                var overload = CurLv - f1.Status.MAtk;
+                if (overload > 0)
+                {
+                    f1.CounterCharge(-BattleStatus.Hp(overload), "mplus");
+                }
             }
 
             return attack;
         }
+
+
+        public static BuffData MPlus(int stack = 1)
+        {
+            return new BuffData("MPlus", stack);
+        }
+
 
         [Effect("PMinus", Timing.OnAttack, priority = -4)]
         private Attack PMinus(Attack attack, FighterData f1, FighterData f2)
@@ -239,7 +259,7 @@ namespace Game
         [Effect("torture", Timing.OnAttack, priority = -4)]
         private Attack Torture(Attack attack, FighterData f1, FighterData f2)
         {
-            f1.CounterCharge(BattleStatus.Hp(CurLv), "torture");
+            f1.CounterCharge(-BattleStatus.Hp(CurLv), "torture");
             Activated?.Invoke();
             return attack;
         }
@@ -492,6 +512,39 @@ namespace Game
                 Activated?.Invoke();
             }
 
+            return attack;
+        }
+
+        /// <summary>
+        /// 防御时:临时增加P1物防和魔防
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="f1"></param>
+        /// <param name="f2"></param>
+        /// <returns></returns>
+        [Effect("sturdy", Timing.OnDefendSettle)]
+        private Attack Sturdy(Attack attack, FighterData f1, FighterData f2)
+        {
+            attack.PDmg -= max(0, CurLv * attack.Combo);
+            attack.MDmg -= max(0, CurLv * attack.Combo);
+            CurLv--;
+            return attack;
+        }
+
+        [Effect("feeble", Timing.OnDefendSettle)]
+        private Attack Feeble(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (attack.PDmg > 0)
+            {
+                attack.PDmg += max(0, CurLv * attack.Combo);
+            }
+
+            if (attack.MDmg > 0)
+            {
+                attack.MDmg += max(0, CurLv * attack.Combo);
+            }
+
+            CurLv--;
             return attack;
         }
 

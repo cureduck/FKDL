@@ -68,7 +68,7 @@ namespace Game
         public bool CooldownRandomSkill(int count = 1)
         {
             var candidates = this.Where
-                ((data => data != null && !data.IsEmpty && data.CooldownLeft > 0));
+                ((data => data != null && data.IsValid && data.CooldownLeft > 0 && data.CooldownLeft < 100));
             if (candidates.Any())
             {
                 var chosen = candidates.ChooseRandom(GameDataManager.Instance.SecondaryData.CurGameRandom);
