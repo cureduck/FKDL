@@ -21,7 +21,8 @@ namespace Game
                 WindowManager.Instance.CrystalPanel.Open(
                     (
                         GameManager.Instance.Player,
-                        CrystalManager.Instance.Lib["boss"]
+                        CrystalManager.Instance.Lib["boss"],
+                        "UI_MagicCrystal_BossReword_Title"
                     ));
             }
 
@@ -69,15 +70,35 @@ namespace Game
                     break;
                 case ChestSaveData chestSaveData:
                     AudioPlayer.Instance.Play(AudioPlayer.AudioOpenChest);
-                    Debug.Log(chestSaveData.Offers.Length);
-                    WindowManager.Instance.OffersWindow.Open(chestSaveData.Offers);
+                    //Debug.Log(chestSaveData.Offers.Length);
+                    switch (chestSaveData.rewardType)
+                    {
+                        case 0:
+                            WindowManager.Instance.OffersWindow.Open(
+                                (chestSaveData.Offers, "UI_OfferPanel_Title_Skill"));
+                            break;
+                        case 1:
+                            WindowManager.Instance.OffersWindow.Open((chestSaveData.Offers,
+                                "UI_OfferPanel_Title_Potion"));
+                            break;
+                        case 2:
+                            WindowManager.Instance.OffersWindow.Open(
+                                (chestSaveData.Offers, "UI_OfferPanel_Title_Relic"));
+                            break;
+                        default:
+                            WindowManager.Instance.OffersWindow.Open(
+                                (chestSaveData.Offers, "UI_OfferPanel_Title_Other"));
+                            break;
+                    }
+
                     break;
                 case CrystalSaveData crystalPanel:
                     AudioPlayer.Instance.Play(AudioPlayer.AudioCrystal);
 
                     var panel = WindowManager.Instance.CrystalPanel;
                     WindowManager.Instance.CrystalPanel.Open(
-                        (GameManager.Instance.Player, CrystalManager.Instance.Lib[crystalPanel.Id])
+                        (GameManager.Instance.Player, CrystalManager.Instance.Lib[crystalPanel.Id],
+                            "UI_MagicCrystal_Title")
                     );
                     panel.gameObject.SetActive(true);
                     break;
@@ -189,7 +210,7 @@ namespace Game
                     PlaySoundEffect(args1.Win ? "casino_win" : "casino_lose");
                     if (args1.Win)
                     {
-                        WindowManager.Instance.OffersWindow.Open(args1.Offers);
+                        WindowManager.Instance.OffersWindow.Open((args1.Offers, "UI_OfferPanel_Title_Other"));
                     }
 
                     break;

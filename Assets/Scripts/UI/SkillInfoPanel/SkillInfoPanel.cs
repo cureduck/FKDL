@@ -9,6 +9,8 @@ using UnityEngine.Serialization;
 public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 {
     [SerializeField] private Localize skillName;
+    [SerializeField] private Localize skillRank;
+    [SerializeField] private TMP_Text skillRank_tmp;
     [SerializeField] private Localize costInfo;
     [SerializeField] private LocalizationParamsManager CostParamsManager;
 
@@ -64,6 +66,23 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
             Skill curSkilInfo = (Data as Args02).skill;
 
             skillName.SetTerm(curSkilInfo.Id);
+
+            if (curSkilInfo.Rank == Rank.Normal)
+            {
+                skillRank.SetTerm("UI_Normal_RankInfo_01");
+                skillRank_tmp.color = new Color(1, 1, 1);
+            }
+            else if (curSkilInfo.Rank == Rank.Uncommon)
+            {
+                skillRank.SetTerm("UI_Normal_RankInfo_02");
+                skillRank_tmp.color = new Color(36 / 255.0f, 176 / 255.0f, 143 / 255.0f);
+            }
+            else
+            {
+                skillRank.SetTerm("UI_Normal_RankInfo_03");
+                skillRank_tmp.color = new Color(255 / 255.0f, 163 / 255.0f, 0 / 255.0f);
+            }
+
             if (curSkilInfo.Positive)
             {
                 if (curSkilInfo.CostInfo.CostType == CostType.Hp)
@@ -125,6 +144,22 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
             Skill curSkillInfo = Data.skillData.Bp;
 
             skillName.SetTerm(curSkillInfo.Id);
+            if (curSkillInfo.Rank == Rank.Normal)
+            {
+                skillRank.SetTerm("UI_Normal_RankInfo_01");
+                skillRank_tmp.color = new Color(1, 1, 1);
+            }
+            else if (curSkillInfo.Rank == Rank.Uncommon)
+            {
+                skillRank.SetTerm("UI_Normal_RankInfo_02");
+                skillRank_tmp.color = new Color(36 / 255.0f, 176 / 255.0f, 143 / 255.0f);
+            }
+            else
+            {
+                skillRank.SetTerm("UI_Normal_RankInfo_03");
+                skillRank_tmp.color = new Color(255 / 255.0f, 163 / 255.0f, 0 / 255.0f);
+            }
+
             if (curSkillInfo.Positive)
             {
                 if (curSkillInfo.CostInfo.CostType == CostType.Hp)

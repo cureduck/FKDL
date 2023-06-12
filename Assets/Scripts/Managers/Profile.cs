@@ -16,7 +16,7 @@ namespace Managers
         {
             return new Profile()
             {
-                Unlocks = new string[] { "MAG", "ALC", "ASS" },
+                Unlocks = new string[] { "MAG", "ALC", "ASS", "KNI" },
                 Progress = 0
             };
         }
@@ -24,6 +24,14 @@ namespace Managers
         public static Profile GetOrCreate()
         {
             return GetOrCreate(NewProfile, _path);
+        }
+
+        public static void Delete()
+        {
+            if (File.Exists(_path))
+            {
+                File.Delete(_path);
+            }
         }
 
         public void Save()

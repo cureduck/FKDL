@@ -104,6 +104,15 @@ public class CellGoodView : MonoBehaviour
 
             itemName_txt.SetTerm(temp);
         }
+        else if (offer.Kind == Offer.OfferKind.Relic)
+        {
+            Relic relic = RelicManager.Instance.GetById(offer.Id);
+            if (relic != null)
+            {
+                itemIcon.sprite = relic.Icon;
+                itemName_txt.SetTerm(relic.Id);
+            }
+        }
 
         if (curHaveGold >= offer.Cost.ActualValue)
         {
@@ -159,6 +168,17 @@ public class CellGoodView : MonoBehaviour
             WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
                 { title = temp, describe = "一把钥匙", screenPosition = itemIcon.transform.position });
         }
+        else if (offer.Kind == Offer.OfferKind.Relic)
+        {
+            Relic relic = RelicManager.Instance.GetById(offer.Id);
+            WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
+            {
+                describe = $"{relic.Id}_desc",
+                title = relic.Id,
+                screenPosition = transform.position,
+                param1 = relic.Param1.ToString(),
+            });
+        }
     }
 
     private void OnPointExit()
@@ -167,7 +187,8 @@ public class CellGoodView : MonoBehaviour
         {
             WindowManager.Instance.skillInfoPanel.Close();
         }
-        else if (offer.Kind == Offer.OfferKind.Potion || offer.Kind == Offer.OfferKind.Key)
+        else if (offer.Kind == Offer.OfferKind.Potion || offer.Kind == Offer.OfferKind.Key ||
+                 offer.Kind == Offer.OfferKind.Relic)
         {
             //Debug.Log("关闭！");
             WindowManager.Instance.simpleInfoItemPanel.Close();

@@ -40,7 +40,8 @@ public class CellSkillView : MonoBehaviour
     [SerializeField] private GameObject haveSkillGroup;
     [SerializeField] private GameObject emptySkillGroup;
     [SerializeField] private GameObject passtiveBG;
-    [SerializeField] private GameObject unPasstiveBG;
+    [SerializeField] private GameObject rank02;
+    [SerializeField] private GameObject rank03;
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI levelInfo;
     [SerializeField] private Localize skillName;
@@ -142,6 +143,7 @@ public class CellSkillView : MonoBehaviour
     public void SetData(FighterData playerData, SkillData skillData, int index, System.Action<object> onStartDrag,
         System.Action<object> onEndDrag, System.Action<CellSkillView, CellSkillViewDragReceive> onEndDragComplete)
     {
+        //Debug.LogWarning(this.skillData + "被动效果移除");
         if (this.skillData != null)
         {
             this.skillData.Activated -= PassiveSkillTrigger;
@@ -182,7 +184,16 @@ public class CellSkillView : MonoBehaviour
             emptySkillGroup.gameObject.SetActive(false);
 
             passtiveBG.SetActive(curSkill.Positive);
-            unPasstiveBG.SetActive(!curSkill.Positive);
+            rank02.gameObject.SetActive(false);
+            rank03.gameObject.SetActive(false);
+            if (curSkill.Rank == Rank.Uncommon)
+            {
+                rank02.gameObject.SetActive(true);
+            }
+            else if (curSkill.Rank == Rank.Rare)
+            {
+                rank03.gameObject.SetActive(true);
+            }
 
             //被动技能且基础冷却为0不会触发特效
             if (!Data.Bp.Positive && Data.Bp.Cooldown <= 0)

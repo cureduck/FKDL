@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Managers;
@@ -11,6 +12,14 @@ namespace Game
 {
     public class RelicData : IEffectContainer, IActivated
     {
+        public static Dictionary<string, string> ProfRelic = new Dictionary<string, string>()
+        {
+            { "ALC", "jjxs" },
+            { "MAG", "xywz" },
+            { "KNI", "qsqz" },
+            { "ASS", "aq" }
+        };
+
         public readonly string Id;
         public int Counter;
 
@@ -119,10 +128,17 @@ namespace Game
         [Effect("xyf", Timing.BeforeAttack)]
         private void xyf(FighterData player, FighterData enemy)
         {
-            if (((PlayerData)player).LuckyChance > SData.CurGameRandom.NextDouble())
+            var p = (PlayerData)player;
+
+            if (p.LuckyChance > SData.CurGameRandom.NextDouble())
             {
+                p.LuckyChance -= .03f;
                 player.ApplySelfBuff(new BuffData("buffer", 1));
                 Activated?.Invoke();
+            }
+            else
+            {
+                p.LuckyChance += .01f;
             }
         }
 
@@ -226,6 +242,14 @@ namespace Game
         private void zqms(FighterData fighter)
         {
             ((PlayerData)fighter).LuckyChance += Bp.Param1;
+        }
+
+
+        [Effect("zqms", Timing.OnMarch)]
+        private void zqms2(FighterData fighter)
+        {
+            ((PlayerData)fighter).LuckyChance += Bp.Param1;
+            Activated?.Invoke();
         }
 
         /// <summary>
@@ -549,6 +573,64 @@ namespace Game
                         playerData.Upgrade(skill);
                     }
                 }
+            }
+
+            return attack;
+        }
+
+        [Effect("qsqz", Timing.OnDefendSettle)]
+        private Attack qsqz(Attack attack, FighterData player, FighterData enemy)
+        {
+            Counter += attack.SumDmg;
+            if (Counter >= Bp.Param1)
+            {
+                Activated?.Invoke();
+                player.ApplySelfBuff(BuffData.Sturdy((int)(Counter / Bp.Param1)));
+                Counter = (int)(Counter % Bp.Param1);
+            }
+
+            return attack;
+        }
+
+        [Effect("xywz", Timing.OnGetSkillCost)]
+        private CostInfo xywz(CostInfo costInfo, SkillData skill, FighterData player, bool istry)
+        {
+            if (costInfo.CostType == CostType.Mp)
+            {
+                costInfo.Value -= 1;
+                Activated?.Invoke();
+            }
+
+            return costInfo;
+        }
+
+        [Effect("xywz", Timing.OnGet)]
+        private void xywz2(FighterData player)
+        {
+            if (player is PlayerData p)
+            {
+                p.TryTakeSkill("hq_mag", out _);
+            }
+        }
+
+
+        [Effect("jjxs", Timing.OnUsePotion)]
+        private PotionData jjxs(PotionData potion, FighterData player)
+        {
+            Activated?.Invoke();
+            player.Heal(Bp.Param1 / 100);
+            return potion;
+        }
+
+        [Effect("aq", Timing.OnAttack)]
+        private Attack aq(Attack attack, FighterData player, FighterData enemy)
+        {
+            Counter += 1;
+            if (Counter > Bp.Param1)
+            {
+                Activated?.Invoke();
+                Counter = 0;
+                attack.Combo += 1;
             }
 
             return attack;

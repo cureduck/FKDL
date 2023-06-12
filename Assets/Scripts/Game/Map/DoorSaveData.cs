@@ -43,6 +43,12 @@ namespace Game
                 {
                     var cost = hpCost[Rank];
 
+                    if (!Player.CanAfford(CostInfo.HpCost(cost), out var info, "door"))
+                    {
+                        info.BroadCastInfo();
+                        return;
+                    }
+
                     Player.Cost(CostInfo.HpCost(cost), "door");
 
                     if (SData.CurGameRandom.NextDouble() < OpenChance + Player.LuckyChance / 5)

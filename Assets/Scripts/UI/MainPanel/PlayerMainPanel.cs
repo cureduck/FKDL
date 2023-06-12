@@ -17,6 +17,8 @@ namespace UI
         [SerializeField] private TMP_TextAnimation pdStateViewTransform;
         [SerializeField] private TMP_TextAnimation maStateViewTransform;
         [SerializeField] private TMP_TextAnimation mdStateViewTransform;
+        [SerializeField] private GameObject healthRecoverSign;
+        [SerializeField] private GameObject magicRecoverSign;
         [SerializeField] private Localize FloorInfo;
 
         private void Start()
@@ -36,8 +38,6 @@ namespace UI
                 {
                     Debug.Log(GameDataManager.Instance.SecondaryData.Profs[i]);
                 }
-
-                playerData.profInfo = GameDataManager.Instance.SecondaryData.Profs;
 
                 GameManager.Instance.Marched += UpdateFloorInfo;
                 UpdateFloorInfo(GameManager.Instance.CurFloor);
@@ -138,14 +138,19 @@ namespace UI
             {
                 Master.OnUpdated -= UpdateView;
                 Master.Strengthened -= OnStrengthen;
-                Master.onGoldValueChange -= GoldPanel.PlayGetCoinEffect;
+                Master.OnGoldValueChanged -= GoldPanel.PlayGetCoinEffect;
+                Master.OnRecoverHealth -= PlayHealthRecover;
+                Master.OnRecoverMana -= PlayManaRecover;
             }
 
             base.SetMaster(master);
             master.OnUpdated += UpdateView;
             master.Strengthened += OnStrengthen;
-            master.onGoldValueChange += GoldPanel.PlayGetCoinEffect;
-
+            master.OnGoldValueChanged += GoldPanel.PlayGetCoinEffect;
+            master.OnRecoverHealth += PlayHealthRecover;
+            master.OnRecoverMana += PlayManaRecover;
+            healthRecoverSign.SetActive(false);
+            magicRecoverSign.SetActive(false);
             GoldPanel.SetMaster(master);
             PotionPanel.SetMaster(master);
             if (master is PlayerData playerData)
@@ -167,6 +172,18 @@ namespace UI
                 profInformationView.SetData(playerData.profInfo);
                 relicListView.SetData(playerData.Relics);
             }
+        }
+
+        private void PlayHealthRecover(int value)
+        {
+            healthRecoverSign.SetActive(false);
+            healthRecoverSign.SetActive(true);
+        }
+
+        private void PlayManaRecover(int value)
+        {
+            magicRecoverSign.SetActive(false);
+            magicRecoverSign.SetActive(true);
         }
     }
 }

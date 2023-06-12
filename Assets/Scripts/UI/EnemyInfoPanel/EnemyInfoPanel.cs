@@ -50,6 +50,12 @@ public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData ta
 
     protected override void UpdateUI()
     {
+        Canvas canvas = GetComponent<Canvas>();
+        if (!canvas.worldCamera)
+        {
+            canvas.worldCamera = Camera.main;
+        }
+
         playerView.SetData(Data.playerData);
         enemyView.SetData(Data.targetEnemy);
         SetResult(Arena.ArrangeFight(Data.playerData, Data.targetEnemy, playerUseSkill));

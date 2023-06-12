@@ -15,19 +15,24 @@ namespace UI
     /// </summary>
     public class OfferUI : MonoBehaviour
     {
-        public Sprite PositiveImage;
-        public Sprite PassiveImage;
+        public Sprite rank01_img;
+        public Sprite rank02_img;
+        public Sprite rank03_img;
+
+        public Image rankView;
 
         public Button targetButton;
         public PointEnterAndExit pointEvent;
         public Image Icon;
         public Localize Id;
         public Localize Prof;
+        public TMP_Text rankLevel_txt;
+        public Localize rankLevelInfo;
         public Localize Positive;
         public Localize Description;
         public Localize MaxLv;
 
-        public Image Bg;
+        //public Image Bg;
 
         public Transform RankStar;
 
@@ -114,8 +119,27 @@ namespace UI
             onClick?.Invoke();
         }
 
-        private void SetRankStar(Rank rank)
+        private void SetRankView(Rank rank)
         {
+            switch (rank)
+            {
+                case Rank.Normal:
+                    rankView.sprite = rank01_img;
+                    rankLevelInfo.SetTerm("UI_Normal_RankInfo_01");
+                    rankLevel_txt.color = new Color(1, 1, 1);
+                    break;
+                case Rank.Uncommon:
+                    rankView.sprite = rank02_img;
+                    rankLevelInfo.SetTerm("UI_Normal_RankInfo_02");
+                    rankLevel_txt.color = new Color(36 / 255.0f, 176 / 255.0f, 143 / 255.0f);
+                    break;
+                default:
+                    rankView.sprite = rank03_img;
+                    rankLevelInfo.SetTerm("UI_Normal_RankInfo_03");
+                    rankLevel_txt.color = new Color(255 / 255.0f, 163 / 255.0f, 0 / 255.0f);
+                    break;
+            }
+
             if (RankStar != null)
             {
                 foreach (Transform child in RankStar)
@@ -163,7 +187,7 @@ namespace UI
                     var potion = PotionManager.Instance.GetById(Offer.Id);
                     Id.SetTerm(Offer.Id);
                     Icon.sprite = potion.Icon;
-                    SetRankStar(Offer.Rank);
+                    SetRankView(Offer.Rank);
                     Description?.SetTerm($"{potion.Id}_desc");
                     Description.SetLocalizeParam("P1", potion.Param1.ToString());
                     break;
@@ -179,10 +203,10 @@ namespace UI
                     }
 
                     Positive?.SetTerm(skill.Positive ? "positive" : "passive");
-                    if (Bg != null)
-                    {
-                        Bg.sprite = skill.Positive ? PositiveImage : PassiveImage;
-                    }
+                    //if (Bg != null)
+                    //{
+                    //    Bg.sprite = skill.Positive ? PositiveImage : PassiveImage;
+                    //}
 
                     //Debug.Log(skill.Description);
                     Prof?.SetTerm(skill.Prof);
@@ -196,7 +220,7 @@ namespace UI
                         });
                     Description.RemoveBetween();
 
-                    SetRankStar(skill.Rank);
+                    SetRankView(skill.Rank);
 
                     if (CostLabel != null)
                     {

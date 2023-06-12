@@ -26,14 +26,14 @@ namespace Game
 
         [JsonIgnore] public Action<float> OnLuckyChanceChanged;
         public PotionData[] Potions;
-
-        public string[] profInfo;
         public RelicAgent Relics;
 
         public PlayerData()
         {
             Relics = new RelicAgent();
         }
+
+        public string[] profInfo => GameDataManager.Instance.SecondaryData.Profs;
 
         [JsonIgnore]
         public bool Engaging
@@ -158,7 +158,6 @@ namespace Game
             if (success)
             {
                 Cost(offer.Cost, kw);
-
 
                 DelayUpdate();
                 return true;

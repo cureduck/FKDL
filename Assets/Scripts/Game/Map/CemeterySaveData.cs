@@ -37,7 +37,7 @@ namespace Game
                 {
                     var skills = SkillManager.Instance.RollT(Rank, 3);
                     var offers = skills.Select((s => new Offer(s)));
-
+                    Player.LuckyChance -= .15f;
                     InformReactResult(new CasinoArgs()
                     {
                         CanReact = true,
@@ -48,6 +48,7 @@ namespace Game
                 }
                 else
                 {
+                    Player.LuckyChance += .05f;
                     InformReactResult(new CasinoArgs() { CanReact = true, Win = false });
                 }
 

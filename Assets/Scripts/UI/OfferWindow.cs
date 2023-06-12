@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Game;
+using I2.Loc;
 using Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,9 +12,11 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class OfferWindow : BasePanel<Offer[]>
+    public class OfferWindow : BasePanel<(Offer[] offers, string title)>
     {
+        [SerializeField] private Localize title;
         [SerializeField] private OfferUI prefab;
+        [SerializeField] private TMP_Text gold_txt;
         [SerializeField] private Button skip_btn;
         [SerializeField] private float delayCloseTime = 1.5f;
         [SerializeField] private Transform offerUIParent;
@@ -32,13 +36,15 @@ namespace UI
             }
         }
 
-        public void Load(IEnumerable<Offer> ofs)
+        public void Load(IEnumerable<Offer> ofs, string title)
         {
             var offers = ofs.ToArray();
             //foreach (var c in ofs)
             //{
             //    Debug.Log(c.Kind);
             //}
+            this.title.SetTerm(title);
+            gold_txt.text = GameManager.Instance.GetSkipRewordCount().ToString();
             OffersUIStartAnimation[] offersUIStartAnimations = new OffersUIStartAnimation[offers.Length];
             for (int i = 0; i < offers.Length; i++)
             {
@@ -92,7 +98,7 @@ namespace UI
 
         protected override void UpdateUI()
         {
-            Load(Data);
+            Load(Data.offers, Data.title);
         }
     }
 }

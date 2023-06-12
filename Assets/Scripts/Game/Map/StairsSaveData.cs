@@ -19,20 +19,20 @@ namespace Game
             needWait = true;
             await System.Threading.Tasks.Task.Delay(500);
             needWait = false;
-            GameManager.Instance.LoadFloor(GameManager.Instance.Map.Floors[Destination]);
-            GameManager.Instance.Map.CurrentFloor = Destination;
-
             if (IsNextFloor(Destination))
             {
                 Player.March(Destination);
             }
+
+            GameManager.Instance.LoadFloor(GameManager.Instance.Map.Floors[Destination]);
+            GameManager.Instance.Map.CurrentFloor = Destination;
         }
 
 
         private bool IsNextFloor(string destination)
         {
-            if (!destination.ToLower().StartsWith("a") &&
-                !GameManager.Instance.Map.CurrentFloor.ToLower().StartsWith("a"))
+            if (int.TryParse(destination, out _) &&
+                int.TryParse(GameManager.Instance.Map.CurrentFloor, out _))
             {
                 return true;
             }

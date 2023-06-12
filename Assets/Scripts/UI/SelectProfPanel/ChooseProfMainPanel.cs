@@ -15,6 +15,7 @@ public class ChooseProfMainPanel : MonoBehaviour
     [SerializeField] private Localize profTitle_txt;
     [SerializeField] private Image chooseProfInfoIcon_img;
     [SerializeField] private Localize profDescribe_txt;
+    [SerializeField] private CellGoodView startRelicInfo;
     [Header("当前已经选择职业")] [SerializeField] private CellProfView mainProf;
     [SerializeField] private CellProfView secondProf01;
     [SerializeField] private CellProfView secondProf02;
@@ -50,7 +51,7 @@ public class ChooseProfMainPanel : MonoBehaviour
 
     private void UpdateView()
     {
-        profListView.SetData(curCanSelectProfs, CellClick, CellPointEnter, CellPointExit, curSelectViewIndex);
+        profListView.SetData(curCanSelectProfs, CellClick, CellPointEnter, null, curSelectViewIndex);
 
         mainProf.SetData(profDatas[0]);
         secondProf01.SetData(profDatas[1]);
@@ -58,6 +59,8 @@ public class ChooseProfMainPanel : MonoBehaviour
 
         startGame_btn.interactable = curSelectViewIndex.Count >= 3;
         waringInfo.gameObject.SetActive(curSelectViewIndex.Count < 3);
+
+        //Relic startRelic = RelicManager.Instance.GetById()
     }
 
     private void CellPointExit(CellChooseProfView arg1, string arg2)
@@ -72,6 +75,28 @@ public class ChooseProfMainPanel : MonoBehaviour
         chooseProfInfoIcon_img.sprite =
             SpriteManager.Instance.GetIcon(SpriteManager.IconType.ChooseProf, $"{ChooseProfTitle}{arg2}");
         profDescribe_txt.SetTerm($"{arg2}_desc".ToLower());
+
+        string relicId;
+        Debug.Log(arg2);
+        if (RelicData.ProfRelic.TryGetValue(arg2, out relicId))
+        {
+            Debug.Log(relicId);
+            //startRelicInfo.gameObject.SetActive(true);
+            Relic curRelicData = RelicManager.Instance.GetById(relicId);
+            if (curRelicData != null)
+            {
+                startRelicInfo.SetData(0, 10, new Offer(curRelicData), null);
+                startRelicInfo.gameObject.SetActive(true);
+            }
+            else
+            {
+                startRelicInfo.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            startRelicInfo.gameObject.SetActive(false);
+        }
     }
 
     private void CellClick(CellChooseProfView cellChooseProfView, string curProfData, bool isActive)

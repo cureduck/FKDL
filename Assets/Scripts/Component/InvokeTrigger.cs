@@ -1,11 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InvokeTrigger : MonoBehaviour
 {
     public float lateTime;
     public System.Action onTimeEvent;
+
+    private void OnDisable()
+    {
+        onTimeEvent?.Invoke();
+    }
 
     public void Set(float lateTime, System.Action onTimeEvent)
     {

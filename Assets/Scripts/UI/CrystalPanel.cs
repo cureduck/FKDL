@@ -6,8 +6,9 @@ using UnityEngine;
 
 namespace UI
 {
-    public class CrystalPanel : BasePanel<(PlayerData player, Crystal crystal)>
+    public class CrystalPanel : BasePanel<(PlayerData player, Crystal crystal, string title)>
     {
+        [SerializeField] private Localize title;
         [SerializeField] private Localize describe;
         [SerializeField] private CellCrystalOptionView crystalOptionPrefab;
         [SerializeField] private Transform OptionList;
@@ -22,6 +23,7 @@ namespace UI
 
         protected override void OnOpen()
         {
+            title.SetTerm(Data.title);
             describe.SetTerm(Data.crystal.Title);
             objectPools.SetDatas(Data.crystal.GetOptions(CrystalManager.Instance.Lib.Random), OnSet, OptionList);
             transform.SetAsLastSibling();

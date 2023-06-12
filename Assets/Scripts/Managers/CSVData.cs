@@ -7,10 +7,9 @@ using UnityEngine;
 
 namespace Managers
 {
-    public class CsvData : IRank
+    public class
+        CsvData : IRank
     {
-        [JsonIgnore, ShowInInspector] public Sprite Icon { get; }
-
         protected CsvData(Rank rank, string id, Sprite icon) : this(rank, id)
         {
             Icon = icon;
@@ -31,15 +30,17 @@ namespace Managers
             Rank = rank;
         }
 
-        public void AddEffect(Timing timing, MethodInfo methodInfo)
-        {
-            Fs[timing] = methodInfo;
-        }
+        [JsonIgnore, ShowInInspector] public Sprite Icon { get; }
 
         [ShowInInspector, JsonIgnore] public Dictionary<Timing, MethodInfo> Fs { get; }
 
 
         public string Id { get; set; }
         public Rank Rank { get; }
+
+        public void AddEffect(Timing timing, MethodInfo methodInfo)
+        {
+            Fs[timing] = methodInfo;
+        }
     }
 }

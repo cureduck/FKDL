@@ -36,7 +36,9 @@ namespace Game
 
 
         [JsonIgnore] public int LossHp => Status.MaxHp - Status.CurHp;
-        public event System.Action<int> onGoldValueChange;
+        public event System.Action<int> OnGoldValueChanged;
+        public event System.Action<int> OnRecoverHealth;
+        public event System.Action<int> OnRecoverMana;
 
         private Attack InitAttack(SkillData skill = null, CostInfo costInfo = default)
         {
@@ -115,6 +117,12 @@ namespace Game
             }
         }
 
+        private Attack PreDefend(Attack attack, FighterData enemy)
+        {
+            attack = CheckChain<Attack>(Timing.OnPreDefend, new object[] { attack, this, enemy });
+            return attack;
+        }
+
 
         public Attack OperateAttack(FighterData target, Attack attack)
         {
@@ -127,6 +135,7 @@ namespace Game
             {
                 j += 1;
                 tmp = CheckChain<Attack>(Timing.OnStrike, new object[] { tmp, this, target, i });
+                tmp = target.PreDefend(tmp, this);
                 tmp = target.Defend(tmp, this);
                 //Settle(tmp, Enemy);
                 attack.Include(tmp);
@@ -339,7 +348,7 @@ namespace Game
             if (g > 0)
             {
                 AudioPlayer.Instance.Play(AudioPlayer.AudioGainCoin);
-                onGoldValueChange?.Invoke(g);
+                OnGoldValueChanged?.Invoke(g);
             }
 
             Gold += g;
@@ -501,6 +510,16 @@ namespace Game
         public void Recover(BattleStatus modify, FighterData enemy, string kw = null)
         {
             modify = CheckChain<BattleStatus>(Timing.OnRecover, new object[] { modify, this, enemy, kw });
+            if (modify.CurHp > 0)
+            {
+                OnRecoverHealth?.Invoke(modify.CurHp);
+            }
+
+            if (modify.CurMp > 0)
+            {
+                OnRecoverMana?.Invoke(modify.CurHp);
+            }
+
             Status += modify;
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             DelayUpdate();
@@ -509,7 +528,20 @@ namespace Game
         public void Heal(BattleStatus modify, string kw = null)
         {
             modify = CheckChain<BattleStatus>(Timing.OnHeal, new object[] { modify, this, kw });
+
+            if (modify.CurHp > 0)
+            {
+                OnRecoverHealth?.Invoke(modify.CurHp);
+            }
+
+            if (modify.CurMp > 0)
+            {
+                OnRecoverMana?.Invoke(modify.CurHp);
+            }
+
+
             Status += modify;
+
             Status.CurHp = math.min(Status.MaxHp, Status.CurHp);
             Status.CurMp = math.min(Status.MaxMp, Status.CurMp);
 

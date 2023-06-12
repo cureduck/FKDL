@@ -186,7 +186,8 @@ namespace Game
                     SetContent("shop", " ", icon: lib["shop"]);
                     break;
                 case StairsSaveData d11:
-                    SetContent("stairs", d11.Destination, icon: lib["stairs"]);
+                    var des = d11.Destination.Contains("A") ? "secret_path" : d11.Destination;
+                    SetContent("stairs", des, icon: lib["stairs"]);
                     break;
                 case StartSaveData d12:
                     SetContent("play", " ");
@@ -207,9 +208,9 @@ namespace Game
 
         #region base
 
-        public SpriteRenderer Bg;
-        public SpriteRenderer OutLine;
-        public SpriteRenderer Mask;
+        [SerializeField] private SpriteRenderer Bg;
+        [SerializeField] private SpriteRenderer OutLine;
+        [SerializeField] private SpriteRenderer Mask;
 
         private const float Spacing = .02f;
 

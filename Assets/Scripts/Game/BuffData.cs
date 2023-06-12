@@ -525,11 +525,30 @@ namespace Game
         [Effect("sturdy", Timing.OnDefendSettle)]
         private Attack Sturdy(Attack attack, FighterData f1, FighterData f2)
         {
-            attack.PDmg -= max(0, CurLv * attack.Combo);
-            attack.MDmg -= max(0, CurLv * attack.Combo);
+            attack.PDmg -= CurLv * attack.Combo;
+            attack.MDmg -= CurLv * attack.Combo;
+
+            attack.PDmg = max(0, attack.PDmg);
+            attack.MDmg = max(0, attack.MDmg);
+
+            var counterCharge = max(0, CurLv - f1.Status.MaxHp / 10);
+
+            if (counterCharge > 0)
+            {
+                f1.CounterCharge(-BattleStatus.Hp(counterCharge), "sturdy");
+            }
+
+            Activated?.Invoke();
+
             CurLv--;
             return attack;
         }
+
+        public static BuffData Sturdy(int stack = 1)
+        {
+            return new BuffData("Sturdy", stack);
+        }
+
 
         [Effect("feeble", Timing.OnDefendSettle)]
         private Attack Feeble(Attack attack, FighterData f1, FighterData f2)
@@ -546,6 +565,21 @@ namespace Game
 
             CurLv--;
             return attack;
+        }
+
+        public static BuffData Feeble(int stack = 1)
+        {
+            return new BuffData("Feeble", stack);
+        }
+
+        public static BuffData PMinus(int stack = 1)
+        {
+            return new BuffData("PMinus", stack);
+        }
+
+        public static BuffData MMinus(int stack = 1)
+        {
+            return new BuffData("MMinus", stack);
         }
 
         #endregion

@@ -691,6 +691,19 @@ namespace Game
             return attack;
         }
 
+        [Effect("ST_ASS", Timing.OnReact)]
+        private MapData ST_ASS2(MapData mapData, FighterData player)
+        {
+            if (mapData is TravellerSaveData)
+            {
+                Activated?.Invoke();
+                var gold = SData.CurGameRandom.Next(10 * CurLv, 20 * CurLv);
+                player.Gain(gold);
+            }
+
+            return mapData;
+        }
+
 
         /// <summary>
         /// 购买技能金币消耗减少P1*Lv
@@ -699,7 +712,7 @@ namespace Game
         /// <param name="player"></param>
         /// <param name="kw"></param>
         /// <returns></returns>
-        [Effect("SQRH_ASS", Timing.OnCost, priority = -100)]
+        [Effect("QSRH_ASS", Timing.OnCost, priority = -100)]
         private CostInfo QSRH_ASS(CostInfo cost, FighterData player, string kw)
         {
             if (cost.CostType == CostType.Gold)
@@ -802,7 +815,7 @@ namespace Game
         [Effect("XX_MON", Timing.OnAttackSettle, priority = 2)]
         private Attack XX_MON(Attack attack, FighterData player, FighterData enemy)
         {
-            player.Recover(BattleStatus.Hp(attack.SumDmg) * Usual / 100, enemy);
+            player.Recover(BattleStatus.Hp(attack.PDmg) * Usual / 100, enemy);
             return attack;
         }
 
@@ -852,9 +865,14 @@ namespace Game
             var p = (PlayerData)fighter;
             foreach (var potion in p.Potions)
             {
-                if (potion != null && !potion.Id.IsNullOrWhitespace() && potion.Count > 0)
+                if (potion != null && !potion.Id.IsNullOrWhitespace() && potion.Count > 0 &&
+                    potion.Bp.Rank <= Rank.Rare)
                 {
-                    potion.Count += (int)Usual;
+                    var creation =
+                        MathNet.Numerics.Distributions.Binomial.Sample(SData.CurGameRandom, min(1, Usual / 100),
+                            potion.Count);
+
+                    potion.Count += creation;
                 }
             }
 
@@ -1371,7 +1389,7 @@ namespace Game
             {
                 if (skill.IsValid && skill.Bp.Prof.Equals("mon"))
                 {
-                    skill.CurLv -= 3;
+                    skill.CurLv = max(1, skill.CurLv - 3);
                 }
             }
         }
@@ -1411,6 +1429,255 @@ namespace Game
             {
                 return attack;
             }
+        }
+
+        [Effect("QLFY_KNI", Timing.OnAttack)]
+        private Attack QLFY_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            Counter += 1;
+            return attack.SwitchToEmpty();
+        }
+
+
+        [Effect("QLFY_KNI", Timing.OnPreDefend, alwaysActive = true, priority = 10000)]
+        private Attack QLFY_KNI2(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (Counter > 0 && enemy != null)
+            {
+                attack.Multi -= Usual;
+                Activated?.Invoke();
+                Counter = 0;
+            }
+
+            return attack;
+        }
+
+
+        [Effect("JSZD_KNI", Timing.SkillEffect)]
+        private void JSZD_KNI(FighterData player)
+        {
+            player.ApplySelfBuff(BuffData.Sturdy((int)Usual));
+        }
+
+        [Effect("JJCS_KNI", Timing.SkillEffect)]
+        private void JJCS_KNI(FighterData player)
+        {
+            player.ApplySelfBuff(BuffData.Thorn((int)Usual));
+        }
+
+        [Effect("WS_KNI", Timing.OnAttack)]
+        private Attack WS_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            player.ApplyBuff(BuffData.Feeble((int)Usual), enemy);
+            player.ApplyBuff(BuffData.PMinus((int)Usual), enemy);
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("TZ_KNI", Timing.OnReact)]
+        private MapData TZ_KNI(MapData map, FighterData player)
+        {
+            if (map is SupplySaveData supply && supply.Type == SupplyType.Grassland)
+            {
+                player.ApplySelfBuff(BuffData.Sturdy((int)Usual));
+                Activated?.Invoke();
+            }
+
+            return map;
+        }
+
+        [Effect("SZZT_KNI", Timing.OnMarch)]
+        private void SZZT_KNI(FighterData player)
+        {
+            player.Strengthen(new BattleStatus(maxHp: (int)Usual));
+        }
+
+        [Effect("ZJ_KNI", Timing.OnAttack, priority = 10000)]
+        private Attack ZJ_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.Combo == 1)
+            {
+                attack.Multi += Usual;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        [Effect("XZ_KNI", Timing.OnDefendSettle, priority = 1000)]
+        private Attack XZ_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            Counter += attack.SumDmg;
+
+            if (Counter > Unusual)
+            {
+                Activated?.Invoke();
+                Counter = 0;
+                player.Strengthen(new BattleStatus(pDef: 1));
+            }
+
+            return attack;
+        }
+
+        [Effect("DPMJ_KNI", Timing.OnAttack, priority = -10000)]
+        private Attack DPMJ_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            return attack.Change(pAtk: player.Status.PDef, multi: Usual);
+        }
+
+
+        [Effect("ZSCJ_KNI", Timing.SkillEffect)]
+        private void ZSCJ_KNI(FighterData player)
+        {
+            (player.Status.PDef, player.Status.PAtk) = (player.Status.PAtk, player.Status.PDef);
+        }
+
+        [Effect("MC_KNI", Timing.OnAttack)]
+        private Attack MC_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            foreach (var sk in enemy.Skills)
+            {
+                if (sk != null && sk.IsValid)
+                {
+                    sk.CooldownLeft += 3;
+                }
+            }
+
+            return attack.Change(multi: Usual);
+        }
+
+        [Effect("ZSGH_KNI", Timing.OnAttack)]
+        private Attack ZSGH_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            player.ApplySelfBuff(BuffData.Divinity((int)Usual));
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("CZ_KNI", Timing.OnAttack)]
+        private Attack CZ_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (player is PlayerData p)
+            {
+                attack.Multi += p.BattleRound * Usual;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+
+        [Effect("CX_KNI", Timing.SkillEffect)]
+        private void CX_KNI(FighterData player)
+        {
+            var buff = player.Buffs.Find((data => data.Id == "thorn"));
+            player.Heal(BattleStatus.Hp((int)Usual * (buff.CurLv / 2)));
+            buff.StackChange(-buff.CurLv / 2);
+        }
+
+        [Effect("ZFZJ_KNI", Timing.OnAttack, priority: -10000)]
+        private Attack ZFZJ_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            var buff = player.Buffs.Find((data => data.Id == "thorn"));
+            attack.Change(cAtk: buff.CurLv / 2, multi: Usual);
+            buff.StackChange(-buff.CurLv / 2);
+            return attack;
+        }
+
+        [Effect("NY_KNI", Timing.OnAttack, priority: -10000)]
+        private Attack NY_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.PAtk = (int)(player.Status.CurHp * Usual);
+            return attack;
+        }
+
+        [Effect("SY_KNI", Timing.OnAttack, priority: -10000)]
+        private Attack SY_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            return attack;
+        }
+
+        [Effect("SY_KNI", Timing.OnKill, priority: -10000)]
+        private Attack SY_KNI2(Attack attack, FighterData player, FighterData enemy)
+        {
+            player.Strengthen(new BattleStatus(maxHp: (int)(enemy.Status.MaxHp * Usual / 100)));
+            return attack;
+        }
+
+        [Effect("CZHJ_KNI", Timing.SkillEffect)]
+        private void CZHJ_KNI(FighterData player)
+        {
+            var buff = player.Buffs.Find((data => data.Id == "Sturdy"));
+            player.Strengthen(new BattleStatus(maxHp: (int)(buff.CurLv * Usual / 100)));
+            player.Buffs.Remove(buff);
+        }
+
+        [Effect("CZHJ_KNI", Timing.OnMarch, alwaysActive = true)]
+        private void CZHJ_KNI2(FighterData player)
+        {
+            CooldownLeft = 0;
+        }
+
+
+        [Effect("XXJJ_KNI", Timing.OnDefendSettle)]
+        private Attack XXJJ_KNI(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (enemy == null) return attack;
+
+            if (attack.SumDmg > 0)
+            {
+                var v = min(attack.PDmg, fighter.Status.CurHp);
+                Activated?.Invoke();
+                fighter.ApplySelfBuff(BuffData.Thorn((int)Usual));
+            }
+
+            return attack;
+        }
+
+        [Effect("FSFJ_KNI", Timing.OnAttackSettle)]
+        private Attack FSFJ_KNI(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (attack.IsEmpty())
+            {
+                Counter += 1;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        [Effect("FSFJ_KNI", Timing.OnAttack)]
+        private Attack FSFJ_KNI2(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (Counter > 0 && !attack.IsEmpty())
+            {
+                attack.Multi += Usual;
+                Counter = 0;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+
+        [Effect("TS_KNI", Timing.OnKill)]
+        private Attack TS_KNI(Attack attack, FighterData fighter, FighterData enemy)
+        {
+            if (enemy == null) return attack;
+            foreach (var sk in enemy.Skills)
+            {
+                if (fighter is PlayerData player)
+                {
+                    player.TryTakeSkill(sk.Bp.Id, out var _);
+                }
+            }
+
+            return attack;
+        }
+
+
+        [Effect("BY_MAG", Timing.SkillEffect)]
+        private void BY_MAG(FighterData player)
+        {
+            player.ApplySelfBuff(BuffData.MPlus((int)Usual));
         }
 
         #endregion

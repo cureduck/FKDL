@@ -1,4 +1,5 @@
-﻿using Managers;
+﻿using System;
+using Managers;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -56,10 +57,10 @@ namespace Game
         }
 
 
-        private void Chase()
+        public void Chase(out Attack? attack)
         {
             Player.DrawBack = true;
-            ManageAttackRound();
+            attack = ManageAttackRound();
 
             DeathCheck();
 
@@ -70,7 +71,23 @@ namespace Game
         public override void Init()
         {
             base.Init();
+
+            var bonus = 0f;
+            if (Area > 4 && Area < 9) bonus = 0.1f;
+            if (Area > 8 && Area < 13) bonus = 0.2f;
+            if (Area > 12 && Area < 17) bonus = 0.3f;
+
             Status = Bp.Status;
+            if (Bp.Rank <= Rank.Uncommon)
+            {
+                Status.MaxHp = (int)(Status.MaxHp * (1 + bonus));
+                Status.CurHp = Status.MaxHp;
+            }
+
+            if (Bp.Skills == null)
+            {
+                Bp.Skills = Array.Empty<SkillData>();
+            }
 
             Skills = new SkillAgent(Bp.Skills);
             //Array.Copy(Bp.Skills, Skills, Bp.Skills.Length);
@@ -124,7 +141,7 @@ namespace Game
             if (IsAlive)
             {
                 DeathCheck();
-                Chase();
+                Chase(out _);
                 DeathCheck();
             }
         }

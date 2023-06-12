@@ -10,7 +10,7 @@ namespace Game
         {
             base.Init();
             var c = Area;
-            Cost = Random.Range(2 * c, 3 * c);
+            Cost = Random.Range((int)1.5f * c, (int)(2.5 * c));
         }
 
         public override void OnReact()

@@ -77,6 +77,13 @@ namespace Managers
             SetGlobalLocalizationParams();
         }
 
+        private void GetProfRelic()
+        {
+            var prof = Player.profInfo[0].ToUpper();
+            var relic = RelicData.ProfRelic[prof];
+            Player.TryTakeRelic(relic, out var _);
+        }
+
 
         private void SetGlobalLocalizationParams()
         {
@@ -106,10 +113,20 @@ namespace Managers
 
         public void SkipReward(out SkipInfo info)
         {
-            info = new SkipInfo(10);
-            Player.Gain(10);
+            info = new SkipInfo(GetSkipRewordCount());
+            Player.Gain(GetSkipRewordCount());
         }
 
+        public int GetSkipRewordCount()
+        {
+            return 10;
+        }
+
+
+        public void FindAndSetFocus()
+        {
+            Focus = squares.Find(square => square.Data.SquareState == SquareState.Focus);
+        }
 
         public Square FindStartSquare()
         {
@@ -200,7 +217,7 @@ namespace Managers
 
             var offers = potions.Select((s => new Offer(s)));
 
-            WindowManager.Instance.OffersWindow.Load(offers);
+            WindowManager.Instance.OffersWindow.Load(offers, "Debug Reward");
         }
 
 
@@ -218,7 +235,7 @@ namespace Managers
 
             var offers = skills.Select((s => new Offer(s)));
 
-            WindowManager.Instance.OffersWindow.Load(offers);
+            WindowManager.Instance.OffersWindow.Load(offers, "UI_OfferPanel_Title_Skill");
         }
 
         public void RollForRelic(int rank)
@@ -233,7 +250,7 @@ namespace Managers
 
             var offers = skills.Select((s => new Offer(s)));
 
-            WindowManager.Instance.OffersWindow.Load(offers);
+            WindowManager.Instance.OffersWindow.Load(offers, "UI_OfferPanel_Title_Relic");
         }
 
 
@@ -248,6 +265,7 @@ namespace Managers
                 Map = Map.LoadFromSave();
                 Player.BroadCastUpdated();
                 LoadMap();
+                FindAndSetFocus();
             }
             catch (Exception e)
             {
@@ -269,6 +287,7 @@ namespace Managers
             Map = Map.LoadFromInit();
             Map.Init();
             LoadMap();
+            GetProfRelic();
             GameLoaded?.Invoke();
             //GameManager.Instance.PlayerData.Gain(10000);
             //GC.Collect();

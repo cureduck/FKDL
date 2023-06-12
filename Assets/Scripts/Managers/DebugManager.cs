@@ -28,7 +28,10 @@ namespace Managers
         {
             foreach (var mapData in GameManager.Instance.Map.Floors[GameManager.Instance.Map.CurrentFloor].Squares)
             {
-                mapData.Reveal();
+                if (mapData.SquareState == SquareState.UnRevealed)
+                {
+                    mapData.Reveal();
+                }
             }
         }
 
@@ -44,8 +47,7 @@ namespace Managers
             if (CrystalManager.Instance.Lib.TryGetValue(id, out var crystal))
             {
                 WindowManager.Instance.CrystalPanel.Open(
-                    (GameManager.Instance.Player,
-                        crystal)
+                    (GameManager.Instance.Player, crystal, "UI_MagicCrystal_Title")
                 );
             }
         }

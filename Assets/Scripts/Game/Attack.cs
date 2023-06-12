@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Newtonsoft.Json;
 using Sirenix.Utilities;
+using static Unity.Mathematics.math;
 
 namespace Game
 {
@@ -23,23 +24,6 @@ namespace Game
         public bool Death;
 
         [JsonIgnore] public bool IsCommonAttack => Kw.IsNullOrWhitespace();
-
-        /*public Attack(int pAtk = 0, int mAtk = 0, int cAtk =0, float multi = 1f, int combo = 1,string id = "", CostInfo costInfo = default)
-        {
-            Combo = combo;
-            Multi = multi;
-            PAtk = pAtk;
-            MAtk = mAtk;
-            CAtk = cAtk;
-            Id = id;
-            PDmg = 0;
-            MDmg = 0;
-            CDmg = 0;
-            //Skill = null;
-            CostInfo = costInfo;
-
-            Death = false;
-        }*/
 
         public void JoinKeyWord(string kw)
         {
@@ -84,7 +68,7 @@ namespace Game
         }
 
 
-        [JsonIgnore] public int SumDmg => PDmg + MDmg + CDmg;
+        [JsonIgnore] public int SumDmg => max(0, PDmg) + max(0, MDmg) + max(0, CDmg);
 
         [JsonIgnore]
         private Attack SubAttack
