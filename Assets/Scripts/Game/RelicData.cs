@@ -506,7 +506,7 @@ namespace Game
                 var player = (PlayerData)fighter;
                 for (var i = 0; i < Bp.Param1; i++)
                 {
-                    player.Strengthen(BattleStatus.GetProfessionUpgrade(player.profInfo[0]));
+                    player.Strengthen(BattleStatus.GetProfessionUpgrade(PlayerData.ProfInfo[0]));
                 }
             }
 
@@ -634,6 +634,20 @@ namespace Game
             }
 
             return attack;
+        }
+
+
+        [Effect("zwzr", Timing.OnMarch)]
+        private void zwzr(FighterData player)
+        {
+            if (player.Status.PAtk > player.Status.MAtk)
+            {
+                player.Strengthen(new BattleStatus(mAtk: (int)Bp.Param1));
+            }
+            else
+            {
+                player.Strengthen(new BattleStatus(pAtk: (int)Bp.Param1));
+            }
         }
 
         #endregion

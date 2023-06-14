@@ -6,8 +6,10 @@ namespace Managers
 {
     public class Profile : SaveData
     {
-        public int Progress;
-        public string[] Unlocks;
+        public int CollectedSouls;
+        public string[] GiftUnlocks;
+        public string[] ProUnlocks;
+        public int RecentCollectedSouls;
 
         private static string _path => Path.Combine(Application.persistentDataPath, "Profile.asset");
 
@@ -16,8 +18,8 @@ namespace Managers
         {
             return new Profile()
             {
-                Unlocks = new string[] { "MAG", "ALC", "ASS", "KNI" },
-                Progress = 0
+                ProUnlocks = new string[] { "MAG", "ALC", "ASS", "KNI", "CUR", "BAR" },
+                CollectedSouls = 0
             };
         }
 

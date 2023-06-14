@@ -1,6 +1,4 @@
-﻿using I2.Loc;
-
-namespace Game
+﻿namespace Game
 {
     public abstract class Args
     {
@@ -22,6 +20,7 @@ namespace Game
     public class CasinoArgs : BaseArgs
     {
         public Offer[] Offers;
+        public int SkipCompensate = 15;
     }
 
     public class DoorArgs : BaseArgs
@@ -30,9 +29,9 @@ namespace Game
 
     public class EnemyArgs : Args
     {
-        public Attack? PlayerAttack;
         public Attack? EnemyAttack;
         public string Keyword;
+        public Attack? PlayerAttack;
     }
 
     public class RockArgs : BaseArgs

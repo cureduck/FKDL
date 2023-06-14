@@ -21,6 +21,7 @@ namespace Managers
         public SkillInfoPanel skillInfoPanel;
         public SimpleInfoItemPanel simpleInfoItemPanel;
         public UIEffectPanel effectPanel;
+
         public Transform dragViewParent;
 
         protected override void Awake()

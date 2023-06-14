@@ -16,9 +16,11 @@ namespace Game
         [SerializeField] private GameObject targetMask;
 
         [SerializeField] private Square square;
-        //private float curTargetIntensity = 0;
 
         private Tween anim;
+
+        //private float curTargetIntensity = 0;
+        private bool isPointEnter;
 
         private void Start()
         {
@@ -32,6 +34,7 @@ namespace Game
 
         private void OnMouseEnter()
         {
+            isPointEnter = true;
             var data = square.Data;
             if (((data.SquareState & SquareState.Revealed) != 0) && !(data is EnemySaveData))
             {
@@ -58,12 +61,14 @@ namespace Game
                     //WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args { title = squareInfo.Name, describe = squareInfo.Desc, worldTrans = transform });
                 }
             }
+
+            GlobalEvents.OnMouseEnterSquare(square);
         }
 
         private void OnMouseExit()
         {
             if (targetMask.activeInHierarchy) return;
-
+            isPointEnter = false;
             //if (square.Data.SquareState == SquareState.UnFocus || square.Data.SquareState == SquareState.Focus)
             //{
             //    WindowManager.Instance.simpleInfoItemPanel.Close();
@@ -73,6 +78,7 @@ namespace Game
             anim = DOTween.To(Getter, Setter, 0, changeSpeed / 1.5f)
                 .OnComplete(() => Setter(0f));
             //curTargetIntensity = 0;
+            GlobalEvents.OnMouseExitSquare(square);
         }
 
         private void OnMouseUp()
@@ -89,6 +95,14 @@ namespace Game
         }
         curTargetIntensity = targetIntensity;
         curClick = this;*/
+        }
+
+        public void ResetView()
+        {
+            if (isPointEnter)
+            {
+                OnMouseExit();
+            }
         }
 
 

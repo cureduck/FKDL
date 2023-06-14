@@ -45,7 +45,7 @@ public class ChooseProfListView : MonoBehaviour
         }
 
         Profile.Delete();
-        string[] curUnlocks = Profile.GetOrCreate().Unlocks;
+        string[] curUnlocks = Profile.GetOrCreate().ProUnlocks;
         for (int i = 0; i < curUnlocks.Length; i++)
         {
             for (int x = 0; x < profDatas.Length; x++)

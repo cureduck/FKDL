@@ -79,9 +79,11 @@ namespace Managers
 
         private void GetProfRelic()
         {
-            var prof = Player.profInfo[0].ToUpper();
-            var relic = RelicData.ProfRelic[prof];
-            Player.TryTakeRelic(relic, out var _);
+            var prof = PlayerData.ProfInfo[0].ToUpper();
+            if (RelicData.ProfRelic.TryGetValue(prof, out var relic))
+            {
+                Player.TryTakeRelic(relic, out var _);
+            }
         }
 
 

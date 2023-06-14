@@ -71,23 +71,23 @@ namespace Game
                 case ChestSaveData chestSaveData:
                     AudioPlayer.Instance.Play(AudioPlayer.AudioOpenChest);
                     //Debug.Log(chestSaveData.Offers.Length);
-                    switch (chestSaveData.rewardType)
+                    switch (chestSaveData.RewardType)
                     {
-                        case 0:
+                        case Offer.OfferKind.Skill:
                             WindowManager.Instance.OffersWindow.Open(
-                                (chestSaveData.Offers, "UI_OfferPanel_Title_Skill"));
+                                (chestSaveData.Offers, "UI_OfferPanel_Title_Skill", chestSaveData.SkipGold));
                             break;
-                        case 1:
+                        case Offer.OfferKind.Potion:
                             WindowManager.Instance.OffersWindow.Open((chestSaveData.Offers,
-                                "UI_OfferPanel_Title_Potion"));
+                                "UI_OfferPanel_Title_Potion", chestSaveData.SkipGold));
                             break;
-                        case 2:
+                        case Offer.OfferKind.Relic:
                             WindowManager.Instance.OffersWindow.Open(
-                                (chestSaveData.Offers, "UI_OfferPanel_Title_Relic"));
+                                (chestSaveData.Offers, "UI_OfferPanel_Title_Relic", chestSaveData.SkipGold));
                             break;
                         default:
                             WindowManager.Instance.OffersWindow.Open(
-                                (chestSaveData.Offers, "UI_OfferPanel_Title_Other"));
+                                (chestSaveData.Offers, "UI_OfferPanel_Title_Other", chestSaveData.SkipGold));
                             break;
                     }
 
@@ -132,7 +132,7 @@ namespace Game
             {
                 var tmp = transform.position;
                 tmp.x = Icon.transform.position.x;
-                WindowManager.Instance.EnemyPanel.Open((_player, d, tmp));
+                WindowManager.Instance.EnemyPanel.Open((_player, d, this, tmp));
             }
         }
 
@@ -210,7 +210,13 @@ namespace Game
                     PlaySoundEffect(args1.Win ? "casino_win" : "casino_lose");
                     if (args1.Win)
                     {
-                        WindowManager.Instance.OffersWindow.Open((args1.Offers, "UI_OfferPanel_Title_Other"));
+                        WindowManager.Instance.OffersWindow.Open
+                        (
+                            (
+                                args1.Offers, "UI_OfferPanel_Title_Other",
+                                args1.SkipCompensate
+                            )
+                        );
                     }
 
                     break;

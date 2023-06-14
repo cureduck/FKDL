@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class OfferWindow : BasePanel<(Offer[] offers, string title)>
+    public class OfferWindow : BasePanel<(Offer[] offers, string title, int skipCoinCount)>
     {
         [SerializeField] private Localize title;
         [SerializeField] private OfferUI prefab;
@@ -44,7 +44,7 @@ namespace UI
             //    Debug.Log(c.Kind);
             //}
             this.title.SetTerm(title);
-            gold_txt.text = GameManager.Instance.GetSkipRewordCount().ToString();
+            gold_txt.text = Data.skipCoinCount.ToString();
             OffersUIStartAnimation[] offersUIStartAnimations = new OffersUIStartAnimation[offers.Length];
             for (int i = 0; i < offers.Length; i++)
             {
@@ -82,7 +82,8 @@ namespace UI
         private void OnSkipButtonClick()
         {
             animationGroup.SelectTarget(-1);
-            GameManager.Instance.SkipReward(out _);
+            GameManager.Instance.Player.Gain(Data.skipCoinCount);
+            //GameManager.Instance.SkipReward(out _);
             StartCoroutine(CloseWindowIE());
             //Debug.LogWarning("获得金币!");
             AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);

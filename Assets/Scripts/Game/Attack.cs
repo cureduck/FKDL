@@ -119,6 +119,23 @@ namespace Game
             return IsEmpty(this);
         }
 
+        public bool IsMagicAttack => PAtk <= 0 && MAtk > 0 && CAtk <= 0;
+
+        public bool IsPhysicalAttack => PAtk > 0 && MAtk <= 0 && CAtk <= 0;
+
+
+        /// <summary>
+        /// reduce the damage by v
+        /// .1 means 10% damage reduction
+        /// </summary>
+        /// <param name="v"></param>
+        public void Reduce(float v)
+        {
+            PDmg = (int)(PDmg * (1 - v));
+            MDmg = (int)(MDmg * (1 - v));
+            CDmg = (int)(CDmg * (1 - v));
+        }
+
         public static bool IsEmpty(Attack attack) => attack.Empty;
 
         public override string ToString()

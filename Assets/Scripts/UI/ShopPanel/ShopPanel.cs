@@ -17,7 +17,7 @@ namespace UI
         [SerializeField] private Transform keyListView;
         [SerializeField] private Button sellPoition_btn;
 
-        [SerializeField] private Button levelUp_btn;
+        //[SerializeField] private Button levelUp_btn;
 
         //[SerializeField] private RectTransform levelUpCostRect;
         [SerializeField] private TMP_Text levelUpCost_txt;
@@ -35,7 +35,7 @@ namespace UI
             keyListObjectPool = new UIViewObjectPool<CellGoodView, Args>(keyPrefab, null);
 
             sellPoition_btn.onClick.AddListener(SellPotionClick);
-            levelUp_btn.onClick.AddListener(LevelUpClick);
+            //levelUp_btn.onClick.AddListener(LevelUpClick);
             reflash_btn.onClick.AddListener(ReflashClick);
             gameObject.SetActive(false);
         }
@@ -84,14 +84,14 @@ namespace UI
 
             keyListObjectPool.SetDatas(args, CellSet, keyListView);
             PlayerData playerData = GameManager.Instance.Player;
-            if (Data.UpgradeCost.Value > playerData.Gold)
-            {
-                levelUpCost_txt.text = $"<color=red>{Data.UpgradeCost.Value}</color>";
-            }
-            else
-            {
-                levelUpCost_txt.text = $"<color=yellow>{Data.UpgradeCost.Value}</color>";
-            }
+            //if (Data.UpgradeCost.Value > playerData.Gold)
+            //{
+            //    levelUpCost_txt.text = $"<color=red>{Data.UpgradeCost.Value}</color>";
+            //}
+            //else
+            //{
+            //    levelUpCost_txt.text = $"<color=yellow>{Data.UpgradeCost.Value}</color>";
+            //}
 
             reflash_btn.interactable = Data.RefreshCost.Value <= playerData.Gold;
             if (Data.RefreshCost.Value > playerData.Gold)

@@ -106,8 +106,8 @@ public class TargetBattleView : MonoBehaviour
     /// <param name="td"></param>
     /// <param name="tdCount"></param>
     /// <param name="dif">实际血量变化与攻击伤害间的差值</param>
-    public void SetResult(int pd, int pdCount, int md, int mdCount, int td, int tdCount, int dif)
+    public void SetResult(int pd, int pdCount, int md, int mdCount, int td, int tdCount, int dif, bool isEscape)
     {
-        damageHightLightView.SetData(fighterData.Status.CurHp, pd, pdCount, md, mdCount, td, tdCount, dif);
+        damageHightLightView.SetData(fighterData.Status.CurHp, pd, pdCount, md, mdCount, td, tdCount, dif, isEscape);
     }
 }

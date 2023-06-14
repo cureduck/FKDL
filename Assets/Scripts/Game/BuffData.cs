@@ -393,7 +393,7 @@ namespace Game
             return attack;
         }
 
-        private const int CurseIndent = 10;
+        private const int CurseIndent = 14;
 
         /// <summary>
         /// 斩杀时：物攻和物防会减少
@@ -405,7 +405,7 @@ namespace Game
             CurLv += 1;
             if (CurLv >= CurseIndent)
             {
-                CurLv = 0;
+                CurLv = 1;
                 f1.Status.PAtk -= 1;
                 f1.Status.PDef -= 1;
                 Activated?.Invoke();
@@ -413,6 +413,25 @@ namespace Game
 
             return attack;
         }
+
+        [Effect("impotence", Timing.OnAttack)]
+        private Attack Impotence2(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (f1 is EnemySaveData f)
+            {
+                CurLv += 1;
+                if (CurLv >= CurseIndent)
+                {
+                    CurLv = 1;
+                    f1.Status.PAtk -= 1;
+                    f1.Status.PDef -= 1;
+                    Activated?.Invoke();
+                }
+            }
+
+            return attack;
+        }
+
 
         /// <summary>
         /// 斩杀时：物攻和魔攻会减少
@@ -424,10 +443,28 @@ namespace Game
             CurLv += 1;
             if (CurLv >= CurseIndent)
             {
-                CurLv = 0;
+                CurLv = 1;
                 f1.Status.PAtk -= 1;
                 f1.Status.MAtk -= 1;
                 Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        [Effect("puny", Timing.OnAttack)]
+        private Attack Puny2(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (f1 is EnemySaveData f)
+            {
+                CurLv += 1;
+                if (CurLv >= CurseIndent)
+                {
+                    CurLv = 1;
+                    f1.Status.PAtk -= 1;
+                    f1.Status.MAtk -= 1;
+                    Activated?.Invoke();
+                }
             }
 
             return attack;
@@ -443,10 +480,28 @@ namespace Game
             CurLv += 1;
             if (CurLv >= CurseIndent)
             {
-                CurLv = 0;
+                CurLv = 1;
                 f1.Status.MAtk -= 1;
                 f1.Status.MDef -= 1;
                 Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        [Effect("confused", Timing.OnAttack)]
+        private Attack Confused2(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (f1 is EnemySaveData f)
+            {
+                CurLv += 1;
+                if (CurLv >= CurseIndent)
+                {
+                    CurLv = 1;
+                    f1.Status.MAtk -= 1;
+                    f1.Status.MDef -= 1;
+                    Activated?.Invoke();
+                }
             }
 
             return attack;
@@ -462,7 +517,7 @@ namespace Game
             CurLv += 1;
             if (CurLv >= CurseIndent)
             {
-                CurLv = 0;
+                CurLv = 1;
                 f1.Status.PDef -= 1;
                 f1.Status.MDef -= 1;
                 Activated?.Invoke();
@@ -470,6 +525,25 @@ namespace Game
 
             return attack;
         }
+
+        [Effect("fragile", Timing.OnAttack)]
+        private Attack Fragile2(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (f1 is EnemySaveData f)
+            {
+                CurLv += 1;
+                if (CurLv >= CurseIndent)
+                {
+                    CurLv = 1;
+                    f1.Status.PDef -= 1;
+                    f1.Status.MDef -= 1;
+                    Activated?.Invoke();
+                }
+            }
+
+            return attack;
+        }
+
 
         /// <summary>
         /// 斩杀时：最大生命值和物防会减少
@@ -484,7 +558,7 @@ namespace Game
             CurLv += 1;
             if (CurLv >= CurseIndent)
             {
-                CurLv = 0;
+                CurLv = 1;
                 f1.Status.MaxHp -= 1;
                 f1.Status.PDef -= 1;
                 Activated?.Invoke();
@@ -492,6 +566,25 @@ namespace Game
 
             return attack;
         }
+
+        [Effect("anemic", Timing.OnAttack)]
+        private Attack Anemic2(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (f1 is EnemySaveData f)
+            {
+                CurLv += 1;
+                if (CurLv >= CurseIndent)
+                {
+                    CurLv = 1;
+                    f1.Status.MaxHp -= 1;
+                    f1.Status.PDef -= 1;
+                    Activated?.Invoke();
+                }
+            }
+
+            return attack;
+        }
+
 
         /// <summary>
         /// 斩杀时：最大魔法值和魔防会减少
@@ -506,7 +599,7 @@ namespace Game
             CurLv += 1;
             if (CurLv >= CurseIndent)
             {
-                CurLv = 0;
+                CurLv = 1;
                 f1.Status.MaxMp -= 1;
                 f1.Status.MDef -= 1;
                 Activated?.Invoke();
@@ -514,6 +607,25 @@ namespace Game
 
             return attack;
         }
+
+        [Effect("dull", Timing.OnAttack)]
+        private Attack Dull2(Attack attack, FighterData f1, FighterData f2)
+        {
+            if (f1 is EnemySaveData f)
+            {
+                CurLv += 1;
+                if (CurLv >= CurseIndent)
+                {
+                    CurLv = 1;
+                    f1.Status.MaxMp -= 1;
+                    f1.Status.MDef -= 1;
+                    Activated?.Invoke();
+                }
+            }
+
+            return attack;
+        }
+
 
         /// <summary>
         /// 防御时:临时增加P1物防和魔防
@@ -580,6 +692,21 @@ namespace Game
         public static BuffData MMinus(int stack = 1)
         {
             return new BuffData("MMinus", stack);
+        }
+
+        [Effect("oblation", Timing.OnCounterCharge, priority = 100)]
+        private BattleStatus Oblation(BattleStatus status, FighterData f1, string kw)
+        {
+            var replace = min(status.CurHp, CurLv);
+            CurLv -= replace;
+            status.CurHp -= replace;
+            Activated?.Invoke();
+            return status;
+        }
+
+        public static BuffData Oblation(int stack = 1)
+        {
+            return new BuffData("Oblation", stack);
         }
 
         #endregion

@@ -42,6 +42,7 @@ namespace Managers
                 Player = PlayerClone,
                 Enemy = EnemyClone,
                 PlayerAttack = null,
+                isPlayerExcape = true,
                 EnemyAttack = enemyAttack
             };
         }
@@ -86,6 +87,7 @@ namespace Managers
 
             public Attack? PlayerAttack;
             public Attack? EnemyAttack;
+            public bool isPlayerExcape; //是不是玩家逃跑行为
         }
 
 

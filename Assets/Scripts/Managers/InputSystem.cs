@@ -1,4 +1,5 @@
-﻿using Game;
+﻿using System;
+using Game;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -197,10 +198,25 @@ namespace Managers
             var sq = RaycastGetSquare();
             var t = sq != null ? sq.Data : null;
 
-            if ((t != null) && (t.SquareState != SquareState.UnRevealed) &&
-                SettingManager.Instance.GameSettings.AutoGoToFocus)
+            if ((t != null) && (t.SquareState != SquareState.UnRevealed))
             {
-                CameraMan.Instance.Target = sq.transform.position;
+                switch (SettingManager.Instance.GameSettings.CameraFollow)
+                {
+                    case CameraSetting.NeverFollow:
+                        break;
+                    case CameraSetting.EnemyFollow:
+                        if (t is EnemySaveData)
+                        {
+                            CameraMan.Instance.Target = sq.transform.position;
+                        }
+
+                        break;
+                    case CameraSetting.AlwaysFollow:
+                        CameraMan.Instance.Target = sq.transform.position;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             if ((t != null) && ((t.SquareState == SquareState.Focus) || (t.SquareState == SquareState.UnFocus)))

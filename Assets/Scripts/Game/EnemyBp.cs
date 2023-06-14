@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game
 {
@@ -10,7 +11,7 @@ namespace Game
         public Sprite Icon;
         public string Id;
 
-        public int Spirit;
+        [FormerlySerializedAs("Spirit")] public int Souls;
 
         public string Description;
 

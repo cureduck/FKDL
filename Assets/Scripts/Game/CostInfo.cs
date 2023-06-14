@@ -12,7 +12,7 @@ namespace Game
             set => _value = value < 0 ? 0 : value;
         }
 
-        public readonly CostType CostType;
+        public CostType CostType;
 
         /// <summary>
         /// 折扣，0.8就是8折

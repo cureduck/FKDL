@@ -169,6 +169,16 @@ namespace Game
             DelayUpdate();
         }
 
+        protected override void Destroyed()
+        {
+            if (!Cloned)
+            {
+                ProfileManager.Instance.Profile.RecentCollectedSouls += Bp.Souls;
+            }
+
+            base.Destroyed();
+        }
+
 
         public override string ToString()
         {

@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Managers;
 using UnityEngine;
 using UnityEngine.UI;
-using Game;
-using Managers;
 
 public class CellProfView : MonoBehaviour
 {
@@ -39,7 +36,7 @@ public class CellProfView : MonoBehaviour
     {
         if (string.IsNullOrEmpty(profIndex)) return;
         WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
-            { describe = $"{profIndex}职业描述", title = profIndex, screenPosition = transform.position });
+            { describe = $"{profIndex.ToLower()}_desc", title = profIndex, screenPosition = transform.position });
     }
 
     private void OnPointExit()

@@ -137,7 +137,7 @@ namespace Managers
 
         public void Add1Atk()
         {
-            GameManager.Instance.Player.Strengthen(new BattleStatus { PAtk = 1 });
+            GameManager.Instance.Player.Strengthen(new BattleStatus { PAtk = 100000000 });
             PlayerMainPanel.Instance.PlayGetCharacterPointEffect(0);
         }
 

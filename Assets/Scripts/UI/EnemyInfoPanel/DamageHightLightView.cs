@@ -14,7 +14,7 @@ public class DamageHightLightView : MonoBehaviour
     //[SerializeField]
     //private Transform endPoint;
     public void SetData(int curLeftHealth, int pDamage, int PDCount, int mDamage, int MDCount, int tDamage, int TDCount,
-        int dif)
+        int dif, bool isEscape)
     {
         if (curLeftHealth <= 0)
         {
@@ -25,6 +25,7 @@ public class DamageHightLightView : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
+
 
         //Debug.Log(curLeftHealth);
         //Debug.Log(transform.position);
@@ -56,6 +57,13 @@ public class DamageHightLightView : MonoBehaviour
         cur = posionDamage_View.sizeDelta;
         cur.x = dif / (float)totalDamage * curWidth;
         posionDamage_View.sizeDelta = cur;
+
+        //逃跑时，不会计算任何伤害数值
+        if (isEscape)
+        {
+            damageText.text = $"<color=red>(玩家逃跑！)</color>";
+            return;
+        }
 
         string curPDamageInfo;
         if (pDamage > 0)

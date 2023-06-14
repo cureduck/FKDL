@@ -3,10 +3,12 @@ using Managers;
 using UI;
 using UnityEngine;
 
-public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData targetEnemy, Vector3 position)>
+public class
+    EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData targetEnemy, Square square, Vector3 position)>
 {
     [SerializeField] private TargetBattleView enemyView;
     [SerializeField] private TargetBattleView playerView;
+    private Square curCheckSquare;
 
     private SkillData playerUseSkill;
 
@@ -16,12 +18,14 @@ public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData ta
         playerView.Init();
     }
 
-    protected override void SetData((PlayerData, EnemySaveData, Vector3) d)
+    protected override void SetData((PlayerData, EnemySaveData, Square, Vector3) d)
     {
         if (!Data.Equals(default))
         {
             Data.playerData.OnUpdated -= UpdateUI;
             Data.targetEnemy.OnUpdated -= UpdateUI;
+            GlobalEvents.MouseEnteringSquare -= PointEntering;
+            GlobalEvents.MouseExitingSquare -= PointExiting;
         }
 
         base.SetData(d);
@@ -30,6 +34,10 @@ public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData ta
             Data.playerData.OnUpdated += UpdateUI;
             Data.targetEnemy.OnUpdated += UpdateUI;
         }
+
+        curCheckSquare = Data.square;
+        GlobalEvents.MouseEnteringSquare += PointEntering;
+        GlobalEvents.MouseExitingSquare += PointExiting;
     }
 
 
@@ -38,6 +46,7 @@ public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData ta
         base.OnClose();
         playerUseSkill = null;
     }
+
 
     protected override void OnOpen()
     {
@@ -58,13 +67,43 @@ public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData ta
 
         playerView.SetData(Data.playerData);
         enemyView.SetData(Data.targetEnemy);
-        SetResult(Arena.ArrangeFight(Data.playerData, Data.targetEnemy, playerUseSkill));
+
+        if (playerUseSkill != null)
+        {
+            SetResult(Arena.ArrangeFight(Data.playerData, Data.targetEnemy, playerUseSkill));
+        }
+        else
+        {
+            if (curCheckSquare != Data.square)
+            {
+                SetResult(Arena.ArrangeFlee(Data.playerData, Data.targetEnemy));
+            }
+            else
+            {
+                SetResult(Arena.ArrangeFight(Data.playerData, Data.targetEnemy, playerUseSkill));
+            }
+        }
     }
 
     public void SetPlayerUseSkill(SkillData skillData)
     {
         playerUseSkill = skillData;
         Debug.Log(playerUseSkill);
+        UpdateUI();
+    }
+
+
+    private void PointEntering(Square square)
+    {
+        //Debug.Log("Enter!");
+        this.curCheckSquare = square;
+        UpdateUI();
+    }
+
+    private void PointExiting(Square square)
+    {
+        //Debug.Log("Exit!");
+        this.curCheckSquare = null;
         UpdateUI();
     }
 
@@ -79,12 +118,12 @@ public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData ta
 
             playerView.SetResult(fightPredictResult.EnemyAttack.Value.PDmg, 1,
                 fightPredictResult.EnemyAttack.Value.MDmg, 1, fightPredictResult.EnemyAttack.Value.CDmg, 1,
-                poisonDamage);
+                poisonDamage, false);
         }
         else
         {
             int poisonDmg = Data.playerData.Status.CurHp - fightPredictResult.Player.Status.CurHp;
-            playerView.SetResult(0, 1, 0, 1, 0, 1, poisonDmg);
+            playerView.SetResult(0, 1, 0, 1, 0, 1, poisonDmg, false);
         }
 
         if (fightPredictResult.PlayerAttack != null)
@@ -94,12 +133,13 @@ public class EnemyInfoPanel : BasePanel<(PlayerData playerData, EnemySaveData ta
             int posion = Data.targetEnemy.Status.CurHp - fightPredictResult.Enemy.Status.CurHp - enemyTotal;
 
             enemyView.SetResult(fightPredictResult.PlayerAttack.Value.PDmg, 1,
-                fightPredictResult.PlayerAttack.Value.MDmg, 1, fightPredictResult.PlayerAttack.Value.CDmg, 1, posion);
+                fightPredictResult.PlayerAttack.Value.MDmg, 1, fightPredictResult.PlayerAttack.Value.CDmg, 1, posion,
+                fightPredictResult.isPlayerExcape);
         }
         else
         {
             int poisonDamage = Data.targetEnemy.Status.CurHp - fightPredictResult.Enemy.Status.CurHp;
-            enemyView.SetResult(0, 1, 0, 1, 0, 1, poisonDamage);
+            enemyView.SetResult(0, 1, 0, 1, 0, 1, poisonDamage, fightPredictResult.isPlayerExcape);
         }
     }
 }

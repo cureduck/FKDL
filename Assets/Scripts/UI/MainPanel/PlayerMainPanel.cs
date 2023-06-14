@@ -155,7 +155,7 @@ namespace UI
             PotionPanel.SetMaster(master);
             if (master is PlayerData playerData)
             {
-                profInformationView.SetData(playerData.profInfo);
+                profInformationView.SetData(PlayerData.ProfInfo);
                 relicListView.SetData(playerData.Relics);
             }
 
@@ -169,7 +169,7 @@ namespace UI
             buffListView.SetData(playerData.Buffs);
             if (playerData != null)
             {
-                profInformationView.SetData(playerData.profInfo);
+                profInformationView.SetData(PlayerData.ProfInfo);
                 relicListView.SetData(playerData.Relics);
             }
         }

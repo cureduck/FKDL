@@ -198,6 +198,33 @@ namespace Game
         }
 
 
+        public void CurseActivated(BuffData curse)
+        {
+            CheckChain<BuffData>(Timing.OnCurseActivate, new object[] { curse, this });
+        }
+
+
+        public void Purify(BuffData buff)
+        {
+            CheckChain<BuffData>(Timing.OnPurify, new object[] { buff, this });
+            Buffs.Remove(buff);
+        }
+
+        /// <summary>
+        /// remove all negative buffs
+        /// </summary>
+        public void PurifyAll()
+        {
+            foreach (var b in Buffs)
+            {
+                if (b.Bp.BuffType == BuffType.Negative)
+                {
+                    Purify(b);
+                }
+            }
+        }
+
+
         private CostInfo GetActualCostInfo(CostInfo costInfo, string kw = "")
         {
             return CheckChain<CostInfo>(Timing.OnCost, new object[] { costInfo, this, kw });

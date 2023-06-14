@@ -41,6 +41,7 @@ namespace UI
 
         private void Update()
         {
+            //GoldText.text = _targetGoldCount.ToString();
             if (_targetGoldCount != _currentGoldCount)
             {
                 if (_pause > 0)
@@ -50,7 +51,7 @@ namespace UI
                 }
                 else
                 {
-                    var delta = (_targetGoldCount - _currentGoldCount) / 50;
+                    var delta = (_targetGoldCount - _currentGoldCount) / 10;
                     delta += _targetGoldCount - _currentGoldCount > 0 ? 1 : -1;
                     _currentGoldCount += delta;
 

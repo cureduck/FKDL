@@ -2,6 +2,7 @@
 using TMPro;
 using UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class SettingPanel : BasePanel<GameSettings>
@@ -19,7 +20,8 @@ public class SettingPanel : BasePanel<GameSettings>
     [SerializeField] private Button close_btn;
 
     //[FormerlySerializedAs("CameraAtoFollowToggle")] 
-    [SerializeField] private Toggle CameraAutoFollowToggle;
+    [FormerlySerializedAs("CameraAutoFollowToggle")] [SerializeField]
+    private TMP_Dropdown cameraFollowDropdown;
 
     //[FormerlySerializedAs("back_to_start_btn")] 
     [SerializeField] private Button backToStartBtn;
@@ -33,7 +35,7 @@ public class SettingPanel : BasePanel<GameSettings>
     public override void Init()
     {
         //LanguageSliderInit();
-        CameraAutoFollowToggle.isOn = gameSettings.AutoGoToFocus;
+        cameraFollowDropdown.value = (int)gameSettings.CameraFollow;
         bgmSizeSilder.value = gameSettings.BgmVolume;
         soundEffectSizeSilder.value = gameSettings.SEVolume;
         viewAngleSelecter.value = gameSettings.Degree / GameSettings.MaxDegree;
@@ -58,7 +60,7 @@ public class SettingPanel : BasePanel<GameSettings>
         isFullScreenSelecter.onValueChanged.AddListener(IsFullScreenToggleValueChange);
         viewAngleSelecter.onValueChanged.AddListener(ViewAngleSelectorSliderValueChange);
         close_btn.onClick.AddListener(ClosePanelButtonClick);
-        CameraAutoFollowToggle.onValueChanged.AddListener((v => gameSettings.AutoGoToFocus = v));
+        cameraFollowDropdown.onValueChanged.AddListener((v => gameSettings.CameraFollow = (CameraSetting)v));
         if (backToStartBtn)
         {
             backToStartBtn?.onClick.AddListener(() =>

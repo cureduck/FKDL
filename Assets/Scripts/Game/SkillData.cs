@@ -1123,7 +1123,7 @@ namespace Game
                 var times = player.Skills.Count(skill => skill.Bp.Rank == Rank.Rare);
                 for (int i = 0; i < times; i++)
                 {
-                    player.Strengthen(BattleStatus.GetProfessionUpgrade(player.profInfo[0]));
+                    player.Strengthen(BattleStatus.GetProfessionUpgrade(PlayerData.ProfInfo[0]));
                 }
 
                 Activated?.Invoke();
@@ -1158,7 +1158,7 @@ namespace Game
             if (fighter is PlayerData player)
             {
                 bool satisfy = true;
-                foreach (var prof in player.profInfo)
+                foreach (var prof in PlayerData.ProfInfo)
                 {
                     if (player.Skills.Count(skill => skill.Bp.Prof == prof) > 2)
                     {
@@ -1678,6 +1678,621 @@ namespace Game
         private void BY_MAG(FighterData player)
         {
             player.ApplySelfBuff(BuffData.MPlus((int)Usual));
+        }
+
+
+        [Effect("SJDF_KNI", Timing.OnAttack, priority: 100)]
+        private Attack SJDF_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty())
+            {
+                Activated?.Invoke();
+                player.ApplySelfBuff(BuffData.PPlus((int)Usual));
+                player.ApplySelfBuff(BuffData.MPlus((int)Usual));
+            }
+
+            return attack;
+        }
+
+        [Effect("EY_CUR", Timing.OnAttack, priority: -10000)]
+        private Attack EY_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            int count = 3;
+            var different_debuffs = new BuffData[count];
+            int index = 0;
+
+            while (index <= count)
+            {
+                var debuff = BuffManager.Instance.GetRandomBuffData(BuffType.Negative);
+                if (debuff != null && !different_debuffs.Any((data => data.Id == debuff.Id)))
+                {
+                    different_debuffs[index] = debuff;
+                    index++;
+                }
+            }
+
+            return attack.SwitchToEmpty();
+        }
+
+
+        [Effect("SJ_CUR", Timing.OnAttack, priority: -10000)]
+        private Attack SJ_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            int stack = (int)(player.Status.MAtk * Usual);
+            player.ApplyBuff(BuffData.Feeble(stack), enemy);
+
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("ZM_CUR", Timing.OnAttack, priority: -10000)]
+        private Attack ZM_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            enemy.Buffs.RemoveAll((data => data.Bp.BuffType == BuffType.Positive));
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("KL_CUR", Timing.OnAttack, priority: -10000)]
+        private Attack KL_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            int stack = (int)Usual;
+            player.ApplySelfBuff(BuffData.Poison(stack));
+            player.ApplyBuff(BuffData.Poison(stack * 2), enemy);
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("ED_CUR", Timing.OnAttack)]
+        private Attack ED_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.PAtk <= 0) return attack;
+            var stack =
+                (int)(Usual * player.Buffs.Sum((data => data.Bp.BuffType == BuffType.Negative ? data.CurLv : 0)));
+            attack.PAtk += stack;
+            Activated?.Invoke();
+
+            return attack;
+        }
+
+        [Effect("ZZ_CUR", Timing.OnApply)]
+        private BuffData ZZ_CUR(BuffData buff, FighterData player)
+        {
+            if (buff.Bp.BuffType != BuffType.Negative) return buff;
+            buff.StackChange((int)Usual);
+            Activated?.Invoke();
+            return buff;
+        }
+
+        [Effect("DC_CUR", Timing.SkillEffect)]
+        private void DC_CUR(FighterData player)
+        {
+            var stack = (int)(Usual * player.Buffs.Count((data => data.Bp.BuffType == BuffType.Curse)));
+            player.ApplySelfBuff(BuffData.MPlus(stack));
+        }
+
+        [Effect("YW_CUR", Timing.OnAttackSettle)]
+        private Attack YW_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (enemy.CurHp < enemy.Status.MaxHp * Usual)
+            {
+                attack.CDmg += enemy.Status.CurHp;
+                Activated?.Invoke();
+                player.Kill(attack, enemy);
+            }
+
+            return attack;
+        }
+
+        [Effect("LH_CUR", Timing.OnCurseActivate)]
+        private BuffData LH_CUR(BuffData buff, FighterData player)
+        {
+            if (buff.Bp.BuffType != BuffType.Curse) return buff;
+            player.PurifyAll();
+            return buff;
+        }
+
+        [Effect("EH_CUR", Timing.OnAttack, priority: -10000)]
+        private Attack EH_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            foreach (var buff in enemy.Buffs)
+            {
+                if (buff.Bp.BuffType == BuffType.Negative)
+                {
+                    buff.StackChange((int)Usual);
+                    Activated?.Invoke();
+                }
+            }
+
+            return attack.SwitchToEmpty();
+        }
+
+
+        [Effect("SG_CUR", Timing.OnKill)]
+        private Attack SG_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (enemy == null) return attack;
+            player.Recover(BattleStatus.Hp((int)Usual), enemy, "SG_CUR");
+            Activated?.Invoke();
+
+            return attack;
+        }
+
+        [Effect("XD_CUR", Timing.OnReact)]
+        private MapData XD_CUR(MapData map, FighterData player)
+        {
+            if (!(map is TotemSaveData)) return map;
+
+            map.SquareState = SquareState.Done;
+            Activated?.Invoke();
+            var stack = (int)Usual;
+
+            player.ApplySelfBuff(BuffData.Divinity(stack));
+            player.ApplySelfBuff(BuffData.Vigor(stack));
+
+            return map;
+        }
+
+        [Effect("LT_CUR", Timing.SkillEffect)]
+        private void LT_CUR(FighterData player)
+        {
+            (player.Status.MDef, player.Status.PDef) = (player.Status.PDef, player.Status.MDef);
+        }
+
+        [Effect("SH_CUR", Timing.OnAttack)]
+        private Attack SH_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty() || attack.IsCommonAttack) return attack;
+            attack.Multi += Usual * Counter;
+            Activated?.Invoke();
+            return attack;
+        }
+
+        [Effect("SH_CUR", Timing.OnKill)]
+        private Attack SH2_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            Counter += 1;
+            Activated?.Invoke();
+            return attack;
+        }
+
+        [Effect("ZN_CUR", Timing.OnMarch)]
+        private void ZN_CUR(FighterData player)
+        {
+            var count = (int)Usual;
+            player.Strengthen(new BattleStatus(maxHp: count, maxMp: count));
+            Activated?.Invoke();
+        }
+
+        [Effect("YS_CUR", Timing.OnAttack, priority: -10000)]
+        private Attack YS_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            foreach (var buff in player.Buffs)
+            {
+                if (buff.Bp.BuffType == BuffType.Negative)
+                {
+                    var count = (int)(Usual * buff.CurLv / 100);
+                    buff.StackChange(-count);
+                    player.ApplyBuff(new BuffData(buff.Id, count), enemy);
+                }
+            }
+
+            return attack;
+        }
+
+        [Effect("BX_CUR", Timing.OnAttack)]
+        private Attack BX_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty() || attack.IsCommonAttack) return attack;
+            var count = (int)(Usual * player.Buffs.Count((data => data.Bp.BuffType == BuffType.Curse)));
+            attack.CDmg += count;
+            Activated?.Invoke();
+            return attack;
+        }
+
+        [Effect("KY_CUR", Timing.OnAttack, priority: -10000)]
+        private Attack KY_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            foreach (var b in player.Buffs)
+            {
+                if (b.Bp.BuffType == BuffType.Curse)
+                {
+                    player.ApplyBuff((BuffData)b.Clone(), enemy);
+                }
+            }
+
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("MW_CUR", Timing.OnAttack, priority: -10000)]
+        private Attack MW_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            var stack =
+                (int)(Usual * player.Buffs.Sum((data => data.Bp.BuffType == BuffType.Negative ? data.CurLv : 0)));
+            stack += (int)(Usual * enemy.Buffs.Sum((data => data.Bp.BuffType == BuffType.Curse ? data.CurLv : 0)));
+
+            attack = new Attack(cAtk: stack, kw: "MW_CUR");
+
+            enemy.SingleDefendSettle(attack, player);
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("XG_CUR", Timing.OnAttack)]
+        private Attack XG_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty()) return attack;
+            if (SData.CurGameRandom.NextDouble() < Usual)
+            {
+                Activated?.Invoke();
+                player.Kill(attack, enemy);
+            }
+
+            return attack;
+        }
+
+        [Effect("JQ_CUR", Timing.OnAttack, priority: -1000)]
+        private Attack JQ_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            var stack = (int)(enemy.Status.CurHp * Usual);
+            enemy.SingleDefendSettle(new Attack(cAtk: stack, kw: "JQ_CUR"), player);
+            player.Recover(new BattleStatus(curHp: stack), enemy, "JQ_CUR");
+            return attack.SwitchToEmpty();
+        }
+
+
+        /// <summary>
+        /// random choose one of the following status that is higher than player's
+        /// and swap it with player's
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("KQ_CUR", Timing.OnAttack)]
+        private Attack KQ_CUR(Attack attack, FighterData player, FighterData enemy)
+        {
+            (bool, bool, bool, bool) HigherThanPlayer = (false, false, false, false);
+            if (enemy.Status.PAtk > player.Status.PAtk) HigherThanPlayer.Item1 = true;
+            if (enemy.Status.MAtk > player.Status.MAtk) HigherThanPlayer.Item2 = true;
+            if (enemy.Status.PDef > player.Status.PDef) HigherThanPlayer.Item3 = true;
+            if (enemy.Status.MDef > player.Status.MDef) HigherThanPlayer.Item4 = true;
+
+            var random = SData.CurGameRandom;
+            var list = new List<int>();
+            if (HigherThanPlayer.Item1) list.Add(0);
+            if (HigherThanPlayer.Item2) list.Add(1);
+            if (HigherThanPlayer.Item3) list.Add(2);
+            if (HigherThanPlayer.Item4) list.Add(3);
+            if (list.Count == 0) return attack.SwitchToEmpty();
+            var index = list[random.Next(list.Count)];
+
+            switch (index)
+            {
+                case 0:
+                    (player.Status.PAtk, enemy.Status.PAtk) = (enemy.Status.PAtk, player.Status.PAtk);
+                    break;
+                case 1:
+                    (player.Status.MAtk, enemy.Status.MAtk) = (enemy.Status.MAtk, player.Status.MAtk);
+                    break;
+                case 2:
+                    (player.Status.PDef, enemy.Status.PDef) = (enemy.Status.PDef, player.Status.PDef);
+                    break;
+                case 3:
+                    (player.Status.MDef, enemy.Status.MDef) = (enemy.Status.MDef, player.Status.MDef);
+                    break;
+            }
+
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("KQ_CUR", Timing.OnMarch, alwaysActive: true)]
+        private void KQ_CUR(FighterData player)
+        {
+            CooldownLeft = 0;
+        }
+
+
+        [Effect("EN_CUR", Timing.SkillEffect)]
+        private void EN_CUR(FighterData player)
+        {
+            var curses = player.Buffs.Where((data => data.Bp.BuffType == BuffType.Curse));
+            var curse = curses.ChooseRandom(SData.CurGameRandom);
+
+            player.Purify(curse);
+
+            if (player is PlayerData p)
+            {
+                p.TryTakePotion("cursepotion", out _);
+            }
+        }
+
+        [Effect("EN_CUR", Timing.OnMarch, alwaysActive = true)]
+        private void EN2_CUR(FighterData player)
+        {
+            CooldownLeft = 0;
+        }
+
+
+        [Effect("SCDJ_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack SCDJ_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.Change(pAtk: player.Status.PAtk, mAtk: player.Status.MAtk, multi: Usual);
+            return attack;
+        }
+
+        [Effect("SL_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack SL_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            var loseHp = player.Status.MaxHp - player.CurHp;
+            player.ApplyBuff(BuffData.Feeble((int)(loseHp * Usual)), enemy);
+
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("TZZ_BAR", Timing.OnAttack)]
+        private Attack TZZ_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty() || attack.PAtk <= 0) return attack;
+            var minus = max(0, enemy.CurHp - player.CurHp);
+
+            if (minus > 0)
+            {
+                attack.PAtk += (int)(minus * Usual);
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        [Effect("YNFM_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack YNFM_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.Change(mAtk: player.Status.PAtk, multi: Usual);
+            return attack;
+        }
+
+        [Effect("XXDR_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack XXDR_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.Change(pAtk: player.Status.MAtk, multi: Usual);
+            return attack;
+        }
+
+        [Effect("NHZS_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack XJ_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            Counter = 1;
+            return attack.SwitchToEmpty();
+        }
+
+        [Effect("NHZS_BAR", Timing.OnDefendSettle, priority: -10000, alwaysActive: true)]
+        private Attack XJ2_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (Counter <= 0) return attack;
+            Counter = 0;
+            var stack = (int)(attack.SumDmg * Usual);
+
+            player.ApplySelfBuff(BuffData.MPlus(stack));
+            player.ApplySelfBuff(BuffData.PPlus(stack));
+            Activated?.Invoke();
+            return attack;
+        }
+
+        [Effect("GDDS_KNI", Timing.OnAttack)]
+        private Attack GDDS_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty())
+            {
+                Counter = 1;
+            }
+
+            return attack;
+        }
+
+        [Effect("GDDS_KNI", Timing.OnDefendSettle, priority: 7, alwaysActive: true)]
+        private Attack GDDS2_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (Counter <= 0) return attack;
+            Counter = 0;
+            attack.Reduce(Usual / 100);
+            Activated?.Invoke();
+            return attack;
+        }
+
+        [Effect("GDDS_KNI", Timing.OnKill, priority: 7)]
+        private Attack GDDS3_KNI(Attack attack, FighterData player, FighterData enemy)
+        {
+            Counter = 0;
+            return attack;
+        }
+
+        [Effect("SZ_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack SZ_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.Change(pAtk: player.Status.PAtk, multi: Usual, combo: 3);
+            return attack;
+        }
+
+
+        /// <summary>
+        /// 击中时:每段的倍率比前一段增加#P1+P2*CurLv#(P1+P2*Lv)
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        [Effect("NH_BAR", Timing.OnStrike)]
+        private Attack NH_BAR(Attack attack, FighterData player, FighterData enemy, int t)
+        {
+            if (attack.IsEmpty() || attack.Combo <= 1) return attack;
+            attack.Multi += Usual * t;
+            Activated?.Invoke();
+            return attack;
+        }
+
+        [Effect("XM_BAR", Timing.OnStrengthen)]
+        private BattleStatus XM_BAR(BattleStatus status, FighterData player)
+        {
+            if (SData.CurGameRandom.Next() < Usual)
+            {
+                if (status.PAtk > 0)
+                {
+                    player.Strengthen(new BattleStatus(mAtk: 1));
+                    Activated?.Invoke();
+                }
+
+                if (status.MAtk > 0)
+                {
+                    player.Strengthen(new BattleStatus(pAtk: 1));
+                    Activated?.Invoke();
+                }
+            }
+
+            return status;
+        }
+
+        [Effect("DG_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack DG_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.Change(pAtk: player.Status.PAtk, multi: Usual);
+            SwitchTo("LH_BAR");
+            return attack;
+        }
+
+        [Effect("LH_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack LH_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.Change(mAtk: player.Status.MAtk, multi: Usual);
+            SwitchTo("DG_BAR");
+            return attack;
+        }
+
+        [Effect("FX_BAR", Timing.SkillEffect)]
+        private void FX_BAR(FighterData player)
+        {
+            var stack = (int)(player.Status.MAtk * Usual);
+            player.ApplySelfBuff(BuffData.PPlus(stack));
+        }
+
+        [Effect("FM_BAR", Timing.SkillEffect)]
+        private void FM_BAR(FighterData player)
+        {
+            var stack = (int)(player.Status.PAtk * Usual);
+            player.ApplySelfBuff(BuffData.MPlus(stack));
+        }
+
+        /// <summary>
+        /// 技能攻击时:若仅造成魔法伤害,获得#P1+P2*CurLv#(P1+P2*Lv)层物增;若仅造成物理伤害,获得#P1+P2*CurLv#(P1+P2*Lv)层魔增
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("SSZW_BAR", Timing.OnAttack)]
+        private Attack SSZW_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty() || attack.IsCommonAttack) return attack;
+            if (attack.IsMagicAttack)
+            {
+                player.ApplySelfBuff(BuffData.PPlus((int)Usual));
+                Activated?.Invoke();
+            }
+            else if (attack.IsPhysicalAttack)
+            {
+                player.ApplySelfBuff(BuffData.MPlus((int)Usual));
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        [Effect("XZCB_BAR", Timing.OnReact, priority: 3)]
+        private MapData XZCB_BAR(MapData map, FighterData player)
+        {
+            if (map.SquareState == SquareState.Done || !(map is TotemSaveData)) return map;
+
+            if (player is PlayerData p)
+            {
+                //p.ApplySelfBuff(new BuffData("oblation", (int) Usual));
+                Activated?.Invoke();
+            }
+
+            return map;
+        }
+
+
+        [Effect("NZ_BAR", Timing.SkillEffect)]
+        private void NZ_BAR(FighterData player)
+        {
+            (player.Status.PAtk, player.Status.MAtk) = (player.Status.MAtk, player.Status.PAtk);
+        }
+
+
+        [Effect("XJ_BAR", Timing.OnGetSkillCost)]
+        private CostInfo XJ_BAR(CostInfo cost, SkillData skill, FighterData player, bool isTry)
+        {
+            if (cost.CostType != CostType.Mp) return cost;
+            cost.Value = (int)(cost.Value * Unusual);
+            cost.CostType = CostType.Hp;
+            Activated?.Invoke();
+            return cost;
+        }
+
+        [Effect("XN_BAR", Timing.OnCounterCharge)]
+        private BattleStatus XN_BAR(BattleStatus status, FighterData player, string kw)
+        {
+            if (status.CurHp > 0)
+            {
+                player.ApplySelfBuff(BuffData.PPlus((int)Usual));
+                Activated?.Invoke();
+            }
+
+            return status;
+        }
+
+        [Effect("WJLZ_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack WJLZ_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.Change(pAtk: player.Status.PAtk, multi: Usual, combo: 9999);
+            return attack;
+        }
+
+        [Effect("WJLZ_BAR", Timing.OnStrike, priority: -10000)]
+        private Attack WJLZ2_BAR(Attack attack, FighterData player, FighterData enemy, int t)
+        {
+            player.CounterCharge(new BattleStatus(curHp: -t));
+            return attack;
+        }
+
+        [Effect("RG_BAR", Timing.OnDefendSettle, priority: 10000)]
+        private Attack RG_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty() || attack.SumDmg <= 0) return attack;
+
+            var stack = (int)(attack.SumDmg * Usual);
+            player.ApplySelfBuff(BuffData.Oblation(stack));
+            return attack;
+        }
+
+        [Effect("FC_BAR", Timing.OnAttack, priority: -10000)]
+        private Attack FC_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            attack.Change(pAtk: (int)(Counter * Usual));
+            return attack;
+        }
+
+        [Effect("FC_BAR", Timing.OnDefendSettle, priority: 10000, alwaysActive = true)]
+        private Attack FC2_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty() || attack.SumDmg <= 0) return attack;
+            Counter += attack.SumDmg;
+            Activated?.Invoke();
+            return attack;
+        }
+
+        [Effect("FC_BAR", Timing.OnKill, alwaysActive = true)]
+        private Attack FC3_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            Counter = 0;
+            return attack;
         }
 
         #endregion

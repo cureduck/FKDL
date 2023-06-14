@@ -149,6 +149,11 @@ namespace Game
         OnApply,
 
         /// <summary>
+        /// 诅咒发作 buff, fighter
+        /// </summary>
+        OnCurseActivate,
+
+        /// <summary>
         /// 净化时 buffData, fighter
         /// </summary>
         OnPurify,

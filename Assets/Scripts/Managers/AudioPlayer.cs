@@ -23,7 +23,7 @@ namespace Managers
         public LerpMoveAudio Bgm;
         public LerpMoveAudio bossBgm;
         public AudioSource SoundEffect;
-
+        public HealthWarningAudioChecker healthWarningAudioChecker;
 
         public GameSettings Settings;
 
@@ -32,6 +32,12 @@ namespace Managers
         private ObjectPool objectPool;
 
         [ShowInInspector] private LinkedList<AudioClip> SEQueue;
+
+        public float EffectSoundSize
+        {
+            get => Settings.SEVolume;
+        }
+
 
         private void Start()
         {

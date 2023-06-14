@@ -4,9 +4,17 @@ using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace Managers
 {
+    public enum CameraSetting
+    {
+        AlwaysFollow,
+        EnemyFollow,
+        NeverFollow
+    }
+
     [CreateAssetMenu(fileName = "GameSettings", menuName = "Game", order = 0)]
     public class GameSettings : SerializedScriptableObject
     {
@@ -15,7 +23,9 @@ namespace Managers
         [Range(0, 1)] public float SEVolume;
         public bool BgmMute;
         public bool SEMute;
-        public bool AutoGoToFocus;
+
+        [FormerlySerializedAs("AutoGoToFocus")]
+        public CameraSetting CameraFollow;
 
         public TransitionManagerSettings TransitionManagerSettings;
 

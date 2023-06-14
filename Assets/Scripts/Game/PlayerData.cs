@@ -33,7 +33,7 @@ namespace Game
             Relics = new RelicAgent();
         }
 
-        public string[] profInfo => GameDataManager.Instance.SecondaryData.Profs;
+        public static string[] ProfInfo => GameDataManager.Instance.SecondaryData.Profs;
 
         [JsonIgnore]
         public bool Engaging
@@ -509,6 +509,7 @@ namespace Game
             }
 
             SecondaryData.DeleteSave();
+            Profile.CollectedSouls += Profile.RecentCollectedSouls;
 
             GameObject.FindObjectOfType<TransitionManager>().LoadScene("StartScene", "DiagonalRectangleGrid", .2f);
         }

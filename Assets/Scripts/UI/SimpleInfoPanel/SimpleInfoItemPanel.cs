@@ -12,7 +12,6 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
 
     private Camera mainCamera;
 
-
     private void Start()
     {
         mainCamera = Camera.main;
