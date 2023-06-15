@@ -16,7 +16,7 @@ namespace Game
         [JsonIgnore] protected static SecondaryData SData => GameDataManager.Instance.SecondaryData;
 
 
-        [JsonIgnore] protected Profile Profile => ProfileManager.Instance.Profile;
+        [JsonIgnore] protected Profile Profile => GameManager.Instance.Profile;
 
         /// <summary>
         /// 面积

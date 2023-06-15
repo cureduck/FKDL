@@ -173,7 +173,7 @@ namespace Game
         {
             if (!Cloned)
             {
-                ProfileManager.Instance.Profile.RecentCollectedSouls += Bp.Souls;
+                Profile.RecentCollectedSouls += Bp.Souls;
             }
 
             base.Destroyed();

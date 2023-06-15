@@ -806,7 +806,7 @@ namespace Game
         [Effect("SYS_ASS", Timing.OnAttack, priority = -10000)]
         private Attack SYS_ASS(Attack attack, FighterData fighter, FighterData enemy)
         {
-            attack.Change(pAtk: (int)(enemy.CurHp * Usual));
+            attack.Change(pAtk: (int)(enemy.CurHp * Usual / 100));
 
             return attack;
         }
@@ -1698,16 +1698,18 @@ namespace Game
         private Attack EY_CUR(Attack attack, FighterData player, FighterData enemy)
         {
             int count = 3;
-            var different_debuffs = new BuffData[count];
+            var different_debuffs = new List<BuffData>();
             int index = 0;
 
             while (index <= count)
             {
                 var debuff = BuffManager.Instance.GetRandomBuffData(BuffType.Negative);
-                if (debuff != null && !different_debuffs.Any((data => data.Id == debuff.Id)))
+                debuff.StackChange((int)Usual - 1);
+                if (debuff != null && !different_debuffs.Any((data => data?.Id == debuff.Id)))
                 {
-                    different_debuffs[index] = debuff;
+                    different_debuffs = different_debuffs.Append(debuff).ToList();
                     index++;
+                    player.ApplyBuff(debuff, enemy);
                 }
             }
 
@@ -1930,7 +1932,7 @@ namespace Game
         [Effect("JQ_CUR", Timing.OnAttack, priority: -1000)]
         private Attack JQ_CUR(Attack attack, FighterData player, FighterData enemy)
         {
-            var stack = (int)(enemy.Status.CurHp * Usual);
+            var stack = (int)(enemy.Status.CurHp * Usual / 100);
             enemy.SingleDefendSettle(new Attack(cAtk: stack, kw: "JQ_CUR"), player);
             player.Recover(new BattleStatus(curHp: stack), enemy, "JQ_CUR");
             return attack.SwitchToEmpty();
@@ -2178,6 +2180,21 @@ namespace Game
             var stack = (int)(player.Status.PAtk * Usual);
             player.ApplySelfBuff(BuffData.MPlus(stack));
         }
+
+
+        [Effect("JK_BAR", Timing.SkillEffect)]
+        private void JK_BAR(FighterData player)
+        {
+            var stack = (int)Usual;
+            player.ApplySelfBuff(BuffData.BloodLust(stack));
+        }
+
+        [Effect("JK_BAR", Timing.OnMarch, alwaysActive = true)]
+        private void JK2_BAR(FighterData player)
+        {
+            CooldownLeft = 0;
+        }
+
 
         /// <summary>
         /// 技能攻击时:若仅造成魔法伤害,获得#P1+P2*CurLv#(P1+P2*Lv)层物增;若仅造成物理伤害,获得#P1+P2*CurLv#(P1+P2*Lv)层魔增

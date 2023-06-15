@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Game
@@ -17,7 +16,6 @@ namespace Game
             });
         }
 
-        [Button]
         protected void Save(string path)
         {
             var f = JsonConvert.SerializeObject(this, new JsonSerializerSettings

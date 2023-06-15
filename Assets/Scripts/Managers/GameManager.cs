@@ -59,7 +59,7 @@ namespace Managers
 #if UNITY_EDITOR
             GetLocalization();
 #endif
-            Profile = ProfileManager.Instance.Profile;
+            Profile = Profile.GetOrCreate();
             _pool = new ObjectPool<Square>(CreateSquare);
 
             if (Application.isPlaying)
@@ -110,18 +110,6 @@ namespace Managers
             SetParam();
 
             Player.OnUpdated += SetParam;
-        }
-
-
-        public void SkipReward(out SkipInfo info)
-        {
-            info = new SkipInfo(GetSkipRewordCount());
-            Player.Gain(GetSkipRewordCount());
-        }
-
-        public int GetSkipRewordCount()
-        {
-            return 10;
         }
 
 
@@ -279,6 +267,18 @@ namespace Managers
             //GC.Collect();
         }
 
+
+        private void GetGifts()
+        {
+            foreach (var gift in SecondaryData.Gifts)
+            {
+                foreach (var command in gift.Commands)
+                {
+                    command.Execute(Player);
+                }
+            }
+        }
+
         [Button]
         public void LoadFromInit()
         {
@@ -290,6 +290,7 @@ namespace Managers
             Map.Init();
             LoadMap();
             GetProfRelic();
+            GetGifts();
             GameLoaded?.Invoke();
             //GameManager.Instance.PlayerData.Gain(10000);
             //GC.Collect();

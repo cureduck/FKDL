@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using EasyTransition;
 using Game;
 using I2.Loc;
 using Managers;
@@ -22,6 +21,7 @@ public class ChooseProfMainPanel : MonoBehaviour
     [Header("按钮")] [SerializeField] private Button resetChoose_btn;
     [SerializeField] private Button startGame_btn;
     [SerializeField] private GameObject waringInfo;
+    [SerializeField] private GameObject _giftsPanel;
     private string[] curCanSelectProfs;
 
     #region 内部自用
@@ -164,7 +164,8 @@ public class ChooseProfMainPanel : MonoBehaviour
         GameDataManager.Instance.SecondaryData = SecondaryData.GetOrCreate();
         profDatas[3] = "COM";
         GameDataManager.Instance.SecondaryData.Profs = profDatas;
-        FindObjectOfType<TransitionManager>().LoadScene("MainScene", "DiagonalRectangleGrid", .2f);
+        //FindObjectOfType<TransitionManager>().LoadScene("MainScene", "DiagonalRectangleGrid", .2f);
         AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
+        _giftsPanel.SetActive(true);
     }
 }

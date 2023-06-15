@@ -18,6 +18,8 @@ namespace Game
 
         [JsonIgnore] public Random CurGameRandom;
 
+        public Gift[] Gifts;
+
         public int InitGameSeed;
 
         [JsonIgnore] public Random PotionRandom;
