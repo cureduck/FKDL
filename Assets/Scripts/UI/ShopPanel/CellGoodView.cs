@@ -15,9 +15,11 @@ public class CellGoodView : MonoBehaviour
     [SerializeField] private PointEnterAndExit pointEnterAndExit;
     [SerializeField] private Button click_btn;
 
-    [Header("技能背景设置")] [SerializeField] private GameObject passtiveSkillBG;
+    [Header("技能背景设置")] [SerializeField] private Image rankLevel_img;
 
-    [SerializeField] private GameObject unPasstiveSkillBG;
+    [SerializeField] private Sprite rank01Level;
+    [SerializeField] private Sprite rank02Level;
+    [SerializeField] private Sprite rank03Level;
 
     [Header("钥匙贴图")] [SerializeField] private Sprite keyIcon;
 
@@ -53,24 +55,22 @@ public class CellGoodView : MonoBehaviour
 
         soldOutSign.gameObject.SetActive(offer.isSold);
         itemIcon.color = Color.white;
-        if (passtiveSkillBG)
-            passtiveSkillBG.gameObject.SetActive(false);
-        if (unPasstiveSkillBG)
-            unPasstiveSkillBG.gameObject.SetActive(false);
         if (offer.Kind == Offer.OfferKind.Skill)
         {
             Skill skill;
             SkillManager.Instance.TryGetById(offer.Id, out skill);
             itemIcon.sprite = skill.Icon;
-            if (skill.Positive)
+            if (offer.Rank == Rank.Normal)
             {
-                unPasstiveSkillBG.gameObject.SetActive(false);
-                passtiveSkillBG.gameObject.SetActive(true);
+                rankLevel_img.sprite = rank01Level;
+            }
+            else if (offer.Rank == Rank.Uncommon)
+            {
+                rankLevel_img.sprite = rank02Level;
             }
             else
             {
-                unPasstiveSkillBG.gameObject.SetActive(true);
-                passtiveSkillBG.gameObject.SetActive(false);
+                rankLevel_img.sprite = rank03Level;
             }
 
             itemName_txt.SetTerm(skill.Id);
@@ -78,6 +78,19 @@ public class CellGoodView : MonoBehaviour
         else if (offer.Kind == Offer.OfferKind.Potion)
         {
             Potion potion = PotionManager.Instance.GetById(offer.Id);
+            if (offer.Rank == Rank.Normal)
+            {
+                rankLevel_img.sprite = rank01Level;
+            }
+            else if (offer.Rank == Rank.Uncommon)
+            {
+                rankLevel_img.sprite = rank02Level;
+            }
+            else
+            {
+                rankLevel_img.sprite = rank03Level;
+            }
+
             itemIcon.sprite = potion.Icon;
             itemName_txt.SetTerm(potion.Id);
         }
@@ -89,16 +102,19 @@ public class CellGoodView : MonoBehaviour
             if (offer.Rank == Rank.Normal)
             {
                 temp = "铜钥匙";
+                //rankLevel_img.sprite = rank01Level;
                 itemIcon.color = level01KeyColor;
             }
             else if (offer.Rank == Rank.Uncommon)
             {
                 temp = "银钥匙";
+                //rankLevel_img.sprite = rank02Level;
                 itemIcon.color = level02KeyColor;
             }
             else
             {
                 temp = "金钥匙";
+                //rankLevel_img.sprite = rank03Level;
                 itemIcon.color = level03KeyColor;
             }
 

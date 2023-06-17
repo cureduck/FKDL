@@ -1773,9 +1773,9 @@ namespace Game
         [Effect("YW_CUR", Timing.OnAttackSettle)]
         private Attack YW_CUR(Attack attack, FighterData player, FighterData enemy)
         {
-            if (enemy.CurHp < enemy.Status.MaxHp * Usual)
+            if (enemy.CurHp - attack.SumDmg < enemy.Status.MaxHp * Usual / 100)
             {
-                attack.CDmg += enemy.Status.CurHp;
+                attack.CDmg += max(0, enemy.CurHp - attack.SumDmg);
                 Activated?.Invoke();
                 player.Kill(attack, enemy);
             }
@@ -2058,7 +2058,7 @@ namespace Game
         }
 
         [Effect("NHZS_BAR", Timing.OnAttack, priority: -10000)]
-        private Attack XJ_BAR(Attack attack, FighterData player, FighterData enemy)
+        private Attack NHZS_BAR(Attack attack, FighterData player, FighterData enemy)
         {
             Counter = 1;
             return attack.SwitchToEmpty();
@@ -2288,6 +2288,20 @@ namespace Game
             player.ApplySelfBuff(BuffData.Oblation(stack));
             return attack;
         }
+
+        [Effect("XQ_BAR", Timing.OnAttack)]
+        private Attack XQ_BAR(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty() || attack.IsCommonAttack) return attack;
+            if (attack.CostInfo.CostType == CostType.Hp)
+            {
+                attack.PAtk += attack.CostInfo.ActualValue;
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
 
         [Effect("FC_BAR", Timing.OnAttack, priority: -10000)]
         private Attack FC_BAR(Attack attack, FighterData player, FighterData enemy)

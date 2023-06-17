@@ -1,4 +1,5 @@
-﻿using Managers;
+﻿using I2.Loc;
+using Managers;
 using TMPro;
 using UI;
 using UnityEngine;
@@ -23,6 +24,8 @@ public class SettingPanel : BasePanel<GameSettings>
     [FormerlySerializedAs("CameraAutoFollowToggle")] [SerializeField]
     private TMP_Dropdown cameraFollowDropdown;
 
+    [SerializeField] private LocalizeDropdown localizeDropdown;
+
     //[FormerlySerializedAs("back_to_start_btn")] 
     [SerializeField] private Button backToStartBtn;
 
@@ -34,6 +37,10 @@ public class SettingPanel : BasePanel<GameSettings>
 
     public override void Init()
     {
+        localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_Always");
+        localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_OnlyEnemy");
+        localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_Never");
+
         //LanguageSliderInit();
         cameraFollowDropdown.value = (int)gameSettings.CameraFollow;
         bgmSizeSilder.value = gameSettings.BgmVolume;

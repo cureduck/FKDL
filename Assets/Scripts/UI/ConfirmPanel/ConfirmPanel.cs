@@ -1,12 +1,13 @@
-﻿using Managers;
-using TMPro;
+﻿using I2.Loc;
+using Managers;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ConfirmPanel : BasePanel<ConfirmPanel.Args>
 {
-    [SerializeField] private TMP_Text info;
+    [SerializeField] private Localize info;
+    [SerializeField] private LocalizationParamsManager infoLocalization;
     [SerializeField] private Button click_btn;
     [SerializeField] private Button cancel_btn;
 
@@ -18,7 +19,9 @@ public class ConfirmPanel : BasePanel<ConfirmPanel.Args>
 
     protected override void OnOpen()
     {
-        info.text = Data.info;
+        info.SetTerm(Data.info);
+        infoLocalization.SetParameterValue("P1", Data.p01Info);
+        //info.text = Data.info;
         transform.SetAsLastSibling();
     }
 
@@ -42,5 +45,6 @@ public class ConfirmPanel : BasePanel<ConfirmPanel.Args>
     {
         public System.Action curEvent;
         public string info;
+        public string p01Info;
     }
 }

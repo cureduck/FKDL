@@ -1,4 +1,4 @@
-﻿using TMPro;
+﻿using I2.Loc;
 using UnityEngine;
 
 public class DamageHightLightView : MonoBehaviour
@@ -7,7 +7,8 @@ public class DamageHightLightView : MonoBehaviour
     [SerializeField] private RectTransform mdDamage_View;
     [SerializeField] private RectTransform tureDamage_view;
     [SerializeField] private RectTransform posionDamage_View;
-    [SerializeField] private TMP_Text damageText;
+    [SerializeField] private Localize damageText;
+    [SerializeField] private LocalizationParamsManager damageTextParamsManager;
 
     //[SerializeField]
     //private Transform startPoint;
@@ -61,14 +62,14 @@ public class DamageHightLightView : MonoBehaviour
         //逃跑时，不会计算任何伤害数值
         if (isEscape)
         {
-            damageText.text = $"<color=red>(玩家逃跑！)</color>";
+            damageText.SetTerm("UI_EnemyPanel_PlayerEscapeSign"); //= $"<color=red>(玩家逃跑！)</color>";
             return;
         }
 
         string curPDamageInfo;
         if (pDamage > 0)
         {
-            curPDamageInfo = PDCount > 1 ? $"-{pDamage}X{PDCount}(物理)" : $"-{pDamage}(物理)";
+            curPDamageInfo = PDCount > 1 ? $"-{pDamage}X{PDCount}({{[PHYSICS]}})" : $"-{pDamage}({{[PHYSICS]}})";
         }
         else
         {
@@ -78,7 +79,7 @@ public class DamageHightLightView : MonoBehaviour
         string curMDamageInfo;
         if (mDamage > 0)
         {
-            curMDamageInfo = MDCount > 1 ? $"-{mDamage}X{MDCount}(魔法)" : $"-{mDamage}(魔法)";
+            curMDamageInfo = MDCount > 1 ? $"-{mDamage}X{MDCount}({{[MAGIC]}})" : $"-{mDamage}({{[MAGIC]}})";
         }
         else
         {
@@ -88,7 +89,7 @@ public class DamageHightLightView : MonoBehaviour
         string curTDamageInfo;
         if (tDamage > 0)
         {
-            curTDamageInfo = TDCount > 1 ? $"-{tDamage}X{TDCount}(真实)" : $"-{tDamage}(真实)";
+            curTDamageInfo = TDCount > 1 ? $"-{tDamage}X{TDCount}({{[REAL]}})" : $"-{tDamage}({{[REAL]}})";
         }
         else
         {
@@ -98,13 +99,13 @@ public class DamageHightLightView : MonoBehaviour
         string curBuffDamageInfo;
         if (dif > 0)
         {
-            curBuffDamageInfo = $"-{dif}(状态)";
+            curBuffDamageInfo = $"-{dif}({{[BUFF]}})";
         }
         else
         {
             if (dif < 0)
             {
-                curBuffDamageInfo = $"+{-dif}(恢复)";
+                curBuffDamageInfo = $"+{-dif}({{[RECOVER]}})";
             }
             else
             {
@@ -113,13 +114,20 @@ public class DamageHightLightView : MonoBehaviour
             //curBuffDamageInfo = string.Empty;
         }
 
+        string curInfo = $"{curPDamageInfo}{curMDamageInfo}{curTDamageInfo}{curBuffDamageInfo}";
 
-        damageText.text = $"{curPDamageInfo}{curMDamageInfo}{curTDamageInfo}{curBuffDamageInfo}";
         if (curLeftHealth <= totalDamage)
         {
-            damageText.text += "<color=red>(致死)</color>";
+            curInfo += "<color=red>({[DEAD]})</color>";
         }
 
+        damageText.SetTerm(curInfo);
+        damageTextParamsManager.SetParameterValue("PHYSICS", "UI_EnemyPanel_PhysicsDamage");
+        damageTextParamsManager.SetParameterValue("MAGIC", "UI_EnemyPanel_MagicDamage");
+        damageTextParamsManager.SetParameterValue("REAL", "UI_EnemyPanel_RealDamage");
+        damageTextParamsManager.SetParameterValue("BUFF", "UI_EnemyPanel_BuffDamage");
+        damageTextParamsManager.SetParameterValue("RECOVER", "UI_EnemyPanel_RecoverDamage");
+        damageTextParamsManager.SetParameterValue("DEAD", "UI_EnemyPanel_DeadSign");
         //string curMDamageInfo = MDCount>1?
         //damageText.text = 
     }

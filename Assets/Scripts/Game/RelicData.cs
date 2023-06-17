@@ -17,7 +17,9 @@ namespace Game
             { "ALC", "jjxs" },
             { "MAG", "xywz" },
             { "KNI", "qsqz" },
-            { "ASS", "aq" }
+            { "ASS", "aq" },
+            { "BAR", "zwzr" },
+            { "CUR", "lw" }
         };
 
         public readonly string Id;
@@ -648,6 +650,25 @@ namespace Game
             {
                 player.Strengthen(new BattleStatus(pAtk: (int)Bp.Param1));
             }
+        }
+
+
+        [Effect("lw", Timing.OnApply)]
+        private BuffData lw(BuffData buff, FighterData player)
+        {
+            if (buff.Bp.BuffType == BuffType.Negative)
+            {
+                Activated?.Invoke();
+                foreach (var b in player.Buffs)
+                {
+                    if (b.Bp.BuffType == BuffType.Curse)
+                    {
+                        b.StackChange(-b.CurLv + 1);
+                    }
+                }
+            }
+
+            return buff;
         }
 
         #endregion

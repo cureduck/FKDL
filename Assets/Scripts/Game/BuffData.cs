@@ -665,12 +665,12 @@ namespace Game
         [Effect("feeble", Timing.OnDefendSettle)]
         private Attack Feeble(Attack attack, FighterData f1, FighterData f2)
         {
-            if (attack.PDmg > 0)
+            if (attack.PAtk > 0)
             {
                 attack.PDmg += max(0, CurLv * attack.Combo);
             }
 
-            if (attack.MDmg > 0)
+            if (attack.MAtk > 0)
             {
                 attack.MDmg += max(0, CurLv * attack.Combo);
             }

@@ -6,6 +6,7 @@ using Game;
 using I2.Loc;
 using Sirenix.OdinInspector;
 using Tools;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -75,6 +76,12 @@ namespace Managers
             }
 
             SetGlobalLocalizationParams();
+        }
+
+
+        private void OnApplicationQuit()
+        {
+            Save();
         }
 
         private void GetProfRelic()
@@ -160,6 +167,10 @@ namespace Managers
             }
         }
 
+#if UNITY_EDITOR
+
+        [MenuItem("Tools/GetLocalization")]
+#endif
         private static void GetLocalization()
         {
             var localizationFilePath = "Assets/Localization";
@@ -180,6 +191,8 @@ namespace Managers
             {
                 Console.WriteLine(e);
             }
+
+            Debug.Log("GetLocalization success");
         }
 
         public event Action GameLoaded;

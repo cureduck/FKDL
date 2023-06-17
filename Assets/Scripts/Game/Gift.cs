@@ -23,7 +23,7 @@ namespace Game
         };
 
         public int CurrentLevel { get; protected set; } = 1;
-        [JsonIgnore] public virtual int LevelUpCost => _levelCost[CurrentLevel];
+        [JsonIgnore] public virtual int LevelUpCost => 0;
         public virtual int MaxLevel => 3;
         public abstract int PointCost { get; }
 
@@ -172,21 +172,8 @@ namespace Game
             { "Gift_MAtk", new MAtkGift() }
         };
 
-        public List<Gift> SelectedGifts;
-        public int SpentPoint = 0;
-
-        public Gifts()
-        {
-            SelectedGifts = new List<Gift>();
-        }
 
         private string _path => Application.streamingAssetsPath + "/Gifts.asset";
-
-        public void SelectGift(Gift gift)
-        {
-            SpentPoint += gift.PointCost;
-            SelectedGifts.Add(gift);
-        }
 
         private static Gifts CreateDefault()
         {

@@ -198,7 +198,7 @@ namespace Managers
             var sq = RaycastGetSquare();
             var t = sq != null ? sq.Data : null;
 
-            if ((t != null) && (t.SquareState != SquareState.UnRevealed))
+            if ((t != null) && (t.SquareState != SquareState.UnRevealed) && t.SquareState != SquareState.Done)
             {
                 switch (SettingManager.Instance.GameSettings.CameraFollow)
                 {

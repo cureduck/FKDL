@@ -82,7 +82,8 @@ public class SkillListView : MonoBehaviour
             WindowManager.Instance.confirmPanel.Open(new ConfirmPanel.Args
             {
                 curEvent = () => playerData.RemoveSkill(cellSkillView.Index),
-                info = $"确定移除<color=yellow>{cellSkillView.Data.Id}</color>?"
+                info = $"UI_ConfirmPanel_RemoveSkill",
+                p01Info = cellSkillView.Data.Id
             });
         }
         else

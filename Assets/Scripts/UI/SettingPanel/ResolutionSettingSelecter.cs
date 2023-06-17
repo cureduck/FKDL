@@ -17,7 +17,10 @@ public class ResolutionSettingSelecter : MonoBehaviour
         for (int i = 0; i < resolutions.Length; i++)
         {
             string option = $"{resolutions[i].width}X{resolutions[i].height}";
-            options.Add(option);
+            if (!options.Contains(option))
+            {
+                options.Add(option);
+            }
         }
 
         tMP_Dropdown.AddOptions(options);

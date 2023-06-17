@@ -12,6 +12,21 @@ public class
 
     private SkillData playerUseSkill;
 
+    private void Start()
+    {
+        Canvas canvas = GetComponent<Canvas>();
+        if (!canvas.worldCamera)
+        {
+            canvas.worldCamera = Camera.main;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GlobalEvents.MouseEnteringSquare -= OnPointEnter;
+        GlobalEvents.MouseExitingSquare -= OnPointExit;
+    }
+
     public override void Init()
     {
         enemyView.Init();
@@ -24,8 +39,8 @@ public class
         {
             Data.playerData.OnUpdated -= UpdateUI;
             Data.targetEnemy.OnUpdated -= UpdateUI;
-            GlobalEvents.MouseEnteringSquare -= PointEntering;
-            GlobalEvents.MouseExitingSquare -= PointExiting;
+            GlobalEvents.MouseEnteringSquare -= OnPointEnter;
+            GlobalEvents.MouseExitingSquare -= OnPointExit;
         }
 
         base.SetData(d);
@@ -36,8 +51,8 @@ public class
         }
 
         curCheckSquare = Data.square;
-        GlobalEvents.MouseEnteringSquare += PointEntering;
-        GlobalEvents.MouseExitingSquare += PointExiting;
+        GlobalEvents.MouseEnteringSquare += OnPointEnter;
+        GlobalEvents.MouseExitingSquare += OnPointExit;
     }
 
 
@@ -59,12 +74,6 @@ public class
 
     protected override void UpdateUI()
     {
-        Canvas canvas = GetComponent<Canvas>();
-        if (!canvas.worldCamera)
-        {
-            canvas.worldCamera = Camera.main;
-        }
-
         playerView.SetData(Data.playerData);
         enemyView.SetData(Data.targetEnemy);
 
@@ -93,14 +102,14 @@ public class
     }
 
 
-    private void PointEntering(Square square)
+    private void OnPointEnter(Square square)
     {
         //Debug.Log("Enter!");
         this.curCheckSquare = square;
         UpdateUI();
     }
 
-    private void PointExiting(Square square)
+    private void OnPointExit(Square square)
     {
         //Debug.Log("Exit!");
         this.curCheckSquare = null;
