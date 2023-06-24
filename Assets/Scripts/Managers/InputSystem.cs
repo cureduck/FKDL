@@ -195,6 +195,8 @@ namespace Managers
 
         private void ClickReact()
         {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
             var sq = RaycastGetSquare();
             var t = sq != null ? sq.Data : null;
 

@@ -71,6 +71,7 @@ namespace UI
             if (GameManager.Instance.Player.TryTakeOffer(offer, out info))
             {
                 animationGroup.SelectTarget(targetIndex);
+                delayCloseTime = 1.0f;
                 StartCoroutine(CloseWindowIE());
             }
             else
@@ -83,6 +84,7 @@ namespace UI
         {
             animationGroup.SelectTarget(-1);
             GameManager.Instance.Player.Gain(Data.skipCoinCount);
+            delayCloseTime = 0.5f;
             //GameManager.Instance.SkipReward(out _);
             StartCoroutine(CloseWindowIE());
             //Debug.LogWarning("获得金币!");

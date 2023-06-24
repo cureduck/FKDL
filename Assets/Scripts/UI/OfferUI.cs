@@ -36,10 +36,18 @@ namespace UI
 
         public Transform RankStar;
 
-        public TMP_Text CostLabel;
-
         public int Cost;
         public bool IsGood;
+
+        [Header("技能的一些描述")] [SerializeField] private Localize costInfo_loc;
+
+        [SerializeField] private TMP_Text costInfo_txt;
+
+        [SerializeField] private LocalizationParamsManager costParams;
+
+        [SerializeField] private Localize coolDownInfo_loc;
+
+        [SerializeField] private LocalizationParamsManager coolDownParams;
 
         [ShowInInspector] public Offer Offer;
 
@@ -159,12 +167,6 @@ namespace UI
 
         public void UpdateData()
         {
-            if ((Cost >= 0) && (CostLabel != null))
-            {
-                CostLabel.text = Cost.ToString();
-            }
-
-
             if (MaxLv != null || Offer.Kind == Offer.OfferKind.Skill)
             {
                 MaxLv.gameObject.SetActive(false);
@@ -180,6 +182,8 @@ namespace UI
                 Positive.gameObject.SetActive(Offer.Kind == Offer.OfferKind.Skill);
             }
 
+            costInfo_loc.gameObject.SetActive(false);
+            coolDownInfo_loc.gameObject.SetActive(false);
 
             switch (Offer.Kind)
             {
@@ -190,6 +194,7 @@ namespace UI
                     SetRankView(Offer.Rank);
                     Description?.SetTerm($"{potion.Id}_desc");
                     Description.SetLocalizeParam("P1", potion.Param1.ToString());
+                    Positive.SetTerm("potion");
                     break;
                 case Offer.OfferKind.Skill:
                     Id.SetTerm(Offer.Id);
@@ -201,6 +206,38 @@ namespace UI
                         MaxLv.SetTerm("maxLv");
                         MaxLv.SetLocalizeParam("P1", skill.MaxLv.ToString());
                     }
+
+                    Debug.Log(skill.Positive);
+                    if (skill.Positive)
+                    {
+                        costInfo_loc.gameObject.SetActive(true);
+                        if (skill.CostInfo.CostType == CostType.Hp)
+                        {
+                            costInfo_loc.SetTerm("UI_OfferPanel_SkillHealthCost");
+                            costParams.SetParameterValue("P1", skill.CostInfo.Value.ToString());
+                            costInfo_txt.color = new Color(1, 0, 0);
+                        }
+                        else if (skill.CostInfo.CostType == CostType.Gold)
+                        {
+                            costInfo_loc.SetTerm("UI_OfferPanel_SkillGoldCost");
+                            costParams.SetParameterValue("P1", skill.CostInfo.Value.ToString());
+                            costInfo_txt.color = new Color(1, 1, 0);
+                        }
+                        else
+                        {
+                            costInfo_loc.SetTerm("UI_OfferPanel_SkillMagicCost");
+                            costParams.SetParameterValue("P1", skill.CostInfo.Value.ToString());
+                            costInfo_txt.color = new Color(0, 1, 1);
+                        }
+                    }
+                    else
+                    {
+                        costInfo_loc.gameObject.SetActive(false);
+                    }
+
+                    coolDownInfo_loc.gameObject.SetActive(true);
+                    coolDownInfo_loc.SetTerm("UI_OfferPanel_SkillCooldownInfo");
+                    coolDownParams.SetParameterValue("P1", skill.Cooldown.ToString());
 
                     Positive?.SetTerm(skill.Positive ? "positive" : "passive");
                     //if (Bg != null)
@@ -221,15 +258,10 @@ namespace UI
                     Description.RemoveBetween();
 
                     SetRankView(skill.Rank);
-
-                    if (CostLabel != null)
-                    {
-                        CostLabel.text = skill.CostInfo.ActualValue == 0 ? skill.CostInfo.ActualValue.ToString() : "";
-                    }
-
                     break;
                 case Offer.OfferKind.Gold:
                     Id.SetTerm(Offer.Cost.ActualValue.ToString());
+                    Positive.SetTerm("gold");
                     break;
                 case Offer.OfferKind.Relic:
                     Id.SetTerm(Offer.Id);
@@ -241,6 +273,7 @@ namespace UI
                         Description?.SetLocalizeParam("P1", relic.Param1.ToString());
                     }
 
+                    Positive.SetTerm("relic");
                     break;
                 case Offer.OfferKind.Key:
                     break;

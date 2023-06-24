@@ -1,16 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using CH.ObjectPool;
 using UnityEngine;
-using CH.ObjectPool;
 
 public class CellAudioPrefab : MonoBehaviour, IPoolObjectSetData
 {
-    public class Args
-    {
-        public AudioClip audioClip;
-        public float volume;
-    }
-
     [SerializeField] private AudioSource audioSource;
 
 
@@ -21,8 +13,19 @@ public class CellAudioPrefab : MonoBehaviour, IPoolObjectSetData
     public void SetDataOnEnable(object data)
     {
         Args args = data as Args;
+        SetData(args);
+    }
+
+    public void SetData(Args args)
+    {
         audioSource.clip = args.audioClip;
         audioSource.volume = args.volume;
         audioSource.Play();
+    }
+
+    public class Args
+    {
+        public AudioClip audioClip;
+        public float volume;
     }
 }

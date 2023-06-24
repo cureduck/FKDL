@@ -43,10 +43,10 @@ namespace Managers
     public abstract class XMLDataManager<T1, T2, T3> : Singleton<T3>, IProvider<T1>
         where T1 : CsvData where T3 : Singleton<T3>
     {
-        private const BindingFlags Flag = (BindingFlags.NonPublic) | (BindingFlags.Instance);
+        private const BindingFlags Flag = BindingFlags.NonPublic | BindingFlags.Instance;
 
 
-        private const float LuckPassRate = .33f;
+        private const float LuckPassRate = .25f;
         [ShowInInspector] protected CustomDictionary<T1> Lib;
         protected SecondaryData SData => GameDataManager.Instance.SecondaryData;
 

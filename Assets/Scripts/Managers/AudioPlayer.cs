@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using CH.ObjectPool;
 using Sirenix.OdinInspector;
@@ -120,20 +119,35 @@ namespace Managers
         {
             AudioClip curClip;
 
-            try
+            if (AudioClips.TryGetValue(id, out curClip))
             {
-                if (AudioClips.TryGetValue(id, out curClip))
-                {
-                    GameObject cur = objectPool.CreatInstance(new CellAudioPrefab.Args
-                        { audioClip = curClip, volume = Settings.SEVolume });
-                    cur.AddComponent<InvokeTrigger>().Set(curClip.length + 0.5f, () => objectPool.UnSpawnInstance(cur));
-                }
+                CellAudioPrefab cur = GameObject.Instantiate(cellAudioPrefab);
+                cur.SetData(new CellAudioPrefab.Args
+                    { audioClip = curClip, volume = Settings.SEVolume });
+                //
+                cur.gameObject.AddComponent<InvokeTrigger>()
+                    .Set(curClip.length + 0.5f, () => GameObject.Destroy(cur.gameObject));
             }
-            catch (Exception e)
+
+            if (id == AudioNormalAttack)
             {
-                Debug.LogError($"{id} played error");
-                Debug.LogError(e);
+                Debug.Log(curClip);
+                Debug.Log("Play!");
             }
+            //try
+            //{
+            //    if (AudioClips.TryGetValue(id, out curClip))
+            //    {
+            //        GameObject cur = objectPool.CreatInstance(new CellAudioPrefab.Args
+            //            { audioClip = curClip, volume = Settings.SEVolume });
+            //        cur.AddComponent<InvokeTrigger>().Set(curClip.length + 0.5f, () => objectPool.UnSpawnInstance(cur));
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Debug.LogError($"{id} played error");
+            //    Debug.LogError(e);
+            //}
         }
 
         [Button]

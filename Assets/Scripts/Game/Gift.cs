@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Game.PlayerCommands;
+using Managers;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -7,6 +8,21 @@ namespace Game
 {
     public abstract class Gift
     {
+        public const int MaxPoint = 5;
+
+        public static readonly Dictionary<string, Gift> GiftDictionary = new Dictionary<string, Gift>
+        {
+            { "Gift_RarePotion", new RarePotionGift() },
+            { "Gift_SkillSlot", new SkillSlotGift() },
+            { "Gift_SkillPoint", new SkillPointGift() },
+            { "Gift_RecoverPotion", new RecoverPotionGift() },
+            { "Gift_RandomSkill", new RandomSkillGift() },
+            { "Gift_MaxHp", new MaxHpGift() },
+            { "Gift_MaxMp", new MaxMpGift() },
+            { "Gift_PAtk", new PAtkGift() },
+            { "Gift_MAtk", new MAtkGift() }
+        };
+
         private Dictionary<int, int> _levelCost = new Dictionary<int, int>()
         {
             { 0, 10 },
@@ -22,7 +38,11 @@ namespace Game
             { 10, 100 },
         };
 
-        public int CurrentLevel { get; protected set; } = 1;
+
+        private string m_IconName => ("Gift_" + GetType().Name.Replace("Gift", "")).ToLower();
+        public Sprite Icon => SpriteManager.Instance.BuffIcons[m_IconName];
+
+        public int CurrentLevel { get; set; } = 1;
         [JsonIgnore] public virtual int LevelUpCost => 0;
         public virtual int MaxLevel => 3;
         public abstract int PointCost { get; }
@@ -152,42 +172,5 @@ namespace Game
     {
         protected override string AttrName => "matk";
         protected override int GiftCount => CurrentLevel;
-    }
-
-
-    public class Gifts : SaveData
-    {
-        public const int MaxPoint = 5;
-
-        public static readonly Dictionary<string, Gift> GiftDictionary = new Dictionary<string, Gift>
-        {
-            { "Gift_RarePotion", new RarePotionGift() },
-            { "Gift_SkillSlot", new SkillSlotGift() },
-            { "Gift_SkillPoint", new SkillPointGift() },
-            { "Gift_RecoverPotion", new RecoverPotionGift() },
-            { "Gift_RandomSkill", new RandomSkillGift() },
-            { "Gift_MaxHp", new MaxHpGift() },
-            { "Gift_MaxMp", new MaxMpGift() },
-            { "Gift_PAtk", new PAtkGift() },
-            { "Gift_MAtk", new MAtkGift() }
-        };
-
-
-        private string _path => Application.streamingAssetsPath + "/Gifts.asset";
-
-        private static Gifts CreateDefault()
-        {
-            return new Gifts();
-        }
-
-        public static Gifts GetOrCreate()
-        {
-            return GetOrCreate(CreateDefault, Application.streamingAssetsPath + "/Gifts.asset");
-        }
-
-        public void Save()
-        {
-            Save(_path);
-        }
     }
 }

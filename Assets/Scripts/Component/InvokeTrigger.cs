@@ -11,6 +11,11 @@ public class InvokeTrigger : MonoBehaviour
         onTimeEvent?.Invoke();
     }
 
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
     public void Set(float lateTime, System.Action onTimeEvent)
     {
         this.lateTime = lateTime;

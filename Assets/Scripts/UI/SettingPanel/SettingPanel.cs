@@ -37,9 +37,12 @@ public class SettingPanel : BasePanel<GameSettings>
 
     public override void Init()
     {
-        localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_Always");
-        localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_OnlyEnemy");
-        localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_Never");
+        if (localizeDropdown._Terms.Count < 3)
+        {
+            localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_Always");
+            localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_OnlyEnemy");
+            localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_Never");
+        }
 
         //LanguageSliderInit();
         cameraFollowDropdown.value = (int)gameSettings.CameraFollow;
@@ -67,7 +70,15 @@ public class SettingPanel : BasePanel<GameSettings>
         isFullScreenSelecter.onValueChanged.AddListener(IsFullScreenToggleValueChange);
         viewAngleSelecter.onValueChanged.AddListener(ViewAngleSelectorSliderValueChange);
         close_btn.onClick.AddListener(ClosePanelButtonClick);
-        cameraFollowDropdown.onValueChanged.AddListener((v => gameSettings.CameraFollow = (CameraSetting)v));
+        cameraFollowDropdown.onValueChanged.AddListener(v =>
+        {
+            if (AudioPlayer.Instance)
+            {
+                AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
+            }
+
+            gameSettings.CameraFollow = (CameraSetting)v;
+        });
         if (backToStartBtn)
         {
             backToStartBtn?.onClick.AddListener(() =>
@@ -84,19 +95,19 @@ public class SettingPanel : BasePanel<GameSettings>
     private void BGMSliderValueChange(float value)
     {
         gameSettings.BgmVolume = value;
-        if (AudioPlayer.Instance)
-        {
-            AudioPlayer.Instance.SetBGMVolume(value);
-        }
+        //if (AudioPlayer.Instance)
+        //{
+        //    AudioPlayer.Instance.SetBGMVolume(value);
+        //}
     }
 
     private void SESliderValueChange(float value)
     {
         gameSettings.SEVolume = value;
-        if (AudioPlayer.Instance)
-        {
-            AudioPlayer.Instance.SetSEVolume(value);
-        }
+        //if (AudioPlayer.Instance)
+        //{
+        //    AudioPlayer.Instance.SetSEVolume(value);
+        //}
     }
 
 
@@ -104,12 +115,13 @@ public class SettingPanel : BasePanel<GameSettings>
     {
         string[] temp = resoltionSelecter.options[index].text.Split('X');
         gameSettings.ScreenSize = new Vector2Int(int.Parse(temp[0]), int.Parse(temp[1]));
+        AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
     }
 
     private void IsFullScreenToggleValueChange(bool isOn)
     {
         gameSettings.IsFullScreen = isOn;
-        AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
+        //AudioPlayer.Instance.Play(AudioPlayer.AuidoUIButtonClick);
     }
 
     private void ViewAngleSelectorSliderValueChange(float angle)

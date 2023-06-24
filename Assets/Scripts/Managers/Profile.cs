@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Game;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ namespace Managers
     public class Profile : SaveData
     {
         public int CollectedSouls;
+        public Dictionary<string, int> GiftsLevel = new Dictionary<string, int>();
         public string[] GiftUnlocks;
         public string[] ProUnlocks;
         public int RecentCollectedSouls;
@@ -16,10 +19,13 @@ namespace Managers
 
         private static Profile NewProfile()
         {
+            var giftsLevel = Gift.GiftDictionary.Keys.ToDictionary(key => key, key => 1);
+
             return new Profile()
             {
                 ProUnlocks = new string[] { "MAG", "ALC", "ASS", "KNI", "CUR", "BAR" },
-                CollectedSouls = 0
+                CollectedSouls = 0,
+                GiftsLevel = giftsLevel
             };
         }
 

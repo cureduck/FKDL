@@ -1,4 +1,5 @@
-﻿using UI;
+﻿using I2.Loc;
+using UI;
 using UnityEngine;
 
 namespace Managers
@@ -16,6 +17,7 @@ namespace Managers
         public WarningInfoDebugPanel warningInfoPanel;
         public SettingPanel settingPanel;
         public StartAndEndPanel startAndEndPanel;
+        public Localize Line;
 
         public SquareInfoPanel SquareInfoPanel;
         public SkillInfoPanel skillInfoPanel;

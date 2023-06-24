@@ -14,9 +14,10 @@ namespace UI
         public Localize IdText;
         public TMP_Text LvText;
 
-        public Image BottleIcon;
+        //public Image BottleIcon;
         public Image PotionIcon;
-
+        [SerializeField] private GameObject emptySign;
+        [SerializeField] private GameObject haveSign;
         [SerializeField] private PointEnterAndExit pointEvent;
         [SerializeField] private GameObject curSelectSign;
         public PotionData data;
@@ -53,7 +54,9 @@ namespace UI
                 IdText.SetTerm("empty");
                 GetComponent<Button>().interactable = false;
                 curSelectSign.gameObject.SetActive(false);
-                BottleIcon.gameObject.SetActive(false);
+                emptySign.gameObject.SetActive(true);
+                haveSign.gameObject.SetActive(false);
+                //BottleIcon.gameObject.SetActive(false);
                 LvText.gameObject.SetActive(false);
             }
             else
@@ -61,10 +64,11 @@ namespace UI
                 LvText.gameObject.SetActive(true);
                 GetComponent<Button>().interactable = true;
                 IdText.SetTerm(Id);
+                emptySign.gameObject.SetActive(false);
+                haveSign.gameObject.SetActive(true);
+                //BottleIcon.gameObject.SetActive(true);
 
-                BottleIcon.gameObject.SetActive(true);
-
-                BottleIcon.sprite = data.Bp.Icon; // SpriteManager.Instance.PotionBottleIcon[data.Bp.Rank];
+                //BottleIcon.sprite = data.Bp.Icon;
 
                 LvText.text = data.Count.ToString();
             }

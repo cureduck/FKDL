@@ -13,12 +13,10 @@
 
 #endregion
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PointEnterAndExit : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
     IPointerUpHandler, IPointerClickHandler
@@ -33,7 +31,7 @@ public class PointEnterAndExit : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Button curButton = GetComponent<Button>();
+        Selectable curButton = GetComponent<Selectable>();
         if (curButton)
         {
             if (curButton.interactable == true)
@@ -63,9 +61,9 @@ public class PointEnterAndExit : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (GetComponent<Button>())
+        if (GetComponent<Selectable>())
         {
-            if (GetComponent<Button>().interactable == true)
+            if (GetComponent<Selectable>().interactable == true)
             {
                 onPointLeftDown.Invoke();
             }
@@ -78,9 +76,9 @@ public class PointEnterAndExit : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (GetComponent<Button>())
+        if (GetComponent<Selectable>())
         {
-            if (GetComponent<Button>().interactable == true)
+            if (GetComponent<Selectable>().interactable == true)
             {
                 onPointEnter.Invoke();
             }
@@ -93,9 +91,9 @@ public class PointEnterAndExit : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (GetComponent<Button>())
+        if (GetComponent<Selectable>())
         {
-            if (GetComponent<Button>().interactable == true)
+            if (GetComponent<Selectable>().interactable == true)
             {
                 onPointExit.Invoke();
             }
@@ -108,9 +106,9 @@ public class PointEnterAndExit : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (GetComponent<Button>())
+        if (GetComponent<Selectable>())
         {
-            if (GetComponent<Button>().interactable == true)
+            if (GetComponent<Selectable>().interactable == true)
             {
                 onPointLeftUp.Invoke();
             }

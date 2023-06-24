@@ -112,6 +112,7 @@ namespace Managers
                 Set("player_pdef", Player.Status.PDef.ToString());
                 Set("player_mdef", Player.Status.MDef.ToString());
                 Set("player_lucky_chance", Player.LuckyChance.ToString("player_lucky_chance"));
+                Set("main_prof", PlayerData.ProfInfo[0].ToUpper());
             }
 
             SetParam();
@@ -120,7 +121,7 @@ namespace Managers
         }
 
 
-        public void FindAndSetFocus()
+        private void FindAndSetFocus()
         {
             Focus = squares.Find(square => square.Data.SquareState == SquareState.Focus);
         }

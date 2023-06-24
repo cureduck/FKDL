@@ -53,9 +53,26 @@ public class ChooseProfMainPanel : MonoBehaviour
     {
         profListView.SetData(curCanSelectProfs, CellClick, CellPointEnter, null, curSelectViewIndex);
 
+        mainProf.CurSelectHeightLightActive(false);
+        secondProf01.CurSelectHeightLightActive(false);
+        secondProf02.CurSelectHeightLightActive(false);
+
         mainProf.SetData(profDatas[0]);
         secondProf01.SetData(profDatas[1]);
         secondProf02.SetData(profDatas[2]);
+        Debug.Log("Gengxing!");
+        if (string.IsNullOrEmpty(profDatas[0]))
+        {
+            mainProf.CurSelectHeightLightActive(true);
+        }
+        else if (string.IsNullOrEmpty(profDatas[1]))
+        {
+            secondProf01.CurSelectHeightLightActive(true);
+        }
+        else if (string.IsNullOrEmpty(profDatas[2]))
+        {
+            secondProf02.CurSelectHeightLightActive(true);
+        }
 
         startGame_btn.interactable = curSelectViewIndex.Count >= 3;
         waringInfo.gameObject.SetActive(curSelectViewIndex.Count < 3);

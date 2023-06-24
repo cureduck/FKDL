@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using Managers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering.Universal;
 
 namespace Game
@@ -34,6 +35,8 @@ namespace Game
 
         private void OnMouseEnter()
         {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
             isPointEnter = true;
             var data = square.Data;
             if (((data.SquareState & SquareState.Revealed) != 0) && !(data is EnemySaveData))

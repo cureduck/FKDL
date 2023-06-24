@@ -64,6 +64,8 @@ namespace Game
 
         [JsonIgnore] public override FighterData Enemy => enemy ?? (EnemySaveData)GameManager.Instance.Focus.Data;
 
+        public event Action<int> Marching;
+
         public void March(string destination)
         {
             Debug.Log($"destination {destination}");
@@ -74,6 +76,7 @@ namespace Game
             ClearAllBuffs();
             CheckChain(Timing.OnMarch, new object[] { this });
 
+            Marching?.Invoke(int.Parse(destination));
             if (destination.Contains((_floorLimit + 1).ToString()))
             {
                 Destroyed();

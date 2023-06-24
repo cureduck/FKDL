@@ -212,7 +212,7 @@ namespace Game
         [SerializeField] private SpriteRenderer OutLine;
         [SerializeField] private SpriteRenderer Mask;
 
-        private const float Spacing = .02f;
+        private const float SPACING = .03f;
 
         public SpriteRenderer Icon;
         public Localize Id;
@@ -236,21 +236,21 @@ namespace Game
 
         private void SetSize(Placement d)
         {
-            transform.position = new Vector3(d.x + Spacing / 2, -d.y + Spacing / 2, 0);
+            transform.position = new Vector3(d.x + SPACING / 2, -d.y + SPACING / 2, 0);
             //transform.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
 
-            Bg.transform.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
-            Bg1.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
-            Bg2.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
-            OutLine1.transform.localScale = new Vector3(1 / (d.Width - Spacing), 1 / (d.Height - Spacing), 0);
-            OutLine2.transform.localScale = new Vector3(1 / (d.Width - Spacing), 1 / (d.Height - Spacing), 0);
-            OutLine1.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
-            OutLine2.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
+            Bg.transform.localScale = new Vector3(d.Width - SPACING, d.Height - SPACING, 0);
+            Bg1.localScale = new Vector3(d.Width - SPACING, d.Height - SPACING, 0);
+            Bg2.localScale = new Vector3(d.Width - SPACING, d.Height - SPACING, 0);
+            OutLine1.transform.localScale = new Vector3(1 / (d.Width - SPACING), 1 / (d.Height - SPACING), 0);
+            OutLine2.transform.localScale = new Vector3(1 / (d.Width - SPACING), 1 / (d.Height - SPACING), 0);
+            OutLine1.size = new Vector2(d.Width - SPACING, d.Height - SPACING);
+            OutLine2.size = new Vector2(d.Width - SPACING, d.Height - SPACING);
 
 
-            Mask.transform.localScale = new Vector3(d.Width - Spacing, d.Height - Spacing, 0);
+            Mask.transform.localScale = new Vector3(d.Width - SPACING, d.Height - SPACING, 0);
 
-            OutLine.size = new Vector2(d.Width - Spacing, d.Height - Spacing);
+            OutLine.size = new Vector2(d.Width - SPACING, d.Height - SPACING);
 
             Id.GetComponent<TMP_Text>().fontSize = Normal;
             //Bonus.GetComponent<TMP_Text>().fontSize = Normal;
@@ -258,9 +258,9 @@ namespace Game
             if ((d.Height == 1) || (d.Width == 1))
             {
                 Id.GetComponent<RectTransform>().localPosition =
-                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f + .3f, -0.01f);
+                    new Vector3((d.Width - SPACING) / 2, -d.Height / 2f + .3f, -0.01f);
                 Bonus.GetComponent<RectTransform>().localPosition =
-                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f - .2f, -0.01f);
+                    new Vector3((d.Width - SPACING) / 2, -d.Height / 2f - .2f, -0.01f);
                 //Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width-Spacing)/2, -d.Height/2f, 0);
                 return;
             }
@@ -270,20 +270,20 @@ namespace Game
                 Id.GetComponent<TMP_Text>().fontSize = Large;
                 //Bonus.GetComponent<TMP_Text>().fontSize = Large;
                 Id.GetComponent<RectTransform>().localPosition =
-                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f + 1f, -0.01f);
+                    new Vector3((d.Width - SPACING) / 2, -d.Height / 2f + 1f, -0.01f);
                 Bonus.GetComponent<RectTransform>().localPosition =
-                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f - 1f, -0.01f);
+                    new Vector3((d.Width - SPACING) / 2, -d.Height / 2f - 1f, -0.01f);
                 Icon.GetComponent<RectTransform>().localPosition =
-                    new Vector3((d.Width - Spacing) / 2, -d.Height / 2f, 0);
+                    new Vector3((d.Width - SPACING) / 2, -d.Height / 2f, 0);
                 Icon.transform.localScale = new Vector3(1.6f, 1.6f, 0);
                 return;
             }
 
             Id.GetComponent<RectTransform>().localPosition =
-                new Vector3((d.Width - Spacing) / 2, -d.Height / 2f + .6f, -0.01f);
+                new Vector3((d.Width - SPACING) / 2, -d.Height / 2f + .6f, -0.01f);
             Bonus.GetComponent<RectTransform>().localPosition =
-                new Vector3((d.Width - Spacing) / 2, -d.Height / 2f - .6f, -0.01f);
-            Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width - Spacing) / 2, -d.Height / 2f, 0);
+                new Vector3((d.Width - SPACING) / 2, -d.Height / 2f - .6f, -0.01f);
+            Icon.GetComponent<RectTransform>().localPosition = new Vector3((d.Width - SPACING) / 2, -d.Height / 2f, 0);
             Icon.transform.localScale = new Vector3(1f, 1f, 0);
 
 
@@ -423,9 +423,12 @@ namespace Game
         {
             _breath.Kill();
             _sequence.Kill();
+            SetBgAlpha(1f);
+            SetOutlineAlpha(.4f);
             Mask.gameObject.SetActive(true);
-            Bonus.gameObject.SetActive(true);
-            Id.gameObject.SetActive(true);
+            Bonus.gameObject.SetActive(false);
+            Id.gameObject.SetActive(false);
+            Icon.gameObject.SetActive(false);
             Mask.GetComponent<SpriteRenderer>().DOFade(1, .1f);
         }
 
@@ -433,7 +436,12 @@ namespace Game
         {
             if (Data.SquareState == SquareState.Done) return;
 
+            OutLine.gameObject.SetActive(true);
+
+            Mask.gameObject.SetActive(true);
             Bonus.gameObject.SetActive(true);
+            Id.gameObject.SetActive(true);
+            Icon.gameObject.SetActive(true);
 
             _sequence.Kill();
             _sequence = DOTween.Sequence();
@@ -441,7 +449,37 @@ namespace Game
                 .Insert(0f, Bg1.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Bg2.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Mask.GetComponent<SpriteRenderer>().DOFade(0, .3f))
+                .Insert(0,
+                    DOTween.To(
+                        () => OutLine.color.a,
+                        SetOutlineAlpha,
+                        0.5f, UpTime))
                 .OnComplete(() => Mask.gameObject.SetActive(false));
+        }
+
+
+        private void SetBgAlpha(float alpha)
+        {
+            var bg = Bg.color;
+            bg.a = alpha;
+            Bg.color = bg;
+            Bg2.GetComponent<SpriteRenderer>().color = bg;
+            Bg1.GetComponent<SpriteRenderer>().color = bg;
+            var icon_a = Icon.color;
+            icon_a.a = alpha;
+            Icon.color = icon_a;
+            var mask_a = Mask.color;
+            mask_a.a = alpha;
+            Mask.color = mask_a;
+        }
+
+        private void SetOutlineAlpha(float alpha)
+        {
+            var outline = OutLine.color;
+            outline.a = alpha;
+            OutLine.color = outline;
+            OutLine1.color = outline;
+            OutLine2.color = outline;
         }
 
 
@@ -459,12 +497,21 @@ namespace Game
             _sequence.Append(transform.DOMoveZ(0f, .4f))
                 .Insert(0f, Bg1.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Bg2.transform.DOLocalMoveZ(0f, UpTime))
-                .Insert(0f, Mask.GetComponent<SpriteRenderer>().DOFade(.7f, UpTime))
                 .Insert(0f,
                     DOTween.To(
                         () => _breathLight.intensity,
                         (value => _breathLight.intensity = value),
-                        0, UpTime))
+                        0.7f, UpTime))
+                .Insert(0,
+                    DOTween.To(
+                        () => Bg.color.a,
+                        SetBgAlpha,
+                        0.4f, UpTime))
+                .Insert(0,
+                    DOTween.To(
+                        () => OutLine.color.a,
+                        SetOutlineAlpha,
+                        0.2f, UpTime))
                 .OnComplete(() =>
                 {
                     _breathLight.intensity = 0;
