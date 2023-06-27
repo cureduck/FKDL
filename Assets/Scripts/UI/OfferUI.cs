@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game;
 using I2.Loc;
 using Managers;
@@ -53,19 +54,22 @@ namespace UI
 
         private System.Action onClick;
 
-        //public Offer Offer 
-        //{
-        //    get 
-        //    {
-        //        return offer;
-        //    }
-        //}
+        private DisplayMode displayMode => Input.GetKey(KeyCode.LeftAlt) ? DisplayMode.Brief : DisplayMode.Detail;
 
         private void Start()
         {
             targetButton.onClick.AddListener(OnClick);
             pointEvent.onPointEnter.AddListener(OnPointEnter);
             pointEvent.onPointExit.AddListener(OnPointExit);
+        }
+
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyUp(KeyCode.LeftAlt))
+            {
+                UpdateData();
+            }
         }
 
         private void OnPointEnter()
@@ -75,20 +79,29 @@ namespace UI
             {
                 string totalDescribe = string.Empty;
                 Skill skill = SkillManager.Instance.GetById(Offer.Id);
-                foreach (var c in skill.Fs.Keys)
+                List<string> curKey = new List<string>();
+                for (int i = 0; i < skill.Keywords.Length; i++)
                 {
-                    string curInfo = GetTimingInfo(c);
-                    if (!string.IsNullOrEmpty(curInfo))
+                    //curKey.Add(StringDefines.KeywordDecorate(skill.Keywords[i]));
+                    if (StringDefines.KeywordsSet.Contains(skill.Keywords[i]))
                     {
-                        totalDescribe += $"{curInfo}\n";
+                        curKey.Add(StringDefines.KeywordDecorate(skill.Keywords[i]));
                     }
                 }
 
+                //Debug.Log(skill.Keywords.Length);
+                for (int i = 0; i < curKey.Count; i++)
+                {
+                    totalDescribe += $"{{[P{i}]}}\n";
+                }
 
                 if (!string.IsNullOrEmpty(totalDescribe))
                 {
                     WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
-                        { title = "关键词", screenPosition = transform.position, describe = totalDescribe });
+                    {
+                        title = "关键词", screenPosition = transform.position, describe = totalDescribe,
+                        curParams = curKey.ToArray()
+                    });
                 }
             }
         }
@@ -163,7 +176,6 @@ namespace UI
                 }
             }
         }
-
 
         public void UpdateData()
         {
@@ -249,13 +261,27 @@ namespace UI
                     Prof?.SetTerm(skill.Prof);
                     Description?.SetTerm($"{skill.Id}_desc");
                     Description.SetLocalizeParam(
-                        new string[] { "P1", "P2" },
+                        new string[] { "P1", "P2", "CurLv" },
                         new string[]
                         {
                             skill.Param1.ToString(),
-                            skill.Param2.ToString()
+                            skill.Param2.ToString(),
+                            "1"
                         });
-                    Description.RemoveBetween();
+                    //Description.RemoveBetween();
+                    switch (displayMode)
+                    {
+                        case DisplayMode.Brief:
+                            Description.Calculate();
+                            var s = Description.GetComponent<TMP_Text>().text;
+                            Description.RemoveBetween((@"\(", @"\)"));
+                            Description.RemoveBetween(('（', '）'));
+                            break;
+                        case DisplayMode.Detail:
+                            Description.RemoveBetween();
+                            break;
+                    }
+
 
                     SetRankView(skill.Rank);
                     break;
@@ -353,6 +379,12 @@ namespace UI
             }
 
             return string.Empty;
+        }
+
+        private enum DisplayMode
+        {
+            Detail,
+            Brief
         }
     }
 }
