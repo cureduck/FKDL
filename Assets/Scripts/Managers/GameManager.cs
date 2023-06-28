@@ -6,9 +6,11 @@ using Game;
 using I2.Loc;
 using Sirenix.OdinInspector;
 using Tools;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Managers
 {
@@ -185,6 +187,13 @@ namespace Managers
                         var f = File.ReadAllText(fileName);
                         f = f.Replace("\r\n", "\n");
                         LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
+
+#if UNITY_EDITOR
+                        LanguageSourceAsset languageSourceAsset = Resources.Load<LanguageSourceAsset>("I2Languages");
+                        EditorUtility.SetDirty(languageSourceAsset);
+                        AssetDatabase.Refresh();
+                        AssetDatabase.SaveAssets();
+#endif
                     }
                 }
             }
@@ -293,6 +302,15 @@ namespace Managers
             }
         }
 
+        private void ApplyNightmare()
+        {
+            foreach (var nightmare in SecondaryData.Nightmares)
+            {
+                Nightmares.ApplyNightMare(nightmare, Map);
+                Player.TryTakeRelic(nightmare, out _);
+            }
+        }
+
         [Button]
         public void LoadFromInit()
         {
@@ -305,6 +323,7 @@ namespace Managers
             LoadMap();
             GetProfRelic();
             GetGifts();
+            ApplyNightmare();
             GameLoaded?.Invoke();
             //GameManager.Instance.PlayerData.Gain(10000);
             //GC.Collect();

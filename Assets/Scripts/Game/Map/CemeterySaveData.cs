@@ -75,7 +75,7 @@ namespace Game
         {
             var info = base.GetSquareInfo();
             info.P1 = _cost[_rank].ToString();
-            info.P2 = (BaseBias + Player.LuckyChance).ToString("P0");
+            info.P2 = BaseBias.ToString("P0");
             return info;
         }
     }

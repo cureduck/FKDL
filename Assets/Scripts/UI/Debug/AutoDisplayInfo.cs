@@ -19,7 +19,7 @@ namespace UI
             {
                 title = _cellView.Id,
                 describe = _cellView.Desc,
-                param1 = _cellView.Param,
+                curParams = new string[] { _cellView.Param },
                 screenPosition = transform.position
             });
         }

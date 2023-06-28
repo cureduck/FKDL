@@ -25,7 +25,7 @@ namespace Managers
         public bool SEMute;
 
         [FormerlySerializedAs("AutoGoToFocus")]
-        public CameraSetting CameraFollow;
+        public CameraSetting CameraFollow = CameraSetting.NeverFollow;
 
         public TransitionManagerSettings TransitionManagerSettings;
 
@@ -140,7 +140,7 @@ namespace Managers
 
         #region 全屏
 
-        [ShowInInspector] private bool _isFullScreen;
+        [ShowInInspector] private bool _isFullScreen = true;
 
         public bool IsFullScreen
         {

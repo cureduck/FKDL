@@ -39,8 +39,15 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
     {
         title_txt.SetTerm(Data.title);
         describe_txt.SetTerm(Data.describe);
-        _paramsManager.SetParameterValue("P1", Data.param1);
-        _paramsManager.SetParameterValue("P2", Data.param2);
+        if (Data.curParams != null)
+        {
+            for (int i = 0; i < Data.curParams.Length; i++)
+            {
+                _paramsManager.SetParameterValue($"P{i + 1}", Data.curParams[i]);
+            }
+        }
+
+        //_paramsManager.SetParameterValue("P2", Data.param2);
         describe_txt.Calculate();
         notBeyoundTheScreen.PanelFollowQuadrant(Data.screenPosition);
         transform.position = Data.screenPosition;
@@ -48,9 +55,8 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
 
     public class Args
     {
+        public string[] curParams;
         public string describe;
-        public string param1;
-        public string param2;
         public Vector2 screenPosition;
         public string title;
         public Transform worldTrans;

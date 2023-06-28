@@ -70,6 +70,7 @@ namespace UI
             Info info;
             if (GameManager.Instance.Player.TryTakeOffer(offer, out info))
             {
+                AudioPlayer.Instance.Play(AudioPlayer.AudioGetItem);
                 animationGroup.SelectTarget(targetIndex);
                 delayCloseTime = 1.0f;
                 StartCoroutine(CloseWindowIE());

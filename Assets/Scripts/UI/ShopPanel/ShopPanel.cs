@@ -137,6 +137,7 @@ namespace UI
                         Data.Goods.KeyList[index].isSold = true;
                     }
 
+                    AudioPlayer.Instance.Play(AudioPlayer.AudioGetItem);
                     PlayerMainPanel.Instance.PlayGetItemEffect(offer, cellGoodView.transform.position);
                     UpdateUI();
                 }

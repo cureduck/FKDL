@@ -159,8 +159,7 @@ public class CellGoodView : MonoBehaviour
             {
                 title = potion.Id,
                 describe = potion.Des,
-                param1 = potion.Param1.ToString(),
-                param2 = potion.Param2.ToString(),
+                curParams = new string[] { potion.Param1.ToString(), potion.Param2.ToString() },
                 screenPosition = itemIcon.transform.position
             });
         }
@@ -192,7 +191,7 @@ public class CellGoodView : MonoBehaviour
                 describe = $"{relic.Id}_desc",
                 title = relic.Id,
                 screenPosition = transform.position,
-                param1 = relic.Param1.ToString(),
+                curParams = new string[] { relic.Param1.ToString() }
             });
         }
     }

@@ -63,6 +63,7 @@ public class SettingPanel : BasePanel<GameSettings>
         }
 
         isFullScreenSelecter.isOn = gameSettings.IsFullScreen;
+        cameraFollowDropdown.value = (int)gameSettings.CameraFollow;
 
         bgmSizeSilder.onValueChanged.AddListener(BGMSliderValueChange);
         soundEffectSizeSilder.onValueChanged.AddListener(SESliderValueChange);
@@ -87,6 +88,8 @@ public class SettingPanel : BasePanel<GameSettings>
                 CurtainManager.Instance.UpCurtain("StartScene");
             });
         }
+
+        IsFullScreenToggleValueChange(gameSettings.IsFullScreen);
 
         Camera.main.fieldOfView = gameSettings.FOV;
         Camera.main.transform.eulerAngles = new Vector3(gameSettings.Degree, 0, 0);

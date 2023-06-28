@@ -17,7 +17,9 @@ namespace Managers
             var id = line["id"].ToLower();
             var icon = GetIcon(id);
             bool.TryParse(line["CanGet"], out var canGet);
-            return new Skill((Rank)int.Parse(line["Rarity"]), id, canGet, icon)
+            var keywords = line["Keywords"].Split(',');
+            var effects = line["effects"].Split(',');
+            return new Skill((Rank)int.Parse(line["Rarity"]), id, canGet, icon, keywords, effects)
             {
                 Prof = line["Pool"],
                 Positive = bool.Parse(line["Positive"]),
@@ -27,7 +29,6 @@ namespace Managers
                 Param2 = float.Parse(line["P2"] != "" ? line["P2"] : "0"),
                 CostInfo = new CostInfo(cost, line["CostType"] == "" ? CostType.Mp : CostType.Hp),
                 Cooldown = cooldown,
-                //Description = line[10]
             };
         }
 

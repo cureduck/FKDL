@@ -44,7 +44,7 @@ public class ChooseProfListView : MonoBehaviour
             uIViewObjectPool.GetCurActiveMemberByIndex(i).SetToggleOnState(curHaveSelect.Contains(i));
         }
 
-        Profile.Delete();
+        //Profile.Delete();
         string[] curUnlocks = Profile.GetOrCreate().ProUnlocks;
         for (int i = 0; i < curUnlocks.Length; i++)
         {

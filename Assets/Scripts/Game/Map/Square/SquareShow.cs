@@ -207,7 +207,7 @@ namespace Game
                     HandleEnemyArgs(args0);
                     break;
                 case CasinoArgs args1:
-                    PlaySoundEffect(args1.Win ? "casino_win" : "casino_lose");
+                    //PlaySoundEffect(args1.Win ? "casino_win" : "casino_lose");
                     if (args1.Win)
                     {
                         WindowManager.Instance.OffersWindow.Open
@@ -217,6 +217,11 @@ namespace Game
                                 args1.SkipCompensate
                             )
                         );
+                        AudioPlayer.Instance.Play(AudioPlayer.AudioGetItem);
+                    }
+                    else
+                    {
+                        AudioPlayer.Instance.Play("casino_lose");
                     }
 
                     break;

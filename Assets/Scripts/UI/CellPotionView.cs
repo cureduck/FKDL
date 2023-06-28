@@ -103,8 +103,7 @@ namespace UI
             WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
             {
                 describe = potion.Des,
-                param1 = potion.Param1.ToString(),
-                param2 = potion.Param2.ToString(),
+                curParams = new string[] { potion.Param1.ToString(), potion.Param2.ToString() },
                 screenPosition = transform.position,
                 title = data.Id
             });

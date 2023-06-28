@@ -8,7 +8,7 @@ namespace Game
 {
     public abstract class Gift
     {
-        public const int MaxPoint = 5;
+        public const int MaxPoint = 7;
 
         public static readonly Dictionary<string, Gift> GiftDictionary = new Dictionary<string, Gift>
         {
@@ -39,13 +39,13 @@ namespace Game
         };
 
 
-        private string m_IconName => ("Gift_" + GetType().Name.Replace("Gift", "")).ToLower();
-        public Sprite Icon => SpriteManager.Instance.BuffIcons[m_IconName];
+        [JsonIgnore] private string m_IconName => ("Gift_" + GetType().Name.Replace("Gift", "")).ToLower();
+        [JsonIgnore] public Sprite Icon => SpriteManager.Instance.BuffIcons[m_IconName];
 
-        public int CurrentLevel { get; set; } = 1;
+        [JsonIgnore] public int CurrentLevel { get; set; } = 1;
         [JsonIgnore] public virtual int LevelUpCost => 0;
         public virtual int MaxLevel => 3;
-        public abstract int PointCost { get; }
+        [JsonIgnore] public abstract int PointCost { get; }
 
         public abstract PlayerCommand[] Commands { get; }
 
@@ -58,23 +58,26 @@ namespace Game
 
     public class RarePotionGift : Gift
     {
-        public override int PointCost => 2;
+        public override int PointCost => 3;
 
         public override PlayerCommand[] Commands => CreateCommands();
 
         private PlayerCommand[] CreateCommands()
         {
-            return new PlayerCommand[]
+            var commands = new PlayerCommand[CurrentLevel];
+            for (int i = 0; i < CurrentLevel; i++)
             {
-                new GetPotionCommand(Mode.Random, null, CurrentLevel, Rank.Rare)
-            };
+                commands[i] = new GetPotionCommand(Mode.Random, null, 1, Rank.Rare);
+            }
+
+            return commands;
         }
     }
 
     public class SkillSlotGift : Gift
     {
         public override int MaxLevel => 3;
-        public override int PointCost => 6 - CurrentLevel;
+        public override int PointCost => 8 - CurrentLevel;
 
         public override PlayerCommand[] Commands => CreateCommands();
 
@@ -90,7 +93,7 @@ namespace Game
     public class SkillPointGift : Gift
     {
         public override int MaxLevel => 2;
-        public override int PointCost => 3;
+        public override int PointCost => 4;
         public override PlayerCommand[] Commands => CreateCommands();
 
         private PlayerCommand[] CreateCommands()

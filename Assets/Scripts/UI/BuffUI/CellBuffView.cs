@@ -47,7 +47,8 @@ public class CellBuffView : MonoBehaviour
             {
                 WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
                 {
-                    describe = $"{buffData.Id}_desc", param1 = buffData.CurLv.ToString(), title = buffData.Id,
+                    describe = $"{buffData.Id}_desc", curParams = new string[] { buffData.CurLv.ToString() },
+                    title = buffData.Id,
                     worldTrans = transform
                 });
             }
@@ -55,7 +56,8 @@ public class CellBuffView : MonoBehaviour
             {
                 WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
                 {
-                    describe = $"{buffData.Id}_desc", param1 = buffData.CurLv.ToString(), title = buffData.Id,
+                    describe = $"{buffData.Id}_desc", curParams = new string[] { buffData.CurLv.ToString() },
+                    title = buffData.Id,
                     screenPosition = transform.position
                 });
             }

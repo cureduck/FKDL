@@ -162,8 +162,8 @@ namespace Managers
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
                     Debug.LogError($"{line} read error");
+                    Debug.LogError(e);
                 }
             }
 

@@ -15,6 +15,7 @@ namespace Managers
         public const string AudioClearRock = "Audio_Clear_Rock";
         public const string AudioGainCoin = "Audio_Gain_Coin";
         public const string AuidoUIButtonClick = "Auido_UI_ButtonClick";
+        public const string AudioGetItem = "Audio_GetItem";
         [SerializeField] private CellAudioPrefab cellAudioPrefab;
         [SerializeField] private AudioClip[] normalBGMs;
         [SerializeField] private AudioClip[] bossBGMs;

@@ -21,6 +21,7 @@ namespace Game
         public Gift[] Gifts;
 
         public int InitGameSeed;
+        public string[] Nightmares;
 
         [JsonIgnore] public Random PotionRandom;
 

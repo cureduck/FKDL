@@ -453,7 +453,7 @@ namespace Game
                     DOTween.To(
                         () => OutLine.color.a,
                         SetOutlineAlpha,
-                        0.5f, UpTime))
+                        0.35f, UpTime))
                 .OnComplete(() => Mask.gameObject.SetActive(false));
         }
 
