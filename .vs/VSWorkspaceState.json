@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Assets",
+    "\\Assets\\PythonScripts",
+    "\\Assets\\PythonScripts\\basic",
+    "\\Assets\\PythonScripts\\Game",
+    "\\Assets\\Scripts",
+    "\\Assets\\Scripts\\Game",
+    "\\Assets\\Scripts\\GlobalEvent",
+    "\\Assets\\Scripts\\Managers"
+  ],
+  "SelectedNode": "\\Assets\\Scripts\\Game\\StoryLine.cs",
+  "PreviewInSolutionExplorer": false
+}
