@@ -8,6 +8,7 @@ namespace Managers
 {
     public class Profile : SaveData
     {
+        public AchievementsMonitor AchievementsMonitor;
         public int CollectedSouls;
         public Dictionary<string, int> GiftsLevel = new Dictionary<string, int>();
         public string[] GiftUnlocks;
@@ -25,7 +26,8 @@ namespace Managers
             {
                 ProUnlocks = new string[] { "MAG", "ALC", "ASS", "KNI", "CUR", "BAR" },
                 CollectedSouls = 0,
-                GiftsLevel = giftsLevel
+                GiftsLevel = giftsLevel,
+                AchievementsMonitor = Game.AchievementsMonitor.GetDefault()
             };
         }
 
