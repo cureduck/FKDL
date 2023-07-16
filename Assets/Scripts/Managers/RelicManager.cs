@@ -17,8 +17,10 @@ namespace Managers
             bool usedUp = bool.TryParse(line["usedup"], out var uu) && uu;
             bool useCounter = bool.TryParse(line["usecounter"], out var us) && us;
             float param = float.TryParse(line["param"], out var up) ? up : 0f;
+            var keywords = line["keywords"].Split(',').Select(s => s.Trim()).ToArray();
 
-            return new Relic((Rank)int.Parse(line["rank"]), line["id"].ToLower(), param, usedUp, useCounter, icon);
+            return new Relic((Rank)int.Parse(line["rank"]), line["id"].ToLower(), param, usedUp, useCounter, keywords,
+                icon);
         }
 
         public override Relic[] RollT(Rank rank, int count = 1)

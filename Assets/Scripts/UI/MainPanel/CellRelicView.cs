@@ -19,6 +19,7 @@ public class CellRelicView : MonoBehaviour
         pointEnterAndExit.onPointEnter.AddListener(OnPointEnter);
         pointEnterAndExit.onPointExit.AddListener(OnPointExit);
         activeIcon.gameObject.SetActive(false);
+        activeIcon.gameObject.SetActive(true);
     }
 
     private void OnPointExit()
@@ -39,6 +40,8 @@ public class CellRelicView : MonoBehaviour
                 title = relicData.Id,
                 screenPosition = transform.position,
                 curParams = new string[] { relicData.Bp.Param1.ToString() },
+                //otherDescribe = "<color=yellow>屠杀</color>：杀死一个单位后，获得3层{[P1]}\n<color=yellow>反噬</color>：因为使用技能或药水受到伤害时{[P2]}",
+                //curOtherDescribeParams = new string[] { "致死","!" }
             });
         }
     }

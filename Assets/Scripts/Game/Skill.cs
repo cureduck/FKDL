@@ -5,12 +5,11 @@ using UnityEngine.Serialization;
 
 namespace Game
 {
-    public class Skill : CsvData
+    public class Skill : CsvData, IKeyword
     {
         public readonly HashSet<Timing> AlwaysActiveTiming;
         public readonly bool CanGet;
         public readonly string[] Effects;
-        public readonly string[] Keywords;
         public bool BattleOnly;
         public int Cooldown;
         public CostInfo CostInfo;
@@ -38,5 +37,7 @@ namespace Game
         public Skill()
         {
         }
+
+        public string[] Keywords { get; }
     }
 }

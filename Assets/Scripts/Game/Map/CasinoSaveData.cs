@@ -30,7 +30,7 @@ namespace Game
         {
             var info = base.GetSquareInfo();
             info.P1 = Cost.ToString();
-            info.P2 = BaseBias.ToString("P0");
+            info.P2 = .3f.ToString("P0");
             return info;
         }
 
@@ -40,7 +40,7 @@ namespace Game
             if (Player.Gold >= Cost)
             {
                 Player.Gain(-Cost);
-                if (SData.CurGameRandom.NextDouble() > .5f)
+                if (SData.CurGameRandom.NextDouble() < Player.LuckyChance)
                 {
                     var potions = PotionManager.Instance.RollT(Rank, 3);
                     var offers = potions.Select((s => new Offer(s)));
@@ -52,6 +52,7 @@ namespace Game
                         Win = true,
                         Offers = offers.ToArray()
                     });
+                    Player.LuckyChance -= .15f;
                 }
                 else
                 {
@@ -61,6 +62,7 @@ namespace Game
                         Info = new SuccessInfo(),
                         Win = false
                     });
+                    Player.LuckyChance += .05f;
                 }
 
                 TimesLeft -= 1;

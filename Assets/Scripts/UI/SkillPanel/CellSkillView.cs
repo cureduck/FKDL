@@ -331,6 +331,10 @@ public class CellSkillView : MonoBehaviour
             {
                 coolDownMask.fillAmount = 1;
                 playerData.UseSkill(skillData);
+                for (int i = 0; i < curSkill.Effects.Length; i++)
+                {
+                    AudioPlayer.Instance.Play(curSkill.Effects[i]);
+                }
             }
             else
             {

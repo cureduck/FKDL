@@ -15,6 +15,8 @@ namespace Managers
         public string[] ProUnlocks;
         public int RecentCollectedSouls;
 
+        public List<string> UnlockedCards;
+
         private static string _path => Path.Combine(Application.persistentDataPath, "Profile.asset");
 
 
@@ -27,7 +29,8 @@ namespace Managers
                 ProUnlocks = new string[] { "MAG", "ALC", "ASS", "KNI", "CUR", "BAR" },
                 CollectedSouls = 0,
                 GiftsLevel = giftsLevel,
-                AchievementsMonitor = Game.AchievementsMonitor.GetDefault()
+                AchievementsMonitor = Game.AchievementsMonitor.GetDefault(),
+                UnlockedCards = new List<string>()
             };
         }
 

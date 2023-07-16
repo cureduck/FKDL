@@ -165,8 +165,8 @@ namespace Managers
 
             if (CameraMove.Instance)
             {
-                CameraMove.Instance.leftDownPoint = leftDownPoint;
-                CameraMove.Instance.rightUpRange = rightUpPoint;
+                CameraMove.Instance.leftDownPoint = leftDownPoint - new Vector2(2, 2);
+                CameraMove.Instance.rightUpRange = rightUpPoint + new Vector2(2, 2);
             }
         }
 

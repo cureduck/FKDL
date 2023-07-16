@@ -46,7 +46,7 @@ public class TargetBattleView : MonoBehaviour
         }
         else
         {
-            title_txt.SetTerm("PLAYER");
+            //title_txt.SetTerm("PLAYER");
         }
 
         this.fighterData = fighterData;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Game;
 using I2.Loc;
 using Managers;
@@ -16,12 +15,11 @@ namespace UI
     /// </summary>
     public class OfferUI : MonoBehaviour
     {
-        public Sprite rank01_img;
+        [Header("稀有度设定")] public Sprite rank01_img;
         public Sprite rank02_img;
         public Sprite rank03_img;
-
+        public Image selectSign_Img;
         public Image rankView;
-
         public Button targetButton;
         public PointEnterAndExit pointEvent;
         public Image Icon;
@@ -77,30 +75,35 @@ namespace UI
             //寻找关键词
             if (this.Offer.Kind == Offer.OfferKind.Skill)
             {
-                string totalDescribe = string.Empty;
                 Skill skill = SkillManager.Instance.GetById(Offer.Id);
-                List<string> curKey = new List<string>();
-                for (int i = 0; i < skill.Keywords.Length; i++)
-                {
-                    //curKey.Add(StringDefines.KeywordDecorate(skill.Keywords[i]));
-                    if (StringDefines.KeywordsSet.Contains(skill.Keywords[i]))
-                    {
-                        curKey.Add(StringDefines.KeywordDecorate(skill.Keywords[i]));
-                    }
-                }
 
-                //Debug.Log(skill.Keywords.Length);
-                for (int i = 0; i < curKey.Count; i++)
-                {
-                    totalDescribe += $"{{[P{i}]}}\n";
-                }
+                //string[] text = new string[] {"Ky_data_01",  "Ky_data_02",  };
+
+                string[] curParameters;
+                string totalDescribe = StringDefines.GetKeyWordDescribe(skill.Keywords, out curParameters);
+                //List<string> curKey = new List<string>();
+                //for (int i = 0; i < skill.Keywords.Length; i++)
+                //{
+                //    //curKey.Add(StringDefines.KeywordDecorate(skill.Keywords[i]));
+                //    if (StringDefines.KeywordsSet.Contains(skill.Keywords[i]))
+                //    {
+                //        curKey.Add(StringDefines.KeywordDecorate(skill.Keywords[i]));
+                //    }
+                //}
+
+                ////Debug.Log(skill.Keywords.Length);
+                //for (int i = 0; i < curKey.Count; i++)
+                //{
+                //    totalDescribe += $"{{[P{i}]}}\n";
+                //}
 
                 if (!string.IsNullOrEmpty(totalDescribe))
                 {
                     WindowManager.Instance.simpleInfoItemPanel.Open(new SimpleInfoItemPanel.Args
                     {
-                        title = "关键词", screenPosition = transform.position, describe = totalDescribe,
-                        curParams = curKey.ToArray()
+                        title = "UI_SimpleInfoPanel_KeywordView_Title", screenPosition = transform.position,
+                        describe = totalDescribe,
+                        curParams = curParameters
                     });
                 }
             }
@@ -148,6 +151,7 @@ namespace UI
                     rankView.sprite = rank01_img;
                     rankLevelInfo.SetTerm("UI_Normal_RankInfo_01");
                     rankLevel_txt.color = new Color(1, 1, 1);
+
                     break;
                 case Rank.Uncommon:
                     rankView.sprite = rank02_img;
@@ -161,6 +165,7 @@ namespace UI
                     break;
             }
 
+            selectSign_Img.color = rankLevel_txt.color;
             if (RankStar != null)
             {
                 foreach (Transform child in RankStar)
@@ -219,7 +224,6 @@ namespace UI
                         MaxLv.SetLocalizeParam("P1", skill.MaxLv.ToString());
                     }
 
-                    Debug.Log(skill.Positive);
                     if (skill.Positive)
                     {
                         costInfo_loc.gameObject.SetActive(true);

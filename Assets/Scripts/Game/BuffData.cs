@@ -1,7 +1,6 @@
 ﻿using System;
 using Managers;
 using Newtonsoft.Json;
-using Sirenix.OdinInspector;
 using UI;
 using static Unity.Mathematics.math;
 
@@ -9,6 +8,8 @@ namespace Game
 {
     public class BuffData : BpData<Buff>, IEffectContainer, ICloneable, IActivated
     {
+        public int CurLv;
+
         [JsonConstructor]
         public BuffData(string id, int curLv)
         {
@@ -20,7 +21,6 @@ namespace Game
         {
         }
 
-        [ShowInInspector] public int CurLv { get; private set; }
         [JsonIgnore] public override Buff Bp => BuffManager.Instance.TryGetById(Id, out var buff) ? buff : null;
 
         public event Action Activated;

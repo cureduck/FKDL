@@ -1,6 +1,7 @@
 ﻿using CH.ObjectPool;
 using DG.Tweening;
 using Game;
+using Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,7 @@ namespace UI
     public class GoldPanel : FighterUIPanel
     {
         public TMP_Text GoldText;
+        public TMP_Text skillPoint_txt;
 
         [SerializeField] private Transform goldPanelParent;
 
@@ -74,8 +76,8 @@ namespace UI
             CKey.text = ((PlayerData)_master).Keys[Rank.Normal].ToString();
             SilverKey.text = ((PlayerData)_master).Keys[Rank.Uncommon].ToString();
             GoldKey.text = ((PlayerData)_master).Keys[Rank.Rare].ToString();
+            skillPoint_txt.text = GameDataManager.Instance.SecondaryData.SkillPoint.ToString();
         }
-
 
         public void PlayGetKeyEffect(Vector2 screenPosition, Rank keyRank)
         {
