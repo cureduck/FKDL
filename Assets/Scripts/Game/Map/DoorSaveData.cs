@@ -15,7 +15,7 @@ namespace Game
         };
 
         public readonly Rank Rank;
-        public float OpenChance = 0.5f;
+        public float OpenChance = 0.25f;
 
         public DoorSaveData(Rank rank)
         {

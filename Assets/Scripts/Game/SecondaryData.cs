@@ -58,6 +58,8 @@ namespace Game
             Init();
         }
 
+        [JsonIgnore] public float NightmareBonusRate => Game.Nightmares.GetAllNightmareBonus(Nightmares);
+
 
         [JsonIgnore] private static string SavePath => Application.persistentDataPath + "/SecondarySaveData.json";
 

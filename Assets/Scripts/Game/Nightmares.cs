@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Game
 {
@@ -12,6 +13,17 @@ namespace Game
             "nightmare_4",
             "nightmare_5",
         };
+
+        private static float GetNightmareBonus(string id)
+        {
+            return .1f;
+        }
+
+        public static float GetAllNightmareBonus(string[] ids)
+        {
+            return ids.Where(id => NightmareLib.Contains(id)).Sum(GetNightmareBonus);
+        }
+
 
         public static void ApplyNightMare(string id, Map map)
         {
