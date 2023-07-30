@@ -15,7 +15,7 @@ namespace Managers
         public string[] ProUnlocks;
         public int RecentCollectedSouls;
 
-        public List<string> UnlockedCards;
+        public HashSet<string> UnlockedCards;
 
         private static string _path => Path.Combine(Application.persistentDataPath, "Profile.asset");
 
@@ -30,7 +30,7 @@ namespace Managers
                 CollectedSouls = 0,
                 GiftsLevel = giftsLevel,
                 AchievementsMonitor = Game.AchievementsMonitor.GetDefault(),
-                UnlockedCards = new List<string>()
+                UnlockedCards = new HashSet<string>()
             };
         }
 
@@ -45,6 +45,11 @@ namespace Managers
             {
                 File.Delete(_path);
             }
+        }
+
+        public int GetUnlockProfCost(string prof)
+        {
+            return ProUnlocks.Length * 30 - 60;
         }
 
         public void Save()

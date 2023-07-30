@@ -106,7 +106,6 @@ namespace Game
                     WindowManager.Instance.effectPanel.enterNewAreaEffect.Play();
                     break;
                 case DoorSaveData doorSaveData:
-
                     break;
             }
         }

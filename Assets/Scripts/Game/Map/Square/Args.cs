@@ -29,8 +29,9 @@
 
     public class EnemyArgs : Args
     {
-        public Attack? EnemyAttack;
+        public bool IsDeath;
         public string Keyword;
+        public string MonsterId;
         public Attack? PlayerAttack;
     }
 

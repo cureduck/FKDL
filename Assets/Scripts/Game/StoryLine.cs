@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Managers;
 using TMPro;
+using Tools;
 using UnityEngine;
 
 namespace Game
@@ -19,23 +20,47 @@ namespace Game
             foreach (var s in phrases)
             {
                 var prefix = s.Split(':')[0];
-                var suffix = s.Split(':')[1];
+                // suffix means all words after :
+                var suffix = s.RemoveBefore(':');
 
                 switch (prefix)
                 {
                     case "trigger":
                         conditions.Add(new TriggerCondition(suffix));
                         break;
+                    case "switch":
+                        conditions.Add(new SwitchCondition(suffix));
+                        break;
                     case "prof":
                         conditions.Add(new ProfCondition(suffix));
                         break;
+                    case "killed":
+                        conditions.Add(new KilledCondition(suffix));
+                        break;
                     default:
-                        Debug.LogError($"can't interpret word {prefix}");
+                        Debug.LogError($"can't interpret word {prefix}-{suffix}");
                         break;
                 }
             }
 
             return conditions.ToArray();
+        }
+    }
+
+
+    public class SwitchCondition : Condition
+    {
+        public readonly string Switch;
+
+        public SwitchCondition(string suffix)
+        {
+            Switch = suffix;
+            StoryManager.Instance.Switches[Switch] = false;
+        }
+
+        public override bool Check()
+        {
+            return StoryManager.Instance.Switches[Switch] == true;
         }
     }
 
@@ -71,6 +96,22 @@ namespace Game
         }
     }
 
+    public class KilledCondition : Condition
+    {
+        private readonly string _id;
+
+        public KilledCondition(string id)
+        {
+            _id = id;
+        }
+
+        public override bool Check()
+        {
+            return GameDataManager.Instance.SecondaryData.Killed.Contains(_id);
+        }
+    }
+
+
     public abstract class Performance
     {
         public abstract void Perform();
@@ -82,7 +123,7 @@ namespace Game
             foreach (var s in phrases)
             {
                 var prefix = s.Split(':')[0];
-                var suffix = s.Split(':')[1];
+                var suffix = s.RemoveBefore(':');
 
                 switch (prefix)
                 {
@@ -91,6 +132,9 @@ namespace Game
                         break;
                     case "line":
                         performances.Add(new LinePerform(suffix));
+                        break;
+                    case "switch":
+                        performances.Add(new SwitchPerform(suffix));
                         break;
                     default:
                         Debug.LogError($"can't interpret word {prefix}");
@@ -137,6 +181,24 @@ namespace Game
             term.GetComponent<TMP_Text>()
                 .DOFade(0, 10f)
                 .OnComplete((() => term.gameObject.SetActive(false)));
+        }
+    }
+
+    public class SwitchPerform : Performance
+    {
+        private string Switch;
+        private bool Value;
+
+
+        public SwitchPerform(string s)
+        {
+            Switch = s.Split(':')[0];
+            Value = bool.Parse(s.Split(':')[1]);
+        }
+
+        public override void Perform()
+        {
+            StoryManager.Instance.Switches[Switch] = Value;
         }
     }
 

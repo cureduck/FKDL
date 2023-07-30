@@ -55,8 +55,20 @@ namespace Game
 
             if (!IsPlayer && !Cloned)
             {
-                InformReactResult(new EnemyArgs { PlayerAttack = attack });
+                if (this is EnemySaveData e)
+                {
+                    var args = new EnemyArgs
+                    {
+                        MonsterId = e.Bp.Id,
+                        PlayerAttack = attack,
+                        Keyword = attack.Kw,
+                        IsDeath = !IsAlive
+                    };
+                    InformReactResult(args);
+                    AttackCallback(args);
+                }
             }
+
 
             /*Status.CurHp -= attack.SumDmg;
 
@@ -70,6 +82,10 @@ namespace Game
             }
 
             return attack;
+        }
+
+        protected virtual void AttackCallback(EnemyArgs args)
+        {
         }
 
 

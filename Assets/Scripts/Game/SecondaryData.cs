@@ -21,6 +21,7 @@ namespace Game
         public Gift[] Gifts;
 
         public int InitGameSeed;
+        public HashSet<string> Killed = new HashSet<string>();
         public string[] Nightmares;
 
         [JsonIgnore] public Random PotionRandom;
@@ -33,6 +34,8 @@ namespace Game
         public int RemoveSkillPoint;
 
         public int SkillPoint;
+
+        public Dictionary<string, bool> Switches = new Dictionary<string, bool>();
 
         public SecondaryData()
         {

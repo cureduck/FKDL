@@ -44,5 +44,10 @@ namespace Managers
             var candidates = base.GetCandidates(rank);
             return candidates.Where(skill => skill.CanGet && SData.Profs.Contains(skill.Prof.ToUpper()));
         }
+
+        public Skill[] GetProfSkills(string prof)
+        {
+            return Lib.Values.Where(skill => skill.Prof == prof).ToArray();
+        }
     }
 }

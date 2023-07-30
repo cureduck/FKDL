@@ -43,7 +43,7 @@ namespace Game
         [JsonIgnore] public Sprite Icon => SpriteManager.Instance.BuffIcons[m_IconName];
 
         [JsonIgnore] public int CurrentLevel { get; set; } = 1;
-        [JsonIgnore] public virtual int LevelUpCost => 0;
+        [JsonIgnore] public virtual int LevelUpCost => _levelCost[CurrentLevel];
         public virtual int MaxLevel => 3;
         [JsonIgnore] public abstract int PointCost { get; }
 

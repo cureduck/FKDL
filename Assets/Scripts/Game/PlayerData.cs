@@ -64,6 +64,9 @@ namespace Game
 
         [JsonIgnore] public override FighterData Enemy => enemy ?? (EnemySaveData)GameManager.Instance.Focus.Data;
 
+        public event Action<string> OnCollectCard;
+        public event Action<string> OnKillEnemy;
+
         public event Action<int> Marching;
 
         public void March(string destination)
@@ -129,6 +132,12 @@ namespace Game
         public void ReactWith(MapData cell)
         {
             CheckChain(Timing.OnReact, new object[] { cell, this });
+        }
+
+        protected override void AttackCallback(EnemyArgs args)
+        {
+            base.AttackCallback(args);
+            OnKillEnemy?.Invoke(args.MonsterId);
         }
 
 
@@ -263,11 +272,12 @@ namespace Game
                         Skills[i] = new SkillData();
                     }
 
-                    if (Skills[i].IsEmpty)
+                    if (!Skills[i].IsValid)
                     {
                         Skills[i].Load(sk);
                         //Equip(Skills[i]);
                         OnGet(Skills[i]);
+                        OnCollectCard?.Invoke(id);
                         DelayUpdate();
                         info = new SuccessInfo();
                         return true;

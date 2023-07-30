@@ -122,6 +122,12 @@ namespace Tools
             return Regex.Replace(s, pattern, "");
         }
 
+        public static string RemoveBefore(this string s, char c)
+        {
+            var pattern = $"^.+?{c}";
+            return Regex.Replace(s, pattern, "");
+        }
+
         public static string RemoveBetween(this string s, (string left, string right) pair = default)
         {
             var pattern = $"{pair.left}.+?{pair.right}";
