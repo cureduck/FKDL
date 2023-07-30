@@ -21,7 +21,6 @@ namespace UI
                 }
 
                 Open(GameManager.Instance.Player);
-                //Data = GameManager.Instance.PlayerData;
 
                 Data.OnUpdated += UpdateUI;
                 Data.SkillPointChanged += SkillPointChanged;
@@ -37,7 +36,7 @@ namespace UI
 
         protected override void UpdateUI()
         {
-            //Debug.Log(Data);
+            Debug.Log(Data);
             if (Data != null)
             {
                 listView.SetData(Data, Data.Skills.ToArray());

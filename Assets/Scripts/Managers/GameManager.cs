@@ -180,25 +180,32 @@ namespace Managers
             try
             {
                 var localizationFiles = Directory.GetFiles(localizationFilePath);
+                Debug.Log(localizationFiles.Length);
                 foreach (var fileName in localizationFiles)
                 {
                     if (fileName.EndsWith(".csv"))
                     {
                         var f = File.ReadAllText(fileName);
+                        Debug.Log(fileName);
                         f = f.Replace("\r\n", "\n");
-                        LocalizationManager.Sources[0].Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
-
-#if UNITY_EDITOR
-                        LanguageSourceAsset languageSourceAsset = Resources.Load<LanguageSourceAsset>("I2Languages");
-                        EditorUtility.SetDirty(languageSourceAsset);
-                        AssetDatabase.Refresh();
-                        AssetDatabase.SaveAssets();
-#endif
+                        Debug.Log($"加载当前文件数据----》{fileName}");
+                        Debug.Log(LocalizationManager.Sources.Count);
+                        Resources.Load<LanguageSourceAsset>("I2Languages").SourceData
+                            .Import_CSV("", f, eSpreadsheetUpdateMode.Merge);
+                        //LocalizationManager.Sources[0].Import_CSV();
+                        Debug.Log("当前文件加载完毕");
                     }
                 }
+#if UNITY_EDITOR
+                LanguageSourceAsset languageSourceAsset = Resources.Load<LanguageSourceAsset>("I2Languages");
+                EditorUtility.SetDirty(languageSourceAsset);
+                AssetDatabase.Refresh();
+                AssetDatabase.SaveAssets();
+#endif
             }
             catch (Exception e)
             {
+                Debug.LogError(e);
                 Console.WriteLine(e);
             }
 

@@ -48,8 +48,9 @@ namespace UI
 
         [SerializeField] private LocalizationParamsManager coolDownParams;
 
-        [ShowInInspector] public Offer Offer;
+        [SerializeField] private GameObject m_isLockSign;
 
+        [ShowInInspector] public Offer Offer;
         private System.Action onClick;
 
         private DisplayMode displayMode => Input.GetKey(KeyCode.LeftAlt) ? DisplayMode.Brief : DisplayMode.Detail;
@@ -77,7 +78,7 @@ namespace UI
             {
                 Skill skill = SkillManager.Instance.GetById(Offer.Id);
 
-                //string[] text = new string[] {"Ky_data_01",  "Ky_data_02",  };
+                //string[] text = new string[] { "PPlus", "poison",  };
 
                 string[] curParameters;
                 string totalDescribe = StringDefines.GetKeyWordDescribe(skill.Keywords, out curParameters);
@@ -124,7 +125,7 @@ namespace UI
         //}
 
 
-        public void SetData(Offer offer, System.Action onClick)
+        public void SetData(Offer offer, bool isLock, System.Action onClick)
         {
             this.Offer = offer;
             //Debug.Log(offer.Kind);
@@ -134,6 +135,8 @@ namespace UI
             }
 
             this.onClick = onClick;
+            if (m_isLockSign)
+                m_isLockSign.SetActive(isLock);
             UpdateData();
         }
 

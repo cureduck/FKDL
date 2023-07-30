@@ -29,14 +29,18 @@ public class SettingPanel : BasePanel<GameSettings>
     //[FormerlySerializedAs("back_to_start_btn")] 
     [SerializeField] private Button backToStartBtn;
 
-    private void Start()
-    {
-        resolutionSetting.Init();
-        Init();
-    }
+    [Header("打开成就面板")] [SerializeField] private Button m_openAchievmentPanel_btn;
+
+    [SerializeField] private AchievementPanel m_achievementPanel;
+    //private void Start()
+    //{
+
+    //    Init();
+    //}
 
     public override void Init()
     {
+        Profile.Delete();
         if (localizeDropdown._Terms.Count < 3)
         {
             localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_Always");
@@ -44,6 +48,8 @@ public class SettingPanel : BasePanel<GameSettings>
             localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_Never");
         }
 
+        resolutionSetting.Init();
+        m_achievementPanel.Init();
         //LanguageSliderInit();
         cameraFollowDropdown.value = (int)gameSettings.CameraFollow;
         bgmSizeSilder.value = gameSettings.BgmVolume;
@@ -89,6 +95,8 @@ public class SettingPanel : BasePanel<GameSettings>
             });
         }
 
+        m_openAchievmentPanel_btn.onClick.AddListener(() => m_achievementPanel.Open(0));
+
         IsFullScreenToggleValueChange(gameSettings.IsFullScreen);
 
         Camera.main.fieldOfView = gameSettings.FOV;
@@ -98,19 +106,19 @@ public class SettingPanel : BasePanel<GameSettings>
     private void BGMSliderValueChange(float value)
     {
         gameSettings.BgmVolume = value;
-        //if (AudioPlayer.Instance)
-        //{
-        //    AudioPlayer.Instance.SetBGMVolume(value);
-        //}
+        if (AudioPlayer.Instance)
+        {
+            AudioPlayer.Instance.SetBGMVolume(value);
+        }
     }
 
     private void SESliderValueChange(float value)
     {
         gameSettings.SEVolume = value;
-        //if (AudioPlayer.Instance)
-        //{
-        //    AudioPlayer.Instance.SetSEVolume(value);
-        //}
+        if (AudioPlayer.Instance)
+        {
+            AudioPlayer.Instance.SetSEVolume(value);
+        }
     }
 
 

@@ -31,8 +31,6 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
         {
             transform.position = mainCamera.WorldToScreenPoint(Data.worldTrans.transform.position);
         }
-
-        Debug.Log(GetCounterpointPosition());
     }
 
     public override void Close()
@@ -43,6 +41,8 @@ public class SimpleInfoItemPanel : BasePanel<SimpleInfoItemPanel.Args>
     public override void Init()
     {
         notBeyoundTheScreen.Init(transform.parent.GetComponent<Canvas>());
+        gameObject.SetActive(false);
+        transform.localScale = Vector3.one * 1.2f;
         //m_keywordNotBeyoundScreen.Init(transform.parent.GetComponent<Canvas>());
     }
 

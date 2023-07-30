@@ -83,20 +83,14 @@ namespace Game
 
 
             ShopGoods goods;
-            if (_refreshTimes == 0)
+
+            var keyGoods = new Offer[3]
             {
-                var keyGoods = new Offer[3]
-                {
-                    new Offer(Rank.Normal, GetKeyPrice(Rank.Normal)),
-                    new Offer(Rank.Uncommon, GetKeyPrice(Rank.Uncommon)),
-                    new Offer(Rank.Rare, GetKeyPrice(Rank.Rare)),
-                };
-                goods = new ShopGoods { SkillList = skillGoods, PotionList = potionGoods, KeyList = keyGoods };
-            }
-            else
-            {
-                goods = new ShopGoods { SkillList = skillGoods, PotionList = potionGoods, KeyList = Goods.KeyList };
-            }
+                new Offer(Rank.Normal, GetKeyPrice(Rank.Normal)),
+                new Offer(Rank.Uncommon, GetKeyPrice(Rank.Uncommon)),
+                new Offer(Rank.Rare, GetKeyPrice(Rank.Rare)),
+            };
+            goods = new ShopGoods { SkillList = skillGoods, PotionList = potionGoods, KeyList = keyGoods };
 
             return goods;
         }

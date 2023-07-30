@@ -55,7 +55,7 @@ namespace UI
 
                 int targetIndex = i;
                 Offer offer = offers[i];
-                offerUI.SetData(offer, () => { OnClick(offer, targetIndex); });
+                offerUI.SetData(offer, false, () => { OnClick(offer, targetIndex); });
                 offersUIStartAnimations[i] = offerUI.GetComponent<OffersUIStartAnimation>();
             }
 

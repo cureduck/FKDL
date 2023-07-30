@@ -33,14 +33,13 @@ namespace Game
 
         public int RemoveSkillPoint;
 
-        public int SkillPoint;
+        public int SkillPoint = 100;
 
         public Dictionary<string, bool> Switches = new Dictionary<string, bool>();
 
         public SecondaryData()
         {
             SkillPoint = 0;
-
             DiscoveredRelics = new List<string>();
         }
 

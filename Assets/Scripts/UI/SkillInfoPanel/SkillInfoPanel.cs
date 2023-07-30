@@ -27,7 +27,13 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 
     [SerializeField] private Localize positiveInfo;
 
+    [Header("关键词")] [SerializeField] private NotBeyoundTheScreen notBeyoundTheScreen;
+
+    [SerializeField] private GameObject m_keyWordObj;
+    [SerializeField] private Localize m_keyWordDescribe_txt;
+    [SerializeField] private LocalizationParamsManager _keyWordParamsManager;
     private Camera mainCamera;
+    private RectTransform rectTransform;
 
 
     private DisplayMode displayMode => Input.GetKey(KeyCode.LeftAlt) ? DisplayMode.Detail : DisplayMode.Brief;
@@ -36,6 +42,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
     {
         mainCamera = Camera.main;
         DescParamsManager = describe.GetComponent<LocalizationParamsManager>();
+        notBeyoundTheScreen.Init(transform.parent.GetComponent<Canvas>());
         gameObject.SetActive(false);
     }
 
@@ -60,19 +67,19 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
         //}
 
         transform.position = Data.screenPosition;
-
+        Skill curSkillInfo;
         if (Data is Args02)
         {
-            Skill curSkilInfo = (Data as Args02).skill;
+            curSkillInfo = (Data as Args02).skill;
 
-            skillName.SetTerm(curSkilInfo.Id);
+            skillName.SetTerm(curSkillInfo.Id);
 
-            if (curSkilInfo.Rank == Rank.Normal)
+            if (curSkillInfo.Rank == Rank.Normal)
             {
                 skillRank.SetTerm("UI_Normal_RankInfo_01");
                 skillRank_tmp.color = new Color(1, 1, 1);
             }
-            else if (curSkilInfo.Rank == Rank.Uncommon)
+            else if (curSkillInfo.Rank == Rank.Uncommon)
             {
                 skillRank.SetTerm("UI_Normal_RankInfo_02");
                 skillRank_tmp.color = new Color(36 / 255.0f, 176 / 255.0f, 143 / 255.0f);
@@ -83,13 +90,13 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                 skillRank_tmp.color = new Color(255 / 255.0f, 163 / 255.0f, 0 / 255.0f);
             }
 
-            if (curSkilInfo.Positive)
+            if (curSkillInfo.Positive)
             {
-                if (curSkilInfo.CostInfo.CostType == CostType.Hp)
+                if (curSkillInfo.CostInfo.CostType == CostType.Hp)
                 {
                     costInfo.SetTerm("HPCostInfo");
                 }
-                else if (curSkilInfo.CostInfo.CostType == CostType.Gold)
+                else if (curSkillInfo.CostInfo.CostType == CostType.Gold)
                 {
                     costInfo.SetTerm("GoldCostInfo");
                 }
@@ -98,7 +105,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                     costInfo.SetTerm("MPCostInfo");
                 }
 
-                CostParamsManager.SetParameterValue("VALUE", curSkilInfo.CostInfo.Value.ToString());
+                CostParamsManager.SetParameterValue("VALUE", curSkillInfo.CostInfo.Value.ToString());
             }
             else
             {
@@ -107,15 +114,15 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
             }
 
             coolDownInfo.SetTerm("CooldownInfo");
-            ColdDownParamsManager.SetParameterValue("VALUE", curSkilInfo.Cooldown.ToString());
+            ColdDownParamsManager.SetParameterValue("VALUE", curSkillInfo.Cooldown.ToString());
 
             //describe.SetTerm($"{curSkilInfo.Id}_desc");
-            describe.SetTerm($"{curSkilInfo.Id}_desc");
+            describe.SetTerm($"{curSkillInfo.Id}_desc");
             describe.SetLocalizeParam(
                 new[] { "P1", "P2", "CurLv" },
                 new[]
                 {
-                    curSkilInfo.Param1.ToString(), curSkilInfo.Param2.ToString(), 1.ToString()
+                    curSkillInfo.Param1.ToString(), curSkillInfo.Param2.ToString(), 1.ToString()
                 });
             switch (displayMode)
             {
@@ -131,17 +138,17 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
             }
 
             maxLevel.SetTerm("MaxLvInfo");
-            MaxParamsManager.SetParameterValue("MaxLv", curSkilInfo.MaxLv.ToString());
+            MaxParamsManager.SetParameterValue("MaxLv", curSkillInfo.MaxLv.ToString());
             MaxParamsManager.SetParameterValue("CurLv", "0");
 
             curBelongProf.SetTerm("SkillBelong");
-            CurBelongProfManager.SetParameterValue("VALUE", curSkilInfo.Prof);
+            CurBelongProfManager.SetParameterValue("VALUE", curSkillInfo.Prof);
 
-            positiveInfo.SetTerm(curSkilInfo.Positive ? "positive" : "passive");
+            positiveInfo.SetTerm(curSkillInfo.Positive ? "positive" : "passive");
         }
         else
         {
-            Skill curSkillInfo = Data.skillData.Bp;
+            curSkillInfo = Data.skillData.Bp;
 
             skillName.SetTerm(curSkillInfo.Id);
             if (curSkillInfo.Rank == Rank.Normal)
@@ -216,6 +223,41 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
 
             positiveInfo.SetTerm(curSkillInfo.Positive ? "positive" : "passive");
         }
+
+
+        //关键词
+        string[] curParameters;
+        string totalDescribe = StringDefines.GetKeyWordDescribe(curSkillInfo.Keywords, out curParameters);
+
+
+        if (!string.IsNullOrEmpty(totalDescribe))
+        {
+            m_keyWordObj.SetActive(true);
+            m_keyWordDescribe_txt.SetTerm(totalDescribe);
+            m_keyWordObj.transform.localPosition = GetCounterpointPosition();
+            m_keyWordObj.GetComponent<RectTransform>().pivot = GetComponent<RectTransform>().pivot;
+            for (int i = 0; i < curParameters.Length; i++)
+            {
+                _keyWordParamsManager.SetParameterValue($"P{i + 1}", curParameters[i]);
+            }
+        }
+        else
+        {
+            m_keyWordObj.SetActive(false);
+        }
+    }
+
+    public Vector2 GetCounterpointPosition()
+    {
+        if (rectTransform == null)
+            rectTransform = GetComponent<RectTransform>();
+        Vector2 curPivot = rectTransform.pivot;
+        Vector2 offPivot = new Vector2(1 - rectTransform.pivot.x, rectTransform.pivot.y);
+        Vector2 targetPosition = new Vector2(rectTransform.sizeDelta.x * (curPivot.x - offPivot.x),
+            rectTransform.sizeDelta.y * (curPivot.y - offPivot.y));
+        //offPivot.x
+
+        return -targetPosition;
     }
 
     private enum DisplayMode

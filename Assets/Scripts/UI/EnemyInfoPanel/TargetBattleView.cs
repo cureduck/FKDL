@@ -84,7 +84,15 @@ public class TargetBattleView : MonoBehaviour
             {
                 if (fighterData.Skills.Count > 0)
                 {
-                    curSkillView.SetData(fighterData, fighterData.Skills[0], 0, null, null, null);
+                    SkillData skillDatas = fighterData.Skills[0];
+                    if (skillDatas != null && skillDatas.Bp != null)
+                    {
+                        curSkillView.SetData(fighterData, fighterData.Skills[0], 0, null, null, null);
+                    }
+                    else
+                    {
+                        curSkillView.SetData(fighterData, null, 0, null, null, null);
+                    }
                 }
                 else
                 {

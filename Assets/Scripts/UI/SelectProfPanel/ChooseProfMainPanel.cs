@@ -22,7 +22,7 @@ public class ChooseProfMainPanel : MonoBehaviour
     [SerializeField] private Button startGame_btn;
     [SerializeField] private GameObject waringInfo;
     [SerializeField] private GameObject _giftsPanel;
-    private string[] curCanSelectProfs;
+    [SerializeField] private LocalizationParamsManager m_leftSoul_par;
 
     #region 内部自用
 
@@ -34,8 +34,8 @@ public class ChooseProfMainPanel : MonoBehaviour
 
     private void Start()
     {
+        Profile.GetOrCreate().CollectedSouls = 1000;
         Init();
-        curCanSelectProfs = new string[] { "ALC", "ASS", "MAG", "BAR", "BLI", "CUR", "KNI" };
         UpdateView();
     }
 
@@ -51,7 +51,7 @@ public class ChooseProfMainPanel : MonoBehaviour
 
     private void UpdateView()
     {
-        profListView.SetData(curCanSelectProfs, CellClick, CellPointEnter, null, curSelectViewIndex);
+        profListView.SetData(Profile.CurAllPorf, CellClick, CellPointEnter, null, OnLockComplete, curSelectViewIndex);
 
         mainProf.CurSelectHeightLightActive(false);
         secondProf01.CurSelectHeightLightActive(false);
@@ -60,7 +60,6 @@ public class ChooseProfMainPanel : MonoBehaviour
         mainProf.SetData(profDatas[0]);
         secondProf01.SetData(profDatas[1]);
         secondProf02.SetData(profDatas[2]);
-        Debug.Log("Gengxing!");
         if (string.IsNullOrEmpty(profDatas[0]))
         {
             mainProf.CurSelectHeightLightActive(true);
@@ -76,8 +75,20 @@ public class ChooseProfMainPanel : MonoBehaviour
 
         startGame_btn.interactable = curSelectViewIndex.Count >= 3;
         waringInfo.gameObject.SetActive(curSelectViewIndex.Count < 3);
+        m_leftSoul_par.SetParameterValue("P1", Profile.GetOrCreate().CollectedSouls.ToString());
 
         //Relic startRelic = RelicManager.Instance.GetById()
+    }
+
+    private void OnLockComplete(string obj)
+    {
+        var temp = Profile.GetOrCreate();
+        temp.CollectedSouls -= temp.GetUnlockProfCost(obj);
+        List<string> curUnlock = new List<string>(temp.ProUnlocks);
+        curUnlock.Add(obj);
+        temp.ProUnlocks = curUnlock.ToArray();
+        temp.Save();
+        UpdateView();
     }
 
     private void CellPointExit(CellChooseProfView arg1, string arg2)
@@ -94,10 +105,10 @@ public class ChooseProfMainPanel : MonoBehaviour
         profDescribe_txt.SetTerm($"{arg2}_desc".ToLower());
 
         string relicId;
-        Debug.Log(arg2);
+        //Debug.Log(arg2);
         if (RelicData.ProfRelic.TryGetValue(arg2, out relicId))
         {
-            Debug.Log(relicId);
+            //Debug.Log(relicId);
             //startRelicInfo.gameObject.SetActive(true);
             Relic curRelicData = RelicManager.Instance.GetById(relicId);
             if (curRelicData != null)
@@ -152,9 +163,9 @@ public class ChooseProfMainPanel : MonoBehaviour
 
     private int GetProfIndexByData(string profData)
     {
-        for (int i = 0; i < curCanSelectProfs.Length; i++)
+        for (int i = 0; i < Profile.CurAllPorf.Length; i++)
         {
-            if (curCanSelectProfs[i] == profData)
+            if (Profile.CurAllPorf[i] == profData)
             {
                 return i;
             }

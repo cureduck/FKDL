@@ -32,7 +32,7 @@ public class CellSkillView : MonoBehaviour
     [SerializeField] private Color notEnough_Color;
 
     [Header("技能升级按钮")] [SerializeField] private GameObject levelUpObject;
-
+    [SerializeField] private GameObject levelUpEffect;
     [SerializeField] private Button levelUp_btn;
 
     [Header("其他组件")] [SerializeField] private GameObject heightlightView;
@@ -98,7 +98,12 @@ public class CellSkillView : MonoBehaviour
         levelUp_btn.onClick.AddListener(UpgradeSkill);
 
         heightlightView.SetActive(false);
-        coolDownCompleteSign.gameObject.SetActive(false);
+        if (levelUpEffect)
+        {
+            levelUpEffect.SetActive(false);
+        }
+
+        coolDownCompleteSign.SetActive(false);
         cellUIDragView.Init(this);
         cellUIDragView.dragParent = WindowManager.Instance.dragViewParent;
     }
@@ -133,6 +138,17 @@ public class CellSkillView : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        if (this.skillData != null)
+        {
+            this.playerData.OnSkillLevelUp -= OnSkillLevelUp;
+            this.skillData.Activated -= PassiveSkillTrigger;
+            this.playerData = null;
+            this.skillData = null;
+        }
+    }
+
     [Button]
     public void UpdateView()
     {
@@ -146,12 +162,15 @@ public class CellSkillView : MonoBehaviour
         //Debug.LogWarning(this.skillData + "被动效果移除");
         if (this.skillData != null)
         {
+            this.playerData.OnSkillLevelUp -= OnSkillLevelUp;
             this.skillData.Activated -= PassiveSkillTrigger;
         }
 
+        this.playerData = playerData;
         this.skillData = skillData;
         if (this.skillData != null)
         {
+            this.playerData.OnSkillLevelUp += OnSkillLevelUp;
             this.skillData.Activated += PassiveSkillTrigger;
         }
 
@@ -349,10 +368,23 @@ public class CellSkillView : MonoBehaviour
         if (temp != null)
         {
             temp.UpgradeWithPoint(skillData);
-            coolDownCompleteSign.gameObject.SetActive(false);
-            coolDownCompleteSign.gameObject.SetActive(true);
+
+
+            coolDownCompleteSign.SetActive(false);
+            coolDownCompleteSign.SetActive(true);
         }
     }
+
+    private void OnSkillLevelUp(SkillData skillData)
+    {
+        if (levelUpEffect && skillData.Id == this.skillData.Id)
+        {
+            levelUpEffect.SetActive(false);
+
+            levelUpEffect.SetActive(true);
+        }
+    }
+
 
     private void PassiveSkillTrigger()
     {

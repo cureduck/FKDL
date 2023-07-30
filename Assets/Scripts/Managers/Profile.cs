@@ -8,26 +8,28 @@ namespace Managers
 {
     public class Profile : SaveData
     {
+        public static string[] CurAllPorf = new string[] { "MAG", "ALC", "ASS", "KNI", "CUR", "BAR" };
+
         public AchievementsMonitor AchievementsMonitor;
         public int CollectedSouls;
         public Dictionary<string, int> GiftsLevel = new Dictionary<string, int>();
         public string[] GiftUnlocks;
         public string[] ProUnlocks;
-        public int RecentCollectedSouls;
 
+        public int RecentCollectedSouls;
         public HashSet<string> UnlockedCards;
 
-        private static string _path => Path.Combine(Application.persistentDataPath, "Profile.asset");
+        private static string _path => Path.Combine(Application.streamingAssetsPath, "Profile.asset");
 
 
-        private static Profile NewProfile()
+        private static Profile CreateNewProfile()
         {
             var giftsLevel = Gift.GiftDictionary.Keys.ToDictionary(key => key, key => 1);
 
             return new Profile()
             {
-                ProUnlocks = new string[] { "MAG", "ALC", "ASS", "KNI", "CUR", "BAR" },
-                CollectedSouls = 0,
+                ProUnlocks = new string[] { "MAG", "ALC", "ASS", /*"KNI", "CUR", "BAR"*/ },
+                CollectedSouls = 1000,
                 GiftsLevel = giftsLevel,
                 AchievementsMonitor = Game.AchievementsMonitor.GetDefault(),
                 UnlockedCards = new HashSet<string>()
@@ -36,7 +38,7 @@ namespace Managers
 
         public static Profile GetOrCreate()
         {
-            return GetOrCreate(NewProfile, _path);
+            return GetOrCreate(CreateNewProfile, _path);
         }
 
         public static void Delete()

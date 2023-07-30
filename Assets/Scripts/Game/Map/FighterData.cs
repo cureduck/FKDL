@@ -39,6 +39,7 @@ namespace Game
         public event System.Action<int> OnGoldValueChanged;
         public event System.Action<int> OnRecoverHealth;
         public event System.Action<int> OnRecoverMana;
+        public event System.Action<SkillData> OnSkillLevelUp;
 
         private Attack InitAttack(SkillData skill = null, CostInfo costInfo = default)
         {
@@ -883,6 +884,7 @@ namespace Game
         {
             skillData.CurLv += lv;
             CheckChain<SkillData>(Timing.OnLvUp, new object[] { skillData, this });
+            OnSkillLevelUp?.Invoke(skillData);
             DelayUpdate();
         }
 

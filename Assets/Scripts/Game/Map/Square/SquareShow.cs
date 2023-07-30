@@ -167,10 +167,12 @@ namespace Game
 
         private void HandleEnemyArgs(EnemyArgs args0)
         {
+            Attack result = args0.PlayerAttack.GetValueOrDefault();
+
             GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
             curEffectObject.transform.position = Icon.transform.position;
             AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
-            Attack result = args0.PlayerAttack.GetValueOrDefault();
+
             //GameObject temp = ObjectPoolManager.Instance.SpawnDamageSignEffect(10, 0);
             float range = 0.5f;
             //temp.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range));
@@ -192,6 +194,13 @@ namespace Game
             if (result.CDmg > 0)
             {
                 GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.CDmg, 2);
+                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range),
+                    UnityEngine.Random.Range(-range, range));
+            }
+
+            if (result.PDmg <= 0 && result.MDmg <= 0 && result.CDmg <= 0)
+            {
+                GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(0, 0);
                 cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range),
                     UnityEngine.Random.Range(-range, range));
             }
