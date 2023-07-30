@@ -19,7 +19,7 @@ namespace Managers
         public int RecentCollectedSouls;
         public HashSet<string> UnlockedCards;
 
-        private static string _path => Path.Combine(Application.streamingAssetsPath, "Profile.asset");
+        private static string _path => Path.Combine(Application.persistentDataPath, "Profile.json");
 
 
         private static Profile CreateNewProfile()

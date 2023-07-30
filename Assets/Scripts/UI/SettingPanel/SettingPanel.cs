@@ -40,7 +40,7 @@ public class SettingPanel : BasePanel<GameSettings>
 
     public override void Init()
     {
-        Profile.Delete();
+        //Profile.Delete();
         if (localizeDropdown._Terms.Count < 3)
         {
             localizeDropdown._Terms.Add("UI_SettingPanel_CameraAutoFollow_Always");

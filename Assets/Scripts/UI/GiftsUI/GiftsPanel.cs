@@ -123,14 +123,13 @@ namespace UI
         private void UpgradeGift(Gift gift)
         {
             gift.Upgrade();
-            var profile = Profile.GetOrCreate();
             foreach (var gift1 in Gift.GiftDictionary)
             {
                 _profile.GiftsLevel[gift1.Key] = gift1.Value.CurrentLevel;
             }
 
-            profile.CollectedSouls -= gift.LevelUpCost;
-            profile.Save();
+            _profile.CollectedSouls -= gift.LevelUpCost;
+            _profile.Save();
         }
 
         private void ChooseGift(Gift gift)
