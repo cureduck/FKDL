@@ -4,13 +4,19 @@ namespace Game
 {
     public class RockSaveData : MapData
     {
+        public readonly int Level;
         public int Cost;
+
+        public RockSaveData(int level)
+        {
+            Level = level;
+        }
 
         public override void Init()
         {
             base.Init();
             var c = Area;
-            Cost = Random.Range((int)1.5f * c, (int)(2.5 * c));
+            Cost = Random.Range((int)1.5f * c, (int)(2.5 * c + Level));
         }
 
         public override void OnReact()

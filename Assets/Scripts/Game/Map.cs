@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Managers;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -10,18 +9,10 @@ namespace Game
 {
     public class Map : SaveData
     {
-        [JsonIgnore] public static string _savePath => Application.persistentDataPath + "/MapData.json";
-
         public string CurrentFloor;
 
         public Dictionary<string, Floor> Floors;
-
-
-        public class Floor
-        {
-            public LinkedList<MapData> Squares;
-            public string FloorName;
-        }
+        [JsonIgnore] public static string _savePath => Application.persistentDataPath + "/MapData.json";
 
         public void Save()
         {
@@ -61,6 +52,32 @@ namespace Game
         }
 
 
+        public void ReplaceAllEnemy(string targetId, string newId)
+        {
+            if (EnemyManager.Instance.TryGetEnemy(newId, out var bp))
+            {
+                foreach (var floor in Floors.Values)
+                {
+                    foreach (var square in floor.Squares)
+                    {
+                        if (square is EnemySaveData sq)
+                        {
+                            if (sq.Id == targetId)
+                            {
+                                sq.Id = newId;
+                                sq.Init();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("replace enemy failed");
+            }
+        }
+
+
         [Button]
         public static Map Load(string path)
         {
@@ -70,6 +87,13 @@ namespace Game
         ~Map()
         {
             Debug.Log("!!!");
+        }
+
+
+        public class Floor
+        {
+            public string FloorName;
+            public LinkedList<MapData> Squares;
         }
     }
 }

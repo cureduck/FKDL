@@ -15,7 +15,6 @@ namespace Game
 {
     public class PlayerData : FighterData
     {
-        private const int _floorLimit = 5;
         [JsonIgnore] private float _luckChance;
         public int BattleRound = 0;
         public bool DrawBack;
@@ -80,10 +79,6 @@ namespace Game
             CheckChain(Timing.OnMarch, new object[] { this });
 
             Marching?.Invoke(int.Parse(destination));
-            if (destination.Contains((_floorLimit + 1).ToString()))
-            {
-                Destroyed();
-            }
         }
 
         private void ClearAllBuffs()

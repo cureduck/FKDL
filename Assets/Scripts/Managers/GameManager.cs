@@ -385,8 +385,10 @@ namespace Managers
             {
                 square.UnbindCurrent();
                 square.gameObject.SetActive(false);
-                _pool.Return(square);
+                Destroy(square);
+                //_pool.Return(square);
             }
+
 
             squares.Clear();
             /*foreach (Transform trans in MapGo)
@@ -397,10 +399,14 @@ namespace Managers
 
             foreach (var square in floor.Squares)
             {
-                Square curObject = CreateSquare(square);
-                if (curObject != null)
+                if (square == null) continue;
+
+                //Square curObject = CreateSquare(square);
+                var sq = Instantiate(Prefab, MapGo);
+                sq.Reload(square);
+                if (sq != null)
                 {
-                    squares.Add(curObject);
+                    squares.Add(sq);
                 }
             }
 

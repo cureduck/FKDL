@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game;
 using UnityEngine;
 
@@ -32,6 +31,12 @@ namespace Managers
                     bp.Icon = SpriteManager.Instance.BuffIcons["soldier"];
                 }
             }
+        }
+
+
+        public bool TryGetEnemy(string id, out EnemyBp bp)
+        {
+            return EnemyBps.TryGetValue(id.ToLower().Trim(), out bp);
         }
     }
 }

@@ -131,7 +131,12 @@ namespace Game
                         performances.Add(new LinePerform(suffix));
                         break;
                     case "switch":
-                        performances.Add(new SwitchPerform(suffix));
+                        var words0 = suffix.Split(',');
+                        performances.Add(new SwitchPerform(words0[0], bool.Parse(words0[1])));
+                        break;
+                    case "replace":
+                        var words = suffix.Split(',');
+                        performances.Add(new ReplacePerform(words[0], words[1]));
                         break;
                     default:
                         Debug.LogError($"can't interpret word {prefix}");
@@ -197,10 +202,10 @@ namespace Game
         private bool Value;
 
 
-        public SwitchPerform(string s)
+        public SwitchPerform(string @switch, bool value)
         {
-            Switch = s.Split(':')[0];
-            Value = bool.Parse(s.Split(':')[1]);
+            Switch = @switch;
+            Value = value;
         }
 
         public override void Perform()
@@ -217,8 +222,23 @@ namespace Game
 
     public class ReplacePerform : Performance
     {
+        private readonly string newId;
+        private readonly string oldId;
+
+        public ReplacePerform(string oldId, string newId)
+        {
+            this.oldId = oldId;
+            this.newId = newId;
+        }
+
         public override void Perform()
         {
+            GameManager.Instance.Map.ReplaceAllEnemy(oldId, newId);
+        }
+
+        public override string ToString()
+        {
+            return $"replace:{oldId}:{newId}";
         }
     }
 

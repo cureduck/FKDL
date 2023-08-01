@@ -10,6 +10,6 @@
     "\\Assets\\Scripts\\GlobalEvent",
     "\\Assets\\Scripts\\Managers"
   ],
-  "SelectedNode": "\\Assets\\Scripts\\Game\\StoryLine.cs",
+  "SelectedNode": "\\Assets\\Scripts\\Managers\\MapLoader.cs",
   "PreviewInSolutionExplorer": false
 }

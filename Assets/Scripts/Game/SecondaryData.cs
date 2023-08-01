@@ -18,6 +18,8 @@ namespace Game
 
         [JsonIgnore] public Random CurGameRandom;
 
+        public HashSet<string> DisabledCrystals = new HashSet<string>();
+
         public Gift[] Gifts;
 
         public int InitGameSeed;
