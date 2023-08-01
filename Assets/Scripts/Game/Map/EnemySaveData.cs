@@ -174,6 +174,7 @@ namespace Game
             if (!Cloned)
             {
                 Profile.RecentCollectedSouls += Bp.Souls;
+                Player.KillEnemy(this);
                 Profile.Save();
             }
 

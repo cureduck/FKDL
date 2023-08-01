@@ -128,16 +128,15 @@ namespace Game
             }
         }
 
+        public void KillEnemy(EnemySaveData e)
+        {
+            OnKillEnemy?.Invoke(e.Id);
+        }
+
 
         public void ReactWith(MapData cell)
         {
             CheckChain(Timing.OnReact, new object[] { cell, this });
-        }
-
-        protected override void AttackCallback(EnemyArgs args)
-        {
-            base.AttackCallback(args);
-            OnKillEnemy?.Invoke(args.MonsterId);
         }
 
 

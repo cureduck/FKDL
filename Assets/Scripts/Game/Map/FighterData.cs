@@ -66,7 +66,6 @@ namespace Game
                         IsDeath = !IsAlive
                     };
                     InformReactResult(args);
-                    AttackCallback(args);
                 }
             }
 
@@ -83,10 +82,6 @@ namespace Game
             }
 
             return attack;
-        }
-
-        protected virtual void AttackCallback(EnemyArgs args)
-        {
         }
 
 
@@ -141,7 +136,7 @@ namespace Game
         }
 
 
-        public Attack OperateAttack(FighterData target, Attack attack)
+        protected virtual Attack OperateAttack(FighterData target, Attack attack)
         {
             //当前连击段数
             var tmp = attack;
@@ -211,7 +206,7 @@ namespace Game
         {
             Enemy.Gain(Gold, "trophy");
 
-            base.Destroyed();
+            Destroyed();
         }
 
 

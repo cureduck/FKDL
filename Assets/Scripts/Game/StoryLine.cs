@@ -34,9 +34,6 @@ namespace Game
                     case "prof":
                         conditions.Add(new ProfCondition(suffix));
                         break;
-                    case "killed":
-                        conditions.Add(new KilledCondition(suffix));
-                        break;
                     default:
                         Debug.LogError($"can't interpret word {prefix}-{suffix}");
                         break;
@@ -62,6 +59,11 @@ namespace Game
         {
             return StoryManager.Instance.Switches[Switch] == true;
         }
+
+        public override string ToString()
+        {
+            return $"switch:{Switch} on";
+        }
     }
 
     public class TriggerCondition : Condition
@@ -77,6 +79,11 @@ namespace Game
         public override bool Check()
         {
             return StoryManager.Instance.Triggering == Trigger;
+        }
+
+        public override string ToString()
+        {
+            return $"trigger:{Trigger}";
         }
     }
 
@@ -94,20 +101,10 @@ namespace Game
             return string.Equals(GameDataManager.Instance.SecondaryData.Profs[0], _prof,
                 StringComparison.CurrentCultureIgnoreCase);
         }
-    }
 
-    public class KilledCondition : Condition
-    {
-        private readonly string _id;
-
-        public KilledCondition(string id)
+        public override string ToString()
         {
-            _id = id;
-        }
-
-        public override bool Check()
-        {
-            return GameDataManager.Instance.SecondaryData.Killed.Contains(_id);
+            return $"prof:{_prof}";
         }
     }
 
@@ -161,6 +158,11 @@ namespace Game
         {
             WindowManager.Instance.startAndEndPanel.Open((Id + "_title", Id + "_content", null));
         }
+
+        public override string ToString()
+        {
+            return $"story:{Id}";
+        }
     }
 
 
@@ -182,6 +184,11 @@ namespace Game
                 .DOFade(0, 10f)
                 .OnComplete((() => term.gameObject.SetActive(false)));
         }
+
+        public override string ToString()
+        {
+            return $"line:{Id}";
+        }
     }
 
     public class SwitchPerform : Performance
@@ -199,6 +206,19 @@ namespace Game
         public override void Perform()
         {
             StoryManager.Instance.Switches[Switch] = Value;
+        }
+
+        public override string ToString()
+        {
+            return $"switch:{Switch}:{Value}";
+        }
+    }
+
+
+    public class ReplacePerform : Performance
+    {
+        public override void Perform()
+        {
         }
     }
 

@@ -95,83 +95,91 @@ namespace Managers
 
                 var prefix = ss[0];
                 var suffix = ss.Length > 1 ? ss[1] : "";
+                var info = worksheet.Name;
 
                 if (int.TryParse(suffix, out var v)) ;
 
-                switch (prefix)
-                {
-                    case "treasure":
-                        floor.Squares.AddLast(new ChestSaveData((Rank)v) { Placement = p });
-                        break;
-                    case "casino":
-                        floor.Squares.AddLast(new CasinoSaveData() { Placement = p });
-                        break;
-                    case "grassland":
-                        floor.Squares.AddLast(new SupplySaveData(SupplyType.Grassland) { Placement = p });
-                        break;
-                    case "spring":
-                        floor.Squares.AddLast(new SupplySaveData(SupplyType.Spring) { Placement = p });
-                        break;
-                    case "camp":
-                        floor.Squares.AddLast(new SupplySaveData(SupplyType.Camp) { Placement = p });
-                        break;
-                    case "shop":
-                        floor.Squares.AddLast(new ShopSaveData() { Placement = p });
-                        break;
-                    case "door":
-                        floor.Squares.AddLast(new DoorSaveData((Rank)v) { Placement = p });
-                        break;
-                    case "key":
-                        floor.Squares.AddLast(new KeySaveData((Rank)v) { Placement = p });
-                        break;
-                    case "crystal":
-                        floor.Squares.AddLast(new CrystalSaveData((Rank)v) { Placement = p });
-                        break;
-                    case "traveler":
-                        floor.Squares.AddLast(new TravellerSaveData(suffix) { Placement = p });
-                        break;
-                    case "enemy":
-                        floor.Squares.AddLast(new EnemySaveData(suffix.ToLower()) { Placement = p });
-                        //EnemyLegalCheck(suffix.ToLower());
-                        break;
-                    case "rock":
-                        floor.Squares.AddLast(new RockSaveData() { Placement = p });
-                        break;
-                    case "obsidian":
-                        floor.Squares.AddLast(new ObsidianSaveData() { Placement = p });
-                        break;
-                    case "stairs":
-                        floor.Squares.AddLast(new StairsSaveData(suffix) { Placement = p });
-                        break;
-                    case "play":
-                        floor.Squares.AddLast(new StartSaveData() { Placement = p, SquareState = SquareState.UnFocus });
-                        break;
-                    case "cemetery":
-                        floor.Squares.AddLast(new CemeterySaveData() { Placement = p });
-                        break;
-                    case "gold":
-                        var level = int.Parse(floor.FloorName.Replace("A", ""));
-                        if (floor.FloorName.StartsWith("A"))
-                        {
-                            floor.Squares.AddLast(new GuineasSaveData(1) { Placement = p });
-                        }
-                        else
-                        {
-                            floor.Squares.AddLast(new GuineasSaveData(level) { Placement = p });
-                        }
-
-                        break;
-                    case "totem":
-                        floor.Squares.AddLast(new TotemSaveData() { Placement = p });
-                        break;
-                    default:
-                        Debug.Log($"Unknown {prefix} {worksheet.Name} {p}");
-                        break;
-                }
+                CreateNewSquare(prefix, floor, v, p, suffix, info);
             }
 
             return floor;
         }
+
+        private static void CreateNewSquare(string prefix, in Map.Floor floor, int v, in Placement p, string suffix,
+            string info)
+        {
+            switch (prefix)
+            {
+                case "treasure":
+                    floor.Squares.AddLast(new ChestSaveData((Rank)v) { Placement = p });
+                    break;
+                case "casino":
+                    floor.Squares.AddLast(new CasinoSaveData() { Placement = p });
+                    break;
+                case "grassland":
+                    floor.Squares.AddLast(new SupplySaveData(SupplyType.Grassland) { Placement = p });
+                    break;
+                case "spring":
+                    floor.Squares.AddLast(new SupplySaveData(SupplyType.Spring) { Placement = p });
+                    break;
+                case "camp":
+                    floor.Squares.AddLast(new SupplySaveData(SupplyType.Camp) { Placement = p });
+                    break;
+                case "shop":
+                    floor.Squares.AddLast(new ShopSaveData() { Placement = p });
+                    break;
+                case "door":
+                    floor.Squares.AddLast(new DoorSaveData((Rank)v) { Placement = p });
+                    break;
+                case "key":
+                    floor.Squares.AddLast(new KeySaveData((Rank)v) { Placement = p });
+                    break;
+                case "crystal":
+                    floor.Squares.AddLast(new CrystalSaveData((Rank)v) { Placement = p });
+                    break;
+                case "traveler":
+                    floor.Squares.AddLast(new TravellerSaveData(suffix) { Placement = p });
+                    break;
+                case "enemy":
+                    floor.Squares.AddLast(new EnemySaveData(suffix.ToLower()) { Placement = p });
+                    //EnemyLegalCheck(suffix.ToLower());
+                    break;
+                case "rock":
+                    floor.Squares.AddLast(new RockSaveData() { Placement = p });
+                    break;
+                case "obsidian":
+                    floor.Squares.AddLast(new ObsidianSaveData() { Placement = p });
+                    break;
+                case "stairs":
+                    floor.Squares.AddLast(new StairsSaveData(suffix) { Placement = p });
+                    break;
+                case "play":
+                    floor.Squares.AddLast(new StartSaveData() { Placement = p, SquareState = SquareState.UnFocus });
+                    break;
+                case "cemetery":
+                    floor.Squares.AddLast(new CemeterySaveData() { Placement = p });
+                    break;
+                case "gold":
+                    var level = int.Parse(floor.FloorName.Replace("A", ""));
+                    if (floor.FloorName.StartsWith("A"))
+                    {
+                        floor.Squares.AddLast(new GuineasSaveData(1) { Placement = p });
+                    }
+                    else
+                    {
+                        floor.Squares.AddLast(new GuineasSaveData(level) { Placement = p });
+                    }
+
+                    break;
+                case "totem":
+                    floor.Squares.AddLast(new TotemSaveData() { Placement = p });
+                    break;
+                default:
+                    Debug.Log($"Unknown {prefix} {info} {p}");
+                    break;
+            }
+        }
+
 
         private static void EnemyLegalCheck(string id)
         {

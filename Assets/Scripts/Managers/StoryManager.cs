@@ -12,9 +12,8 @@ namespace Managers
 {
     public class StoryManager : Singleton<StoryManager>
     {
-        public HashSet<string> Killed;
-
         [ShowInInspector] private Dictionary<string, Scenario> Lib;
+        public HashSet<string> Killed => GameManager.Instance.SecondaryData.Killed;
         private static string _path => Path.Combine(Application.streamingAssetsPath, "Storyline.csv");
         private static string _prof => GameDataManager.Instance.SecondaryData.Profs[0];
         public Dictionary<string, bool> Switches => GameManager.Instance.SecondaryData.Switches;
@@ -84,6 +83,7 @@ namespace Managers
 
         private void TriggerCheck()
         {
+            Debug.Log($"{Triggering} is triggered");
             foreach (var s in Lib.Values)
             {
                 var b = s.Conditions.All(condition => condition.Check());
