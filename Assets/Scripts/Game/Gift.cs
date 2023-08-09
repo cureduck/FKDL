@@ -25,24 +25,20 @@ namespace Game
 
         private Dictionary<int, int> _levelCost = new Dictionary<int, int>()
         {
-            { 0, 10 },
-            { 1, 10 },
-            { 2, 20 },
-            { 3, 30 },
-            { 4, 40 },
-            { 5, 50 },
-            { 6, 60 },
-            { 7, 70 },
-            { 8, 80 },
-            { 9, 90 },
-            { 10, 100 },
+            { 0, 50 },
+            { 1, 75 },
+            { 2, 100 },
+            { 3, 125 },
+            { 4, 150 },
+            { 5, 175 },
+            { 6, 200 }
         };
+
+        public int CurrentLevel = 1;
 
 
         [JsonIgnore] private string m_IconName => ("Gift_" + GetType().Name.Replace("Gift", "")).ToLower();
         [JsonIgnore] public Sprite Icon => SpriteManager.Instance.BuffIcons[m_IconName];
-
-        [JsonIgnore] public int CurrentLevel { get; set; } = 1;
         [JsonIgnore] public virtual int LevelUpCost => _levelCost[CurrentLevel];
         public virtual int MaxLevel => 3;
         [JsonIgnore] public abstract int PointCost { get; }

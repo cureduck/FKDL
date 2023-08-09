@@ -120,7 +120,7 @@ namespace Game
                                 icon = "elite";
                                 break;
                             case Rank.Rare:
-                                icon = "boss";
+                                icon = "demon general5";
                                 break;
                         }
                     }
@@ -201,6 +201,10 @@ namespace Game
                     break;
                 case TotemSaveData d15:
                     SetContent("totem", "", icon: lib["totem"]);
+                    break;
+                case SpecialSaveData d16:
+                    SetContent(d16.Id, "",
+                        SpriteManager.Instance.BuffIcons.TryGetValue(d16.Id, out _) ? lib[d16.Id] : lib["unknown"]);
                     break;
             }
         }
@@ -465,9 +469,9 @@ namespace Game
             Bg.color = bg;
             Bg2.GetComponent<SpriteRenderer>().color = bg;
             Bg1.GetComponent<SpriteRenderer>().color = bg;
-            var icon_a = Icon.color;
-            icon_a.a = alpha;
-            Icon.color = icon_a;
+            // var icon_a = Icon.color;
+            // icon_a.a = alpha;
+            // Icon.color = icon_a;
             var mask_a = Mask.color;
             mask_a.a = alpha;
             Mask.color = mask_a;
@@ -494,6 +498,7 @@ namespace Game
             Bonus.gameObject.SetActive(false);
             Id.gameObject.SetActive(false);
 
+
             _sequence.Append(transform.DOMoveZ(0f, .4f))
                 .Insert(0f, Bg1.transform.DOLocalMoveZ(0f, UpTime))
                 .Insert(0f, Bg2.transform.DOLocalMoveZ(0f, UpTime))
@@ -512,6 +517,8 @@ namespace Game
                         () => OutLine.color.a,
                         SetOutlineAlpha,
                         0.2f, UpTime))
+                .Insert(0,
+                    Icon.DOColor(Color.black, UpTime))
                 .OnComplete(() =>
                 {
                     _breathLight.intensity = 0;

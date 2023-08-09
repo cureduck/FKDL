@@ -13,7 +13,7 @@ namespace Managers
     public class StoryManager : Singleton<StoryManager>
     {
         [ShowInInspector] private Dictionary<string, Scenario> Lib;
-        public HashSet<string> Killed => GameManager.Instance.SecondaryData.Killed;
+        public Dictionary<string, int> Killed => GameManager.Instance.SecondaryData.Killed;
         private static string _path => Path.Combine(Application.streamingAssetsPath, "Storyline.csv");
         private static string _prof => GameDataManager.Instance.SecondaryData.Profs[0];
         public Dictionary<string, bool> Switches => GameManager.Instance.SecondaryData.Switches;
@@ -24,6 +24,22 @@ namespace Managers
         {
             LoadStories();
             BindEvents();
+            DeepestNightmareCheck();
+        }
+
+        private void DeepestNightmareCheck()
+        {
+            if (GameDataManager.Instance.SecondaryData.Nightmares.Length == 5)
+            {
+                var code = "deepest_nightmare";
+                Trigger(code);
+            }
+        }
+
+        private void Trigger(string code)
+        {
+            Triggering = code;
+            TriggerCheck();
         }
 
 
@@ -36,8 +52,22 @@ namespace Managers
 
         private void OnKillEnemy(string id)
         {
-            Killed.Add(id);
+            if (!Killed.ContainsKey(id))
+            {
+                Killed[id] = 1;
+            }
+            else
+            {
+                Killed[id]++;
+            }
+
             Triggering = "killed_" + id;
+
+            if (id == "king" || id == "demon lord")
+            {
+                GameManager.Instance.GameOver();
+            }
+
             TriggerCheck();
         }
 

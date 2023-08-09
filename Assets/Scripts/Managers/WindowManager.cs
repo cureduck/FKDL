@@ -1,4 +1,6 @@
-﻿using I2.Loc;
+﻿using DG.Tweening;
+using I2.Loc;
+using TMPro;
 using UI;
 using UnityEngine;
 
@@ -17,6 +19,7 @@ namespace Managers
         public WarningInfoDebugPanel warningInfoPanel;
         public SettingPanel settingPanel;
         public StartAndEndPanel startAndEndPanel;
+        public GameOverWindow GameOverWindow;
         public Localize Line;
 
         public SquareInfoPanel SquareInfoPanel;
@@ -45,6 +48,19 @@ namespace Managers
             simpleInfoItemPanel?.Init();
             settingPanel?.Init();
             startAndEndPanel?.Init();
+        }
+
+        public void PerformLine(string id)
+        {
+            var term = WindowManager.Instance.Line;
+            term.gameObject.SetActive(true);
+            term.SetTerm(id);
+            var seq = DOTween.Sequence();
+            seq.Append(term.GetComponent<TMP_Text>()
+                    .DOFade(1f, 5f))
+                .Append(term.GetComponent<TMP_Text>()
+                    .DOFade(0, 10f))
+                .OnComplete((() => term.gameObject.SetActive(false)));
         }
     }
 }

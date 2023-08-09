@@ -8,6 +8,12 @@ using static UnityEngine.Mathf;
 
 namespace Managers
 {
+    public enum DisplayMode
+    {
+        Detail,
+        Simple,
+    }
+
     public class InputSystem : Singleton<InputSystem>
     {
         public enum Mode
@@ -56,6 +62,9 @@ namespace Managers
         private float HoldTime;
         private float indent;
         private Vector2 prePos;
+
+
+        public DisplayMode DisplayMode => Input.GetKey(KeyCode.LeftAlt) ? DisplayMode.Detail : DisplayMode.Simple;
         private PlayerData P => GameManager.Instance.Player;
 
         private void Update()

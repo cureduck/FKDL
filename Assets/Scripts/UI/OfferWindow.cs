@@ -21,7 +21,7 @@ namespace UI
         [SerializeField] private float delayCloseTime = 1.5f;
         [SerializeField] private Transform offerUIParent;
         [SerializeField] private OffersUIStartAnimationGroup animationGroup;
-
+        [SerializeField] private GameObject m_tips;
 
         public void Start()
         {
@@ -39,6 +39,20 @@ namespace UI
         public void Load(IEnumerable<Offer> ofs, string title)
         {
             var offers = ofs.ToArray();
+
+            m_tips.gameObject.SetActive(false);
+            if (offers.Length > 0)
+            {
+                for (int i = 0; i < offers.Length; i++)
+                {
+                    if (offers[i].Kind == Offer.OfferKind.Skill)
+                    {
+                        m_tips.gameObject.SetActive(true);
+                        break;
+                    }
+                }
+            }
+
             //foreach (var c in ofs)
             //{
             //    Debug.Log(c.Kind);

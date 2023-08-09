@@ -122,6 +122,12 @@ namespace UI
 
         private void UpgradeGift(Gift gift)
         {
+            if (_profile.CollectedSouls < gift.LevelUpCost)
+            {
+                WindowManager.Instance.warningInfoPanel.Open("UI_Normal_NotEnoughSoul");
+                return;
+            }
+
             gift.Upgrade();
             foreach (var gift1 in Gift.GiftDictionary)
             {

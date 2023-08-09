@@ -81,7 +81,7 @@ namespace Game
             if (Bp.Rank <= Rank.Uncommon)
             {
                 Status.MaxHp = (int)(Status.MaxHp * (1 + bonus));
-                Status.CurHp = Status.MaxHp;
+                Status.CurHp = (int)(Status.CurHp * (1 + bonus));
             }
 
             if (Bp.Skills == null)
@@ -173,9 +173,8 @@ namespace Game
         {
             if (!Cloned)
             {
-                Profile.RecentCollectedSouls += Bp.Souls;
+                SData.RecentCollectedSouls += Bp.Souls;
                 Player.KillEnemy(this);
-                Profile.Save();
             }
 
             base.Destroyed();

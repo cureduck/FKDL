@@ -140,7 +140,18 @@ namespace Game
 
         public override string ToString()
         {
-            return $"({PAtk}|{MAtk}|{CAtk}) *{Multi} *{Combo} : ({PDmg}|{MDmg}|{CDmg})";
+            if (PAtk <= 0 && MAtk <= 0 && CAtk <= 0)
+            {
+                return "0";
+            }
+
+            var pstr = "<color=red>{PAtk}</color>";
+            var mstr = "<color=blue>{MAtk}</color>";
+            var cstr = "<color=green>{CAtk}</color>";
+
+            var dmgstr = string.Join(",", pstr, mstr, cstr);
+
+            return $"{dmgstr} * {Multi} * {Combo}";
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Game;
 using I2.Loc;
+using Managers;
 using TMPro;
 using Tools;
 using UI;
@@ -36,7 +37,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
     private RectTransform rectTransform;
 
 
-    private DisplayMode displayMode => Input.GetKey(KeyCode.LeftAlt) ? DisplayMode.Detail : DisplayMode.Brief;
+    private DisplayMode displayMode => InputSystem.Instance.DisplayMode;
 
     private void Start()
     {
@@ -126,7 +127,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                 });
             switch (displayMode)
             {
-                case DisplayMode.Brief:
+                case DisplayMode.Simple:
                     describe.Calculate();
                     var s = describe.GetComponent<TMP_Text>().text;
                     describe.RemoveBetween((@"\(", @"\)"));
@@ -199,7 +200,7 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
                 });
             switch (displayMode)
             {
-                case DisplayMode.Brief:
+                case DisplayMode.Simple:
                     describe.Calculate();
                     var s = describe.GetComponent<TMP_Text>().text;
                     describe.RemoveBetween((@"\(", @"\)"));
@@ -258,12 +259,6 @@ public class SkillInfoPanel : BasePanel<SkillInfoPanel.Args>
         //offPivot.x
 
         return -targetPosition;
-    }
-
-    private enum DisplayMode
-    {
-        Detail,
-        Brief
     }
 
     public class Args

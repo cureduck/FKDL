@@ -16,7 +16,25 @@ namespace Game
         }
 
         [JsonIgnore] public Offer.OfferKind RewardType => Offers[0].Kind; //0表示技能，1表示药水，2表示遗物
-        [JsonIgnore] public int SkipGold => 10;
+
+        [JsonIgnore]
+        public int SkipGold
+        {
+            get
+            {
+                switch (_rank)
+                {
+                    case Rank.Normal:
+                        return 10;
+                    case Rank.Uncommon:
+                        return 15;
+                    case Rank.Rare:
+                        return 20;
+                    default:
+                        return 25;
+                }
+            }
+        }
 
         public override void Init()
         {

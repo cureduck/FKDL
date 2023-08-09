@@ -1,22 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using CH.ObjectPool;
+﻿using CH.ObjectPool;
 using TMPro;
-using Game;
+using UnityEngine;
 
 public class DamageSign : MonoBehaviour, IPoolObjectSetData
 {
-    public class Args
-    {
-        public int value;
-        public int damageType; //0：表示物理，1表示魔法，2表示真实
-    }
-
     [SerializeField] private TMP_Text curSign;
     [SerializeField] private Color pdColor;
     [SerializeField] private Color mdColor;
     [SerializeField] private Color cdColor;
+    [SerializeField] private GameObject cantDamageSign;
 
     public void InitOnSpawn()
     {
@@ -42,5 +34,12 @@ public class DamageSign : MonoBehaviour, IPoolObjectSetData
         curSign.color = targetColor;
 
         curSign.text = $"{args.value}";
+        cantDamageSign.gameObject.SetActive(args.value <= 0);
+    }
+
+    public class Args
+    {
+        public int damageType; //0：表示物理，1表示魔法，2表示真实
+        public int value;
     }
 }

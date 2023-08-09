@@ -88,7 +88,7 @@ namespace Game
             }
             else
             {
-                ((PlayerData)player).RemoveBuff("poison");
+                ((PlayerData)player).RemoveBuff("poison", (int)Bp.Param1);
             }
         }
 
@@ -135,7 +135,7 @@ namespace Game
             }
             else
             {
-                player.RemoveBuff("poison");
+                player.RemoveBuff("poison", (int)Bp.Param1);
             }
         }
 
@@ -176,7 +176,7 @@ namespace Game
             }
             else
             {
-                player.RemoveBuff("poison");
+                player.RemoveBuff("poison", (int)Bp.Param1);
             }
         }
 

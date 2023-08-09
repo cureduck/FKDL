@@ -17,7 +17,7 @@ namespace UI
         [SerializeField] private Localize _description;
         [SerializeField] private Button _upgradeButton;
         [SerializeField] private TMP_Text _currentLvText;
-        [SerializeField] private Localize _levelUpCost;
+        [SerializeField] private LocalizationParamsManager _levelUpCost_para;
         [SerializeField] private Localize m_HoldToLevelUp;
 
 
@@ -79,7 +79,8 @@ namespace UI
             _description.SetLocalizeParam("CurLv", Data.CurrentLevel.ToString());
             _description.SetLocalizeParam("PointCost", (Data.PointCost).ToString());
             _description.Calculate();
-            _levelUpCost.SetTerm($"升级花费:{Data.LevelUpCost.ToString()}");
+            _levelUpCost_para.SetParameterValue("P1", Data.LevelUpCost.ToString());
+            //_levelUpCost.SetTerm($"升级花费:{Data.LevelUpCost.ToString()}");
             //_upgradeButton.onClick.AddListener((() => Data.Upgrade()));
             _currentLvText.text = Data.CurrentLevel >= Data.MaxLevel
                 ? "<color=yellow>Max</color>"
@@ -87,7 +88,7 @@ namespace UI
             if (Data.MaxLevel <= Data.CurrentLevel)
             {
                 _upgradeButton.gameObject.SetActive(false);
-                _levelUpCost.gameObject.SetActive(false);
+                _levelUpCost_para.gameObject.SetActive(false);
                 m_HoldToLevelUp.gameObject.SetActive(false);
             }
         }

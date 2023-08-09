@@ -7,7 +7,7 @@ using Unity.Mathematics;
 
 namespace Game
 {
-    public class MapData : IUpdateable, ICloneable
+    public abstract class MapData : IUpdateable, ICloneable
     {
         public Placement Placement;
         public SquareState SquareState = SquareState.UnRevealed;
@@ -15,8 +15,6 @@ namespace Game
         [JsonIgnore] protected static PlayerData Player => GameManager.Instance.Player;
         [JsonIgnore] protected static SecondaryData SData => GameDataManager.Instance.SecondaryData;
 
-
-        [JsonIgnore] protected Profile Profile => GameManager.Instance.Profile;
 
         /// <summary>
         /// 面积
@@ -195,13 +193,14 @@ namespace Game
             };
         }
 
+        //public abstract (string name, string icon, string detail) GetSquareInfo2();
+
 
         protected virtual void InformReactResult(Args obj)
         {
             ReactResultInfo?.Invoke(obj);
         }
     }
-
 
     public struct Placement
     {

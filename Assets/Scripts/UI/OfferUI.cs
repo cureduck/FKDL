@@ -168,6 +168,13 @@ namespace UI
                     break;
             }
 
+            if (Offer.Kind == Offer.OfferKind.Relic)
+            {
+                rankView.sprite = rank03_img;
+                rankLevelInfo.SetTerm("UI_Normal_RankInfo_03");
+                rankLevel_txt.color = new Color(255 / 255.0f, 163 / 255.0f, 0 / 255.0f);
+            }
+
             selectSign_Img.color = rankLevel_txt.color;
             if (RankStar != null)
             {

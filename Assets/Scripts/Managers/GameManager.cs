@@ -6,8 +6,11 @@ using Game;
 using I2.Loc;
 using Sirenix.OdinInspector;
 using Tools;
+using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
+using static GameKeywords;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -28,7 +31,6 @@ namespace Managers
         [FormerlySerializedAs("GlobalLocalizationParamsManager")]
         private LocalizationParamsManager GLPM;
 
-        public Profile Profile;
 
         public Dictionary<string, Color> SquareColors;
 
@@ -62,7 +64,6 @@ namespace Managers
 #if UNITY_EDITOR
             GetLocalization();
 #endif
-            Profile = Profile.GetOrCreate();
             _pool = new ObjectPool<Square>(CreateSquare);
 
             if (Application.isPlaying)
@@ -414,13 +415,74 @@ namespace Managers
         }
 
 
+        public void GameOver()
+        {
+            WindowManager.Instance.GameOverWindow.Open(GetEndingData());
+            //WindowManager.Instance.GameOverWindow.Load();
+            if (File.Exists(Paths._savePath))
+            {
+                File.Delete(Paths._savePath);
+            }
+
+            SecondaryData.DeleteSave();
+            var profile = Profile.GetOrCreate();
+            profile.CollectedSouls += SecondaryData.RecentCollectedSouls;
+            profile.Save();
+        }
+
+        [Button]
+        private Profile GetProfile()
+        {
+            return Profile.GetOrCreate();
+        }
+
+        public GameOverData GetEndingData()
+        {
+            var collectedSouls = (ENDING_PARAM_SOULS, SecondaryData.RecentCollectedSouls.ToString());
+            var killed = (ENDING_PARAM_KILLED, SecondaryData.Killed.Values.Sum().ToString());
+            var deepestLevel = (ENDING_PARAM_FLOOR, GameManager.Instance.CurFloor.ToString());
+
+            var endingParams = new (string id, string param)[]
+            {
+                collectedSouls,
+                killed,
+                deepestLevel
+            };
+
+            return new GameOverData()
+            {
+                EndingId = GetEndingId(),
+                EndingParams = endingParams
+            };
+        }
+
+        private string GetEndingId()
+        {
+            if (!Player.IsAlive)
+            {
+                return ENDIND_DEAD;
+            }
+            else
+            {
+                if (SecondaryData.Nightmares.Length == 5)
+                {
+                    return ENDING_TRUE;
+                }
+                else
+                {
+                    return ENDING_FALSE;
+                }
+            }
+        }
+
+
         [Button]
         private Square CreateSquare(MapData data)
         {
             if (data == null) return null;
 
-            //var sq = Instantiate(Prefab, MapGo);
-            var sq = _pool.Get();
+            var sq = Instantiate(Prefab, MapGo);
+            //var sq = _pool.Get();
             sq.Reload(data);
 
             try

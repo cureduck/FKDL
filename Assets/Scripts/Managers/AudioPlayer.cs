@@ -9,6 +9,7 @@ namespace Managers
     public class AudioPlayer : Singleton<AudioPlayer>
     {
         public const string AudioNormalAttack = "Audio_Normal_Attack";
+        public const string AudioCantDamage = "Audio_Cant_Damage";
         public const string AudioOpenChest = "Audio_Open_Chest";
         public const string AudioOpenShop = "Audio_Open_Shop";
         public const string AudioCrystal = "Audio_Crystal";

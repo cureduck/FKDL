@@ -49,11 +49,11 @@ namespace UI
 
         private void Load()
         {
+            curSelectSign.gameObject.SetActive(false);
             if ((GameManager.Instance.Player == null) || (Id.IsNullOrWhitespace()))
             {
                 IdText.SetTerm("empty");
                 GetComponent<Button>().interactable = false;
-                curSelectSign.gameObject.SetActive(false);
                 emptySign.gameObject.SetActive(true);
                 haveSign.gameObject.SetActive(false);
                 //BottleIcon.gameObject.SetActive(false);
@@ -66,6 +66,7 @@ namespace UI
                 IdText.SetTerm(Id);
                 emptySign.gameObject.SetActive(false);
                 haveSign.gameObject.SetActive(true);
+                PotionIcon.sprite = Target.Icon;
                 //BottleIcon.gameObject.SetActive(true);
 
                 //BottleIcon.sprite = data.Bp.Icon;

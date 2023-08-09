@@ -13,6 +13,7 @@ namespace Game
     public class SecondaryData : SaveData
     {
         public readonly List<string> DiscoveredRelics;
+        public readonly Dictionary<string, int> Killed = new Dictionary<string, int>();
         public int BreakoutPoint;
         [JsonIgnore] public Random CurCardRandom;
 
@@ -23,12 +24,12 @@ namespace Game
         public Gift[] Gifts;
 
         public int InitGameSeed;
-        public HashSet<string> Killed = new HashSet<string>();
         public string[] Nightmares;
 
         [JsonIgnore] public Random PotionRandom;
 
         [FormerlySerializedAs("Prof")] public string[] Profs;
+        public int RecentCollectedSouls = 0;
 
 
         [JsonIgnore] public Random RelicRandom;

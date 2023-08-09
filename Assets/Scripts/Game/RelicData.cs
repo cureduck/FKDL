@@ -104,6 +104,7 @@ namespace Game
         [Effect("lmzw", Timing.OnAttack, 900)]
         private Attack lmzw(Attack attack, FighterData player, FighterData enemy)
         {
+            if (!attack.IsCommonAttack) return attack;
             attack.Combo += 1;
             var skill = player.Skills.Where((data => data.IsValid && data.Bp.Positive))
                 .ToArray().ChooseRandom(SData.CurGameRandom);

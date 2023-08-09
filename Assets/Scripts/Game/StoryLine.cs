@@ -182,6 +182,8 @@ namespace Game
 
         public override void Perform()
         {
+            WindowManager.Instance.PerformLine(Id);
+
             var term = WindowManager.Instance.Line;
             term.gameObject.SetActive(true);
             term.SetTerm(Id);

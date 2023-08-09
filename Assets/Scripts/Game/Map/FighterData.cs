@@ -528,14 +528,20 @@ namespace Game
             }
         }
 
-        public void RemoveBuff(BuffData buff)
+        public void RemoveBuff(BuffData buff, int stack = 999999)
         {
             buff = CheckChain<BuffData>(Timing.OnPurify, new object[] { buff, this });
-            Buffs.Remove(buff);
-            OnLose(buff);
+            if (buff == null) return;
+            buff.CurLv -= stack;
+            if (buff.CurLv <= 0)
+            {
+                buff.CurLv = 0;
+                Buffs.Remove(buff);
+                OnLose(buff);
+            }
         }
 
-        public void RemoveBuff(string id)
+        public void RemoveBuff(string id, int stack = 999999)
         {
             var buff = Buffs.FirstOrDefault(x => x.Id == id);
             if (buff != null)

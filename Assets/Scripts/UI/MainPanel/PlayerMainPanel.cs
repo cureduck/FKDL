@@ -57,7 +57,14 @@ namespace UI
                 }
                 else
                 {
-                    FloorInfo.SetLocalizeParam("P1", int.Parse(v).ToChineseOrdinal());
+                    if (LocalizationManager.CurrentLanguage == "Chinese")
+                    {
+                        FloorInfo.SetLocalizeParam("P1", int.Parse(v).ToChineseOrdinal());
+                    }
+                    else
+                    {
+                        FloorInfo.SetLocalizeParam("P1", v);
+                    }
                 }
             }
             catch (Exception e)

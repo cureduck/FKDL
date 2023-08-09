@@ -20,24 +20,25 @@ namespace Managers
         protected override void Awake()
         {
             base.Awake();
-            attackEffectPool = new ObjectPool(attackEffect);
-            unpasstivePool = new ObjectPool(skillTriggerSign.gameObject);
-            damageSignEffectPool = new ObjectPool(damageSignEffect);
+            //attackEffectPool = new ObjectPool(attackEffect);
+            //unpasstivePool = new ObjectPool(skillTriggerSign.gameObject);
+            //damageSignEffectPool = new ObjectPool(damageSignEffect);
         }
 
         #region 攻击特效
 
         public GameObject SpawnAttackEffect()
         {
-            GameObject cur = attackEffectPool.CreatInstance();
-            cur.AddComponent<InvokeTrigger>().Set(0.5f, () => UnSpawnAttackEffect(cur));
+            GameObject cur = GameObject.Instantiate(attackEffect);
+            //GameObject cur = attackEffectPool.CreatInstance();
+            //cur.AddComponent<InvokeTrigger>().Set(0.5f, () => UnSpawnAttackEffect(cur));
             return cur;
         }
 
-        public void UnSpawnAttackEffect(GameObject targetObject)
-        {
-            attackEffectPool.UnSpawnInstance(targetObject);
-        }
+        //public void UnSpawnAttackEffect(GameObject targetObject)
+        //{
+        //    attackEffectPool.UnSpawnInstance(targetObject);
+        //}
 
         #endregion
 
@@ -45,15 +46,17 @@ namespace Managers
 
         public GameObject SpawnUnPasstiveSkillSignEffect(Sprite icon)
         {
-            GameObject cur = unpasstivePool.CreatInstance(icon);
-            cur.AddComponent<InvokeTrigger>().Set(1.0f, () => UnSpawnUnPasstiveSkillSignEffect(cur));
-            return cur;
+            UnpasstiveSkillTriggerSign cur = GameObject.Instantiate(skillTriggerSign);
+            cur.SetDataOnEnable(icon);
+            //GameObject cur = unpasstivePool.CreatInstance(icon);
+            //cur.AddComponent<InvokeTrigger>().Set(1.0f, () => UnSpawnUnPasstiveSkillSignEffect(cur));
+            return cur.gameObject;
         }
 
-        private void UnSpawnUnPasstiveSkillSignEffect(GameObject targetObject)
-        {
-            unpasstivePool.UnSpawnInstance(targetObject);
-        }
+        //private void UnSpawnUnPasstiveSkillSignEffect(GameObject targetObject)
+        //{
+        //    unpasstivePool.UnSpawnInstance(targetObject);
+        //}
 
         #endregion
 
@@ -61,16 +64,19 @@ namespace Managers
 
         public GameObject SpawnDamageSignEffect(int damage, int damageType)
         {
-            GameObject cur = damageSignEffectPool.CreatInstance(new DamageSign.Args
-                { value = damage, damageType = damageType });
-            cur.AddComponent<InvokeTrigger>().Set(1.0f, () => UnSpawnDamageSignEffect(cur));
+            GameObject cur = GameObject.Instantiate(damageSignEffect);
+            cur.GetComponent<DamageSign>()
+                .SetDataOnEnable(new DamageSign.Args { value = damage, damageType = damageType });
+
+            //damageSignEffectPool.CreatInstance();
+            //cur.AddComponent<InvokeTrigger>().Set(1.0f, () => UnSpawnDamageSignEffect(cur));
             return cur;
         }
 
-        private void UnSpawnDamageSignEffect(GameObject targetObject)
-        {
-            damageSignEffectPool.UnSpawnInstance(targetObject);
-        }
+        //private void UnSpawnDamageSignEffect(GameObject targetObject)
+        //{
+        //    damageSignEffectPool.UnSpawnInstance(targetObject);
+        //}
 
         #endregion
     }

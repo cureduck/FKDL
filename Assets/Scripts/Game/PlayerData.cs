@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EasyTransition;
 using Game.PlayerCommands;
 using Managers;
 using Newtonsoft.Json;
@@ -510,15 +509,10 @@ namespace Game
         protected override void Destroyed()
         {
             base.Destroyed();
-            if (File.Exists(Paths._savePath))
+            if (!Cloned)
             {
-                File.Delete(Paths._savePath);
+                GameManager.Instance.GameOver();
             }
-
-            SecondaryData.DeleteSave();
-            Profile.CollectedSouls += Profile.RecentCollectedSouls;
-
-            GameObject.FindObjectOfType<TransitionManager>().LoadScene("StartScene", "DiagonalRectangleGrid", .2f);
         }
     }
 }

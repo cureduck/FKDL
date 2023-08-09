@@ -16,7 +16,6 @@ namespace Managers
         public string[] GiftUnlocks;
         public string[] ProUnlocks;
 
-        public int RecentCollectedSouls;
         public HashSet<string> UnlockedCards;
 
         private static string _path => Path.Combine(Application.persistentDataPath, "Profile.json");
@@ -51,7 +50,7 @@ namespace Managers
 
         public int GetUnlockProfCost(string prof)
         {
-            return ProUnlocks.Length * 30 - 60;
+            return ProUnlocks.Length * 100 - 200;
         }
 
         public void Save()

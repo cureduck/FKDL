@@ -171,7 +171,7 @@ namespace Game
 
             GameObject curEffectObject = ObjectPoolManager.Instance.SpawnAttackEffect();
             curEffectObject.transform.position = Icon.transform.position;
-            AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
+
 
             //GameObject temp = ObjectPoolManager.Instance.SpawnDamageSignEffect(10, 0);
             float range = 0.5f;
@@ -201,8 +201,12 @@ namespace Game
             if (result.PDmg <= 0 && result.MDmg <= 0 && result.CDmg <= 0)
             {
                 GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(0, 0);
-                cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range),
-                    UnityEngine.Random.Range(-range, range));
+                cur.transform.position = Icon.transform.position;
+                AudioPlayer.Instance.Play(AudioPlayer.AudioCantDamage);
+            }
+            else
+            {
+                AudioPlayer.Instance.Play(AudioPlayer.AudioNormalAttack);
             }
         }
 

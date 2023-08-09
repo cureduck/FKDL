@@ -17,7 +17,6 @@ namespace Game
         [SerializeField] private GameObject targetMask;
 
         [SerializeField] private Square square;
-
         private Tween anim;
 
         //private float curTargetIntensity = 0;
