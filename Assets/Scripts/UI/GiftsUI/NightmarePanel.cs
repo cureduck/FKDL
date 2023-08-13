@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using EasyTransition;
 using Game;
 using I2.Loc;
@@ -16,9 +17,12 @@ namespace UI
         private CellNightmareView m_CellNightmarePrefab;
 
         [SerializeField] private Localize curSelectText;
+
         [SerializeField] private LocalizationParamsManager curSelectCountLizationManager;
-        [SerializeField] private ScrollViewAndBarOnVertical customSizeFitter;
+
+        //[SerializeField] private ScrollViewAndBarOnVertical customSizeFitter;
         [SerializeField] private Button _startButton;
+        [SerializeField] private Localize m_NightmareBonus;
         private List<string> _chosenNightmares;
         private Dictionary<string, CellNightmareView> _nightmareToggles = new Dictionary<string, CellNightmareView>();
         private SecondaryData SData => GameDataManager.Instance.SecondaryData;
@@ -54,7 +58,8 @@ namespace UI
                 //});
             }
 
-            customSizeFitter.AdjustTheListLength();
+            SetNightmareBonus();
+            //customSizeFitter.AdjustTheListLength();
         }
 
         private void OnCellToggleValueChange(string nightmare, bool value)
@@ -70,11 +75,18 @@ namespace UI
 
             curSelectText.SetTerm("UI_GiftsAndNightmarePanel_CurSelectNightmareCountView");
             curSelectCountLizationManager.SetParameterValue("P1", _chosenNightmares.Count.ToString());
+            SetNightmareBonus();
         }
 
         private string[] GetNightmareOptions()
         {
             return Nightmares.NightmareLib.ChooseRandom(5, SData.CurGameRandom);
+        }
+
+        private void SetNightmareBonus()
+        {
+            m_NightmareBonus.SetLocalizeParam("P1",
+                Nightmares.GetAllNightmareBonus(_chosenNightmares).ToString(CultureInfo.InvariantCulture));
         }
 
         private void StartGame()

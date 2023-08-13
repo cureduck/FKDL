@@ -672,6 +672,115 @@ namespace Game
             return buff;
         }
 
+
+        [Effect("jbp", Timing.OnReact)]
+        private MapData jbp(MapData map, FighterData player)
+        {
+            if (map is SupplySaveData supply)
+            {
+                Activated?.Invoke();
+                player.Gain((int)Bp.Param1);
+            }
+
+            return map;
+        }
+
+
+        /// <summary>
+        /// 获得一个其他职业的初始遗物
+        /// </summary>
+        /// <param name="player"></param>
+        [Effect("hyhz", Timing.OnGet)]
+        private void hyhz(FighterData player)
+        {
+            if (player is PlayerData p)
+            {
+                var cur_relic = ProfRelic[SData.Profs[0]];
+                var relics = ProfRelic.Values.ToList();
+                relics.Remove(cur_relic);
+                var relic = relics.ChooseRandom(SData.CurGameRandom);
+
+                p.TryTakeRelic(relic, out _);
+            }
+        }
+
+
+        /// <summary>
+        /// 攻击时：每有一种buff，恢复P1生命值
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="player"></param>
+        /// <param name="enemy"></param>
+        /// <returns></returns>
+        [Effect("gcgz", Timing.OnAttack)]
+        private Attack gcgz(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty()) return attack;
+            var buffs = player.Buffs.Where(b => b.Bp.BuffType == (BuffType.Buff)).ToList();
+
+            player.Heal((int)(buffs.Count * Bp.Param1));
+
+            return attack;
+        }
+
+        /// <summary>
+        /// 物防、魔防提升时：额外提升1点
+        /// </summary>
+        /// <returns></returns>
+        [Effect("wgxl", Timing.OnStrengthen)]
+        private BattleStatus wgxl(BattleStatus status, FighterData player)
+        {
+            if (status.PDef > 0)
+            {
+                Activated?.Invoke();
+                status.PDef += 1;
+            }
+
+            if (status.MDef > 0)
+            {
+                Activated?.Invoke();
+                status.MDef += 1;
+            }
+
+            return status;
+        }
+
+        [Effect("zdjy", Timing.OnStrengthen)]
+        private BattleStatus zdjy(BattleStatus status, FighterData player)
+        {
+            if (status.PAtk > 0)
+            {
+                Activated?.Invoke();
+                status.PAtk += 1;
+            }
+
+            if (status.MAtk > 0)
+            {
+                Activated?.Invoke();
+                status.MAtk += 1;
+            }
+
+            return status;
+        }
+
+        [Effect("fszh", Timing.OnStrengthen)]
+        private BattleStatus fszh(BattleStatus status, FighterData player)
+        {
+            if (status.MaxHp > 0)
+            {
+                Activated?.Invoke();
+                status.MaxHp += (int)Bp.Param1;
+            }
+
+            if (status.MaxMp > 0)
+            {
+                Activated?.Invoke();
+                status.MaxMp += (int)Bp.Param1;
+            }
+
+            return status;
+        }
+
         #endregion
     }
 }

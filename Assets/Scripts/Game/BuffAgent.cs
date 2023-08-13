@@ -67,5 +67,11 @@ namespace Game
         {
             return string.Join("-", this);
         }
+
+        public int GetStack(string id)
+        {
+            var buff = Find(data => data.Id == id);
+            return buff?.CurLv ?? 0;
+        }
     }
 }

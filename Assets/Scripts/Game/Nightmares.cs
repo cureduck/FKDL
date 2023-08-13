@@ -19,7 +19,7 @@ namespace Game
             return .1f;
         }
 
-        public static float GetAllNightmareBonus(string[] ids)
+        public static float GetAllNightmareBonus(IEnumerable<string> ids)
         {
             return ids.Where(id => NightmareLib.Contains(id)).Sum(GetNightmareBonus);
         }

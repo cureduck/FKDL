@@ -18,7 +18,7 @@ namespace Managers
             var icon = GetIcon(id);
             bool.TryParse(line["CanGet"], out var canGet);
             var keywords = line["Keywords"].Split(',');
-            var effects = line["Effects"].Split(',');
+            var effects = line["Effects"];
             return new Skill((Rank)int.Parse(line["Rarity"]), id, canGet, icon, keywords, effects)
             {
                 Prof = line["Pool"],

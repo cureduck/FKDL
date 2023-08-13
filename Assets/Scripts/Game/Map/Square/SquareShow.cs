@@ -181,28 +181,32 @@ namespace Game
             {
                 GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.PDmg, 0);
                 cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range),
-                    UnityEngine.Random.Range(-range, range));
+                    UnityEngine.Random.Range(-range, range), -1);
+                cur.transform.rotation = Camera.main.transform.rotation;
             }
 
             if (result.MDmg > 0)
             {
                 GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.MDmg, 1);
                 cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range),
-                    UnityEngine.Random.Range(-range, range));
+                    UnityEngine.Random.Range(-range, range), -1);
+                cur.transform.rotation = Camera.main.transform.rotation;
             }
 
             if (result.CDmg > 0)
             {
                 GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(result.CDmg, 2);
                 cur.transform.position = Icon.transform.position + new Vector3(UnityEngine.Random.Range(-range, range),
-                    UnityEngine.Random.Range(-range, range));
+                    UnityEngine.Random.Range(-range, range), -1);
+                cur.transform.rotation = Camera.main.transform.rotation;
             }
 
-            if (result.PDmg <= 0 && result.MDmg <= 0 && result.CDmg <= 0)
+            if (result.SumDmg <= 0)
             {
                 GameObject cur = ObjectPoolManager.Instance.SpawnDamageSignEffect(0, 0);
                 cur.transform.position = Icon.transform.position;
                 AudioPlayer.Instance.Play(AudioPlayer.AudioCantDamage);
+                cur.transform.rotation = Camera.main.transform.rotation;
             }
             else
             {

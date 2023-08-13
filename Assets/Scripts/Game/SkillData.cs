@@ -2326,6 +2326,50 @@ namespace Game
             return attack;
         }
 
+
+        [Effect("CR_ALC", Timing.OnAttack, priority: -10000)]
+        private Attack CR_ALC(Attack attack, FighterData player, FighterData enemy)
+        {
+            if (attack.IsEmpty()) return attack;
+            var stack = player.Buffs.GetStack("poison");
+            if (stack > 0)
+            {
+                player.ApplyBuff(BuffData.Poison((int)(stack * Usual)), enemy);
+                Activated?.Invoke();
+            }
+
+            return attack;
+        }
+
+        [Effect("GS_KNI", Timing.SkillEffect)]
+        private void GS_KNI(FighterData player)
+        {
+            var stack = player.Buffs.GetStack("sturdy");
+            if (stack > 0)
+            {
+                player.ApplySelfBuff(BuffData.Thorn((int)(stack * Usual)));
+                Activated?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// no longer cost mp, but poison self
+        /// </summary>
+        /// <param name="cost"></param>
+        /// <param name="skill"></param>
+        /// <param name="player"></param>
+        /// <param name="isTry"></param>
+        /// <returns></returns>
+        [Effect("JB_ALC", Timing.OnGetSkillCost)]
+        private CostInfo JB_ALC(CostInfo cost, SkillData skill, FighterData player, bool isTry)
+        {
+            if (cost.CostType != CostType.Mp) return cost;
+            player.ApplySelfBuff(BuffData.Poison((int)Unusual * cost.ActualValue));
+            cost.Value = 0;
+            Activated?.Invoke();
+            return cost;
+        }
+
         #endregion
     }
 }

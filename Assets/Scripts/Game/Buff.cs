@@ -1,4 +1,5 @@
-﻿using Managers;
+﻿using System;
+using Managers;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -21,11 +22,13 @@ namespace Game
         [JsonIgnore] public Buff OppositeBp => BuffManager.Instance.TryGetById(OppositeId, out var op) ? op : null;
     }
 
+    [Flags]
     public enum BuffType
     {
-        Positive,
-        Negative,
-        Blessing,
-        Curse
+        Positive = 1 << 0,
+        Negative = 1 << 1,
+        Blessing = 1 << 2,
+        Curse = 1 << 3,
+        Buff = Positive | Negative
     }
 }

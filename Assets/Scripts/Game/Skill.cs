@@ -9,7 +9,7 @@ namespace Game
     {
         public readonly HashSet<Timing> AlwaysActiveTiming;
         public readonly bool CanGet;
-        public readonly string[] Effects;
+        public readonly string SE;
         public bool BattleOnly;
         public int Cooldown;
         public CostInfo CostInfo;
@@ -21,12 +21,12 @@ namespace Game
         [FormerlySerializedAs("Pool")] public string Prof;
 
         public Skill(Rank rank, string id, bool canGet, Sprite icon, string[] keywords = null,
-            string[] effects = null) : base(rank, id, icon)
+            string se = null) : base(rank, id, icon)
         {
             CanGet = canGet;
             Keywords = keywords;
             AlwaysActiveTiming = new HashSet<Timing>();
-            Effects = effects;
+            SE = se;
         }
 
 

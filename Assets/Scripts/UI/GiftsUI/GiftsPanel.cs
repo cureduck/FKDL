@@ -5,6 +5,7 @@ using I2.Loc;
 using Managers;
 using Tools;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI
@@ -14,12 +15,21 @@ namespace UI
         [SerializeField] private CellGiftView _giftTogglePrefab;
 
         [SerializeField] private Localize pointLeftText;
-        [SerializeField] private LocalizationParamsManager pointLizationManager;
+
+        [FormerlySerializedAs("pointLizationManager")] [SerializeField]
+        private LocalizationParamsManager pointLocalizationManager;
+
         [SerializeField] private Localize soulsLeftText;
-        [SerializeField] private LocalizationParamsManager soulLizationManager;
+
+        [FormerlySerializedAs("soulLizationManager")] [SerializeField]
+        private LocalizationParamsManager soulLocalizationManager;
+
         [SerializeField] private Localize curSelectText;
-        [SerializeField] private LocalizationParamsManager curSelectCountLizationManager;
-        [SerializeField] private ScrollViewAndBarOnVertical customSizeFitter;
+
+        [FormerlySerializedAs("curSelectCountLizationManager")] [SerializeField]
+        private LocalizationParamsManager curSelectCountLocalizationManager;
+
+        //[SerializeField] private ScrollViewAndBarOnVertical customSizeFitter;
         private Dictionary<Gift, Toggle> _giftToggles = new Dictionary<Gift, Toggle>();
         private Profile _profile;
         private SecondaryData SData => GameDataManager.Instance.SecondaryData;
@@ -40,14 +50,14 @@ namespace UI
         {
             int leftGiftPoint = (Gift.MaxPoint - GetSelectedGifts().Sum((gift => gift.PointCost)));
             pointLeftText.SetTerm("UI_GiftsAndNightmarePanel_LeftTalentPoints");
-            pointLizationManager.SetParameterValue("P1", leftGiftPoint.ToString());
+            pointLocalizationManager.SetParameterValue("P1", leftGiftPoint.ToString());
 
             soulsLeftText.SetTerm("UI_GiftsAndNightmarePanel_LeftSoulPoints");
-            soulLizationManager.SetParameterValue("P1", _profile.CollectedSouls.ToString());
+            soulLocalizationManager.SetParameterValue("P1", _profile.CollectedSouls.ToString());
 
             //curSelectText.SetTerm(GetSelectedGifts().Length.ToString());
             curSelectText.SetTerm("UI_GiftsAndNightmarePanel_CurSelectGiftCountView");
-            curSelectCountLizationManager.SetParameterValue("P1", GetSelectedGifts().Length.ToString());
+            curSelectCountLocalizationManager.SetParameterValue("P1", GetSelectedGifts().Length.ToString());
         }
 
         private void PrepareGiftPanel()
@@ -94,7 +104,7 @@ namespace UI
                 });
             }
 
-            customSizeFitter.AdjustTheListLength();
+            //customSizeFitter.AdjustTheListLength();
         }
 
         private void ResetAllToggleInteractable()
@@ -135,6 +145,9 @@ namespace UI
             }
 
             _profile.CollectedSouls -= gift.LevelUpCost;
+
+            soulLocalizationManager.SetParameterValue("P1", _profile.CollectedSouls.ToString());
+
             _profile.Save();
         }
 
@@ -161,8 +174,11 @@ namespace UI
 
         public void Save()
         {
-            _profile.GiftsLevel =
-                Gift.GiftDictionary.ToDictionary((pair => pair.Key), (pair => pair.Value.CurrentLevel));
+            foreach (var gift in Gift.GiftDictionary)
+            {
+                _profile.GiftsLevel[gift.Key] = gift.Value.CurrentLevel;
+            }
+
             _profile.Save();
         }
     }
