@@ -19,7 +19,12 @@ namespace Managers
             bool.TryParse(line["CanGet"], out var canGet);
             var keywords = line["Keywords"].Split(',');
             var effects = line["Effects"];
-            return new Skill((Rank)int.Parse(line["Rarity"]), id, canGet, icon, keywords, effects)
+            if (!bool.TryParse(line["CanDelete"], out var canDelete))
+            {
+                canDelete = true;
+            }
+
+            return new Skill((Rank)int.Parse(line["Rarity"]), id, canGet, icon, keywords, effects, canDelete)
             {
                 Prof = line["Pool"],
                 Positive = bool.Parse(line["Positive"]),
@@ -28,7 +33,7 @@ namespace Managers
                 Param1 = float.Parse(line["P1"] != "" ? line["P1"] : "0"),
                 Param2 = float.Parse(line["P2"] != "" ? line["P2"] : "0"),
                 CostInfo = new CostInfo(cost, line["CostType"] == "" ? CostType.Mp : CostType.Hp),
-                Cooldown = cooldown,
+                Cooldown = cooldown
             };
         }
 

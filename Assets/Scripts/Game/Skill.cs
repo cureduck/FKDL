@@ -8,6 +8,7 @@ namespace Game
     public class Skill : CsvData, IKeyword
     {
         public readonly HashSet<Timing> AlwaysActiveTiming;
+        public readonly bool CanDelete = true;
         public readonly bool CanGet;
         public readonly string SE;
         public bool BattleOnly;
@@ -21,12 +22,13 @@ namespace Game
         [FormerlySerializedAs("Pool")] public string Prof;
 
         public Skill(Rank rank, string id, bool canGet, Sprite icon, string[] keywords = null,
-            string se = null) : base(rank, id, icon)
+            string se = null, bool canDelete = true) : base(rank, id, icon)
         {
             CanGet = canGet;
             Keywords = keywords;
             AlwaysActiveTiming = new HashSet<Timing>();
             SE = se;
+            CanDelete = canDelete;
         }
 
 

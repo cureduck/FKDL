@@ -358,6 +358,12 @@ namespace Game
 
         public void RemoveSkill(int index)
         {
+            if (!Skills[index].Bp.CanDelete)
+            {
+                HelpInfoManager.Instance.SetTerm("ThisSkillCanNotBeRemoved");
+                return;
+            }
+
             if (index >= 0 && index < Skills.Count)
             {
                 //GetSkillPoint(Skills[index].Bp.Rank);
